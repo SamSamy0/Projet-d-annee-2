@@ -1,4 +1,4 @@
-# Tetris Royale
+# RPG creator
 
 Ajoutez ici tout ce qu’il faut savoir pour pouvoir compiler et lancer votre programme, ainsi que les prénoms, noms et matricules des membres du groupe
 
