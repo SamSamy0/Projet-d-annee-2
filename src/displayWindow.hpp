@@ -5,7 +5,7 @@
 #include <TGUI/TGUI.hpp>
 #include <unordered_map>
 class Window {
- private:
+private:
   std::unordered_map<std::string, std::string> DB;
   bool isLoggedIn;
   sf::RenderWindow mainWindow;
@@ -14,11 +14,11 @@ class Window {
   void updateTextSize();
   void processEvents();
   void login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd);
-  void signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd);
+  bool signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd);
   void menuWindow();
   bool checkLogin();
 
- public:
+public:
   Window();
   void run();
 };

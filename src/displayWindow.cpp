@@ -2,13 +2,38 @@
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
+#include <TGUI/Text.hpp>
+#include <TGUI/Widgets/TextArea.hpp>
 
-void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
-  bool newUsr = true;
-  for (int i = 0; i < DB.size(); i++) {
-    if (DB[i][0] == "bonjour") {
+bool Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
+  // bool newUsr = true;
+
+  // mainWindow.clear(sf::Color::White);
+  // sf::CircleShape player(50.f);
+  // player.setFillColor(sf::Color::Green);
+  // mainWindow.draw(player);
+  for (auto i = DB.begin(); i != DB.end(); i++) {
+    if (i->first == usrname->getText()) {
+      // Demander un autre Pseudo
+      usrname->setText("");
+
+      usrname->setDefaultText("Username already taken or invalid ");
+      pswd->setText("");
+      return false;
     }
   }
+  // New user
+  // WARNING: Je dois attendre le "Network Manager" de Tomas et Chinsou
+  // NOTE: Faire un objet "Identifiant" pour envoyer usrname et pswd
+  if (usrname->getText() != "") {
+    DB.insert({static_cast<std::string>(usrname->getText()),
+               static_cast<std::string>(pswd->getText())});
+    // NOTE: C'est ici que je devrai envoyer au serveur les identifiants de
+    // l'utilisateur
+    std::cout << usrname->getText() << "   " << pswd->getText() << std::endl;
+    // NOTE: Change mode LOGGIN -> MENU for changing what gui draws
+  }
+  return true;
 }
 void Window::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   /* Envoyer l'identifiant et le password à la base de donnée.
@@ -17,15 +42,15 @@ void Window::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
    * Tant qu'on est pas connecté, on reste sur la page de connexion
    * et un message est affiché
    */
-  while (Window::checkLogin()) {
-    // On affiche en boucle le menu de connexion
-    // Window::menuWindow();
-    usrname->setDefaultText("Wrong identifier(s)");
-    gui.draw();
-  }
+  // while (!Window::checkLogin()) {
+  //   // On affiche en boucle le menu de connexion
+  //   // Window::menuWindow();
+  //   usrname->setDefaultText("Wrong identifier(s)");
+  //   gui.draw();
+  // }
   /* Si on est connecté, le menu est affiché avec les projets.
    * */
-  Window::menuWindow();
+  // Window::menuWindow();
 }
 
 void Window::initWidget() {
@@ -39,7 +64,7 @@ void Window::initWidget() {
   gui.add(editBoxUsername, "Username");
 
   auto editBoxPassword = tgui::EditBox::copy(editBoxUsername);
-  editBoxPassword->setPosition({"37.5%", "43,75%"});
+  editBoxPassword->setPosition({"37.5%", "43.75%"});
   editBoxPassword->setDefaultText("Password...");
   editBoxPassword->setPasswordCharacter('*');
   gui.add(editBoxPassword, "Password");
@@ -49,12 +74,15 @@ void Window::initWidget() {
   loginButton->setSize({"12.5%", "3.125%"});
   gui.add(loginButton);
 
-  loginButton->onPress(&Window::login, this, editBoxUsername, editBoxPassword);
+  // loginButton->onPress(&Window::login, this, editBoxUsername,
+  // editBoxPassword);
 
   auto signInButton = tgui::Button::create("Sign in");
   signInButton->setPosition({"62.5%", "53.125%"});
   signInButton->setSize({"12.5%", "3.125%"});
   gui.add(signInButton);
+  signInButton->onPress(&Window::signIn, this, editBoxUsername,
+                        editBoxPassword);
 }
 void Window::updateTextSize() {
   const float windowHeight = gui.getView().getRect().height;
@@ -68,7 +96,7 @@ void Window::processEvents() {
       mainWindow.close();
 
     // Echap to escape
-    if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+    if (const auto *keyPressed = event->getIf<sf::Event::KeyPressed>()) {
       if (keyPressed->code == sf::Keyboard::Key::Escape)
         mainWindow.close();
     }
@@ -76,8 +104,7 @@ void Window::processEvents() {
 }
 
 Window::Window()
-    : mainWindow(sf::VideoMode::getDesktopMode(),
-                 "Game name",
+    : mainWindow(sf::VideoMode::getDesktopMode(), "Game name",
                  sf::State::Fullscreen),
       gui(mainWindow) {
   initWidget();
@@ -86,6 +113,7 @@ void Window::run() {
   while (mainWindow.isOpen()) {
     processEvents();
     mainWindow.clear(sf::Color::White);
+    gui.draw();
     mainWindow.display();
   }
 }
