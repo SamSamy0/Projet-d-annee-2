@@ -1,3 +1,11 @@
+#pragma once
+#include <iostream>
+#include <string>
+#include <vector>
+#include <SFML/Graphics.hpp>
+
+using namespace std;
+
 class Vue {
     protected:
         float x_{0};
