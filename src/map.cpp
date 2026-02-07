@@ -13,7 +13,7 @@ float Map::getHeight() const { return height_; }
 string Map::getName() const { return mapName_; }
 float Map::getScale() const { return scale_; }
 vector<Layer>& Map::getLayers() { return layers_; }
-void Map::addLayer(const Layer& layer) { layers_.push_back(layer); }
+void Map::insertLayer(const Layer& layer, int depth) { layers_.insert(layers_.begin() + depth, layer) ; }
 void Map::displayMap(sf::RenderWindow& window) {
     window.clear();
     sf::View mapView;

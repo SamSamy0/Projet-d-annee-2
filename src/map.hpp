@@ -22,7 +22,7 @@ class Map {
         string getName() const ;
         float getScale() const ;
         vector<Layer>& getLayers() ;
-        void addLayer(const Layer& layer) ;
+        void insertLayer(const Layer& layer, int depth) ;
         void displayMap(sf::RenderWindow& window) ;
         void detectMovement() ;
         void detectZooming() ;
