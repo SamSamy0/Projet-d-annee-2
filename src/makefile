@@ -5,7 +5,7 @@ LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 TARGET = carte
 SRC = carte.cpp
 
-all: $(TARGET)
+all: 
 
 $(TARGET): $(SRC)
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
