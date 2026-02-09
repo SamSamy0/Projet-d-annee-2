@@ -17,7 +17,7 @@ void Map::insertLayer(const Layer& layer, int depth) { layers_.insert(layers_.be
 void Map::displayMap(sf::RenderWindow& window) {
     window.clear();
     sf::View mapView;
-    mapView.setSize(sf::Vector2f(width, height));
+    mapView.setSize(sf::Vector2f(width_, height_));
     mapView.setCenter(sf::Vector2f(positionX_, positionY_));
     mapView.zoom(zoom_.getZoom());
     window.setView(mapView);

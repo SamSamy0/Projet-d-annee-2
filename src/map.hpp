@@ -3,10 +3,11 @@
 #include <string>
 #include <vector>
 #include <SFML/Graphics.hpp>
-
 #include "layer.hpp"
 
 using namespace std;
+
+class Moving;
 
 class Map {
     Moving move_;
@@ -26,4 +27,6 @@ class Map {
         void displayMap(sf::RenderWindow& window) ;
         void detectMovement() ;
         void detectZooming() ;
+        void loadFromDiks();
+        void saveToDisk();
 };
