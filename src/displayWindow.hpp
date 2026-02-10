@@ -1,15 +1,21 @@
 #ifndef DISPLAYWINDOW_HPP
 #define DISPLAYWINDOW_HPP
+#include "Identifier.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
-#include <unordered_map>
-class Window {
+#include <vector>
+
+enum class projectState { LOGIN, MENU, GAME };
+class AuthWindow {
 private:
-  std::unordered_map<std::string, std::string> DB;
+  projectState state = projectState::LOGIN;
+  // Temporary
+  std::vector<Identifier> DB;
+  // Must verifiy if variable isLoggedIn is used
   bool isLoggedIn;
   sf::RenderWindow mainWindow;
-  tgui::Gui gui;
+  tgui::Gui AuthGui;
   void initWidget();
   void updateTextSize();
   void processEvents();
@@ -17,9 +23,11 @@ private:
   bool signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd);
   void menuWindow();
   bool checkLogin();
+  void loginWidget();
+  // void menuWidget();
 
 public:
-  Window();
+  AuthWindow();
   void run();
 };
 #endif
