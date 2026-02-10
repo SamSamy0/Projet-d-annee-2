@@ -59,7 +59,18 @@ class ClientNetworkManager{
             socket.send(packet);
         }
 
+        void createProject(std::string role, float size, float scale){
+            sf::Packet packet;
+            MsgProtocole msg = MsgProtocole::LOB_CREATE_PROJECT_REQ;
+            
+            packet << static_cast<uint8_t>(msg);
+            packet << role << size << scale ;
 
+            socket.send(packet);
+
+        }
+
+        
 };
 
 
