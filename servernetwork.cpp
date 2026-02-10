@@ -2,62 +2,102 @@
 #include <vector>
 #include <iostream>
 #include <array>
+#include <memory>
+#include <deque>
+#include "protocol.hpp"
+
+
+
 
 
 struct Client{
-    sf::IpAddress address_ip;
-    unsigned short port;
+    int id;
+    std::unique_ptr<sf::TcpSocket> sock;
 };
+
+
+struct Event{
+    Client client;
+    MsgProtocole message_type;
+    std::unique_ptr<sf::Packet> data_packet;
+};
+
+struct Reponse{
+    Client client;
+    bool synchro;
+    MsgProtocole message_type;
+    std::unique_ptr<sf::Packet> packet;
+};
+
 
 class ServerNetworkManager{
     sf::TcpListener listener;
-    std::vector<sf::TcpSocket> liste_client;
-    std::vector<std::array<char, 10>> messages;
+    std::vector<Client> client_list;
+    std::deque<Event> event_queu;
+    std::deque<Reponse> rep_queu;
     public:
-        void start(){
-            listener.listen(5000);
+
+        bool start(){
+            if (listener.listen(5000) == sf::Socket::Done){
+                std::cout << "Le server écoute sur le port 5000" << std::endl;
+                listener.setBlocking(false);
+                return true;
+            }else return false;    
         };
 
-        void accept(){
-            sf::TcpSocket client;
-            listener.accept(client);
-            liste_client.push_back(client);
+        bool accept(){
+
+            auto socket_client = std::make_unique<sf::TcpSocket>();
+            if (listener.accept(*socket_client) == sf::Socket::Done) {
+                
+                Client new_client;
+                new_client.sock = std::move(socket_client);
+
+                client_list.push_back(new_client);
+                std::cout << "nouvelle machine connécté: " << new_client.sock->getRemoteAddress() << std::endl ;
+
+                return true;
+            } else return false;
         };
 
-        void getmessages(){
-            for (sf::TcpSocket& client : liste_client){
-                std::array<char,10> data;
-                std::size_t received;
-                client.receive(&data,10,received);
-                messages.push_back(data);
+        void getMessages(){
+            for (auto& client : client_list){
+                
+                client.sock->setBlocking(false);
+
+                auto packet = std::make_unique<sf::Packet>();
+                Event recu;
+                uint8_t msg_type;
+                
+                if (client.sock->receive(*packet) == sf::Socket::Done){
+                    *packet >> msg_type;
+                    recu.message_type = static_cast<MsgProtocole>(msg_type) ;
+                    recu.data_packet = std::move(packet);
+                    event_queu.push_back(recu);
+                    std::cout << " LOGS!!! PAS ENCORE COMFIGURER" << std::endl;
+                }
             };
         };
 
-        void tratemessages(){
-            for (std::array<char,10>&  message : messages){
-                std::cout.write(message.data(),10);
-                std::cout << '\n';
+        void sendReponse(){
+            for (auto it = rep_queu.begin(); it != rep_queu.end(); ){
+                auto& rep = *it;
+
+                if (rep.synchro == true){
+                    for (auto& client : client_list){
+                        if(client.sock->getRemoteAddress() != rep.client.sock->getRemoteAddress()){
+                            client.sock->send(*(rep.packet));
+                        }
+                    }
+                
+                }else{
+                    rep.client.sock->send(*(rep.packet));
+                }
+            it = rep_queu.erase(it);
             };
         };
 
-        void reponse(){
-            for (sf::TcpSocket& client : liste_client){
-                client.send("messages recu",13);
-            };
-        };
-
-    
 };
 
-int main(){   // juste pour tester
-    ServerNetworkManager server;
-    server.start();
-    for (int i =0; i< 5; i++){
-        server.accept();
-        server.getmessages();
-        server.tratemessages();
-        server.reponse();
-    };
-    
-    return 0;
-}
+
+
