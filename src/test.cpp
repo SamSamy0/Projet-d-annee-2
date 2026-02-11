@@ -15,7 +15,9 @@ int main() {
             if (ev->is<sf::Event::Closed>()) {
                 window.close();
             }
+            map.detectZooming(*ev);
         }
+        map.detectMovement();
         map.displayMap(window); // dessiner à chaque frame
     }
 
