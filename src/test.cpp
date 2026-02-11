@@ -4,7 +4,7 @@
 using namespace std;
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({1200, 800}), "Test");
+    sf::RenderWindow window(sf::VideoMode({1200, 800}), "Test", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
 
     Map map(4, "hello", 800, 1200, 2); // en supposant que tu as un constructeur correct

@@ -1,8 +1,9 @@
 #pragma once
 
 class Zoom {
-    float facteurZoom_{4};
+    float facteurZoom_;
     public :
+        Zoom();
         float getZoom() const;
         void zoomIn();
         void zoomOut();

@@ -8,13 +8,18 @@ using namespace std;
 
 class Move {
 	public :
-		float positionX_{600};
-		float positionY_{400};
-		Move();
-		void goLeft();
-		void goRight();
-		void goTop();
-		void goDown();
+		float positionX_;
+		float positionY_;
+		float moveSpeed_;
+		float minimumHeight_;
+		float maximumHeight_;
+		float minimumWidth_;
+		float maximumWidth_;
+		Move(float width, float height);
+		void goLeft(float zoom);
+		void goRight(float zoom);
+		void goTop(float zoom);
+		void goDown(float zoom);
 };	
 	
 
