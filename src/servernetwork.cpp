@@ -33,9 +33,11 @@ struct Reponse{
 class ServerNetworkManager{
     sf::TcpListener listener;
     std::vector<Client> client_list;
-    std::deque<Event> event_queu;
+    
     std::deque<Reponse> rep_queu;
     public:
+
+
 
         bool start(){
             if (listener.listen(5000) == sf::Socket::Done){

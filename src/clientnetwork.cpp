@@ -14,6 +14,10 @@ class ClientNetworkManager{
     std::deque<ServerRep> reponse;
     public:
         
+        std::deque<ServerRep>& getQueuRep(){
+            return reponse;
+        }
+
         bool connect(){
             socket.setBlocking(false);
 
@@ -33,7 +37,7 @@ class ClientNetworkManager{
                 rep.message_type = static_cast<MsgProtocole>(type_mess);
                 rep.data_packet = std::move(packet);
 
-                reponse.push_back(rep);
+                reponse.push_back(std::move(rep));
                  
             }
         }
