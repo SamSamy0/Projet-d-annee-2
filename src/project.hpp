@@ -3,10 +3,10 @@
 #include <string>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "map.hpp"
 
 
 class Tool;
+class Map;
 
 
 
@@ -17,6 +17,7 @@ class Project{
 
 
 public:
+  Project(); //TODO: à définir avec Adam
   float getScale(); 
 
 };

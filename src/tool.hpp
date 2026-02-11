@@ -1,13 +1,13 @@
 #pragma once 
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "project.hpp"
-#include "layer.hpp"
 
 
-//NOTE: Quand ces classes seront codés il faudra inclure les hpp et supprimer les déclarations 
 class ClientNetworkManager;
+class Project;
+class Layer;
 
+enum class typeOutilsPixel;  
 enum Shape{
   SQUARE,
   DIAMOND,
@@ -15,41 +15,47 @@ enum Shape{
 };
 
 
+
 class Tool{
 protected:
 
-  std::shared_ptr<Project> project;
-  bool is_selected_;
-  std::string name_;
+  std::shared_ptr<Project> project_;
+  bool is_selected_ = false;
+  typeOutilsPixel name_;
 
 public:
+  Tool(std::shared_ptr<Project> project,typeOutilsPixel name);
   std::shared_ptr<Project> getProject();
   float getScale();
   virtual void getMessage(const ClientNetworkManager& network) const;
   virtual void sendMessage(const ClientNetworkManager& network) const;
+  virtual ~Tool() = default;
 };
+
+
+
 
 class Brush{
 protected:
-  float size_m_ = 0; //WARNING: (la valeur par défaut peut changer)
+  sf::Vector2f size_m_ = sf::Vector2f(0,0); //WARNING: (la valeur par défaut peut changer)
 public:
-  void setSize(float s);
+  Brush() = default;
+  void setSize(float x, float y);
   virtual void drawOn(Layer& couche,sf::Vector2f pos) = 0;
   virtual ~Brush() = default;
-
 };
 
 
 
-class PixelTool: public Tool{};
 
-class PixelBrush : public PixelTool, public Brush{
+class PixelBrush : public Tool, public Brush{
   sf::Color color_;
   Shape shape_;
-  bool is_erraser_;
+  bool is_erraser_ = false;
 
 
 public:
+  PixelBrush(std::shared_ptr<Project> project,typeOutilsPixel name); 
   void setColor(sf::Color c);
   void setShape(Shape s);
   void drawOn(Layer& couche,sf::Vector2f pos);
@@ -57,6 +63,6 @@ public:
 };
 
 
-class PixelShift : public PixelTool{};
+class PixelShift : public Tool{};
 class SpriteTool : public Tool{};
 

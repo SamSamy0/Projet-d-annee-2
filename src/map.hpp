@@ -8,13 +8,15 @@
 using namespace std;
 
 class Moving;
+class Project;
 
 class Map {
-    Moving move_;
+    Map(); //TODO: à définir avec Adam
+    unique_ptr<Project> project;
+    // Moving move_;
     int id;
     string mapName_;
-    float height_;
-    float width_;
+    sf::Vector2u size ;
     float scale_;
     vector<Layer> layers_;
     public :
