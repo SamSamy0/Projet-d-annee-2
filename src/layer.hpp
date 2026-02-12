@@ -27,7 +27,7 @@ class PixelLayer : public Layer{
   sf::Sprite offset_;
 
 public:
-  PixelLayer();//TODO: à définir 
+  PixelLayer(std::string name);//TODO: à définir 
 
   sf::RenderTexture& getTexture();
   void draw(sf::Drawable& s);

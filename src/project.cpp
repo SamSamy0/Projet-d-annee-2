@@ -3,5 +3,5 @@
 
 
 
-float Project::getScale(){return map_->getScale();}
+unsigned int Project::getScale(){return map_->getScale();}
 

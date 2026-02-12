@@ -4,6 +4,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "layer.hpp"
+//TODO: DEFINIR DES VALEURS MAX ET MIN POUR LA SIZE, LA SCALE
 
 using namespace std;
 
@@ -16,14 +17,14 @@ class Map {
     // Moving move_;
     int id;
     string mapName_;
-    sf::Vector2u size ;
-    float scale_;
+    sf::Vector2u size_ ;
+    unsigned int scale_;
     vector<Layer> layers_;
     public :
         float getWidth() const ;
         float getHeight() const ;
         string getName() const ;
-        float getScale() const ;
+        unsigned int getScale() const ;
         vector<Layer>& getLayers() ;
         void insertLayer(const Layer& layer, int depth) ;
         void displayMap(sf::RenderWindow& window) ;

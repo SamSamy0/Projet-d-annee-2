@@ -18,7 +18,7 @@ class Project{
 
 public:
   Project(); //TODO: à définir avec Adam
-  float getScale(); 
+  unsigned int getScale(); 
 
 };
 
