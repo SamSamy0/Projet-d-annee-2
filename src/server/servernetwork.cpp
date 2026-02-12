@@ -5,26 +5,11 @@
 #include <memory>
 #include <deque>
 #include "protocol.hpp"
+#include "messages.cpp"
 
 
 
 
-
-struct Client{
-    int id = 0;
-    std::shared_ptr<sf::TcpSocket> sock;
-    sf::IpAddress getAddress(){
-        return sock->getRemoteAddress();
-    }
-};
-
-
-struct Event{
-    Client client;
-    MsgProtocole message_type;
-    std::shared_ptr<sf::Packet> data_packet;
-
-};
 
 struct Reponse{
     Client client;
@@ -37,7 +22,7 @@ struct Reponse{
 class ServerNetworkManager{
     sf::TcpListener listener;
     std::vector<Client> client_list;
-    std::deque<Event> event_queu;
+    std::deque<std::unique_ptr<Message>> message_queu;
     std::deque<Reponse> rep_queu;
     public:
 
@@ -54,7 +39,6 @@ class ServerNetworkManager{
         //accepte les clients qui se connectes
         bool accept(){
 
-            //crée un pointeur vers le socket client
             auto socket_client = std::make_shared<sf::TcpSocket>();
 
             
@@ -77,18 +61,11 @@ class ServerNetworkManager{
         void getMessages(){
             for (auto& client : client_list){
 
-                Event recu;
-                recu.client = client;
                 auto packet = std::make_shared<sf::Packet>();
-                uint8_t msg_type;
                 
                 if (client.sock->receive(*packet) == sf::Socket::Done){
-                    *packet >> msg_type;
-                    recu.message_type = static_cast<MsgProtocole>(msg_type) ;
-                    recu.data_packet = std::move(packet);
-                    event_queu.push_back(recu);
-                    
-                    std::cout << " LOGS!!! PAS ENCORE COMFIGURER" << std::endl;
+                    auto msg = MessageFactory(packet,client);
+                    message_queu.push_back(std::move(msg));
                 }
             };
         };
