@@ -8,8 +8,8 @@ using namespace std;
 
 // ----- Implémentation des méthodes Map -----
 
-float Map::getWidth() const { return width_; }
-float Map::getHeight() const { return height_; }
+float Map::getWidth() const { return size_.x; }
+float Map::getHeight() const { return size_.y; }
 string Map::getName() const { return mapName_; }
 unsigned int Map::getScale() const { return scale_; }
 vector<Layer>& Map::getLayers() { return layers_; }
@@ -17,7 +17,7 @@ void Map::insertLayer(const Layer& layer, int depth) { layers_.insert(layers_.be
 void Map::displayMap(sf::RenderWindow& window) {
     window.clear();
     sf::View mapView;
-    mapView.setSize(sf::Vector2f(width_, height_));
+    mapView.setSize(sf::Vector2f(size_.x, size_.y));
     mapView.setCenter(sf::Vector2f(positionX_, positionY_));
     mapView.zoom(zoom_.getZoom());
     window.setView(mapView);
