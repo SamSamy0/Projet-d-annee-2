@@ -1,12 +1,11 @@
-#pragma once 
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
-
 
 class User;
 class Map;
 
-class Layer{
+class Layer {
 protected:
   std::shared_ptr<Map> map_;
   std::string name_;
@@ -16,30 +15,25 @@ protected:
 
 public:
   Layer(std::string name);
-  virtual void draw(sf::Drawable& s) = 0;
+  virtual void draw(sf::Drawable &s) = 0;
   virtual ~Layer() = default;
-
 };
 
-class PixelLayer : public Layer{
+class PixelLayer : public Layer {
 
   sf::RenderTexture texture_;
   sf::Sprite offset_;
 
 public:
-  PixelLayer(std::string name);//TODO: à définir 
+  PixelLayer(std::string name); // TODO: à définir
 
-  sf::RenderTexture& getTexture();
-  void draw(sf::Drawable& s);
-  void errase(sf::Drawable& s);
-
-
+  sf::RenderTexture &getTexture();
+  void draw(sf::Drawable &s);
+  void errase(sf::Drawable &s);
 };
-class SpriteLayer : public Layer{
-
+class SpriteLayer : public Layer {
 
 public:
-  SpriteLayer(); //TODO: à définir
-  void draw(sf::Drawable& s);
-
+  SpriteLayer(); // TODO: à définir
+  void draw(sf::Drawable &s);
 };
