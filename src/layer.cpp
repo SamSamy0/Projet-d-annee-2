@@ -19,3 +19,5 @@ void PixelLayer::errase(sf::Drawable &s) {
   texture_.draw(s, sf::BlendNone);
   texture_.display();
 }
+
+void PixelLayer::shift(sf::Vector2u v){} //TODO: à défini

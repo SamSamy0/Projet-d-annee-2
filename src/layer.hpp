@@ -30,6 +30,7 @@ public:
   sf::RenderTexture &getTexture();
   void draw(sf::Drawable &s);
   void errase(sf::Drawable &s);
+  void shift(sf::Vector2u v);
 };
 class SpriteLayer : public Layer {
 

@@ -20,8 +20,8 @@ void PixelBrush::setColor(sf::Color c) {
 void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setErraser() { is_erraser_ = !is_erraser_; }
 
-void PixelBrush::drawOn(Layer &couche, sf::Vector2u pos) {
-  PixelLayer *pixellayer = dynamic_cast<PixelLayer *>(&couche);
+void PixelBrush::drawOn(Layer &layer, sf::Vector2u pos) {
+  PixelLayer *pixellayer = dynamic_cast<PixelLayer *>(&layer);
   sf::Vector2f rounded_pos = sf::Vector2f(std::round(pos.x), std::round(pos.y));
 
   switch (shape_) {
@@ -64,4 +64,11 @@ void PixelBrush::drawOn(Layer &couche, sf::Vector2u pos) {
     break;
   }
   }
+}
+
+
+void PixelShift::shiftOn(Layer& layer, sf::Vector2u pos_1, sf::Vector2u pos_2){
+  PixelLayer *pixellayer = dynamic_cast<PixelLayer *>(&layer);
+  sf::Vector2u vect = sf::Vector2u(pos_2.x-pos_1.x, pos_2.y-pos_1.y); //Vecteur du déplacement
+  pixellayer->shift(vect);
 }

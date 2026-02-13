@@ -48,5 +48,12 @@ public:
   void setErraser();
 };
 
-class PixelShift : public Tool {};
+class PixelShift : public Tool {
+
+
+
+public:
+  void shiftOn(Layer& couche, sf::Vector2u pos_1, sf::Vector2u pos_2);
+
+};
 class SpriteTool : public Tool {};
