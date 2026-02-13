@@ -4,15 +4,22 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-#include <view.hpp>
-
 using namespace std;
 
 class Move {
-	View& view_;
 	public :
-		Move(const View& view) : view_{view} {}
-		void goLeft() {}
+		float positionX_;
+		float positionY_;
+		float moveSpeed_;
+		float minimumHeight_;
+		float maximumHeight_;
+		float minimumWidth_;
+		float maximumWidth_;
+		Move(float width, float height);
+		void goLeft(float zoom);
+		void goRight(float zoom);
+		void goTop(float zoom);
+		void goDown(float zoom);
 };	
 	
 

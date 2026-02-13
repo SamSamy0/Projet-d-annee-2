@@ -1,14 +1,28 @@
-CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++17
-LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
+CXX      := g++
+CXXFLAGS := -std=c++20 -Wall -Wextra -O2
 
-TARGET = carte
-SRC = carte.cpp
+SFML_PREFIX := $(shell brew --prefix sfml 2>/dev/null || brew --prefix)
 
-all: 
+INCLUDES := -I$(SFML_PREFIX)/include
+LDFLAGS  := -L$(SFML_PREFIX)/lib
+LDLIBS   := -lsfml-graphics -lsfml-window -lsfml-system
 
-$(TARGET): $(SRC)
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
+TARGET := test
+
+# 🔥 AJOUT DE move.cpp ICI
+SRC := test.cpp map.cpp zoom.cpp move.cpp
+
+OBJ := $(SRC:.cpp=.o)
+
+all: $(TARGET)
+
+$(TARGET): $(OBJ)
+	$(CXX) $(OBJ) -o $@ $(LDFLAGS) $(LDLIBS)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -f $(TARGET)
+	rm -f $(OBJ) $(TARGET)
+
+.PHONY: all clean

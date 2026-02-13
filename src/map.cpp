@@ -1,43 +1,81 @@
-#include <iostream>
+#include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
-#include <SFML/Graphics.hpp>
 #include "map.hpp"
+#include <SFML/Config.hpp>
+#include <iostream>
 
 using namespace std;
 
-// ----- Implémentation des méthodes Map -----
+Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<Layer> layers) : 
+    id_{mapId}, size_{size}, 
+    scale_{scale}, move_{(float)(size_.x), (float)(size_.y)} {
+    viewMap_.setSize(sf::Vector2f(size_.x, size_.y));
+    viewMap_.setCenter(sf::Vector2f(size_.x / 2.f, size_.y / 2.f));
+}
 
-float Map::getWidth() const { return size_.x; }
-float Map::getHeight() const { return size_.y; }
-string Map::getName() const { return mapName_; }
+sf::Vector2u Map::getSize()const {return size_;}
+
 unsigned int Map::getScale() const { return scale_; }
+
 vector<Layer>& Map::getLayers() { return layers_; }
-void Map::insertLayer(const Layer& layer, int depth) { layers_.insert(layers_.begin() + depth, layer) ; }
-void Map::displayMap(sf::RenderWindow& window) {
-    window.clear();
-    sf::View mapView;
-    mapView.setSize(sf::Vector2f(size_.x, size_.y));
-    mapView.setCenter(sf::Vector2f(positionX_, positionY_));
-    mapView.zoom(zoom_.getZoom());
-    window.setView(mapView);
+
+// void Map::insertLayer(Layer& layer, int depth) { layers_.insert(layers_.begin() + depth, layer) ; }
+
+void Map::displayMap(sf::RenderWindow& window)
+{
+   
+    // On crée la map => zone dessinable
+    sf::RectangleShape map;
+    map.setSize(sf::Vector2f(size_.x, size_.y));
+    map.setOrigin(sf::Vector2f((float)(size_.x) / 2, (float)(size_.y) / 2));
+    map.setPosition(sf::Vector2f((float)(size_.x) / 2, (float)(size_.y) / 2));
+    map.setFillColor(sf::Color::White);
+    
+    // Pour éviter que SFML n'étire la carte si celle-ci n'a pas la meme taille que la fenêtre, on utilise un système de ratio
+    // Note : idée proposée par ChatGPT !!
+    float windowRatio = static_cast<float>(window.getSize().x) / window.getSize().y;
+    float mapRatio = (float)(size_.x) / (float)(size_.y);
+    float zoomFactor = zoom_.getZoom();
+
+    if (windowRatio > mapRatio) {
+        float newWidth = size_.y * windowRatio;
+        viewMap_.setSize(sf::Vector2f(newWidth * zoomFactor, size_.y * zoomFactor));
+    } else {
+        float newHeight = size_.x / windowRatio;
+        viewMap_.setSize(sf::Vector2f(size_.x * zoomFactor, newHeight * zoomFactor));
+    }
+    // Fin de l'idée de ChatGPT
+    
+    viewMap_.setCenter(sf::Vector2f(move_.positionX_ + (float)(size_.x) / 2, move_.positionY_ + (float)(size_.y) / 2));
+
+    // On règle la fenêtre et on l'affiche
+    window.clear(sf::Color(60, 60, 60));
+    window.setView(viewMap_);
+    window.draw(map);
     window.display();
 }
-void Map::detectMovement() {
-    if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>()) { // regarde si un event c'est produit (l'utilisateur a appuyé sur une touche)
-                switch (keyPressed->code) {
-                    case sf::Keyboard::Key::Z || sf::Keyboard::Key::Up // check s'il veut monter
-                        move_.goTop();
-                        break;
-                    case sf::Keyboard::Key::Q || sf::Keyboard::Key::Left // check s'il veut aller à gauche
-                        move_.goLeft();
-                        break;
-                    case sf::Keyboard::Key::D || sf::Keyboard::Key::Right // check s'il veut aller à droite
-                        move_.goRight();
-                        break;
-                    default: // check s'il veut descendre
-                        move_.goDown();
-                }
-        
-            }
+
+void Map::detectZooming(sf::Event event) {
+    if (const auto* mouse = event.getIf<sf::Event::MouseWheelScrolled>()) {
+        if (mouse->delta > 0) { // regarde si l'utilisateur veut faire un zoom avant
+            zoom_.zoomIn(); 
+        }
+        else if (mouse->delta < 0) {  // regarde si l'utilisateur veut faire un zoom arrière
+            zoom_.zoomOut();
+        }
+    }  
+}
+
+void Map::detectMovement()
+{
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))) { // regarde si l'utilisateur veut aller à gauche
+        move_.goLeft(zoom_.getZoom());
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))) { // regarde si l'utilisateur veut aller à droite
+        move_.goRight(zoom_.getZoom());
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))) { // regarde si l'utilisateur veut aller en haut
+        move_.goTop(zoom_.getZoom());
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))) { // regarde si l'utilisateur veut aller en bas
+        move_.goDown(zoom_.getZoom());
+    }
 }

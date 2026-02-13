@@ -3,7 +3,7 @@
 Layer::Layer(std::string name) : name_{name} {}
 
 PixelLayer::PixelLayer(std::string name) : Layer(name) {
-  if(!texture_.resize(sf::Vector2u(map_->getWidth(),map_->getHeight())){
+  if(!texture_.resize(sf::Vector2u(map_->getSize(),map_->getSize())){
     // NOTE:GERER L'ERREUR 
     }
     offset_.setTexture(texture_.getTexture());
