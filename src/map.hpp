@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 #include <SFML/Graphics.hpp>
@@ -21,13 +22,13 @@ class Map {
     Zoom zoom_;
     Move move_;
     sf::View viewMap_;
-    vector<Layer> layers_;
+    vector<shared_ptr<Layer>> layers_;
 public:
-    Map(int mapId,sf::Vector2u size , unsigned int scale, vector<Layer> layers);
+    Map(int mapId,sf::Vector2u size , unsigned int scale, vector<shared_ptr<Layer>> layers);
     sf::Vector2u getSize() const;
     unsigned int getScale() const;
-    vector<Layer>& getLayers();
-    void insertLayer(Layer& layer, int depth);
+    vector<shared_ptr<Layer>>& getLayers();
+    void insertLayer(shared_ptr<Layer> layer, int depth);
     void displayMap(sf::RenderWindow& window);
     void closeWindowManager(sf::RenderWindow& window, const sf::Event& ev);
     void detectMovement();

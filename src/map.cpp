@@ -7,9 +7,9 @@
 
 using namespace std;
 
-Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<Layer> layers) : 
-    id_{mapId}, size_{size}, 
-    scale_{scale}, move_{(float)(size_.x), (float)(size_.y)} {
+Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
+    id_{mapId}, size_{size},
+    scale_{scale}, move_{(float)(size_.x), (float)(size_.y)}, layers_{layers} {
     viewMap_.setSize(sf::Vector2f(size_.x, size_.y));
     viewMap_.setCenter(sf::Vector2f(size_.x / 2.f, size_.y / 2.f));
 }
@@ -18,9 +18,9 @@ sf::Vector2u Map::getSize()const {return size_;}
 
 unsigned int Map::getScale() const { return scale_; }
 
-vector<Layer>& Map::getLayers() { return layers_; }
+vector<shared_ptr<Layer>>& Map::getLayers() { return layers_; }
 
-// void Map::insertLayer(Layer& layer, int depth) { layers_.insert(layers_.begin() + depth, layer) ; }
+void Map::insertLayer(shared_ptr<Layer> layer, int depth) { layers_.insert(layers_.begin() + depth, layer) ; }
 
 void Map::displayMap(sf::RenderWindow& window)
 {
