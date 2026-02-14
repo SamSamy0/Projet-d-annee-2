@@ -1,78 +1,46 @@
-#include <SFML/Network.hpp>
-#include <vector>
-#include <iostream>
-#include <array>
-#include <memory>
-#include <deque>
-#include "protocol.hpp"
+#include "messages.hpp"
 
 
-struct Client{
-    int id = 0;
-    std::shared_ptr<sf::TcpSocket> sock;
-    sf::IpAddress getAddress(){
-        return sock->getRemoteAddress();
-    }
-};
+
+sf::IpAddress Client::getAddress(){
+    return sock->getRemoteAddress();
+}
 
  
-struct Message {
-    Client client;
-
-    explicit Message(const Client& c) : client(c) {}
-    virtual void process() = 0;
-    virtual ~Message() = default;
-};
+LoginMessage::LoginMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c): Message(c){
+    *data_packet >> pseudo >> password;
+}
 
 
-struct LoginMessage : Message{
-    std::string pseudo;
-    std::string password;
-    LoginMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c)
-        : Message(c)
-    {
-        *data_packet >> pseudo >> password;
-    }
-    void process() override{
-        //logique de traitement
-    }
-};
+void LoginMessage::process(){
+    //logique de traitement
+}
 
 
-struct RegisterMessage : Message{
-    std::string pseudo;
-    std::string password;
-    RegisterMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c)
-        : Message(c)
-    {
-        *data_packet >> pseudo >> password;
-    }
-    void process() override{
-        //logique de traitement
-    }
-};
+
+RegisterMessage::RegisterMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c): Message(c){
+    *data_packet >> pseudo >> password;
+}
 
 
-struct CreateProjectMessage : Message{
-    float size;
-    float scale;
-    CreateProjectMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c)
-        : Message(c)
-    {
-        *data_packet >> size >> scale;
-    }
-    void process() override{
-        //logique de traitement
-    }
-};
+void RegisterMessage::process() {
+    //logique de traitement
+}
 
 
-struct GetProjectDataMessage : Message{
+CreateProjectMessage::CreateProjectMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c): Message(c){
+    *data_packet >> size >> scale;
+}
+
+
+void CreateProjectMessage::process() {
+    //logique de traitement
+}
+
     
-    void process() override{
-        //logique de traitement
-    }
-};
+void GetProjectDataMessage::process() {
+    //logique de traitement
+}
 
 
 std::unique_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet,Client client){

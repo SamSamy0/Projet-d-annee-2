@@ -1,112 +1,86 @@
-#include <SFML/Network.hpp>
-#include <vector>
-#include <iostream>
-#include <array>
-#include <memory>
-#include <deque>
-#include "protocol.hpp"
-#include "messages.cpp"
+#include "servernetwork.hpp"
 
 
-
-
-
-struct Reponse{
-    Client client;
-    std::vector<int> id_list;
-    MsgProtocole message_type;
-    std::unique_ptr<sf::Packet> packet;
+bool ServerNetworkManager::start(){
+    if (listener.listen(5000) == sf::Socket::Done){  
+        std::cout << "Le server écoute sur le port 5000" << std::endl;
+        listener.setBlocking(false);  // met le listener en non-bloquant
+        return true;
+    }else return false;    
 };
 
 
-class ServerNetworkManager{
-    sf::TcpListener listener;
-    std::vector<Client> client_list;
-    std::deque<std::unique_ptr<Message>> message_queu;
-    std::deque<Reponse> rep_queu;
-    public:
+//accepte les clients qui se connectes
+bool ServerNetworkManager::accept(){
 
-        // lance le serveur en ecoute
-        bool start(){
-            if (listener.listen(5000) == sf::Socket::Done){  
-                std::cout << "Le server écoute sur le port 5000" << std::endl;
-                listener.setBlocking(false);  // met le listener en non-bloquant
-                return true;
-            }else return false;    
-        };
+    auto socket_client = std::make_shared<sf::TcpSocket>();
 
+    
+    if (listener.accept(*socket_client) == sf::Socket::Done) {
 
-        //accepte les clients qui se connectes
-        bool accept(){
+        socket_client->setBlocking(false);
 
-            auto socket_client = std::make_shared<sf::TcpSocket>();
+        Client new_client;
+        new_client.sock = socket_client;
 
-            
-            if (listener.accept(*socket_client) == sf::Socket::Done) {
+        client_list.push_back(new_client);
+        std::cout << "nouvelle machine connécté: " << socket_client->getRemoteAddress() << std::endl ;
 
-                socket_client->setBlocking(false);
-
-                Client new_client;
-                new_client.sock = socket_client;
-
-                client_list.push_back(new_client);
-                std::cout << "nouvelle machine connécté: " << socket_client->getRemoteAddress() << std::endl ;
-
-                return true;
-            } else return false;
-        };
-
-
-        //recois les messages de tout les clients
-        void getMessages(){
-            for (auto& client : client_list){
-
-                auto packet = std::make_shared<sf::Packet>();
-                
-                if (client.sock->receive(*packet) == sf::Socket::Done){
-                    auto msg = MessageFactory(packet,client);
-                    message_queu.push_back(std::move(msg));
-                }
-            };
-        };
-
-
-        //envoi des reponses au client
-        void sendReponse(){
-            for (auto it = rep_queu.begin(); it != rep_queu.end(); ){
-                auto& rep = *it;
-
-                //si c'est pour une connection
-                if (rep.message_type == MsgProtocole::AUTH_RESULT){
-
-                    //associe au socket l'id du client
-                    for (auto& client: client_list){
-                        if (rep.client.getAddress() == client.getAddress()){
-                            client.id = rep.id_list[0];
-                        }
-                    }
-
-                    //envoie la reponse serveur
-                    rep.client.sock->send(*(rep.packet));
-                }
-
-                //sinon
-                else{
-                    //envoi a tout les clients de la liste d'id
-                    for (auto id : rep.id_list){
-                        for (auto& client: client_list){
-                            if (id == client.id){
-                                client.sock->send(*(rep.packet));
-                            }
-                        }
-                    }
-                }
-                
-            it = rep_queu.erase(it);
-            };
-        };
-
+        return true;
+    } else return false;
 };
+
+
+//recois les messages de tout les clients
+void ServerNetworkManager::getMessages(){
+    for (auto& client : client_list){
+
+        auto packet = std::make_shared<sf::Packet>();
+        
+        if (client.sock->receive(*packet) == sf::Socket::Done){
+            auto msg = MessageFactory(packet,client);
+            message_queu.push_back(std::move(msg));
+        }
+    };
+};
+
+
+//envoi des reponses au client
+void ServerNetworkManager::sendReponse(){
+    for (auto it = rep_queu.begin(); it != rep_queu.end(); ){
+        auto& rep = *it;
+
+        //si c'est pour une connection
+        if (rep.message_type == MsgProtocole::AUTH_RESULT){
+
+            //associe au socket l'id du client
+            for (auto& client: client_list){
+                if (rep.client.getAddress() == client.getAddress()){
+                    client.id = rep.id_list[0];
+                }
+            }
+
+            //envoie la reponse serveur
+            rep.client.sock->send(*(rep.packet));
+        }
+
+        //sinon
+        else{
+            //envoi a tout les clients de la liste d'id
+            for (auto id : rep.id_list){
+                for (auto& client: client_list){
+                    if (id == client.id){
+                        client.sock->send(*(rep.packet));
+                    }
+                }
+            }
+        }
+        
+    it = rep_queu.erase(it);
+    };
+};
+
+
 
 
 
