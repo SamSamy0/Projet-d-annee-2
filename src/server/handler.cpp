@@ -3,11 +3,13 @@
 #include <deque>
 #include <memory>
 #include "protocol.hpp"
-#include "clientnetwork.cpp"
+#include "clientnetwork.hpp"
 
-class Handler{
-    ClientNetworkManager& manager;
-    public:
-    Handler(ClientNetworkManager& m): manager(m) {}
-    
-}
+
+void ClientEventHandler::process(ServerRep& event){
+    switch(event.message_type){
+        case AUTH_RESULT:
+            handleAuth(event);
+            break;
+    }
+};
