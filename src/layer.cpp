@@ -22,4 +22,6 @@ void PixelLayer::errase(sf::Drawable &s) {
   texture_.display();
 }
 
-void PixelLayer::shift(sf::Vector2u v){} //TODO: à défini
+void PixelLayer::shift(sf::Vector2i v){
+  offset_.move(sf::Vector2f(v));
+} 
