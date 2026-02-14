@@ -1,3 +1,6 @@
+#include <deque>
+#include "messages.cpp"
+
 class Worker{
-    std::deque<Event> event_queu;
-}
+    std::deque<Message> message_queu;
+};
