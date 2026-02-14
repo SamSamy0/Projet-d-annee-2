@@ -10,7 +10,7 @@ LDLIBS   := -lsfml-graphics -lsfml-window -lsfml-system
 TARGET := test
 
 # 🔥 AJOUT DE move.cpp ICI
-SRC := test.cpp map.cpp zoom.cpp move.cpp
+SRC := test.cpp map.cpp zoom.cpp move.cpp layer.o
 
 OBJ := $(SRC:.cpp=.o)
 

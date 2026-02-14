@@ -15,7 +15,7 @@ using namespace std;
 class Project;
 
 class Map {
-// unique_ptr<Project> project;
+    // shared_ptr<Project> project;
     int id_;
     sf::Vector2u size_;
     unsigned int scale_;

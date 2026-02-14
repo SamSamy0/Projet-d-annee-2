@@ -14,7 +14,7 @@ protected:
   bool Masked_ = false;
 
 public:
-  Layer(std::string name);
+  Layer(std::string name, std::shared_ptr<Map> map);
   virtual void draw(sf::Drawable &s) = 0;
   virtual ~Layer() = default;
 };
@@ -25,7 +25,7 @@ class PixelLayer : public Layer {
   sf::Sprite offset_;
 
 public:
-  PixelLayer(std::string name); // TODO: à définir
+  PixelLayer(std::string name, std::shared_ptr<Map> map);
 
   sf::RenderTexture &getTexture();
   void draw(sf::Drawable &s);
