@@ -1,11 +1,7 @@
 #include "messages.hpp"
 #include "protocol.hpp"
-
-
-
-sf::IpAddress Client::getAddress(){
-    return sock->getRemoteAddress();
-}
+#include "worker.hpp"
+#include "reponsequeue.hpp"
 
  
 LoginMessage::LoginMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c): Message(c){
@@ -14,7 +10,9 @@ LoginMessage::LoginMessage(std::shared_ptr<sf::Packet> data_packet, const Client
 
 
 void LoginMessage::process(Worker& worker){
-    //logique de traitement
+    client.id = worker.verifyLogin(this->pseudo, this->password);
+    Reponse rps;
+    rps.client = this->client;
 }
 
 
@@ -25,7 +23,7 @@ RegisterMessage::RegisterMessage(std::shared_ptr<sf::Packet> data_packet, const 
 
 
 void RegisterMessage::process(Worker& worker) {
-    //logique de traitement
+    client.id = worker.verifyLogin(this->pseudo, this->password);
 }
 
 

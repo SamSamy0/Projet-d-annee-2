@@ -7,15 +7,7 @@
 #include <SFML/Network.hpp>
 #include "protocol.hpp"
 #include "messages.cpp"
-
-
-
-struct Reponse{
-    Client client;
-    std::vector<int> id_list;
-    MsgProtocole message_type;
-    std::unique_ptr<sf::Packet> packet;
-};
+#include "reponsequeue.hpp"
 
 
 class ServerNetworkManager{

@@ -2,18 +2,10 @@
 #define MESSAGES_HPP
 
 #include <memory>
+#include "client.hpp"
 #include <SFML/Network.hpp>
 
 class Worker;
-
-
-
-struct Client{
-    int id = 0;
-    std::shared_ptr<sf::TcpSocket> sock;
-    
-    sf::IpAddress getAddress();
-};
 
 
 struct Message {
