@@ -13,7 +13,7 @@ LoginMessage::LoginMessage(std::shared_ptr<sf::Packet> data_packet, const Client
 }
 
 
-void LoginMessage::process(){
+void LoginMessage::process(Worker& worker){
     //logique de traitement
 }
 
@@ -24,7 +24,7 @@ RegisterMessage::RegisterMessage(std::shared_ptr<sf::Packet> data_packet, const 
 }
 
 
-void RegisterMessage::process() {
+void RegisterMessage::process(Worker& worker) {
     //logique de traitement
 }
 
@@ -34,12 +34,12 @@ CreateProjectMessage::CreateProjectMessage(std::shared_ptr<sf::Packet> data_pack
 }
 
 
-void CreateProjectMessage::process() {
+void CreateProjectMessage::process(Worker& worker) {
     //logique de traitement
 }
 
     
-void GetProjectDataMessage::process() {
+void GetProjectDataMessage::process(Worker& worker) {
     //logique de traitement
 }
 

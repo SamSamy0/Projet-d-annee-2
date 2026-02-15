@@ -1,4 +1,4 @@
-#include "projectsmanager.h"
+#include "projectsmanager.hpp"
 #include <QFile>
 #include <QJsonDocument>
 #include <QFileInfo>

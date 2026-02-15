@@ -1,3 +1,6 @@
+#ifndef MESSAGEQUEUE_H
+#define MESSAGEQUEUE_H
+
 #include <mutex>
 #include <condition_variable>
 #include <deque>
@@ -19,3 +22,5 @@ public:
     std::unique_ptr<Message> pop();
     void stop();
 };
+
+#endif
