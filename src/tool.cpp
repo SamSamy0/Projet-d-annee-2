@@ -3,8 +3,7 @@
 #include "map.hpp"
 #include <memory>
 
-Tool::Tool(std::shared_ptr<Map> map)
-    : map_{map}{}
+Tool::Tool(std::shared_ptr<Map> map) : map_{map}{}
 std::shared_ptr<Map> Tool::getMap() { return this->map_; }
 unsigned int Tool::getScale() { return map_->getScale(); }
 
@@ -13,8 +12,7 @@ void Brush::setSize(unsigned int x, unsigned int y = 0) {
   size_m_.y = y;
 }
 
-PixelBrush::PixelBrush(std::shared_ptr<Map> map)
-    : Brush(), Tool(map) {name_ = PIXELBRUSH;}
+PixelBrush::PixelBrush(std::shared_ptr<Map> map) :Tool(map),Brush() {name_ = PIXELBRUSH;}
 
 void PixelBrush::setColor(sf::Color c) {
   color_ = c;
@@ -68,7 +66,7 @@ void PixelBrush::drawOn(Layer &layer, sf::Vector2u pos) {
   }
 }
 
-PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map){}
+PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map){name_ = PIXELSHIFT;}
 
 void PixelShift::shiftOn(Layer& layer, sf::Vector2u pos_1, sf::Vector2u pos_2){
   PixelLayer *pixellayer = dynamic_cast<PixelLayer *>(&layer); //TODO: gérer l'erreur du cast
