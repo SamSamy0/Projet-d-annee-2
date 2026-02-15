@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "layer.hpp"
 #include "zoom.hpp"
 #include "move.hpp"
 
@@ -12,7 +11,8 @@
 
 using namespace std;
 
-class Project;
+// class Project;
+class Layer;
 
 class Map {
     // shared_ptr<Project> project;
@@ -23,12 +23,17 @@ class Map {
     Move move_;
     sf::View viewMap_;
     vector<shared_ptr<Layer>> layers_;
+    unsigned int selected_;
 public:
     Map(int mapId,sf::Vector2u size , unsigned int scale, vector<shared_ptr<Layer>> layers);
+    Map(int mapId,sf::Vector2u size , unsigned int scale);
     sf::Vector2u getSize() const;
     unsigned int getScale() const;
+    bool hasLayer() const;
     vector<shared_ptr<Layer>>& getLayers();
-    void insertLayer(shared_ptr<Layer> layer, int depth);
+    shared_ptr<Layer> getCurrentLayer();
+    void insertLayer(shared_ptr<Layer> layer);
+    void createPixelLayer();
     void displayMap(sf::RenderWindow& window);
     void closeWindowManager(sf::RenderWindow& window, const sf::Event& ev);
     void detectMovement();

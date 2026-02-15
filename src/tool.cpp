@@ -1,19 +1,21 @@
 #include "tool.hpp"
 #include "layer.hpp"
-#include "project.hpp"
+#include "map.hpp"
+#include <memory>
 
-std::shared_ptr<Project> Tool::getProject() { return this->project_; }
-unsigned int Tool::getScale() { return project_->getScale(); }
-Tool::Tool(std::shared_ptr<Project> project, typeOutilsPixel name)
-    : project_{project}, name_{name} {}
+Tool::Tool(std::shared_ptr<Map> map)
+    : map_{map}{}
+std::shared_ptr<Map> Tool::getMap() { return this->map_; }
+unsigned int Tool::getScale() { return map_->getScale(); }
 
 void Brush::setSize(unsigned int x, unsigned int y = 0) {
   size_m_.x = x;
   size_m_.y = y;
 }
 
-PixelBrush::PixelBrush(std::shared_ptr<Project> project, typeOutilsPixel name)
-    : Brush(), Tool(project, name) {}
+PixelBrush::PixelBrush(std::shared_ptr<Map> map)
+    : Brush(), Tool(map) {name_ = PIXELBRUSH;}
+
 void PixelBrush::setColor(sf::Color c) {
   color_ = c;
 } // NOTE: PEUT ETRE FAIRE UNE FONCTION PAR R G B A
@@ -66,6 +68,7 @@ void PixelBrush::drawOn(Layer &layer, sf::Vector2u pos) {
   }
 }
 
+PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map){}
 
 void PixelShift::shiftOn(Layer& layer, sf::Vector2u pos_1, sf::Vector2u pos_2){
   PixelLayer *pixellayer = dynamic_cast<PixelLayer *>(&layer); //TODO: gérer l'erreur du cast

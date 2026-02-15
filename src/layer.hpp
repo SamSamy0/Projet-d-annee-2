@@ -7,14 +7,14 @@ class Map;
 
 class Layer {
 protected:
-  std::shared_ptr<Map> map_;
+  sf::Vector2u size_;
   std::string name_;
   bool locked_ = false;
   // User lock_;
   bool Masked_ = false;
 
 public:
-  Layer(std::string name, std::shared_ptr<Map> map);
+  Layer(std::string name, sf::Vector2u size);
   virtual void draw(sf::Drawable &s) = 0;
   virtual ~Layer() = default;
 };
@@ -25,14 +25,16 @@ class PixelLayer : public Layer {
   sf::Sprite offset_;
 
 public:
-  PixelLayer(std::string name, std::shared_ptr<Map> map);
+  PixelLayer(std::string name, sf::Vector2u size);
 
   sf::RenderTexture &getTexture();
   void draw(sf::Drawable &s);
   void errase(sf::Drawable &s);
   void shift(sf::Vector2i v);
+  void display();
 };
 class SpriteLayer : public Layer {
+  std::vector<sf::Sprite> sprites_;
 
 public:
   SpriteLayer(); // TODO: à définir
