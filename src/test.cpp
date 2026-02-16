@@ -15,16 +15,10 @@ int main()
     window.setFramerateLimit(60);
 
     // 🔹 Création du projet
-<<<<<<< HEAD
     Project project(1, sf::Vector2u(500, 500), window);
-=======
-    Project project(20, sf::Vector2u(500, 500));
->>>>>>> a2ad2e28b449ff6dc02f111fa1fb80e2395bd9e9
 
     std::shared_ptr<Map> map = project.getMap();
 
-<<<<<<< HEAD
-=======
     project.getToolBar().selectTool(PIXELBRUSH);
     project.getToolBar().getSelectedTool()->setColor(sf::Color::Red);
     project.getToolBar().getSelectedTool()->setShape(DIAMOND);
@@ -37,7 +31,6 @@ int main()
 
 
 
->>>>>>> a2ad2e28b449ff6dc02f111fa1fb80e2395bd9e9
     while (window.isOpen())
     {
         while (auto event = window.pollEvent())
