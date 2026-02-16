@@ -12,8 +12,6 @@ using namespace std;
 Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
     id_{mapId}, size_{size},layers_{std::move(layers)},
     scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)}{
-    viewMap_.setSize(sf::Vector2f(size_.x, size_.y));
-    viewMap_.setCenter(sf::Vector2f(size_.x / 2.f, size_.y / 2.f));
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
 }
 
@@ -21,8 +19,6 @@ Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Lay
 Map::Map(int mapId, sf::Vector2u size , unsigned int scale) : 
     id_{mapId}, size_{size},
     scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)}{
-    viewMap_.setSize(sf::Vector2f(size_.x, size_.y));
-    viewMap_.setCenter(sf::Vector2f(size_.x / 2.f, size_.y / 2.f));
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
     createPixelLayer();
 }
@@ -50,7 +46,7 @@ shared_ptr<Layer> Map::getCurrentLayer(){
     return nullptr;}
     else{return layers_[selected_];}
 }
-void Map::displayMap(sf::RenderWindow& window)
+void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
 {
    
     // On crée la map => zone dessinable
@@ -68,23 +64,21 @@ void Map::displayMap(sf::RenderWindow& window)
 
     if (windowRatio > mapRatio) {
         float newWidth = size_.y * windowRatio;
-        viewMap_.setSize(sf::Vector2f(newWidth * zoomFactor, size_.y * zoomFactor));
+        viewMap.setSize(sf::Vector2f(newWidth * zoomFactor, size_.y * zoomFactor));
     } else {
         float newHeight = size_.x / windowRatio;
-        viewMap_.setSize(sf::Vector2f(size_.x * zoomFactor, newHeight * zoomFactor));
+        viewMap.setSize(sf::Vector2f(size_.x * zoomFactor, newHeight * zoomFactor));
     }
     // Fin de l'idée de ChatGPT
     
-    viewMap_.setCenter(sf::Vector2f(move_.positionX_ + (float)(size_.x) / 2, move_.positionY_ + (float)(size_.y) / 2));
+    viewMap.setCenter(sf::Vector2f(move_.positionX_ + (float)(size_.x) / 2, move_.positionY_ + (float)(size_.y) / 2));
 
     // On règle la fenêtre et on l'affiche
-    window.clear(sf::Color(60, 60, 60));
-    window.setView(viewMap_);
+   
     window.draw(map);
     for (auto& layer: layers_) {
         layer->drawLayer(window);
     }
-    //window.display();
 }
 
 void Map::detectZooming(sf::Event event) {

@@ -22,7 +22,6 @@ class Map {
     unsigned int scale_;
     Zoom zoom_;
     Move move_;
-    sf::View viewMap_;
     vector<shared_ptr<Layer>> layers_;
     unsigned int selected_;
 public:
@@ -35,7 +34,7 @@ public:
     shared_ptr<Layer> getCurrentLayer();
     void insertLayer(shared_ptr<Layer> layer);
     void createPixelLayer();
-    void displayMap(sf::RenderWindow& window);
+    void displayMap(sf::RenderWindow& window, sf::View& viewMap);
     void closeWindowManager(sf::RenderWindow& window, const sf::Event& ev);
     void detectMovement();
     void detectZooming(sf::Event event);
