@@ -5,6 +5,7 @@
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Text.hpp>
 #include <TGUI/Widgets/TextArea.hpp>
+#include <string>
 
 class Identifier {
 private:

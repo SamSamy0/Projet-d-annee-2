@@ -1,9 +1,7 @@
-#include "Menu.hpp"
-// #include "displayWindow.hpp"
+#include "displayWindow.hpp"
 
 int main() {
-  // AuthWindow windo;
-  MenuWin window;
+  AuthWindow window;
   window.run();
   return 0;
 }

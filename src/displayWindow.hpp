@@ -15,13 +15,15 @@ private:
   // Must verifiy if variable isLoggedIn is used
   bool isLoggedIn;
   sf::RenderWindow mainWindow;
-  tgui::Gui AuthGui;
+  sf::RenderWindow menuWindow;
+  // Authentification Interface
+  tgui::Gui gui;
   void initWidget();
   void updateTextSize();
   void processEvents();
   void login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd);
-  bool signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd);
-  void menuWindow();
+  void signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd);
+  void initMenuWidget();
   bool checkLogin();
   void loginWidget();
   // void menuWidget();

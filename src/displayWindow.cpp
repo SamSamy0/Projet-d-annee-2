@@ -6,7 +6,7 @@
 #include <TGUI/Text.hpp>
 #include <TGUI/Widgets/TextArea.hpp>
 
-bool AuthWindow::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
+void AuthWindow::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   // NOTE: I have to put the condition username 3-15 car
 
   for (auto i = DB.begin(); i != DB.end(); i++) {
@@ -16,22 +16,25 @@ bool AuthWindow::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
 
       usrname->setDefaultText("Username already taken or invalid ");
       pswd->setText("");
-      return false;
     }
   }
   // New user
   // WARNING: Je dois attendre le "Network Manager" de Tomas et Chinsou
   if (usrname->getText() != "") {
-    Identifier id = Identifier{static_cast<std::string>(usrname->getText()),
-                               static_cast<std::string>(pswd->getText())};
-    DB.push_back({id});
+    //     Identifier id =
+    //     Identifier{static_cast<std::string>(usrname->getText()),
+    //                                static_cast<std::string>(pswd->getText())};
+    DB.push_back({static_cast<std::string>(usrname->getText()),
+                  static_cast<std::string>(pswd->getText())});
     // NOTE: C'est ici que je devrai envoyer au serveur les identifiants de
     // l'utilisateur
-    std::cout << id.getusername() << "   " << pswd->getText() << std::endl;
+    std::cout << usrname->getText() << "   " << pswd->getText() << std::endl;
     // NOTE: Change mode LOGGIN -> MENU for changing what gui draws
   }
-  return true;
+  this->state = projectState::MENU;
+  initMenuWidget();
 }
+
 void AuthWindow::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   /* Envoyer l'identifiant et le password à la base de donnée.
    * On vérifie que la connexion est correct -> autre fonction
@@ -39,33 +42,33 @@ void AuthWindow::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
    * Tant qu'on est pas connecté, on reste sur la page de connexion
    * et un message est affiché
    */
-  // while (!Window::checkLogin()) {
-  //   // On affiche en boucle le menu de connexion
-  //   // Window::menuWindow();
-  //   usrname->setDefaultText("Wrong identifier(s)");
-  //   gui.draw();
+  // if (Identifiants correct){
+  // state = projectState::MENU;
+  // initMenuWidget();
+  //
+  // } else{
+  // usrname->setDefaultText("Wrong Identifier(s)");
+  // pswd->setText("");
   // }
-  /* Si on est connecté, le menu est affiché avec les projets.
-   * */
-  // Window::menuWindow();
+  //
 }
 void AuthWindow::loginWidget() {
   auto editBoxUsername = tgui::EditBox::create();
   editBoxUsername->setPosition({"37.5%", "25%"});
   editBoxUsername->setSize({"25%", "6.25%"});
   editBoxUsername->setDefaultText("Username...");
-  AuthGui.add(editBoxUsername, "Username");
+  gui.add(editBoxUsername, "Username");
 
   auto editBoxPassword = tgui::EditBox::copy(editBoxUsername);
   editBoxPassword->setPosition({"37.5%", "43.75%"});
   editBoxPassword->setDefaultText("Password...");
   editBoxPassword->setPasswordCharacter('*');
-  AuthGui.add(editBoxPassword, "Password");
+  gui.add(editBoxPassword, "Password");
 
   auto loginButton = tgui::Button::create("Login");
   loginButton->setPosition({"25%", "53.125%"});
   loginButton->setSize({"12.5%", "3.125%"});
-  AuthGui.add(loginButton);
+  gui.add(loginButton);
 
   // loginButton->onPress(&Window::login, this, editBoxUsername,
   // editBoxPassword);
@@ -73,7 +76,7 @@ void AuthWindow::loginWidget() {
   auto signInButton = tgui::Button::create("Sign in");
   signInButton->setPosition({"62.5%", "53.125%"});
   signInButton->setSize({"12.5%", "3.125%"});
-  AuthGui.add(signInButton);
+  gui.add(signInButton);
   signInButton->onPress(&AuthWindow::signIn, this, editBoxUsername,
                         editBoxPassword);
 }
@@ -85,7 +88,7 @@ void AuthWindow::loginWidget() {
 
 void AuthWindow::initWidget() {
   updateTextSize();
-  AuthGui.onViewChange([this] { updateTextSize(); });
+  gui.onViewChange([this] { updateTextSize(); });
 
   if (this->state == projectState::LOGIN) {
     AuthWindow::loginWidget();
@@ -98,12 +101,12 @@ void AuthWindow::initWidget() {
   // }
 }
 void AuthWindow::updateTextSize() {
-  const float windowHeight = AuthGui.getView().getRect().height;
-  AuthGui.setTextSize(static_cast<unsigned int>(0.03 * windowHeight));
+  const float windowHeight = gui.getView().getRect().height;
+  gui.setTextSize(static_cast<unsigned int>(0.03 * windowHeight));
 }
 void AuthWindow::processEvents() {
   while (const std::optional event = mainWindow.pollEvent()) {
-    AuthGui.handleEvent(*event);
+    gui.handleEvent(*event);
     // Close the Window
     if (event->is<sf::Event::Closed>())
       mainWindow.close();
@@ -116,17 +119,40 @@ void AuthWindow::processEvents() {
   }
 }
 
+void AuthWindow::initMenuWidget() {
+  gui.removeAllWidgets();
+  auto createProjB = tgui::Button::create("Créer Projet");
+  createProjB->setPosition({"62.5%", "31.25%"});
+  createProjB->setSize({"12.5%", "3.125%"});
+  gui.add(createProjB);
+
+  // loginButton->onPress(&Window::login, this, editBoxUsername,
+  // editBoxPassword);
+
+  auto joinProjB = tgui::Button::create("Rejoindre Projet");
+  joinProjB->setPosition({"62.5%", "18.75%"});
+  joinProjB->setSize({"12.5%", "3.125%"});
+  gui.add(joinProjB);
+}
+
 AuthWindow::AuthWindow()
     : mainWindow(sf::VideoMode::getDesktopMode(), "Game name",
                  sf::State::Fullscreen),
-      AuthGui(mainWindow) {
+      gui(mainWindow) {
   initWidget();
 }
 void AuthWindow::run() {
   while (mainWindow.isOpen()) {
     processEvents();
     mainWindow.clear(sf::Color::White);
-    AuthGui.draw();
+
+    if (AuthWindow::state == projectState::LOGIN ||
+        AuthWindow::state == projectState::MENU) {
+      gui.draw();
+
+    } else if (AuthWindow::state == projectState::MENU) {
+      // Display Game
+    }
     mainWindow.display();
   }
 }
