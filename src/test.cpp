@@ -23,9 +23,12 @@ int main()
 
     project.getToolBar().selectTool(PIXELBRUSH);
     project.getToolBar().getSelectedTool()->setColor(sf::Color::Red);
-    project.getToolBar().getSelectedTool()->setShape(SQUARE);
-    project.getToolBar().getSelectedTool()->setSize(2000,2000);
+    project.getToolBar().getSelectedTool()->setShape(DIAMOND);
+    project.getToolBar().getSelectedTool()->setSize(5,5);
     project.getToolBar().getSelectedTool()->drawOn(sf::Vector2i(200,200));
+    project.getToolBar().getSelectedTool()->setErraser();
+    project.getToolBar().getSelectedTool()->drawOn(sf::Vector2i(190,200));
+
 
 
 

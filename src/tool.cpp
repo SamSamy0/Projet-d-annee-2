@@ -58,10 +58,10 @@ void PixelBrush::drawOn(sf::Vector2i pos) {
     unsigned int size_y = (size_m_.y) * getScale();
     sf::ConvexShape diamond(4);
     diamond.setPoint(0, sf::Vector2f(size_x / 2, 0));      // top point
-    diamond.setPoint(1, sf::Vector2f(size_x / 2, size_y)); // botom point
-    diamond.setPoint(2, sf::Vector2f(size_x, size_y / 2)); // right point
-    diamond.setPoint(3, sf::Vector2f(size_x / 2, 0));      // left point
-    diamond.setOrigin(sf::Vector2f(size_x, size_y));
+      diamond.setPoint(1, sf::Vector2f(size_x, size_y / 2)); // right point
+    diamond.setPoint(2, sf::Vector2f(size_x / 2, size_y)); // botom point
+    diamond.setPoint(3, sf::Vector2f(0, size_y/2));      // left point
+    diamond.setOrigin(sf::Vector2f(size_x/2, size_y/2));
     diamond.setPosition(rounded_pos);
     is_erraser_ ? diamond.setFillColor(sf::Color::Transparent)
                 : diamond.setFillColor(color_);
