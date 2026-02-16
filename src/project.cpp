@@ -3,9 +3,12 @@
 #include "layer.hpp"
 #include "tool.hpp"
 #include <memory>
+#include "toolbar.hpp"
 
-Project::Project(unsigned int scale, sf::Vector2u size, sf::RenderWindow &window): window_{window}, map_{std::make_shared<Map>(1,size,scale)},
-  toolbar_{map_}{}
+
+
+Project::Project(unsigned int scale, sf::Vector2u size, sf::RenderWindow &window): map_{std::make_shared<Map>(1,size,scale)},
+  window_{window},toolbar_{map_}{}
 
 unsigned int Project::getScale() { return map_->getScale(); }
 std::shared_ptr<Map> Project::getMap(){return map_;}

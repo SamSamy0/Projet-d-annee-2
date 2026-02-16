@@ -14,10 +14,10 @@ class User;
 class Project{
   // std::vector<User> users;
   // Chat chat;
+  std::shared_ptr<Map> map_;
   sf::RenderWindow& window_;
   sf::View viewMap_;
   sf::View viewUI_;
-  std::shared_ptr<Map> map_;
   ToolBar toolbar_;
 
 public:
@@ -27,4 +27,5 @@ public:
   void display();
   void displayScale();
   ToolBar getToolBar();
+  void displayToolBar();
 };

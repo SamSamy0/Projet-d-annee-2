@@ -46,7 +46,9 @@ shared_ptr<Layer> Map::getCurrentLayer(){
     return nullptr;}
     else{return layers_[selected_];}
 }
+
 void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
+
 {
    
     // On crée la map => zone dessinable
