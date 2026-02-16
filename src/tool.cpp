@@ -7,12 +7,16 @@ Tool::Tool(std::shared_ptr<Map> map) : map_{map}{}
 std::shared_ptr<Map> Tool::getMap() { return this->map_; }
 unsigned int Tool::getScale() { return map_->getScale(); }
 
+Brush::Brush(std::shared_ptr<Map> map) : Tool(map){}
 void Brush::setSize(unsigned int x, unsigned int y = 0) {
   size_m_.x = x;
   size_m_.y = y;
 }
 
-PixelBrush::PixelBrush(std::shared_ptr<Map> map) :Tool(map),Brush() {name_ = PIXELBRUSH;}
+PixelBrush::PixelBrush(std::shared_ptr<Map> map) :Brush(map) {
+  name_ = PIXELBRUSH;
+  }
+
 
 void PixelBrush::setColor(sf::Color c) {
   color_ = c;
@@ -20,7 +24,8 @@ void PixelBrush::setColor(sf::Color c) {
 void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setErraser() { is_erraser_ = !is_erraser_; }
 
-void PixelBrush::drawOn(sf::Vector2u pos) {
+void PixelBrush::drawOn(sf::Vector2i pos) {
+
   shared_ptr<Layer> layer = map_->getCurrentLayer() ;
   std::shared_ptr<PixelLayer> pixellayer = std::dynamic_pointer_cast<PixelLayer>(layer); //TODO: gérer l'erreur du cast
   sf::Vector2f rounded_pos = sf::Vector2f(std::round(pos.x), std::round(pos.y));
@@ -53,10 +58,10 @@ void PixelBrush::drawOn(sf::Vector2u pos) {
     unsigned int size_y = (size_m_.y) * getScale();
     sf::ConvexShape diamond(4);
     diamond.setPoint(0, sf::Vector2f(size_x / 2, 0));      // top point
-    diamond.setPoint(1, sf::Vector2f(size_x / 2, size_y)); // botom point
-    diamond.setPoint(2, sf::Vector2f(size_x, size_y / 2)); // right point
-    diamond.setPoint(3, sf::Vector2f(size_x / 2, 0));      // left point
-    diamond.setOrigin(sf::Vector2f(size_x, size_y));
+      diamond.setPoint(1, sf::Vector2f(size_x, size_y / 2)); // right point
+    diamond.setPoint(2, sf::Vector2f(size_x / 2, size_y)); // botom point
+    diamond.setPoint(3, sf::Vector2f(0, size_y/2));      // left point
+    diamond.setOrigin(sf::Vector2f(size_x/2, size_y/2));
     diamond.setPosition(rounded_pos);
     is_erraser_ ? diamond.setFillColor(sf::Color::Transparent)
                 : diamond.setFillColor(color_);

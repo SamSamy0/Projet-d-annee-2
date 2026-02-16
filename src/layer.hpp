@@ -30,7 +30,7 @@ public:
 
   sf::RenderTexture &getTexture();
   void drawLayer(sf::RenderWindow& window) override;
-  void draw(sf::Drawable &s);
+  void draw(sf::Drawable &s) override;
   void errase(sf::Drawable &s);
   void shift(sf::Vector2i v);
   void display();

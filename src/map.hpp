@@ -32,6 +32,7 @@ public:
     bool hasLayer() const;
     vector<shared_ptr<Layer>>& getLayers();
     shared_ptr<Layer> getCurrentLayer();
+    sf::View& getView();
     void insertLayer(shared_ptr<Layer> layer);
     void createPixelLayer();
     void displayMap(sf::RenderWindow& window, sf::View& viewMap);

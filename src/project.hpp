@@ -4,7 +4,11 @@
 #include <string>
 #include <vector>
 #include <memory>
+<<<<<<< HEAD
 #include "map.hpp"
+=======
+#include "toolbar.hpp"
+>>>>>>> a2ad2e28b449ff6dc02f111fa1fb80e2395bd9e9
 
 class Tool;
 class Map;
@@ -17,13 +21,17 @@ class Project{
   sf::View viewMap_;
   sf::View viewUI_;
   std::shared_ptr<Map> map_;
-  std::vector<std::shared_ptr<Tool>> tools_;
+  ToolBar toolbar_;
 
 public:
   Project(unsigned int scale, sf::Vector2u size, sf::RenderWindow& window);
   unsigned int getScale();
   std::shared_ptr<Map> getMap();
+<<<<<<< HEAD
   std::vector<std::shared_ptr<Tool>> getTools();
   void display();
   void displayScale();
+=======
+  ToolBar getToolBar();
+>>>>>>> a2ad2e28b449ff6dc02f111fa1fb80e2395bd9e9
 };
