@@ -1,27 +1,55 @@
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 #include "map.hpp"
+#include "layer.hpp"
 #include <SFML/Config.hpp>
 #include <iostream>
 
 using namespace std;
 
-Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<Layer> layers) : 
-    id_{mapId}, size_{size}, 
-    scale_{scale}, move_{(float)(size_.x), (float)(size_.y)} {
+Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
+    id_{mapId}, size_{size},layers_{std::move(layers)},
+    scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)}{
     viewMap_.setSize(sf::Vector2f(size_.x, size_.y));
     viewMap_.setCenter(sf::Vector2f(size_.x / 2.f, size_.y / 2.f));
+    hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
 }
+
+
+Map::Map(int mapId, sf::Vector2u size , unsigned int scale) : 
+    id_{mapId}, size_{size},
+    scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)}{
+    viewMap_.setSize(sf::Vector2f(size_.x, size_.y));
+    viewMap_.setCenter(sf::Vector2f(size_.x / 2.f, size_.y / 2.f));
+    hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
+    createPixelLayer();
+}
+
 
 sf::Vector2u Map::getSize()const {return size_;}
 
+bool Map::hasLayer()const {return !layers_.empty();}
+
 unsigned int Map::getScale() const { return scale_; }
 
-vector<Layer>& Map::getLayers() { return layers_; }
+vector<shared_ptr<Layer>>& Map::getLayers() { return layers_; }
 
-// void Map::insertLayer(Layer& layer, int depth) { layers_.insert(layers_.begin() + depth, layer) ; }
+void Map::insertLayer(shared_ptr<Layer> layer) { layers_.insert(layers_.begin()+selected_+1, layer) ; }
 
+void Map::createPixelLayer(){
+
+    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>("Nouvelle Couche",size_);
+    layers_.push_back(pixellayer);
+    layers_.size() ==1? selected_ = 0: selected_+=1;
+}
+
+shared_ptr<Layer> Map::getCurrentLayer(){
+    if(layers_.size() == 0){
+    return nullptr;}
+    else{return layers_[selected_];}
+}
 void Map::displayMap(sf::RenderWindow& window)
 {
    

@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "layer.hpp"
 #include "zoom.hpp"
 #include "move.hpp"
 
@@ -11,23 +11,29 @@
 
 using namespace std;
 
-class Project;
+// class Project;
+class Layer;
 
 class Map {
-// unique_ptr<Project> project;
+    // shared_ptr<Project> project;
     int id_;
     sf::Vector2u size_;
     unsigned int scale_;
     Zoom zoom_;
     Move move_;
     sf::View viewMap_;
-    vector<Layer> layers_;
+    vector<shared_ptr<Layer>> layers_;
+    unsigned int selected_;
 public:
-    Map(int mapId,sf::Vector2u size , unsigned int scale, vector<Layer> layers);
+    Map(int mapId,sf::Vector2u size , unsigned int scale, vector<shared_ptr<Layer>> layers);
+    Map(int mapId,sf::Vector2u size , unsigned int scale);
     sf::Vector2u getSize() const;
     unsigned int getScale() const;
-    vector<Layer>& getLayers();
-    void insertLayer(Layer& layer, int depth);
+    bool hasLayer() const;
+    vector<shared_ptr<Layer>>& getLayers();
+    shared_ptr<Layer> getCurrentLayer();
+    void insertLayer(shared_ptr<Layer> layer);
+    void createPixelLayer();
     void displayMap(sf::RenderWindow& window);
     void closeWindowManager(sf::RenderWindow& window, const sf::Event& ev);
     void detectMovement();

@@ -1,9 +1,11 @@
 #include "layer.hpp"
+#include "map.hpp"
+#include <memory>
 
-Layer::Layer(std::string name) : name_{name} {}
+Layer::Layer(std::string name, sf::Vector2u size) : name_{name}, size_{size} {}
 
-PixelLayer::PixelLayer(std::string name) : Layer(name) {
-  if(!texture_.resize(sf::Vector2u(map_->getSize(),map_->getSize())){
+PixelLayer::PixelLayer(std::string name,sf::Vector2u size) : Layer(name, size), offset_(texture_.getTexture()) {
+  if(!texture_.resize(size)){
     // NOTE:GERER L'ERREUR 
     }
     offset_.setTexture(texture_.getTexture());
@@ -20,4 +22,8 @@ void PixelLayer::errase(sf::Drawable &s) {
   texture_.display();
 }
 
-void PixelLayer::shift(sf::Vector2u v){} //TODO: à défini
+void PixelLayer::shift(sf::Vector2i v){
+  offset_.move(sf::Vector2f(v));
+} 
+
+void PixelLayer::display(){texture_.display();}
