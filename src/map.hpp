@@ -33,3 +33,5 @@ public:
     void detectMovement();
     void detectZooming(sf::Event event);
 };
+
+

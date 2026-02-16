@@ -11,7 +11,7 @@ class Move {
 		float positionX_;
 		float positionY_;
 		float moveSpeed_;
-		float minimumHeight_;
+		float∏ minimumHeight_;
 		float maximumHeight_;
 		float minimumWidth_;
 		float maximumWidth_;
