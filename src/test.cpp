@@ -1,38 +1,48 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "tool.hpp"
+#include "project.hpp"
 #include "map.hpp"
 #include "layer.hpp"
-#include "project.hpp"
 
-using namespace std;
+int main()
+{
+    sf::RenderWindow window(
+        sf::VideoMode({1200, 800}),
+        "Map Test",
+        sf::Style::Titlebar | sf::Style::Close
+    );
 
-int main() {
-    sf::RenderWindow window(sf::VideoMode({1200, 800}), "Test", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
-    vector<shared_ptr<Layer>> layers;
-    
 
-    Project project(5,sf::Vector2u(500,500));
-    shared_ptr<Map> map = project.getMap();
+    // 🔹 Création du projet
+    Project project(1, sf::Vector2u(500, 500));
 
-    std::shared_ptr<Tool> pixelbrush = project.getTools()[PIXELBRUSH];
-    auto pb = std::dynamic_pointer_cast<PixelBrush>(pixelbrush);
-    pb->setColor(sf::Color(255,0,0,255));
-    pb->setShape(SQUARE);
-    pb->setSize(10,0);
-    pb->drawOn(sf::Vector2u(200,200));
+    // 🔹 Récupération de la map
+    std::shared_ptr<Map> map = project.getMap();
 
-    while (window.isOpen()) {
-        while (auto ev = window.pollEvent()) {
-            if (ev->is<sf::Event::Closed>()) {
+    // 🔹 S'assurer qu'il y a au moins une layer
+    if (!map->hasLayer())
+        map->createPixelLayer();
+
+    while (window.isOpen())
+    {
+        while (auto event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
                 window.close();
-            }
-            map->detectZooming(*ev);
+
+            map->detectZooming(*event);
         }
+
         map->detectMovement();
-        window.clear();
-        map->displayMap(window); // dessiner à chaque frame
+
+        // ⚠️ UN SEUL clear
+        window.clear(sf::Color(60, 60, 60));
+
+        // ⚠️ displayMap ne doit PAS faire clear() ni display()
+        map->displayMap(window);
+
+        // ⚠️ UN SEUL display
         window.display();
     }
 

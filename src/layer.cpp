@@ -27,3 +27,10 @@ void PixelLayer::shift(sf::Vector2i v){
 } 
 
 void PixelLayer::display(){texture_.display();}
+
+void PixelLayer::drawLayer(sf::RenderWindow& window) {
+  if (!Masked_) {
+    sf::Sprite layer{texture_.getTexture()};
+    window.draw(layer);
+  }
+}

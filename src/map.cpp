@@ -81,7 +81,10 @@ void Map::displayMap(sf::RenderWindow& window)
     window.clear(sf::Color(60, 60, 60));
     window.setView(viewMap_);
     window.draw(map);
-    window.display();
+    for (auto& layer: layers_) {
+        layer->drawLayer(window);
+    }
+    //window.display();
 }
 
 void Map::detectZooming(sf::Event event) {

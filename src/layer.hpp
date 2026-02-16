@@ -15,6 +15,7 @@ protected:
 
 public:
   Layer(std::string name, sf::Vector2u size);
+  virtual void drawLayer(sf::RenderWindow& window) = 0;
   virtual void draw(sf::Drawable &s) = 0;
   virtual ~Layer() = default;
 };
@@ -28,6 +29,7 @@ public:
   PixelLayer(std::string name, sf::Vector2u size);
 
   sf::RenderTexture &getTexture();
+  void drawLayer(sf::RenderWindow& window) override;
   void draw(sf::Drawable &s);
   void errase(sf::Drawable &s);
   void shift(sf::Vector2i v);
