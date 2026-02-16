@@ -7,12 +7,15 @@
 
 
 class ClientEventHandler{
-public:
-    void process(ServerRep& event);
+    ClientNetworkManager* manager_;
+    public:
+    ClientEventHandler(ClientNetworkManager& client_manageer);
+    void process(ServerEvent& event);
+    void trateEventQueu();
 };
 
-void handleAuth(ServerRep& event);
-void handleProjectData(ServerRep& event);
+void handleAuth(ServerEvent& event);
+void handleProjectData(ServerEvent& event);
 
 
 #endif

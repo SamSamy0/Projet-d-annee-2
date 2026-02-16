@@ -7,7 +7,7 @@
 #include "protocol.hpp"
 
 
-struct ServerRep{
+struct ServerEvent{
     MsgProtocole message_type;
     std::unique_ptr<sf::Packet> data_packet;
 };
@@ -15,13 +15,15 @@ struct ServerRep{
 
 class ClientNetworkManager{
     sf::TcpSocket socket;
-    std::deque<ServerRep> reponse;
+    std::deque<ServerEvent> reponse;
     
 public:
         
-    std::deque<ServerRep>& getQueuRep();
+    std::deque<ServerEvent>& getQueuEvent();
     bool connect();
-    void getReponse();
+    void getEvent();
+    bool hasEvent();
+    ServerEvent popEvent();
     void login(std::string pseudo,std::string password);
     void askRegister(std::string pseudo, std::string password);
     void createProject(std::string role, float size, float scale);

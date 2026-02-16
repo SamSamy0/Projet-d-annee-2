@@ -46,8 +46,15 @@ struct CreateProjectMessage : Message{
 
 
 struct GetProjectDataMessage : Message{
+<<<<<<< HEAD
     
-    void process(Worker& worker) override;
+    
+=======
+    int projectId_;
+
+    GetProjectDataMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c);
+    void process() override;
+>>>>>>> 130851d (avancement handler)
 };
 
 

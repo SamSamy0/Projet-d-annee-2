@@ -2,7 +2,7 @@
 
 
 
-std::deque<ServerRep>& ClientNetworkManager::getQueuRep(){
+std::deque<ServerEvent>& ClientNetworkManager::getQueuEvent(){
     return reponse;
 }
 
@@ -16,8 +16,9 @@ bool ClientNetworkManager::connect(){
 }
 
 
-void ClientNetworkManager::getReponse(){
-    ServerRep rep;
+
+void ClientNetworkManager::getEvent(){
+    ServerEvent rep;
     auto packet = std::make_unique<sf::Packet>();
 
     if (socket.receive(*packet) == sf::Socket::Done){
