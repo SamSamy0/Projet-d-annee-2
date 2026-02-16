@@ -16,3 +16,5 @@ Project::Project(unsigned int scale, sf::Vector2u size){
 }
 unsigned int Project::getScale() { return map_->getScale(); }
 std::shared_ptr<Map> Project::getMap(){return map_;}
+std::vector<std::shared_ptr<Tool>> Project::getTools(){return tools_;}
+

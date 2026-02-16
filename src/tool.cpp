@@ -20,8 +20,9 @@ void PixelBrush::setColor(sf::Color c) {
 void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setErraser() { is_erraser_ = !is_erraser_; }
 
-void PixelBrush::drawOn(Layer &layer, sf::Vector2u pos) {
-  PixelLayer *pixellayer = dynamic_cast<PixelLayer *>(&layer); //TODO: gérer l'erreur du cast
+void PixelBrush::drawOn(sf::Vector2u pos) {
+  shared_ptr<Layer> layer = map_->getCurrentLayer() ;
+  std::shared_ptr<PixelLayer> pixellayer = std::dynamic_pointer_cast<PixelLayer>(layer); //TODO: gérer l'erreur du cast
   sf::Vector2f rounded_pos = sf::Vector2f(std::round(pos.x), std::round(pos.y));
 
   switch (shape_) {
@@ -68,8 +69,9 @@ void PixelBrush::drawOn(Layer &layer, sf::Vector2u pos) {
 
 PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map){name_ = PIXELSHIFT;}
 
-void PixelShift::shiftOn(Layer& layer, sf::Vector2u pos_1, sf::Vector2u pos_2){
-  PixelLayer *pixellayer = dynamic_cast<PixelLayer *>(&layer); //TODO: gérer l'erreur du cast
+void PixelShift::shiftOn(sf::Vector2u pos_1, sf::Vector2u pos_2){
+  std::shared_ptr<Layer> layer = map_->getCurrentLayer();
+  std::shared_ptr<PixelLayer> pixellayer = std::dynamic_pointer_cast<PixelLayer>(layer); //TODO: gérer l'erreur du cast
   sf::Vector2i vect(static_cast<int>(pos_2.x) - static_cast<int>(pos_1.x),
                     static_cast<int>(pos_2.y) - static_cast<int>(pos_1.y)); //on convertit avant la soustraction
   pixellayer->shift(vect);

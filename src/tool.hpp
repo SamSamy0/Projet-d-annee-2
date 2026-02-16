@@ -34,7 +34,7 @@ protected:
 public:
   Brush() = default;
   void setSize(unsigned int x, unsigned int y);
-  virtual void drawOn(Layer &couche, sf::Vector2u pos) = 0;
+  virtual void drawOn(sf::Vector2u pos) = 0;
   virtual ~Brush() = default;
 };
 //-----------------------------PIXELBRUSH---------------------------
@@ -47,7 +47,7 @@ public:
   PixelBrush(std::shared_ptr<Map> map);
   void setColor(sf::Color c);
   void setShape(Shape s);
-  void drawOn(Layer &couche, sf::Vector2u pos);
+  void drawOn(sf::Vector2u pos);
   void setErraser();
 };
 //-----------------------------------------------------------------------
@@ -61,6 +61,6 @@ class PixelShift : public Tool {
 
 public:
   PixelShift(std::shared_ptr<Map> map);
-  void shiftOn(Layer& couche, sf::Vector2u pos_1, sf::Vector2u pos_2);
+  void shiftOn(sf::Vector2u pos_1, sf::Vector2u pos_2);
 };
 class SpriteTool : public Tool {};
