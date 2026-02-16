@@ -13,12 +13,9 @@ bool ServerNetworkManager::start(){
 
 //accepte les clients qui se connectes
 bool ServerNetworkManager::accept(){
-
     auto socket_client = std::make_shared<sf::TcpSocket>();
 
-    
     if (listener.accept(*socket_client) == sf::Socket::Done) {
-
         socket_client->setBlocking(false);
 
         Client new_client;

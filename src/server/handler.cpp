@@ -1,15 +1,15 @@
-#include <SFML/Network.hpp>
-#include <iostream>
-#include <deque>
-#include <memory>
-#include "protocol.hpp"
-#include "clientnetwork.hpp"
+#include "handler.hpp"
 
 
 void ClientEventHandler::process(ServerRep& event){
     switch(event.message_type){
-        case AUTH_RESULT:
+        case MsgProtocole::AUTH_RESULT:
             handleAuth(event);
+            //mettre le bool IsLoggedIn a true
+            break;
+        case MsgProtocole::LOB_PROJECT_DATA_REP:
+            handleProjectData(event);
             break;
     }
 };
+
