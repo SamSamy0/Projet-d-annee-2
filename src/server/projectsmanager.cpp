@@ -3,8 +3,9 @@
 #include <QJsonDocument>
 #include <QFileInfo>
 #include <QDebug>
+#include <QJsonArray>
 
-ProjectsManager::ProjectsManager(const std::string &rootPath)
+ProjectsManager::ProjectsManager(const std::string &rootPath = "BigData")
     : m_rootPath(QString::fromStdString(rootPath))
 {
     QDir dir;
@@ -13,16 +14,25 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
     }
 }
 
-bool ProjectsManager::saveProjectJson(int id, const QJsonObject &data) {
+bool ProjectsManager::createProjectJson(int id, const QString &projectName, int width, int height) {
     if (!ensureDirectoryExists(id)) {
         return false;
     }
+    QJsonObject root;
+    QJsonArray emptylayers;
+    
+    root["id"] = id;
+    root["name"] = projectName;
+    root["width"] = width;
+    root["height"] = height;
+
+    root["layers"] = emptylayers;
 
     QString filePath = getProjectPath(id) + "/donnees.json";
     QFile file(filePath);
 
     if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        QJsonDocument doc(data);
+        QJsonDocument doc(root);
         file.write(doc.toJson(QJsonDocument::Indented));
         file.close();
         return true;
@@ -46,6 +56,34 @@ bool ProjectsManager::saveImage(int id, const QString &fileName, const QByteArra
 
     qCritical() << "Impossible d'écrire le média reçu pour le projet" << id;
     return false;
+}
+
+QJsonObject ProjectsManager::loadProjectJson(int id) {
+    QString filePath = getProjectPath(id) + "/donnees.json";
+    QFile file(filePath);
+
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Impossible d'ouvrir le fichier projet pour l'ID" << id << ":" << filePath;
+        return QJsonObject();
+    }
+
+    QByteArray rawData = file.readAll();
+    file.close();
+
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(rawData, &error);
+
+    if (error.error != QJsonParseError::NoError) {
+        qCritical() << "Erreur de parsing JSON pour le projet" << id << ":" << error.errorString();
+        return QJsonObject();
+    }
+
+    if (!doc.isObject()) {
+        qCritical() << "Le contenu du fichier n'est pas un objet JSON valide pour le projet" << id;
+        return QJsonObject();
+    }
+
+    return doc.object();
 }
 
 QString ProjectsManager::getProjectPath(int id) const {

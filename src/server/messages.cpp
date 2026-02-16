@@ -13,6 +13,7 @@ void LoginMessage::process(Worker& worker){
     client.id = worker.verifyLogin(this->pseudo, this->password);
     Reponse rps;
     rps.client = this->client;
+    //rps.packet = 
 }
 
 
@@ -24,6 +25,8 @@ RegisterMessage::RegisterMessage(std::shared_ptr<sf::Packet> data_packet, const 
 
 void RegisterMessage::process(Worker& worker) {
     client.id = worker.verifyLogin(this->pseudo, this->password);
+    Reponse rps;
+
 }
 
 
