@@ -6,15 +6,10 @@
 
 
 
-Project::Project(unsigned int scale, sf::Vector2u size){
+Project::Project(unsigned int scale, sf::Vector2u size): map_{std::make_shared<Map>(1,size,scale)},
+  toolbar_{map_}{}
 
-  map_ = std::make_shared<Map>(1,size,scale);
-
-  tools_.push_back(std::make_shared<PixelBrush>(map_));
-  tools_.push_back(std::make_shared<PixelShift>(map_));
-
-}
 unsigned int Project::getScale() { return map_->getScale(); }
 std::shared_ptr<Map> Project::getMap(){return map_;}
-std::vector<std::shared_ptr<Tool>> Project::getTools(){return tools_;}
+ToolBar Project::getToolBar(){return toolbar_;}
 

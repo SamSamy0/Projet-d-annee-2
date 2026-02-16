@@ -50,6 +50,9 @@ shared_ptr<Layer> Map::getCurrentLayer(){
     return nullptr;}
     else{return layers_[selected_];}
 }
+
+sf::View& Map::getView(){return viewMap_;}
+
 void Map::displayMap(sf::RenderWindow& window)
 {
    

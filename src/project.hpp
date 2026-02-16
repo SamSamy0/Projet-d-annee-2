@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "toolbar.hpp"
 
 class Tool;
 class Map;
@@ -13,12 +14,12 @@ class Project{
   // std::vector<User> users;
   // Chat chat;
   std::shared_ptr<Map> map_;
-  std::vector<std::shared_ptr<Tool>> tools_;
+  ToolBar toolbar_;
 
 
 public:
   Project(unsigned int scale, sf::Vector2u size);
   unsigned int getScale();
   std::shared_ptr<Map> getMap();
-  std::vector<std::shared_ptr<Tool>> getTools();
+  ToolBar getToolBar();
 };

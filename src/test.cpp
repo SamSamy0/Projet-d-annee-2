@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "project.hpp"
+#include "tool.hpp"
 #include "map.hpp"
 #include "layer.hpp"
 
@@ -15,14 +16,19 @@ int main()
     window.setFramerateLimit(60);
 
     // 🔹 Création du projet
-    Project project(1, sf::Vector2u(500, 500));
+    Project project(20, sf::Vector2u(500, 500));
 
     // 🔹 Récupération de la map
     std::shared_ptr<Map> map = project.getMap();
 
-    // 🔹 S'assurer qu'il y a au moins une layer
-    if (!map->hasLayer())
-        map->createPixelLayer();
+    project.getToolBar().selectTool(PIXELBRUSH);
+    project.getToolBar().getSelectedTool()->setColor(sf::Color::Red);
+    project.getToolBar().getSelectedTool()->setShape(SQUARE);
+    project.getToolBar().getSelectedTool()->setSize(2000,2000);
+    project.getToolBar().getSelectedTool()->drawOn(sf::Vector2i(200,200));
+
+
+
 
     while (window.isOpen())
     {

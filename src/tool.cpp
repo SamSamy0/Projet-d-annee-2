@@ -7,12 +7,16 @@ Tool::Tool(std::shared_ptr<Map> map) : map_{map}{}
 std::shared_ptr<Map> Tool::getMap() { return this->map_; }
 unsigned int Tool::getScale() { return map_->getScale(); }
 
+Brush::Brush(std::shared_ptr<Map> map) : Tool(map){}
 void Brush::setSize(unsigned int x, unsigned int y = 0) {
   size_m_.x = x;
   size_m_.y = y;
 }
 
-PixelBrush::PixelBrush(std::shared_ptr<Map> map) :Tool(map),Brush() {name_ = PIXELBRUSH;}
+PixelBrush::PixelBrush(std::shared_ptr<Map> map) :Brush(map) {
+  name_ = PIXELBRUSH;
+  }
+
 
 void PixelBrush::setColor(sf::Color c) {
   color_ = c;
@@ -20,7 +24,8 @@ void PixelBrush::setColor(sf::Color c) {
 void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setErraser() { is_erraser_ = !is_erraser_; }
 
-void PixelBrush::drawOn(sf::Vector2u pos) {
+void PixelBrush::drawOn(sf::Vector2i pos) {
+
   shared_ptr<Layer> layer = map_->getCurrentLayer() ;
   std::shared_ptr<PixelLayer> pixellayer = std::dynamic_pointer_cast<PixelLayer>(layer); //TODO: gérer l'erreur du cast
   sf::Vector2f rounded_pos = sf::Vector2f(std::round(pos.x), std::round(pos.y));
