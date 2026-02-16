@@ -15,8 +15,10 @@ class Project{
   std::shared_ptr<Map> map_;
   std::vector<std::shared_ptr<Tool>> tools_;
 
+
 public:
   Project(unsigned int scale, sf::Vector2u size);
   unsigned int getScale();
   std::shared_ptr<Map> getMap();
+  std::vector<std::shared_ptr<Tool>> getTools();
 };
