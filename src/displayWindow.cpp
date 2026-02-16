@@ -121,9 +121,16 @@ void AuthWindow::processEvents() {
 
 void AuthWindow::initMenuWidget() {
   gui.removeAllWidgets();
+  auto title = tgui::Label::create("Liste de projets");
+  title->setPosition("2%", "5%");
+  title->setTextSize(40);
+
+  title->getRenderer()->setTextStyle(tgui::TextStyle::Underlined);
+  title->getRenderer()->setTextColor(sf::Color::Black);
+  gui.add(title);
   auto createProjB = tgui::Button::create("Créer Projet");
   createProjB->setPosition({"62.5%", "31.25%"});
-  createProjB->setSize({"12.5%", "3.125%"});
+  createProjB->setSize({"20%", "4%"});
   gui.add(createProjB);
 
   // loginButton->onPress(&Window::login, this, editBoxUsername,
@@ -131,7 +138,7 @@ void AuthWindow::initMenuWidget() {
 
   auto joinProjB = tgui::Button::create("Rejoindre Projet");
   joinProjB->setPosition({"62.5%", "18.75%"});
-  joinProjB->setSize({"12.5%", "3.125%"});
+  joinProjB->setSize({"20%", "4%"});
   gui.add(joinProjB);
 }
 
@@ -150,7 +157,7 @@ void AuthWindow::run() {
         AuthWindow::state == projectState::MENU) {
       gui.draw();
 
-    } else if (AuthWindow::state == projectState::MENU) {
+    } else if (AuthWindow::state == projectState::GAME) {
       // Display Game
     }
     mainWindow.display();
