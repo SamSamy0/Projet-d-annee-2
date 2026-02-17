@@ -9,9 +9,9 @@
 int main()
 {
     sf::RenderWindow window(
-        sf::VideoMode({1200, 800}),
+        sf::VideoMode::getDesktopMode(),
         "Project Test",
-        sf::Style::Titlebar | sf::Style::Close
+        sf::State::Fullscreen
     );
 
     tgui::Gui gui(window);
@@ -24,7 +24,7 @@ int main()
     std::shared_ptr<Map> map = project.getMap();
 
     project.getToolBar().selectTool(PIXELBRUSH);
-    project.getToolBar().getSelectedTool()->setColor(sf::Color::Blue);
+    project.getToolBar().getSelectedTool()->setColor(sf::Color(0,0,255,125));
     project.getToolBar().getSelectedTool()->setShape(CIRCLE);
     project.getToolBar().getSelectedTool()->setSize(10,10);
     project.getToolBar().getSelectedTool()->drawOn(sf::Vector2i(-25,200));
