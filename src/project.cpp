@@ -17,15 +17,14 @@ std::shared_ptr<Map> Project::getMap(){return map_;}
 ToolBar Project::getToolBar(){return toolbar_;}
 
 void Project::displayScale() {
-  sf::Font police("../../res/police/ARIAL.TTF");
+  sf::Font police("police/ARIAL.TTF");
   sf::Text scaleText(police);
-  scaleText.setString("1 metre = " + std::to_string(static_cast<int>(getScale())) + " pixels");
+  scaleText.setString("1 metre =" + dynamic_cast<strinf>(getScale()) + " pixels");
   scaleText.setCharacterSize(17);
   scaleText.setFillColor(sf::Color::White);
   scaleText.setPosition(sf::Vector2f(850, 13));
   window_.draw(scaleText);
 }
-
 
 void Project::display(tgui::Gui& gui) {
   window_.clear(sf::Color(200,200,200));
