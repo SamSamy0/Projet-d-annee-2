@@ -1,13 +1,8 @@
 #include "messages.hpp"
 #include "protocol.hpp"
-<<<<<<< HEAD
 #include "worker.hpp"
 #include "reponsequeue.hpp"
-=======
-
-
-
->>>>>>> 130851d (avancement handler)
+#include <utility>
 
  
 sf::IpAddress Client::getAddress(){
@@ -21,9 +16,22 @@ LoginMessage::LoginMessage(std::shared_ptr<sf::Packet> data_packet, const Client
 
 void LoginMessage::process(Worker& worker){
     client.id = worker.verifyLogin(this->pseudo, this->password);
-    Reponse rps;
-    rps.client = this->client;
-    //rps.packet = 
+
+    //création de la réponse
+    auto rps = std::make_unique<Reponse>();
+    rps->client = this->client;
+    rps->message_type = MsgProtocole::AUTH_RESULT;
+
+    rps->packet = std::make_unique<sf::Packet>();
+    *rps->packet << static_cast<sf::Uint8>(MsgProtocole::AUTH_RESULT);
+    if (client.id == -1) {
+        *rps->packet << static_cast<sf::Uint8>(0);
+    } else {
+        *rps->packet << static_cast<sf::Uint8>(1);
+    }
+
+    //mise sur la liste des réponses
+    worker.rep_queue.push(std::move(rps));
 }
 
 
@@ -34,8 +42,23 @@ RegisterMessage::RegisterMessage(std::shared_ptr<sf::Packet> data_packet, const 
 
 
 void RegisterMessage::process(Worker& worker) {
-    client.id = worker.verifyLogin(this->pseudo, this->password);
-    Reponse rps;
+    client.id = worker.addUser(this->pseudo, this->password);
+    
+    //création de la réponse
+    auto rps = std::make_unique<Reponse>();
+    rps->client = this->client;
+    rps->message_type = MsgProtocole::AUTH_RESULT;
+
+    rps->packet = std::make_unique<sf::Packet>();
+    *rps->packet << static_cast<sf::Uint8>(MsgProtocole::AUTH_RESULT);
+    if (client.id == -1) {
+        *rps->packet << static_cast<sf::Uint8>(0);
+    } else {
+        *rps->packet << static_cast<sf::Uint8>(1);
+    }
+
+    //mise sur la liste des réponses
+    worker.rep_queue.push(std::move(rps));
 
 }
 
@@ -46,15 +69,14 @@ CreateProjectMessage::CreateProjectMessage(std::shared_ptr<sf::Packet> data_pack
 
 
 void CreateProjectMessage::process(Worker& worker) {
-    //logique de traitement
+    long long id_proj = worker.db_Manager.addProject("test", this->client.id);
+    worker.proj_Manager.createProjectJson(id_proj, "test", size, scale);
 }
-
-<<<<<<< HEAD
     
-void GetProjectDataMessage::process(Worker& worker) {
-=======
+    int projectId_;
 
-    //logique de traitement
+void GetProjectDataMessage::process(Worker& worker) {
+    
 }
 
 

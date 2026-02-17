@@ -6,6 +6,7 @@
 #include <deque>
 #include <memory>
 #include "client.hpp"
+#include "protocol.hpp"
 
 
 struct Reponse{

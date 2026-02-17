@@ -9,7 +9,8 @@ class ProjectsManager {
 public:
 
     explicit ProjectsManager(const std::string &rootPath = "BigData");
-    bool saveProjectJson(int id, const QJsonObject &data);
+    bool createProjectJson(int id, const QString &projectName, int width, int height);
+    QJsonObject loadProjectJson(int id);
     bool saveImage(int id, const QString &fileName, const QByteArray &data);
 
 private:

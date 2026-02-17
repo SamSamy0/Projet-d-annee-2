@@ -17,11 +17,11 @@ public:
     long long addUser(const std::string& pseudo, const std::string& password);
     MessageQueue& dem_queue;
     ReponseQueue& rep_queue;
+    DatabaseManager db_Manager;
+    ProjectsManager proj_Manager;
 
 private:
     std::atomic<bool> m_running;
-    DatabaseManager db_Manager;
-    ProjectsManager proj_Manager;
 };
 
 #endif
