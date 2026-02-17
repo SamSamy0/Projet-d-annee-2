@@ -29,6 +29,6 @@ public:
     unsigned int getScale();
     std::shared_ptr<Map> getMap();
     ToolBar getToolBar();
-    void display(tgui::Gui& gui);
+    void display();
     void displayScale();
 };

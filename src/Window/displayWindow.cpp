@@ -1,6 +1,6 @@
 #include "displayWindow.hpp"
 #include "../server/clientnetwork.hpp"
-// #include "../src/project/project.hpp"
+#include "../src/project/project.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
@@ -146,7 +146,7 @@ void Window::createProj() {
 Window::Window(ClientNetworkManager &manager)
     : mainWindow(sf::VideoMode::getDesktopMode(), "Game name",
                  sf::State::Fullscreen),
-      gui{mainWindow}, manager{manager} {
+      gui{mainWindow}, manager{manager}, carteRPG_{nullptr} {
   initWidget();
 }
 void Window::run() {
@@ -160,6 +160,7 @@ void Window::run() {
 
     } else if (Window::state == projectState::GAME) {
       // Display Game
+      carteRPG_->display();
     }
     mainWindow.display();
   }

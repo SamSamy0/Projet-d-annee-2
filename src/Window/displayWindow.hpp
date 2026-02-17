@@ -6,6 +6,7 @@
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <vector>
+#include "../project/project.hpp"
 
 enum class projectState { LOGIN, MENU, GAME };
 class Window {
@@ -20,6 +21,7 @@ private:
   // sf::RenderWindow menuWindow;
   // Authentification Interface
   tgui::Gui gui;
+  Project carteRPG_;
   void initWidget();
   void updateTextSize();
   void processEvents();
