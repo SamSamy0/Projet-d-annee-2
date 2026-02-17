@@ -17,7 +17,7 @@ std::shared_ptr<Map> Project::getMap(){return map_;}
 ToolBar Project::getToolBar(){return toolbar_;}
 
 void Project::displayScale() {
-  sf::Font police("police/ARIAL.TTF");
+  sf::Font police("../../res/police/ARIAL.TTF");
   sf::Text scaleText(police);
   scaleText.setString("1 metre = 5 pixel");
   scaleText.setCharacterSize(17);
