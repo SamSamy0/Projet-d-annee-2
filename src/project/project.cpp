@@ -18,6 +18,10 @@ unsigned int Project::getScale() { return map_->getScale(); }
 std::shared_ptr<Map> Project::getMap(){return map_;}
 ToolBar Project::getToolBar(){return toolbar_;}
 
+
+
+sf::View& Project::getView(){return viewMap_;}
+
 void Project::displayScale() {
   sf::Font police("../../res/police/ARIAL.TTF");
   sf::Text scaleText(police);

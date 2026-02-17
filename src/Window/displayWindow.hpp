@@ -8,6 +8,7 @@
 #include <vector>
 #include "../project/project.hpp"
 
+class Project;
 enum class projectState { LOGIN, MENU, GAME };
 class Window {
 private:
@@ -20,6 +21,7 @@ private:
   sf::RenderWindow mainWindow;
   // sf::RenderWindow menuWindow;
   // Authentification Interface
+  std::unique_ptr<Project> project = nullptr;
   tgui::Gui gui;
   std::unique_ptr<Project> carteRPG_;
   void initWidget();
@@ -32,6 +34,9 @@ private:
   void loginWidget();
   void createProj();
   // void menuWidget();
+
+  // Detection
+  void leftClickEvent();
 
 public:
   // Constructor

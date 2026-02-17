@@ -17,12 +17,14 @@ PixelLayer::PixelLayer(std::string name,sf::Vector2u size) : Layer(name, size), 
 }
 sf::RenderTexture &PixelLayer::getTexture() { return texture_; }
 void PixelLayer::draw(sf::Drawable &s) {
-  texture_.draw(s);
-  texture_.display();
+  sf::RenderStates states;
+  states.blendMode = sf::BlendNone; 
+  texture_.draw(s,states);
+  // texture_.display();
 }
 void PixelLayer::errase(sf::Drawable &s) {
   texture_.draw(s, sf::BlendNone);
-  texture_.display();
+  // texture_.display();
 }
 
 void PixelLayer::shift(sf::Vector2i v){

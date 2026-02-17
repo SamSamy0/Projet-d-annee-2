@@ -75,7 +75,7 @@ void PixelBrush::drawOn(sf::Vector2i pos) {
 
 PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map){name_ = PIXELSHIFT;}
 
-void PixelShift::shiftOn(sf::Vector2u pos_1, sf::Vector2u pos_2){
+void PixelShift::shiftOn(sf::Vector2i pos_1, sf::Vector2i pos_2){
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
   if (layer->getType() == PIXELLAYER){
     sf::Vector2i vect(static_cast<int>(pos_2.x) - static_cast<int>(pos_1.x),

@@ -30,6 +30,8 @@ bool Map::hasLayer()const {return !layers_.empty();}
 
 unsigned int Map::getScale() const { return scale_; }
 
+
+
 vector<shared_ptr<Layer>>& Map::getLayers() { return layers_; }
 
 void Map::insertLayer(shared_ptr<Layer> layer) { layers_.insert(layers_.begin()+selected_+1, layer) ; }
@@ -45,6 +47,13 @@ shared_ptr<Layer> Map::getCurrentLayer(){
     if(layers_.size() == 0){
     return nullptr;}
     else{return layers_[selected_];}
+}
+
+
+
+bool Map::isInside(sf::Vector2i pos)const{
+    return (pos.x >= 0 && pos.x < static_cast<int>(size_.x) &&
+    pos.y >= 0 && pos.y < static_cast<int>(size_.y));
 }
 
 void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
