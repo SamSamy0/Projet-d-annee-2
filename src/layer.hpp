@@ -5,16 +5,21 @@
 class User;
 class Map;
 
+enum typeCouche{PIXELLAYER,
+SPRITELAYER};
+
 class Layer {
 protected:
-  sf::Vector2u size_;
   std::string name_;
+  sf::Vector2u size_;
   bool locked_ = false;
   // User lock_;
   bool Masked_ = false;
+  typeCouche type_;
 
 public:
   Layer(std::string name, sf::Vector2u size);
+  typeCouche getType();
   virtual void drawLayer(sf::RenderWindow& window) = 0;
   virtual void draw(sf::Drawable &s) = 0;
   virtual ~Layer() = default;

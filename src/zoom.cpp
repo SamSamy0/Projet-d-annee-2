@@ -1,6 +1,5 @@
 #include "zoom.hpp"
 
-using namespace std;
 
 Zoom::Zoom() : facteurZoom_{1} {}
 

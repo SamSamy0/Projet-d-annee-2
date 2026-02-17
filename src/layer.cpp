@@ -4,6 +4,8 @@
 
 Layer::Layer(std::string name, sf::Vector2u size) : name_{name}, size_{size} {}
 
+typeCouche Layer::getType(){return type_;}
+
 PixelLayer::PixelLayer(std::string name,sf::Vector2u size) : Layer(name, size), offset_(texture_.getTexture()) {
   if(!texture_.resize(size)){
     // NOTE:GERER L'ERREUR 
@@ -11,6 +13,7 @@ PixelLayer::PixelLayer(std::string name,sf::Vector2u size) : Layer(name, size), 
     offset_.setTexture(texture_.getTexture());
     texture_.clear(sf::Color::Transparent);
     texture_.display();
+    type_ = PIXELLAYER;
 }
 sf::RenderTexture &PixelLayer::getTexture() { return texture_; }
 void PixelLayer::draw(sf::Drawable &s) {

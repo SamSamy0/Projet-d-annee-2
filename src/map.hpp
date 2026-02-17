@@ -20,9 +20,9 @@ class Map {
     int id_;
     sf::Vector2u size_;
     unsigned int scale_;
+    vector<shared_ptr<Layer>> layers_;
     Zoom zoom_;
     Move move_;
-    vector<shared_ptr<Layer>> layers_;
     unsigned int selected_;
 public:
     Map(int mapId,sf::Vector2u size , unsigned int scale, vector<shared_ptr<Layer>> layers);

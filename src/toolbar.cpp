@@ -1,5 +1,6 @@
 #include "toolbar.hpp"
 #include "map.hpp"
+#include "layer.hpp"
 
 
 ToolBar::ToolBar(std::shared_ptr<Map> map){
@@ -10,6 +11,14 @@ ToolBar::ToolBar(std::shared_ptr<Map> map){
 
 
 
-  void ToolBar::selectTool(typeOutil outil){selected_ = outil;}
+  void ToolBar::selectTool(typeOutil outil){
+
+  typeCouche type = getSelectedTool()->getMap()->getCurrentLayer()->getType();
+
+  if((outil<=1 && type == PIXELLAYER) || (outil > 1 && type == SPRITELAYER))
+  selected_ = outil;
+
+
+}
   std::shared_ptr<Tool> ToolBar::getSelectedTool() const {return tools_[selected_];}
   typeOutil ToolBar::getSelected() const {return selected_;}
