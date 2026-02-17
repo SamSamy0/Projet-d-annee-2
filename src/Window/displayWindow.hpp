@@ -21,7 +21,7 @@ private:
   // sf::RenderWindow menuWindow;
   // Authentification Interface
   tgui::Gui gui;
-  Project carteRPG_;
+  std::unique_ptr<Project> carteRPG_;
   void initWidget();
   void updateTextSize();
   void processEvents();

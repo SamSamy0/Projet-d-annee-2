@@ -84,10 +84,16 @@ void Window::initWidget() {
   } else if (this->state == projectState::MENU) {
     // AuthWindow::menuWidget();
   }
-  // else if (this->state == projectState::GAME){
-  // Display the map if we enter a project.
-  //
-  // }
+  else if (this->state == projectState::GAME){
+    // Ajout du bouton de Home (retour en arrière)
+    auto homeButton = tgui::Button::create();
+    homeButton->setSize(30, 30);
+    homeButton->setPosition(15, 5);
+    homeButton->getRenderer()->setTexture("../../res/images/accueil.png");
+    homeButton->getRenderer()->setBorders({0});
+    homeButton->onPress([](){ state = projectState::MENU; });
+    gui.add(homeButton);
+  }
 }
 void Window::updateTextSize() {
   const float windowHeight = gui.getView().getRect().height;

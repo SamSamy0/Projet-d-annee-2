@@ -6,20 +6,22 @@
 #include "tool.hpp"
 #include <memory>
 #include "toolbar.hpp"
+#include <SFML/Graphics.hpp>
+#include <string>
 
 
 
 Project::Project(unsigned int scale, sf::Vector2u size, sf::RenderWindow &window, tgui::Gui& gui): map_{std::make_shared<Map>(1,size,scale)},
   window_{window},toolbar_{map_}, gui_{gui} {}
 
-unsigned int Project::getScale() { return map_->getScale(); }
+unsigned int Project::getScale() { return map_->getScale(); } 
 std::shared_ptr<Map> Project::getMap(){return map_;}
 ToolBar Project::getToolBar(){return toolbar_;}
 
 void Project::displayScale() {
-  sf::Font police("police/ARIAL.TTF");
+  sf::Font police("../../res/police/ARIAL.TTF");
   sf::Text scaleText(police);
-  scaleText.setString("1 metre =" + dynamic_cast<strinf>(getScale()) + " pixels");
+  scaleText.setString("1 metre =" + to_string(getScale()) + " pixels");
   scaleText.setCharacterSize(17);
   scaleText.setFillColor(sf::Color::White);
   scaleText.setPosition(sf::Vector2f(850, 13));

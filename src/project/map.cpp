@@ -9,6 +9,7 @@
 
 using namespace std;
 
+
 Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
     id_{mapId}, size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)}{
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
