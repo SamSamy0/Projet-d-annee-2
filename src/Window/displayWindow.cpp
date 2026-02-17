@@ -1,6 +1,7 @@
 #include "displayWindow.hpp"
 #include "../server/clientnetwork.hpp"
-// #include "../src/project/project.hpp"
+#include "../project/project.hpp"
+#include "../project/tool.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
@@ -105,8 +106,53 @@ void Window::processEvents() {
       if (keyPressed->code == sf::Keyboard::Key::Escape)
         mainWindow.close();
     }
+
+    //Dans un projet
+
+    if(state == projectState::GAME && project){
+      project->getMap()->detectZooming(*event); //ZOOM
+
+      if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){leftClickEvent();}
+
+
+    }
   }
 }
+
+
+void Window::leftClickEvent(){
+  
+  toolType tool = project->getToolBar().getSelected();
+  sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); //position de la souris
+  sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
+  sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+
+  switch (tool){
+
+    case PIXELBRUSH :{
+
+      if (project->getMap()->isInside(mapPos) && !gui.getWidgetAtPos(sf::Vector2f(mousePos),true)) {
+          project->getToolBar().getSelectedTool()->drawOn(mapPos);}
+      break;
+    }
+    case PIXELSHIFT :{
+
+
+      break;
+    }
+
+    case SPRITEBRUSH :{
+
+
+
+      break;
+    }
+  }
+
+
+
+}
+
 
 void Window::initMenuWidget() {
   gui.removeAllWidgets();
@@ -160,6 +206,7 @@ void Window::run() {
 
     } else if (Window::state == projectState::GAME) {
       // Display Game
+
     }
     mainWindow.display();
   }

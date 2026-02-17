@@ -11,7 +11,7 @@ ToolBar::ToolBar(std::shared_ptr<Map> map){
 
 
 
-  void ToolBar::selectTool(typeOutil outil){
+  void ToolBar::selectTool(toolType outil){
 
   typeCouche type = getSelectedTool()->getMap()->getCurrentLayer()->getType();
 
@@ -21,4 +21,4 @@ ToolBar::ToolBar(std::shared_ptr<Map> map){
 
 }
   std::shared_ptr<Tool> ToolBar::getSelectedTool() const {return tools_[selected_];}
-  typeOutil ToolBar::getSelected() const {return selected_;}
+  toolType ToolBar::getSelected() const {return selected_;}

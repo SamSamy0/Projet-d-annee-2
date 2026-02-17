@@ -31,4 +31,5 @@ public:
     ToolBar getToolBar();
     void display(tgui::Gui& gui);
     void displayScale();
+    sf::View& getView();
 };

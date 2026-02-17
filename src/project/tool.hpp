@@ -6,7 +6,7 @@ class ClientNetworkManager;
 class Map;
 class Layer;
 
-enum typeOutil{PIXELBRUSH,
+enum toolType{PIXELBRUSH,
 PIXELSHIFT,
 SPRITEBRUSH,};
 
@@ -19,7 +19,7 @@ enum Shape { SQUARE, DIAMOND, CIRCLE };
 class Tool {
 protected:
   std::shared_ptr<Map> map_;
-  typeOutil name_;
+  toolType name_;
 
 public:
   Tool(std::shared_ptr<Map> map);
@@ -34,7 +34,7 @@ public:
   virtual void setErraser(){}
 
   //Action
-  virtual void shiftOn(sf::Vector2u pos_1, sf::Vector2u pos_2){}
+  virtual void shiftOn(sf::Vector2i pos_1, sf::Vector2i pos_2){}
   virtual void drawOn(sf::Vector2i pos) {};
   // virtual void getMessage(const ClientNetworkManager &netw
   // virtual void sendMessage(const ClientNetworkManager &network) const;
@@ -75,5 +75,5 @@ class PixelShift : public Tool {
 
 public:
   PixelShift(std::shared_ptr<Map> map);
-  void shiftOn(sf::Vector2u pos_1, sf::Vector2u pos_2) override;
+  void shiftOn(sf::Vector2i pos_1, sf::Vector2i pos_2) override;
 };

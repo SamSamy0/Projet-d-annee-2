@@ -32,13 +32,13 @@ public:
     bool hasLayer() const;
     vector<shared_ptr<Layer>>& getLayers();
     shared_ptr<Layer> getCurrentLayer();
-    sf::View& getView();
     void insertLayer(shared_ptr<Layer> layer);
     void createPixelLayer();
     void displayMap(sf::RenderWindow& window, sf::View& viewMap);
     void closeWindowManager(sf::RenderWindow& window, const sf::Event& ev);
     void detectMovement();
     void detectZooming(sf::Event event);
+    bool isInside(sf::Vector2i pos)const;
 };
 
 

@@ -24,12 +24,10 @@ int main()
     std::shared_ptr<Map> map = project.getMap();
 
     project.getToolBar().selectTool(PIXELBRUSH);
-    project.getToolBar().getSelectedTool()->setColor(sf::Color::Red);
-    project.getToolBar().getSelectedTool()->setShape(DIAMOND);
-    project.getToolBar().getSelectedTool()->setSize(5,5);
-    project.getToolBar().getSelectedTool()->drawOn(sf::Vector2i(200,200));
-    project.getToolBar().getSelectedTool()->setErraser();
-    project.getToolBar().getSelectedTool()->drawOn(sf::Vector2i(190,200));
+    project.getToolBar().getSelectedTool()->setColor(sf::Color::Blue);
+    project.getToolBar().getSelectedTool()->setShape(CIRCLE);
+    project.getToolBar().getSelectedTool()->setSize(10,10);
+    project.getToolBar().getSelectedTool()->drawOn(sf::Vector2i(-25,200));
 
     while (window.isOpen())
     {
@@ -41,6 +39,19 @@ int main()
             // Gestion du zoom
             map->detectZooming(*event);
             gui.handleEvent(*event);
+
+
+
+
+      if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window); //position de la souris
+        sf::Vector2f pos = window.mapPixelToCoords(mousePos, project.getView());
+        sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+
+
+      if (project.getMap()->isInside(mapPos) && !gui.getWidgetAtPos(sf::Vector2f(mousePos),true)) {
+                  project.getToolBar().getSelectedTool()->drawOn(mapPos);
+        }
         }
 
         // Gestion du déplacement
@@ -49,6 +60,7 @@ int main()
         // Affichage complet via Project
         project.display(gui);
     }
+        }
 
     return 0;
 }

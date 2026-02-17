@@ -13,10 +13,10 @@ struct parameters{
 class ToolBar {
 
   std::vector<std::shared_ptr<Tool>> tools_;
-  typeOutil selected_ = PIXELBRUSH;
+  toolType selected_ = PIXELBRUSH;
   public:
     ToolBar(std::shared_ptr<Map> map);
-    void selectTool(typeOutil outil);
+    void selectTool(toolType outil);
     std::shared_ptr<Tool> getSelectedTool() const;
-    typeOutil getSelected() const;
+    toolType getSelected() const;
 };
