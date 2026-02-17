@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <TGUI/TGUI.hpp>
+#include <TGUI/Backend/SFML-Graphics.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -7,25 +9,26 @@
 #include "map.hpp"
 #include "toolbar.hpp"
 
+
 class Tool;
 class Map;
 class User;
 
 class Project{
-  // std::vector<User> users;
-  // Chat chat;
-  std::shared_ptr<Map> map_;
-  sf::RenderWindow& window_;
-  sf::View viewMap_;
-  sf::View viewUI_;
-  ToolBar toolbar_;
+    // std::vector<User> users;
+    // Chat chat;
+    sf::RenderWindow& window_;
+    tgui::Gui& gui_;
+    sf::View viewMap_;
+    sf::View viewUI_;
+    std::shared_ptr<Map> map_;
+    ToolBar toolbar_;
 
 public:
-  Project(unsigned int scale, sf::Vector2u size, sf::RenderWindow& window);
-  unsigned int getScale();
-  std::shared_ptr<Map> getMap();
-  void display();
-  void displayScale();
-  ToolBar getToolBar();
-  void displayToolBar();
+    Project(unsigned int scale, sf::Vector2u size, sf::RenderWindow& window, tgui::Gui& gui);
+    unsigned int getScale();
+    std::shared_ptr<Map> getMap();
+    ToolBar getToolBar();
+    void display(tgui::Gui& gui);
+    void displayScale();
 };

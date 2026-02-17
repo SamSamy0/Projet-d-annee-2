@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include <TGUI/TGUI.hpp>
+#include <TGUI/Backend/SFML-Graphics.hpp>
 #include <memory>
 #include "project.hpp"
 #include "tool.hpp"
@@ -12,10 +14,12 @@ int main()
         sf::Style::Titlebar | sf::Style::Close
     );
 
+    tgui::Gui gui(window);
+
     window.setFramerateLimit(60);
 
     // 🔹 Création du projet
-    Project project(1, sf::Vector2u(500, 500), window);
+    Project project(1, sf::Vector2u(500, 500), window, gui);
 
     std::shared_ptr<Map> map = project.getMap();
 
@@ -27,10 +31,6 @@ int main()
     project.getToolBar().getSelectedTool()->setErraser();
     project.getToolBar().getSelectedTool()->drawOn(sf::Vector2i(190,200));
 
-
-
-
-
     while (window.isOpen())
     {
         while (auto event = window.pollEvent())
@@ -40,13 +40,14 @@ int main()
 
             // Gestion du zoom
             map->detectZooming(*event);
+            gui.handleEvent(*event);
         }
 
         // Gestion du déplacement
         map->detectMovement();
 
         // Affichage complet via Project
-        project.display();
+        project.display(gui);
     }
 
     return 0;
