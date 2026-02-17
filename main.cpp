@@ -1,9 +1,9 @@
-#include "src/displayWindow.hpp"
+#include "src/Window/displayWindow.hpp"
 #include "src/server/clientnetwork.hpp"
 
 int main() {
   ClientNetworkManager manager;
-  AuthWindow window(manager);
+  Window window(manager);
   window.run();
   return 0;
 }
