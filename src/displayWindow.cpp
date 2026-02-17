@@ -1,5 +1,6 @@
 #include "displayWindow.hpp"
 #include "Identifier.hpp"
+#include "server/clientnetwork.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
@@ -7,50 +8,43 @@
 #include <TGUI/Widgets/TextArea.hpp>
 
 void AuthWindow::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
+  // NOTE: I have to ask how the usernames are stored in the server
+  // -> Asked Tomas
   // NOTE: I have to put the condition username 3-15 car
 
-  for (auto i = DB.begin(); i != DB.end(); i++) {
-    if (i->getusername() == usrname->getText()) {
-      // Demander un autre Pseudo
-      usrname->setText("");
+  // Sending Identifiers to server
+  // NOTE: Need to forbid empty usrnames
+  if (usrname->getText() != "") {
+    manager.askRegister(static_cast<std::string>(usrname->getText()),
+                        static_cast<std::string>(pswd->getText()));
+    std::cout << usrname->getText() << "   " << pswd->getText() << std::endl;
 
+    if (!isLoggedIn) {
+      // Ask another Usrname
+      usrname->setText("");
       usrname->setDefaultText("Username already taken or invalid ");
       pswd->setText("");
+    } else {
+      // Change from Login menu -> Game menu
+      this->state = projectState::MENU;
+      initMenuWidget();
     }
   }
-  // New user
-  // WARNING: Je dois attendre le "Network Manager" de Tomas et Chinsou
-  if (usrname->getText() != "") {
-    //     Identifier id =
-    //     Identifier{static_cast<std::string>(usrname->getText()),
-    //                                static_cast<std::string>(pswd->getText())};
-    DB.push_back({static_cast<std::string>(usrname->getText()),
-                  static_cast<std::string>(pswd->getText())});
-    // NOTE: C'est ici que je devrai envoyer au serveur les identifiants de
-    // l'utilisateur
-    std::cout << usrname->getText() << "   " << pswd->getText() << std::endl;
-    // NOTE: Change mode LOGGIN -> MENU for changing what gui draws
-  }
-  this->state = projectState::MENU;
-  initMenuWidget();
 }
 
 void AuthWindow::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
-  /* Envoyer l'identifiant et le password à la base de donnée.
-   * On vérifie que la connexion est correct -> autre fonction
-   *
-   * Tant qu'on est pas connecté, on reste sur la page de connexion
-   * et un message est affiché
-   */
-  // if (Identifiants correct){
-  // state = projectState::MENU;
-  // initMenuWidget();
-  //
-  // } else{
-  // usrname->setDefaultText("Wrong Identifier(s)");
-  // pswd->setText("");
-  // }
-  //
+  manager.login(static_cast<std::string>(usrname->getText()),
+                static_cast<std::string>(pswd->getText()));
+  // If the handler changed isLoggedIn to true, access granted
+  if (isLoggedIn) {
+    state = projectState::MENU;
+    initMenuWidget();
+  }
+  // The identifiers were wrong
+  else {
+    usrname->setDefaultText("Wrong Identifier(s)");
+    pswd->setText("");
+  }
 }
 void AuthWindow::loginWidget() {
   auto editBoxUsername = tgui::EditBox::create();
@@ -142,10 +136,10 @@ void AuthWindow::initMenuWidget() {
   gui.add(joinProjB);
 }
 
-AuthWindow::AuthWindow()
+AuthWindow::AuthWindow(ClientNetworkManager &manager)
     : mainWindow(sf::VideoMode::getDesktopMode(), "Game name",
                  sf::State::Fullscreen),
-      gui(mainWindow) {
+      gui{mainWindow}, manager{manager} {
   initWidget();
 }
 void AuthWindow::run() {
