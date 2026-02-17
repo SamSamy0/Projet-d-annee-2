@@ -22,6 +22,9 @@ public:
   typeCouche getType();
   virtual void drawLayer(sf::RenderWindow& window) = 0;
   virtual void draw(sf::Drawable &s) = 0;
+  virtual void errase(sf::Drawable &s) = 0;
+  virtual void shift(sf::Vector2i v) = 0;
+  virtual void display() = 0;
   virtual ~Layer() = default;
 };
 
@@ -36,14 +39,18 @@ public:
   sf::RenderTexture &getTexture();
   void drawLayer(sf::RenderWindow& window) override;
   void draw(sf::Drawable &s) override;
-  void errase(sf::Drawable &s);
-  void shift(sf::Vector2i v);
-  void display();
+  void errase(sf::Drawable &s) override;
+  void shift(sf::Vector2i v)override;
+  void display()override;
 };
 class SpriteLayer : public Layer {
   std::vector<sf::Sprite> sprites_;
 
 public:
   SpriteLayer(); // TODO: à définir
-  void draw(sf::Drawable &s);
+  void drawLayer(sf::RenderWindow& window) override;
+  void draw(sf::Drawable &s) override;
+  void errase(sf::Drawable &s) override;
+  void shift(sf::Vector2i v)override;
+  void display()override;
 };
