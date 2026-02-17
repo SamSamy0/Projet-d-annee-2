@@ -29,6 +29,7 @@ public:
 
     void push(std::unique_ptr<Reponse> rps);
     std::unique_ptr<Reponse> pop();
+    bool ReponseQueue::isEmpty();
     void stop();
 };
 

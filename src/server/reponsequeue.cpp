@@ -21,6 +21,11 @@ std::unique_ptr<Reponse> ReponseQueue::pop() {
     return rps;
 }
 
+bool ReponseQueue::isEmpty() {
+    std::lock_guard<std::mutex> lock(r_mutex);
+    return r_queue.empty();
+}
+
 void ReponseQueue::stop() {
     {
         std::lock_guard<std::mutex> lock(r_mutex);

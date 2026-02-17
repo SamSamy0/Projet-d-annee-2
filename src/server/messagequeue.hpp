@@ -21,6 +21,7 @@ public:
     void push(std::unique_ptr<Message> msg);
     std::unique_ptr<Message> pop();
     void stop();
+    bool isEmpty();
 };
 
 #endif
