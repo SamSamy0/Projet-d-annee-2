@@ -21,7 +21,6 @@ private:
   // Authentification Interface
   tgui::Gui gui;
   std::unique_ptr<Project> project = nullptr;
-  std::unique_ptr<Project> carteRPG_;
   void initWidget();
   void updateTextSize();
   void processEvents();

@@ -1,9 +1,10 @@
 #include "tool.hpp"
 #include "layer.hpp"
 #include "map.hpp"
+#include <cmath>
 #include <memory>
 
-Tool::Tool(std::shared_ptr<Map> map) : map_{map}{}
+Tool::Tool(std::shared_ptr<Map> map) : map_{map} {}
 std::shared_ptr<Map> Tool::getMap() { return this->map_; }
 unsigned int Tool::getScale() { return map_->getScale(); }
 
@@ -66,10 +67,9 @@ void Brush::stopDrawing(){
 
 
 
-PixelBrush::PixelBrush(std::shared_ptr<Map> map) :Brush(map) {
+PixelBrush::PixelBrush(std::shared_ptr<Map> map) : Brush(map) {
   name_ = PIXELBRUSH;
-  }
-
+}
 
 void PixelBrush::setColor(sf::Color c) {
   color_ = c;
@@ -127,13 +127,17 @@ void PixelBrush::paint(sf::Vector2i pos) {
   }
 }
 
-PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map){name_ = PIXELSHIFT;}
+PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map) {
+  name_ = PIXELSHIFT;
+}
 
-void PixelShift::shiftOn(sf::Vector2i pos_1, sf::Vector2i pos_2){
+void PixelShift::shiftOn(sf::Vector2i pos_1, sf::Vector2i pos_2) {
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
-  if (layer->getType() == PIXELLAYER){
-    sf::Vector2i vect(static_cast<int>(pos_2.x) - static_cast<int>(pos_1.x),
-                      static_cast<int>(pos_2.y) - static_cast<int>(pos_1.y)); //on convertit avant la soustraction
+  if (layer->getType() == PIXELLAYER) {
+    sf::Vector2i vect(
+        static_cast<int>(pos_2.x) - static_cast<int>(pos_1.x),
+        static_cast<int>(pos_2.y) -
+            static_cast<int>(pos_1.y)); // on convertit avant la soustraction
     layer->shift(vect);
   }
 }
