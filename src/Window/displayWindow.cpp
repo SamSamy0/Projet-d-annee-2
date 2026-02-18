@@ -1,24 +1,15 @@
-<<<<<<< HEAD
-=======
-#include "displayWindow.hpp"
-#include "../project/project.hpp"
-#include "../project/tool.hpp"
-#include "../server/clientnetwork.hpp"
->>>>>>> origin/menu
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Text.hpp>
 #include <TGUI/Widgets/TextArea.hpp>
-<<<<<<< HEAD
 #include "displayWindow.hpp"
 #include "../server/clientnetwork.hpp"
 #include "../project/project.hpp"
 #include "../project/tool.hpp"
-=======
-// #include <memory>
->>>>>>> origin/menu
+
 
 void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   // NOTE: I have to ask how the usernames are stored in the server
@@ -123,7 +114,6 @@ void Window::processEvents() {
         mainWindow.close();
     }
 
-<<<<<<< HEAD
     //Dans un projet
     if(state == projectState::GAME && project){
 
@@ -136,9 +126,6 @@ void Window::processEvents() {
         }
       }
       
-=======
-    // Dans un projet
->>>>>>> origin/menu
 
     if (state == projectState::GAME && project) {
       project->getMap()->detectZooming(*event); // ZOOM
