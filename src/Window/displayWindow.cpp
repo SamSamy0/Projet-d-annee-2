@@ -1,16 +1,12 @@
-#include "displayWindow.hpp"
-#include "../server/clientnetwork.hpp"
-<<<<<<< HEAD
-#include "../src/project/project.hpp"
-=======
-#include "../project/project.hpp"
-#include "../project/tool.hpp"
->>>>>>> 1963c10c39ecca0e61448e4a08421c65ec4a40a8
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Text.hpp>
 #include <TGUI/Widgets/TextArea.hpp>
+#include "displayWindow.hpp"
+#include "../server/clientnetwork.hpp"
+#include "../project/project.hpp"
+#include "../project/tool.hpp"
 
 void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   // NOTE: I have to ask how the usernames are stored in the server

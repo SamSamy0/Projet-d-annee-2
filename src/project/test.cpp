@@ -58,7 +58,7 @@ int main()
         map->detectMovement();
 
         // Affichage complet via Project
-        project.display(gui);
+        project.display();
     }
         }
 

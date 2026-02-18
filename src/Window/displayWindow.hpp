@@ -1,11 +1,11 @@
 #ifndef DISPLAYWINDOW_HPP
 #define DISPLAYWINDOW_HPP
-#include "../server/clientnetwork.hpp"
-#include "Identifier.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <vector>
+#include "Identifier.hpp"
+#include "../server/clientnetwork.hpp"
 #include "../project/project.hpp"
 
 class Project;
