@@ -13,7 +13,7 @@ DatabaseManager::DatabaseManager() {
 
         query.exec("CREATE TABLE IF NOT EXISTS users ("
                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                   "pseudo TEXT UNIQUE, "
+                   "pseudo TEXT UNIQUE COLLATE NOCASE, "
                    "password TEXT)");
         query.exec("CREATE TABLE IF NOT EXISTS projects ("
                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -121,6 +121,7 @@ std::vector<MemberEntry> DatabaseManager::getProjectMembers(long long projectId)
             MemberEntry m;
             m.userId = query.value(0).toLongLong();
             m.role = static_cast<int8_t>(query.value(1).toInt());
+            m.pseudo = getPseudo(m.userId);
             members.push_back(m);
         }
     }
@@ -139,6 +140,7 @@ std::vector<ProjectEntry> DatabaseManager::getUserProjects(long long userId) {
             ProjectEntry p;
             p.projectId = query.value(0).toLongLong();
             p.role = static_cast<int8_t>(query.value(1).toInt());
+            p.name = getName(p.projectId);
             projects.push_back(p);
         }
     }
@@ -198,4 +200,22 @@ int8_t DatabaseManager::getRole(const long long userId, const long long projectI
         qDebug() << "Avertissement : Aucun projet trouvé pour l'ID" << projectId;
         return -1;
     }
+}
+
+std::vector<ProjectEntry> DatabaseManager::getAllProjects() {
+    std::vector<ProjectEntry> projects;
+    QSqlQuery query;
+
+    query.prepare("SELECT id, name FROM projects");
+
+    if (query.exec()) {
+        while (query.next()) {
+            ProjectEntry p;
+            p.projectId = query.value(0).toLongLong();
+            p.role = static_cast<int8_t>(2);
+            p.name = query.value(1).toString().toStdString();
+            projects.push_back(p);
+        }
+    }
+    return projects;
 }

@@ -8,11 +8,13 @@
 struct MemberEntry {
     long long userId;
     int8_t role;
+    std::string pseudo;
 };
 
 struct ProjectEntry {
     long long projectId;
     int8_t role;
+    std::string name;
 };
 
 class DatabaseManager {
@@ -28,6 +30,7 @@ public:
     std::string getPseudo(const long long userId);
     std::string getName(const long long projectId);
     int8_t getRole(const long long userId, const long long projectId);
+    std::vector<ProjectEntry> getAllProjects();
 private:
     QSqlDatabase m_db;
 };
