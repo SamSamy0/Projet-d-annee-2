@@ -56,12 +56,12 @@ void ClientNetworkManager::askRegister(std::string pseudo, std::string password)
 }
 
 
-void ClientNetworkManager::createProject(std::string role, float size, float scale){
+void ClientNetworkManager::createProject(std::string nomProjet, sf::Vector2u size, float scale){
     sf::Packet packet;
     MsgProtocole msg = MsgProtocole::LOB_CREATE_PROJECT_REQ;
     
     packet << static_cast<uint8_t>(msg);
-    packet << role << size << scale ;
+    packet << nomProjet << size.x << size.y << scale ;
 
     socket.send(packet);
 

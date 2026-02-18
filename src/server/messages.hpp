@@ -37,7 +37,8 @@ struct RegisterMessage : Message{
 
 
 struct CreateProjectMessage : Message{
-    float size;
+    std::string nomProjet;
+    sf::Vector2u size;
     float scale;
     
     CreateProjectMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c);

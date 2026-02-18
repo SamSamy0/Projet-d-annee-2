@@ -14,7 +14,7 @@ ProjectsManager::ProjectsManager(const std::string &rootPath = "BigData")
     }
 }
 
-bool ProjectsManager::createProjectJson(int id, const QString &projectName, int width, int height) {
+bool ProjectsManager::createProjectJson(int id, const QString &projectName, int width, int height, float scale) {
     if (!ensureDirectoryExists(id)) {
         return false;
     }
@@ -25,6 +25,7 @@ bool ProjectsManager::createProjectJson(int id, const QString &projectName, int 
     root["name"] = projectName;
     root["width"] = width;
     root["height"] = height;
+    root["scale"] = scale;
 
     root["layers"] = emptylayers;
 

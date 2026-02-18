@@ -64,13 +64,13 @@ void RegisterMessage::process(Worker& worker) {
 
 
 CreateProjectMessage::CreateProjectMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c): Message(c){
-    *data_packet >> size >> scale;
+    *data_packet >> nomProjet >> size.x >> size.y >> scale;
 }
 
 
 void CreateProjectMessage::process(Worker& worker) {
     long long id_proj = worker.db_Manager.addProject("test", this->client.id);
-    worker.proj_Manager.createProjectJson(id_proj, "test", size, scale);
+    worker.proj_Manager.createProjectJson(id_proj, "test", size.x, size.y, scale);
 }
 
 
