@@ -1,6 +1,11 @@
 #include "displayWindow.hpp"
 #include "../server/clientnetwork.hpp"
-// #include "../src/project/project.hpp"
+<<<<<<< HEAD
+#include "../src/project/project.hpp"
+=======
+#include "../project/project.hpp"
+#include "../project/tool.hpp"
+>>>>>>> 1963c10c39ecca0e61448e4a08421c65ec4a40a8
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
@@ -84,10 +89,16 @@ void Window::initWidget() {
   } else if (this->state == projectState::MENU) {
     // AuthWindow::menuWidget();
   }
-  // else if (this->state == projectState::GAME){
-  // Display the map if we enter a project.
-  //
-  // }
+  else if (this->state == projectState::GAME){
+    // Ajout du bouton de Home (retour en arrière)
+    auto homeButton = tgui::Button::create();
+    homeButton->setSize(30, 30);
+    homeButton->setPosition(15, 5);
+    homeButton->getRenderer()->setTexture("../../res/images/accueil.png");
+    homeButton->getRenderer()->setBorders({0});
+    homeButton->onPress([](){ state = projectState::MENU; });
+    gui.add(homeButton);
+  }
 }
 void Window::updateTextSize() {
   const float windowHeight = gui.getView().getRect().height;
@@ -105,8 +116,53 @@ void Window::processEvents() {
       if (keyPressed->code == sf::Keyboard::Key::Escape)
         mainWindow.close();
     }
+
+    //Dans un projet
+
+    if(state == projectState::GAME && project){
+      project->getMap()->detectZooming(*event); //ZOOM
+
+      if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){leftClickEvent();}
+
+
+    }
   }
 }
+
+
+void Window::leftClickEvent(){
+  
+  toolType tool = project->getToolBar().getSelected();
+  sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); //position de la souris
+  sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
+  sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+
+  switch (tool){
+
+    case PIXELBRUSH :{
+
+      if (project->getMap()->isInside(mapPos) && !gui.getWidgetAtPos(sf::Vector2f(mousePos),true)) {
+          project->getToolBar().getSelectedTool()->drawOn(mapPos);}
+      break;
+    }
+    case PIXELSHIFT :{
+
+
+      break;
+    }
+
+    case SPRITEBRUSH :{
+
+
+
+      break;
+    }
+  }
+
+
+
+}
+
 
 void Window::initMenuWidget() {
   gui.removeAllWidgets();
@@ -146,7 +202,7 @@ void Window::createProj() {
 Window::Window(ClientNetworkManager &manager)
     : mainWindow(sf::VideoMode::getDesktopMode(), "Game name",
                  sf::State::Fullscreen),
-      gui{mainWindow}, manager{manager} {
+      gui{mainWindow}, manager{manager}, carteRPG_{nullptr} {
   initWidget();
 }
 void Window::run() {
@@ -160,6 +216,7 @@ void Window::run() {
 
     } else if (Window::state == projectState::GAME) {
       // Display Game
+      carteRPG_->display();
     }
     mainWindow.display();
   }
