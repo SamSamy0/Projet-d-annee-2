@@ -1,16 +1,14 @@
 #include "displayWindow.hpp"
-#include "../server/clientnetwork.hpp"
-<<<<<<< HEAD
-#include "../src/project/project.hpp"
-=======
 #include "../project/project.hpp"
 #include "../project/tool.hpp"
->>>>>>> 1963c10c39ecca0e61448e4a08421c65ec4a40a8
+#include "../server/clientnetwork.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Text.hpp>
 #include <TGUI/Widgets/TextArea.hpp>
+#include <memory>
 
 void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   // NOTE: I have to ask how the usernames are stored in the server
@@ -31,8 +29,7 @@ void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
       pswd->setText("");
     } else {
       // Change from Login menu -> Game menu
-      this->state = projectState::MENU;
-      initMenuWidget();
+      setState(projectState::MENU);
     }
   }
 }
@@ -42,8 +39,7 @@ void Window::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
                 static_cast<std::string>(pswd->getText()));
   // If the handler changed isLoggedIn to true, access granted
   if (isLoggedIn) {
-    state = projectState::MENU;
-    initMenuWidget();
+    setState(projectState::MENU);
   }
   // The identifiers were wrong
   else {
@@ -81,23 +77,23 @@ void Window::loginWidget() {
 }
 
 void Window::initWidget() {
+  gui.removeAllWidgets();
   updateTextSize();
   gui.onViewChange([this] { updateTextSize(); });
 
   if (this->state == projectState::LOGIN) {
     Window::loginWidget();
   } else if (this->state == projectState::MENU) {
-    // AuthWindow::menuWidget();
-  }
-  else if (this->state == projectState::GAME){
+    Window::initMenuWidget();
+  } else if (this->state == projectState::GAME) {
     // Ajout du bouton de Home (retour en arrière)
     auto homeButton = tgui::Button::create();
     homeButton->setSize(30, 30);
     homeButton->setPosition(15, 5);
     homeButton->getRenderer()->setTexture("../../res/images/accueil.png");
     homeButton->getRenderer()->setBorders({0});
-    homeButton->onPress([](){ state = projectState::MENU; });
     gui.add(homeButton);
+    homeButton->onPress(&Window::setState, this, projectState::MENU);
   }
 }
 void Window::updateTextSize() {
@@ -117,52 +113,41 @@ void Window::processEvents() {
         mainWindow.close();
     }
 
-    //Dans un projet
+    // Dans un projet
 
-    if(state == projectState::GAME && project){
-      project->getMap()->detectZooming(*event); //ZOOM
+    if (state == projectState::GAME && project) {
+      project->getMap()->detectZooming(*event); // ZOOM
 
-      if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){leftClickEvent();}
-
-
+      if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+        leftClickEvent();
+      }
     }
   }
 }
 
-
-void Window::leftClickEvent(){
-  
+void Window::leftClickEvent() {
   toolType tool = project->getToolBar().getSelected();
-  sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); //position de la souris
+  sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); // mouse position
   sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
   sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
 
-  switch (tool){
-
-    case PIXELBRUSH :{
-
-      if (project->getMap()->isInside(mapPos) && !gui.getWidgetAtPos(sf::Vector2f(mousePos),true)) {
-          project->getToolBar().getSelectedTool()->drawOn(mapPos);}
-      break;
+  switch (tool) {
+  case PIXELBRUSH: {
+    if (project->getMap()->isInside(mapPos) &&
+        !gui.getWidgetAtPos(sf::Vector2f(mousePos), true)) {
+      project->getToolBar().getSelectedTool()->drawOn(mapPos);
     }
-    case PIXELSHIFT :{
-
-
-      break;
-    }
-
-    case SPRITEBRUSH :{
-
-
-
-      break;
-    }
+    break;
+  }
+  case PIXELSHIFT: {
+    break;
   }
 
-
-
+  case SPRITEBRUSH: {
+    break;
+  }
+  }
 }
-
 
 void Window::initMenuWidget() {
   gui.removeAllWidgets();
@@ -197,6 +182,13 @@ void Window::createProj() {
   manager.createProject("Owner", 100.0, 1);
   // Vector2u = map size
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
+  this->project =
+      std::make_unique<Project>(1, sf::Vector2u(500, 500), mainWindow, gui);
+}
+
+void Window::setState(projectState newState) {
+  this->state = newState;
+  this->initWidget();
 }
 
 Window::Window(ClientNetworkManager &manager)

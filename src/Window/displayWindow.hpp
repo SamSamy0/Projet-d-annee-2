@@ -1,12 +1,12 @@
 #ifndef DISPLAYWINDOW_HPP
 #define DISPLAYWINDOW_HPP
+#include "../project/project.hpp"
 #include "../server/clientnetwork.hpp"
 #include "Identifier.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <vector>
-#include "../project/project.hpp"
 
 class Project;
 enum class projectState { LOGIN, MENU, GAME };
@@ -33,9 +33,10 @@ private:
   bool checkLogin();
   void loginWidget();
   void createProj();
+  void setState(projectState newState);
   // void menuWidget();
 
-  // Detection
+  // Detection in map
   void leftClickEvent();
 
 public:
