@@ -1,13 +1,13 @@
+#include "displayWindow.hpp"
+#include "../project/project.hpp"
+#include "../project/tool.hpp"
+#include "../server/clientnetwork.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Text.hpp>
 #include <TGUI/Widgets/TextArea.hpp>
-#include "displayWindow.hpp"
-#include "../server/clientnetwork.hpp"
-#include "../project/project.hpp"
-#include "../project/tool.hpp"
 
 void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   // NOTE: I have to ask how the usernames are stored in the server
@@ -116,20 +116,18 @@ void Window::processEvents() {
         mainWindow.close();
     }
 
-    //Dans un projet
-    if(state == projectState::GAME && project){
-
-      project->getMap()->detectZooming(*event); //ZOOM
+    // Dans un projet
+    if (state == projectState::GAME && project) {
+      project->getMap()->detectZooming(*event); // ZOOM
       //
-      if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){leftClickEvent();}
-      if (auto mouseEvent = event->getIf<sf::Event::MouseButtonReleased>()){
-        if (mouseEvent->button == sf::Mouse::Button::Left){
+      if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+        leftClickEvent();
+      }
+      if (auto mouseEvent = event->getIf<sf::Event::MouseButtonReleased>()) {
+        if (mouseEvent->button == sf::Mouse::Button::Left) {
           project->getToolBar().getSelectedTool()->stopDrawing();
         }
       }
-      
-
-
     }
   }
 }
@@ -192,8 +190,8 @@ void Window::createProj() {
   // Vector2u = map size
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
   gui.removeAllWidgets();
-  this->project =
-      std::make_unique<Project>(1, sf::Vector2u(500, 500),"project",1, mainWindow, gui);
+  this->project = std::make_unique<Project>(1, sf::Vector2u(500, 500),
+                                            "project", 1, mainWindow, gui);
   setState(projectState::GAME);
 }
 
@@ -219,11 +217,11 @@ void Window::run() {
     processEvents();
     mainWindow.clear(sf::Color::White);
 
-    if (Window::state == projectState::LOGIN ||
-        Window::state == projectState::MENU) {
-      gui.draw();
-    } 
-    else if (Window::state == projectState::GAME && project) {
+    // if (Window::state == projectState::LOGIN ||
+    //     Window::state == projectState::MENU) {
+    //   // gui.draw();
+    // }
+    if (Window::state == projectState::GAME && project) {
       // Display Game
       project->display();
     }
