@@ -6,7 +6,7 @@
 #include <memory>
 #include <SFML/Network.hpp>
 #include "protocol.hpp"
-#include "messages.cpp"
+#include "messagequeue.hpp"
 #include "reponsequeue.hpp"
 
 
