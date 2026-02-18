@@ -19,6 +19,13 @@ void ClientEventHandler::process(ServerEvent& event){
         case MsgProtocole::LOB_PROJECT_DATA_REP:
             handleProjectData(event);
             break;
+        case MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP:
+            handleMyProjects(event);
+            break;
         }
+}
+
+void handleMyProjects(ServerEvent& event) {
+
 }
 

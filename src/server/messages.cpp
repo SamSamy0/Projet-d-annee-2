@@ -76,9 +76,32 @@ void CreateProjectMessage::process(Worker& worker) {
 
 
 void GetProjectDataMessage::process(Worker& worker) {
-    
+    //à faire un jour
 }
 
+GetUsersProjectsMessage::GetUsersProjectsMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c): Message(c) {
+    *data_packet >> userdId_;
+
+}
+
+void GetUsersProjectsMessage::process(Worker& worker) {
+    std::vector<ProjectEntry> projects = worker.db_Manager.getAllProjects();
+
+    auto rps = std::make_unique<Reponse>();
+    rps->client = this->client;
+    rps->message_type = MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP;
+
+    rps->packet = std::make_unique<sf::Packet>();
+    *rps->packet << static_cast<sf::Uint8>(MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP);
+
+    for (const auto& entry : projects) {
+        *rps->packet << entry.projectId;
+        *rps->packet << entry.name;
+        *rps->packet << entry.role;
+    }
+
+    worker.rep_queue.push(std::move(rps));
+}
 
 std::unique_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet,Client client){
     uint8_t message_type;

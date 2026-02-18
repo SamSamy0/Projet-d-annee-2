@@ -53,6 +53,13 @@ struct GetProjectDataMessage : Message{
     void process(Worker& worker) override;
 };
 
+struct GetUsersProjectsMessage : Message {
+    int userdId_;
+
+    GetUsersProjectsMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c);
+    void process(Worker& worker) override;
+};
+
 
 std::unique_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet,Client client);
 
