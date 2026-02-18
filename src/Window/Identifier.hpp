@@ -1,5 +1,4 @@
-#ifndef IDENTIFIER_HPP
-#define IDENTIFIER_HPP
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
@@ -23,4 +22,3 @@ public:
   std::string getrole();
   std::string getusername();
 };
-#endif

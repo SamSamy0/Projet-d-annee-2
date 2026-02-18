@@ -1,27 +1,44 @@
 cmake_minimum_required(VERSION 3.10)
-project(ProjetCollaboratif)
-
+project(Projet)
 set(CMAKE_CXX_STANDARD 17)
 
-set(SFML_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(SFML_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-
-add_subdirectory(lib/SFML-master/SFML-master)
+find_package(SFML 3.0 COMPONENTS Graphics Window System Network REQUIRED)
+find_package(TGUI 1.0 REQUIRED)
 
 set(SOURCES
     main.cpp
     src/Window/Identifier.cpp
     src/Window/displayWindow.cpp
-    src/Window/displayWindow.hpp
     src/server/clientnetwork.cpp
     src/server/handler.cpp
+    src/project/map.cpp
+    src/project/layer.cpp
+    src/project/zoom.cpp
+    src/project/move.cpp
+    src/project/toolbar.cpp
 )
+
 add_executable(sfml-app ${SOURCES})
+
 target_link_libraries(sfml-app 
-    sfml-graphics 
-    sfml-window 
-    sfml-system 
-    sfml-network
-    tgui
-)
-target_include_directories(sfml-app PRIVATE . src/server)
+    SFML::Graphics 
+    SFML::Window 
+    SFML::System 
+    SFML::Network
+    TGUI::TGUI
+)# set(SOURCES
+#     main.cpp
+#     src/Window/Identifier.cpp
+#     src/Window/displayWindow.cpp
+#     src/Window/displayWindow.hpp
+#     # src/server/clientnetwork.cpp
+#     # src/server/handler.cpp
+#     # src/project/project.cpp
+#     # src/project/tool.cpp
+#     # src/project/map.cpp
+#     # src/project/layer.cpp
+#     # src/project/zoom.cpp
+#     # src/project/move.cpp
+#     # src/project/toolbar.cpp
+#     
+# )
