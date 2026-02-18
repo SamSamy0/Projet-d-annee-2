@@ -13,14 +13,16 @@
 class ServerNetworkManager{
     sf::TcpListener listener;
     std::vector<Client> client_list;
-    std::deque<std::unique_ptr<Message>> message_queu;
-    std::deque<Reponse> rep_queu;
+    MessageQueue message_queu;
+    ReponseQueue rep_queu;
+    std::atomic<bool> m_running;
     
 public:
     bool start();
     bool accept();
     void getMessages();
     void sendReponse();
+    void run();
 };
 
 #endif

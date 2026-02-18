@@ -72,8 +72,8 @@ void CreateProjectMessage::process(Worker& worker) {
     long long id_proj = worker.db_Manager.addProject("test", this->client.id);
     worker.proj_Manager.createProjectJson(id_proj, "test", size, scale);
 }
-    
-    int projectId_;
+
+
 
 void GetProjectDataMessage::process(Worker& worker) {
     

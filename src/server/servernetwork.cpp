@@ -37,7 +37,7 @@ void ServerNetworkManager::getMessages(){
         
         if (client.sock->receive(*packet) == sf::Socket::Done){
             auto msg = MessageFactory(packet,client);
-            message_queu.push_back(std::move(msg));
+            message_queu.push(std::move(msg));
         }
     };
 };
@@ -45,8 +45,8 @@ void ServerNetworkManager::getMessages(){
 
 //envoi des reponses au client
 void ServerNetworkManager::sendReponse(){
-    for (auto it = rep_queu.begin(); it != rep_queu.end(); ){
-        auto& rep = *it;
+    while (!rep_queu.isEmpty()){
+        Reponse& rep = *rep_queu.pop();
 
         //si c'est pour une connection
         if (rep.message_type == MsgProtocole::AUTH_RESULT){
@@ -73,12 +73,22 @@ void ServerNetworkManager::sendReponse(){
                 }
             }
         }
-        
-    it = rep_queu.erase(it);
     };
 };
 
+void ServerNetworkManager::run() {
+    m_running = true;
+    std::cout << "[Network] Serveur démarré, prêt à gérer les clients..." << std::endl;
 
+    while (m_running) {
+        accept();
+        getMessages();
+        sendReponse();
+
+        //pour faire une vérif des messages toutes 10 millisecs
+        sf::sleep(sf::milliseconds(10)); 
+    }
+}
 
 
 
