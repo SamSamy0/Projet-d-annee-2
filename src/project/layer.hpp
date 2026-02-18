@@ -20,6 +20,7 @@ protected:
 public:
   Layer(std::string name, sf::Vector2u size);
   typeCouche getType();
+  virtual sf::RenderTexture &getTexture() {}
   virtual void drawLayer(sf::RenderWindow& window) = 0;
   virtual void draw(sf::Drawable &s) = 0;
   virtual void errase(sf::Drawable &s) = 0;

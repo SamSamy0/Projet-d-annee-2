@@ -45,10 +45,15 @@ public:
 class Brush :public Tool {
 protected:
   sf::Vector2u size_m_ = sf::Vector2u(1, 1);
+  bool isDrawing_ = false;
+  int distance_ = 0;
+  int spacing_;
+  sf::Vector2i lastPos_;
 public:
   Brush(std::shared_ptr<Map>);
   void setSize(unsigned int x, unsigned int y);
-  virtual void drawOn(sf::Vector2i pos) = 0;
+  void drawOn(sf::Vector2i pos);
+  virtual void paint(sf::Vector2i pos) = 0;
   virtual ~Brush() = default;
 };
 //-----------------------------PIXELBRUSH---------------------------
@@ -61,7 +66,7 @@ public:
   PixelBrush(std::shared_ptr<Map> map);
   void setColor(sf::Color c) override;
   void setShape(Shape s)override;
-  void drawOn(sf::Vector2i pos) override;
+  void paint(sf::Vector2i pos) override;
   void setErraser() override ;
 };
 //-----------------------------------------------------------------------

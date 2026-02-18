@@ -19,14 +19,14 @@ int main()
     window.setFramerateLimit(60);
 
     // 🔹 Création du projet
-    Project project(1, sf::Vector2u(500, 500), window, gui);
+    Project project(10, sf::Vector2u(5000, 5000), window, gui);
 
     std::shared_ptr<Map> map = project.getMap();
 
     project.getToolBar().selectTool(PIXELBRUSH);
     project.getToolBar().getSelectedTool()->setColor(sf::Color(0,0,255,125));
     project.getToolBar().getSelectedTool()->setShape(CIRCLE);
-    project.getToolBar().getSelectedTool()->setSize(10,10);
+    project.getToolBar().getSelectedTool()->setSize(1,1);
     project.getToolBar().getSelectedTool()->drawOn(sf::Vector2i(-25,200));
 
     while (window.isOpen())
