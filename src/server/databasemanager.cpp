@@ -1,4 +1,4 @@
-#include "databasemanager.h"
+#include "databasemanager.hpp"
 #include <QSqlError>
 #include <QDebug>
 
@@ -86,7 +86,7 @@ long long DatabaseManager::addProject(const std::string& name, const long long u
 
     if (query.exec()) {
         long long projId = query.lastInsertId().toLongLong();
-        //this->addLink(userId, projId, 2);
+        this->addLink(userId, projId, 2);
         return projId;
     }
     qDebug() << "Erreur d'inscription :" << query.lastError().text();
