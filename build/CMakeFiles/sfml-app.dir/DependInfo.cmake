@@ -14,6 +14,8 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/samy/BA2/pa/group-13/src/project/layer.cpp" "CMakeFiles/sfml-app.dir/src/project/layer.cpp.o" "gcc" "CMakeFiles/sfml-app.dir/src/project/layer.cpp.o.d"
   "/home/samy/BA2/pa/group-13/src/project/map.cpp" "CMakeFiles/sfml-app.dir/src/project/map.cpp.o" "gcc" "CMakeFiles/sfml-app.dir/src/project/map.cpp.o.d"
   "/home/samy/BA2/pa/group-13/src/project/move.cpp" "CMakeFiles/sfml-app.dir/src/project/move.cpp.o" "gcc" "CMakeFiles/sfml-app.dir/src/project/move.cpp.o.d"
+  "/home/samy/BA2/pa/group-13/src/project/project.cpp" "CMakeFiles/sfml-app.dir/src/project/project.cpp.o" "gcc" "CMakeFiles/sfml-app.dir/src/project/project.cpp.o.d"
+  "/home/samy/BA2/pa/group-13/src/project/tool.cpp" "CMakeFiles/sfml-app.dir/src/project/tool.cpp.o" "gcc" "CMakeFiles/sfml-app.dir/src/project/tool.cpp.o.d"
   "/home/samy/BA2/pa/group-13/src/project/toolbar.cpp" "CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o" "gcc" "CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o.d"
   "/home/samy/BA2/pa/group-13/src/project/zoom.cpp" "CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o" "gcc" "CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o.d"
   "/home/samy/BA2/pa/group-13/src/server/clientnetwork.cpp" "CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o" "gcc" "CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o.d"

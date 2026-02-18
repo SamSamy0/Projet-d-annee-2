@@ -273,6 +273,54 @@ src/project/move.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/src/project/move.cpp.s
 .PHONY : src/project/move.cpp.s
 
+src/project/project.o: src/project/project.cpp.o
+.PHONY : src/project/project.o
+
+# target to build an object file
+src/project/project.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/src/project/project.cpp.o
+.PHONY : src/project/project.cpp.o
+
+src/project/project.i: src/project/project.cpp.i
+.PHONY : src/project/project.i
+
+# target to preprocess a source file
+src/project/project.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/src/project/project.cpp.i
+.PHONY : src/project/project.cpp.i
+
+src/project/project.s: src/project/project.cpp.s
+.PHONY : src/project/project.s
+
+# target to generate assembly for a file
+src/project/project.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/src/project/project.cpp.s
+.PHONY : src/project/project.cpp.s
+
+src/project/tool.o: src/project/tool.cpp.o
+.PHONY : src/project/tool.o
+
+# target to build an object file
+src/project/tool.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/src/project/tool.cpp.o
+.PHONY : src/project/tool.cpp.o
+
+src/project/tool.i: src/project/tool.cpp.i
+.PHONY : src/project/tool.i
+
+# target to preprocess a source file
+src/project/tool.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/src/project/tool.cpp.i
+.PHONY : src/project/tool.cpp.i
+
+src/project/tool.s: src/project/tool.cpp.s
+.PHONY : src/project/tool.s
+
+# target to generate assembly for a file
+src/project/tool.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sfml-app.dir/build.make CMakeFiles/sfml-app.dir/src/project/tool.cpp.s
+.PHONY : src/project/tool.cpp.s
+
 src/project/toolbar.o: src/project/toolbar.cpp.o
 .PHONY : src/project/toolbar.o
 
@@ -396,6 +444,12 @@ help:
 	@echo "... src/project/move.o"
 	@echo "... src/project/move.i"
 	@echo "... src/project/move.s"
+	@echo "... src/project/project.o"
+	@echo "... src/project/project.i"
+	@echo "... src/project/project.s"
+	@echo "... src/project/tool.o"
+	@echo "... src/project/tool.i"
+	@echo "... src/project/tool.s"
 	@echo "... src/project/toolbar.o"
 	@echo "... src/project/toolbar.i"
 	@echo "... src/project/toolbar.s"
