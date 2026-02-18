@@ -11,7 +11,7 @@ LDLIBS   := -ltgui -lsfml-graphics -lsfml-window -lsfml-system
 
 TARGET := test
 
-SRC := test2.cpp map.cpp zoom.cpp move.cpp layer.cpp project.cpp tool.cpp toolbar.cpp
+SRC := test.cpp map.cpp zoom.cpp move.cpp layer.cpp project.cpp tool.cpp toolbar.cpp
 OBJ := $(SRC:.cpp=.o)
 
 all: $(TARGET)
