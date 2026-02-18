@@ -1,14 +1,44 @@
-cmake_minimum_required(VERSION 3.16)
-project(MyProject LANGUAGES CXX)
-
+cmake_minimum_required(VERSION 3.10)
+project(Projet)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Ajoute SFML (le code source que tu as mis dans lib/SFML)
-add_subdirectory(lib/SFML)
+find_package(SFML 3.0 COMPONENTS Graphics Window System Network REQUIRED)
+find_package(TGUI 1.0 REQUIRED)
 
-add_executable(app
-    src/main.cpp
+set(SOURCES
+    main.cpp
+    src/Window/Identifier.cpp
+    src/Window/displayWindow.cpp
+    src/server/clientnetwork.cpp
+    src/server/handler.cpp
+    src/project/map.cpp
+    src/project/layer.cpp
+    src/project/zoom.cpp
+    src/project/move.cpp
+    src/project/toolbar.cpp
 )
 
-target_link_libraries(app PRIVATE sfml-graphics sfml-window sfml-system)
+add_executable(sfml-app ${SOURCES})
+
+target_link_libraries(sfml-app 
+    SFML::Graphics 
+    SFML::Window 
+    SFML::System 
+    SFML::Network
+    TGUI::TGUI
+)# set(SOURCES
+#     main.cpp
+#     src/Window/Identifier.cpp
+#     src/Window/displayWindow.cpp
+#     src/Window/displayWindow.hpp
+#     # src/server/clientnetwork.cpp
+#     # src/server/handler.cpp
+#     # src/project/project.cpp
+#     # src/project/tool.cpp
+#     # src/project/map.cpp
+#     # src/project/layer.cpp
+#     # src/project/zoom.cpp
+#     # src/project/move.cpp
+#     # src/project/toolbar.cpp
+#     
+# )
