@@ -96,10 +96,10 @@ void Window::initWidget() {
     homeButton->getRenderer()->setBorders({0});
     gui.add(homeButton);
     // homeButton->onPress(&Window::setState, this, projectState::MENU);
-    homeButton->onPress([&]() {
-      state = projectState::MENU;
-      std::cout << "Home pressed\n";
-    });
+    // homeButton->onPress([&]() {
+    //   state = projectState::MENU;
+    //   std::cout << "Home pressed\n";
+    // });
   }
 }
 void Window::updateTextSize() {
@@ -190,10 +190,10 @@ void Window::createProj() {
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
   gui.removeAllWidgets();
   std::cout << "Avant change state" << std::endl;
-  setState(projectState::GAME);
   std::cout << "Après change state" << std::endl;
   this->project =
       std::make_unique<Project>(1, sf::Vector2u(500, 500), mainWindow, gui);
+  setState(projectState::GAME);
 }
 
 void Window::setState(projectState newState) {
@@ -204,7 +204,7 @@ void Window::setState(projectState newState) {
 Window::Window(ClientNetworkManager &manager)
     : mainWindow(sf::VideoMode::getDesktopMode(), "Game name",
                  sf::State::Fullscreen),
-      gui{mainWindow}, manager{manager}, carteRPG_{nullptr} {
+      gui{mainWindow}, manager{manager}, project{nullptr} {
   initWidget();
 }
 // Window::Window(ClientNetworkManager &manager)
@@ -221,9 +221,10 @@ void Window::run() {
     if (Window::state == projectState::LOGIN ||
         Window::state == projectState::MENU) {
       gui.draw();
-    } else if (Window::state == projectState::GAME) {
+    } else if (Window::state == projectState::GAME && project) {
       // Display Game
-      carteRPG_->display();
+      std::cout << "Going to display carterpg" << std::endl;
+      project->display();
     }
     gui.draw();
     mainWindow.display();

@@ -20,8 +20,7 @@ private:
   sf::RenderWindow mainWindow;
   // Authentification Interface
   tgui::Gui gui;
-  std::unique_ptr<Project> project = nullptr;
-  std::unique_ptr<Project> carteRPG_;
+  std::unique_ptr<Project> project;
   void initWidget();
   void updateTextSize();
   void processEvents();
