@@ -192,8 +192,6 @@ void Window::createProj() {
   // Vector2u = map size
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
   gui.removeAllWidgets();
-  std::cout << "Avant change state" << std::endl;
-  std::cout << "Après change state" << std::endl;
   this->project =
       std::make_unique<Project>(1, sf::Vector2u(500, 500),"project",1, mainWindow, gui);
   setState(projectState::GAME);
@@ -224,11 +222,7 @@ void Window::run() {
     if (Window::state == projectState::LOGIN ||
         Window::state == projectState::MENU) {
       gui.draw();
-    } else if (Window::state == projectState::GAME && project) {
-      // Display Game
-      std::cout << "Going to display carterpg" << std::endl;
-      project->display();
-    }
+    } 
     else if (Window::state == projectState::GAME && project) {
       // Display Game
       project->display();
