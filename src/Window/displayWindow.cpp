@@ -90,10 +90,16 @@ void Window::initWidget() {
     auto homeButton = tgui::Button::create();
     homeButton->setSize(30, 30);
     homeButton->setPosition(15, 5);
-    homeButton->getRenderer()->setTexture("../../res/images/accueil.png");
+    std::cout << "Agvant texture" << std::endl;
+    homeButton->getRenderer()->setTexture("../res/images/accueil.png");
+    std::cout << "Après texture" << std::endl;
     homeButton->getRenderer()->setBorders({0});
     gui.add(homeButton);
-    homeButton->onPress(&Window::setState, this, projectState::MENU);
+    // homeButton->onPress(&Window::setState, this, projectState::MENU);
+    homeButton->onPress([&]() {
+      state = projectState::MENU;
+      std::cout << "Home pressed\n";
+    });
   }
 }
 void Window::updateTextSize() {
@@ -125,30 +131,29 @@ void Window::processEvents() {
   }
 }
 
-// void Window::leftClickEvent() {
-//   toolType tool = project->getToolBar().getSelected();
-//   sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); // mouse
-//   position sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos,
-//   project->getView()); sf::Vector2i mapPos(static_cast<int>(pos.x),
-//   static_cast<int>(pos.y));
-//
-//   switch (tool) {
-//   case PIXELBRUSH: {
-//     if (project->getMap()->isInside(mapPos) &&
-//         !gui.getWidgetAtPos(sf::Vector2f(mousePos), true)) {
-//       project->getToolBar().getSelectedTool()->drawOn(mapPos);
-//     }
-//     break;
-//   }
-//   case PIXELSHIFT: {
-//     break;
-//   }
-//
-//   case SPRITEBRUSH: {
-//     break;
-//   }
-//   }
-// }
+void Window::leftClickEvent() {
+  toolType tool = project->getToolBar().getSelected();
+  sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); // mouse position
+  sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
+  sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+
+  switch (tool) {
+  case PIXELBRUSH: {
+    if (project->getMap()->isInside(mapPos) &&
+        !gui.getWidgetAtPos(sf::Vector2f(mousePos), true)) {
+      project->getToolBar().getSelectedTool()->drawOn(mapPos);
+    }
+    break;
+  }
+  case PIXELSHIFT: {
+    break;
+  }
+
+  case SPRITEBRUSH: {
+    break;
+  }
+  }
+}
 
 void Window::initMenuWidget() {
   gui.removeAllWidgets();
@@ -180,9 +185,13 @@ void Window::initMenuWidget() {
 void Window::createProj() {
   // Notify the server that a Proj is being created by using
   // ClientNetworkManager
-  manager.createProject("Owner", 100.0, 1);
+  // manager.createProject("Owner", 100.0, 1);
   // Vector2u = map size
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
+  gui.removeAllWidgets();
+  std::cout << "Avant change state" << std::endl;
+  setState(projectState::GAME);
+  std::cout << "Après change state" << std::endl;
   this->project =
       std::make_unique<Project>(1, sf::Vector2u(500, 500), mainWindow, gui);
 }
@@ -212,11 +221,11 @@ void Window::run() {
     if (Window::state == projectState::LOGIN ||
         Window::state == projectState::MENU) {
       gui.draw();
+    } else if (Window::state == projectState::GAME) {
+      // Display Game
+      carteRPG_->display();
     }
-    // else if (Window::state == projectState::GAME && carteRPG_) {
-    //   // Display Game
-    //   carteRPG_->display();
-    // }
+    gui.draw();
     mainWindow.display();
   }
 }

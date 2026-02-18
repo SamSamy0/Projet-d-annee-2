@@ -1,22 +1,22 @@
 #include "tool.hpp"
 #include "layer.hpp"
 #include "map.hpp"
+#include <cmath>
 #include <memory>
 
-Tool::Tool(std::shared_ptr<Map> map) : map_{map}{}
+Tool::Tool(std::shared_ptr<Map> map) : map_{map} {}
 std::shared_ptr<Map> Tool::getMap() { return this->map_; }
 unsigned int Tool::getScale() { return map_->getScale(); }
 
-Brush::Brush(std::shared_ptr<Map> map) : Tool(map){}
+Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {}
 void Brush::setSize(unsigned int x, unsigned int y = 0) {
   size_m_.x = x;
   size_m_.y = y;
 }
 
-PixelBrush::PixelBrush(std::shared_ptr<Map> map) :Brush(map) {
+PixelBrush::PixelBrush(std::shared_ptr<Map> map) : Brush(map) {
   name_ = PIXELBRUSH;
-  }
-
+}
 
 void PixelBrush::setColor(sf::Color c) {
   color_ = c;
@@ -25,10 +25,10 @@ void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setErraser() { is_erraser_ = !is_erraser_; }
 
 void PixelBrush::drawOn(sf::Vector2i pos) {
-
-  shared_ptr<Layer> pixellayer = map_->getCurrentLayer() ;
-  if (pixellayer->getType() == PIXELLAYER){
-    sf::Vector2f rounded_pos = sf::Vector2f(std::round(pos.x), std::round(pos.y));
+  shared_ptr<Layer> pixellayer = map_->getCurrentLayer();
+  if (pixellayer->getType() == PIXELLAYER) {
+    sf::Vector2f rounded_pos =
+        sf::Vector2f(std::round(pos.x), std::round(pos.y));
 
     switch (shape_) {
     case SQUARE: {
@@ -58,10 +58,10 @@ void PixelBrush::drawOn(sf::Vector2i pos) {
       unsigned int size_y = (size_m_.y) * getScale();
       sf::ConvexShape diamond(4);
       diamond.setPoint(0, sf::Vector2f(size_x / 2, 0));      // top point
-        diamond.setPoint(1, sf::Vector2f(size_x, size_y / 2)); // right point
+      diamond.setPoint(1, sf::Vector2f(size_x, size_y / 2)); // right point
       diamond.setPoint(2, sf::Vector2f(size_x / 2, size_y)); // botom point
-      diamond.setPoint(3, sf::Vector2f(0, size_y/2));      // left point
-      diamond.setOrigin(sf::Vector2f(size_x/2, size_y/2));
+      diamond.setPoint(3, sf::Vector2f(0, size_y / 2));      // left point
+      diamond.setOrigin(sf::Vector2f(size_x / 2, size_y / 2));
       diamond.setPosition(rounded_pos);
       is_erraser_ ? diamond.setFillColor(sf::Color::Transparent)
                   : diamond.setFillColor(color_);
@@ -73,13 +73,17 @@ void PixelBrush::drawOn(sf::Vector2i pos) {
   }
 }
 
-PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map){name_ = PIXELSHIFT;}
+PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map) {
+  name_ = PIXELSHIFT;
+}
 
-void PixelShift::shiftOn(sf::Vector2i pos_1, sf::Vector2i pos_2){
+void PixelShift::shiftOn(sf::Vector2i pos_1, sf::Vector2i pos_2) {
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
-  if (layer->getType() == PIXELLAYER){
-    sf::Vector2i vect(static_cast<int>(pos_2.x) - static_cast<int>(pos_1.x),
-                      static_cast<int>(pos_2.y) - static_cast<int>(pos_1.y)); //on convertit avant la soustraction
+  if (layer->getType() == PIXELLAYER) {
+    sf::Vector2i vect(
+        static_cast<int>(pos_2.x) - static_cast<int>(pos_1.x),
+        static_cast<int>(pos_2.y) -
+            static_cast<int>(pos_1.y)); // on convertit avant la soustraction
     layer->shift(vect);
   }
 }

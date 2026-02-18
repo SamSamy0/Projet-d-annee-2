@@ -12,10 +12,12 @@ set(SOURCES
     src/server/clientnetwork.cpp
     src/server/handler.cpp
     src/project/map.cpp
+    src/project/project.cpp
     src/project/layer.cpp
     src/project/zoom.cpp
     src/project/move.cpp
     src/project/toolbar.cpp
+    src/project/tool.cpp
 )
 
 add_executable(sfml-app ${SOURCES})
