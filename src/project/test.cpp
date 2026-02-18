@@ -24,8 +24,8 @@ int main()
     std::shared_ptr<Map> map = project.getMap();
 
     project.getToolBar().selectTool(PIXELBRUSH);
-    project.getToolBar().getSelectedTool()->setColor(sf::Color(0,0,255,125));
-    project.getToolBar().getSelectedTool()->setShape(DIAMOND);
+    project.getToolBar().getSelectedTool()->setColor(sf::Color(0,0,255));
+    project.getToolBar().getSelectedTool()->setShape(SQUARE);
     project.getToolBar().getSelectedTool()->setSize(10,10);
 
     while (window.isOpen())

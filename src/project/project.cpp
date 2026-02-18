@@ -11,8 +11,14 @@
 
 
 
-Project::Project(unsigned int scale, sf::Vector2u size, sf::RenderWindow &window, tgui::Gui& gui): map_{std::make_shared<Map>(1,size,scale)},
-  window_{window},toolbar_{map_}, gui_{gui} {}
+Project::Project(unsigned int scale, sf::Vector2u size,std::string name,unsigned int id , sf::RenderWindow &window, tgui::Gui& gui): map_{std::make_shared<Map>(1,size,scale)},
+  name_{name},id_{id},window_{window},toolbar_{map_}, gui_{gui} {}
+
+unsigned int Project::getId(){return id_;}
+std::string Project::getName(){return name_;}
+void Project::setName(std::string name){name_ = name;}
+
+
 
 unsigned int Project::getScale() { return map_->getScale(); } 
 std::shared_ptr<Map> Project::getMap(){return map_;}
