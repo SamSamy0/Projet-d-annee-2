@@ -1,5 +1,4 @@
-#ifndef DISPLAYWINDOW_HPP
-#define DISPLAYWINDOW_HPP
+#pragma once
 #include "../project/project.hpp"
 #include "../server/clientnetwork.hpp"
 #include "Identifier.hpp"
@@ -19,10 +18,9 @@ private:
   // Must verifiy if variable isLoggedIn is used
   bool isLoggedIn;
   sf::RenderWindow mainWindow;
-  // sf::RenderWindow menuWindow;
   // Authentification Interface
-  std::unique_ptr<Project> project = nullptr;
   tgui::Gui gui;
+  std::unique_ptr<Project> project = nullptr;
   std::unique_ptr<Project> carteRPG_;
   void initWidget();
   void updateTextSize();
@@ -42,8 +40,8 @@ private:
 public:
   // Constructor
   Window(ClientNetworkManager &manager);
+  Window();
   // Setter for bool isLoggedIn
   void setLogIn();
   void run();
 };
-#endif

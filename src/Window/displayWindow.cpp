@@ -8,7 +8,7 @@
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Text.hpp>
 #include <TGUI/Widgets/TextArea.hpp>
-#include <memory>
+// #include <memory>
 
 void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   // NOTE: I have to ask how the usernames are stored in the server
@@ -29,8 +29,10 @@ void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
       pswd->setText("");
     } else {
       // Change from Login menu -> Game menu
-      setState(projectState::MENU);
+      // state = projectState::MENU;
     }
+    // initMenuWidget();
+    setState(projectState::MENU);
   }
 }
 
@@ -64,9 +66,7 @@ void Window::loginWidget() {
   loginButton->setPosition({"25%", "53.125%"});
   loginButton->setSize({"12.5%", "3.125%"});
   gui.add(loginButton);
-
-  // loginButton->onPress(&Window::login, this, editBoxUsername,
-  // editBoxPassword);
+  loginButton->onPress(&Window::login, this, editBoxUsername, editBoxPassword);
 
   auto signInButton = tgui::Button::create("Sign in");
   signInButton->setPosition({"62.5%", "53.125%"});
@@ -125,29 +125,30 @@ void Window::processEvents() {
   }
 }
 
-void Window::leftClickEvent() {
-  toolType tool = project->getToolBar().getSelected();
-  sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); // mouse position
-  sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
-  sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
-
-  switch (tool) {
-  case PIXELBRUSH: {
-    if (project->getMap()->isInside(mapPos) &&
-        !gui.getWidgetAtPos(sf::Vector2f(mousePos), true)) {
-      project->getToolBar().getSelectedTool()->drawOn(mapPos);
-    }
-    break;
-  }
-  case PIXELSHIFT: {
-    break;
-  }
-
-  case SPRITEBRUSH: {
-    break;
-  }
-  }
-}
+// void Window::leftClickEvent() {
+//   toolType tool = project->getToolBar().getSelected();
+//   sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); // mouse
+//   position sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos,
+//   project->getView()); sf::Vector2i mapPos(static_cast<int>(pos.x),
+//   static_cast<int>(pos.y));
+//
+//   switch (tool) {
+//   case PIXELBRUSH: {
+//     if (project->getMap()->isInside(mapPos) &&
+//         !gui.getWidgetAtPos(sf::Vector2f(mousePos), true)) {
+//       project->getToolBar().getSelectedTool()->drawOn(mapPos);
+//     }
+//     break;
+//   }
+//   case PIXELSHIFT: {
+//     break;
+//   }
+//
+//   case SPRITEBRUSH: {
+//     break;
+//   }
+//   }
+// }
 
 void Window::initMenuWidget() {
   gui.removeAllWidgets();
@@ -197,6 +198,12 @@ Window::Window(ClientNetworkManager &manager)
       gui{mainWindow}, manager{manager}, carteRPG_{nullptr} {
   initWidget();
 }
+// Window::Window(ClientNetworkManager &manager)
+//     : mainWindow(sf::VideoMode::getDesktopMode(), "Game name",
+//                  sf::State::Fullscreen),
+//       gui{mainWindow}, manager{manager} {
+//   initWidget();
+// }
 void Window::run() {
   while (mainWindow.isOpen()) {
     processEvents();
@@ -205,11 +212,11 @@ void Window::run() {
     if (Window::state == projectState::LOGIN ||
         Window::state == projectState::MENU) {
       gui.draw();
-
-    } else if (Window::state == projectState::GAME) {
-      // Display Game
-      carteRPG_->display();
     }
+    // else if (Window::state == projectState::GAME && carteRPG_) {
+    //   // Display Game
+    //   carteRPG_->display();
+    // }
     mainWindow.display();
   }
 }
