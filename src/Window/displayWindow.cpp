@@ -1,24 +1,13 @@
-<<<<<<< HEAD
-=======
-#include "displayWindow.hpp"
-#include "../project/project.hpp"
-#include "../project/tool.hpp"
-#include "../server/clientnetwork.hpp"
->>>>>>> origin/menu
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Text.hpp>
 #include <TGUI/Widgets/TextArea.hpp>
-<<<<<<< HEAD
 #include "displayWindow.hpp"
 #include "../server/clientnetwork.hpp"
 #include "../project/project.hpp"
 #include "../project/tool.hpp"
-=======
-// #include <memory>
->>>>>>> origin/menu
 
 void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   // NOTE: I have to ask how the usernames are stored in the server
@@ -100,7 +89,7 @@ void Window::initWidget() {
     auto homeButton = tgui::Button::create();
     homeButton->setSize(30, 30);
     homeButton->setPosition(15, 5);
-    homeButton->getRenderer()->setTexture("../../res/images/accueil.png");
+    homeButton->getRenderer()->setTexture("../res/images/accueil.png");
     homeButton->getRenderer()->setBorders({0});
     gui.add(homeButton);
     homeButton->onPress(&Window::setState, this, projectState::MENU);
@@ -123,7 +112,6 @@ void Window::processEvents() {
         mainWindow.close();
     }
 
-<<<<<<< HEAD
     //Dans un projet
     if(state == projectState::GAME && project){
 
@@ -136,44 +124,36 @@ void Window::processEvents() {
         }
       }
       
-=======
-    // Dans un projet
->>>>>>> origin/menu
 
-    if (state == projectState::GAME && project) {
-      project->getMap()->detectZooming(*event); // ZOOM
 
-      if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-        leftClickEvent();
-      }
     }
   }
 }
 
-// void Window::leftClickEvent() {
-//   toolType tool = project->getToolBar().getSelected();
-//   sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); // mouse
-//   position sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos,
-//   project->getView()); sf::Vector2i mapPos(static_cast<int>(pos.x),
-//   static_cast<int>(pos.y));
-//
-//   switch (tool) {
-//   case PIXELBRUSH: {
-//     if (project->getMap()->isInside(mapPos) &&
-//         !gui.getWidgetAtPos(sf::Vector2f(mousePos), true)) {
-//       project->getToolBar().getSelectedTool()->drawOn(mapPos);
-//     }
-//     break;
-//   }
-//   case PIXELSHIFT: {
-//     break;
-//   }
-//
-//   case SPRITEBRUSH: {
-//     break;
-//   }
-//   }
-// }
+void Window::leftClickEvent() {
+  toolType tool = project->getToolBar().getSelected();
+  sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); // mouse position
+  sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos,project->getView()); 
+  sf::Vector2i mapPos(static_cast<int>(pos.x),
+  static_cast<int>(pos.y));
+
+  switch (tool) {
+  case PIXELBRUSH: {
+    if (project->getMap()->isInside(mapPos) &&
+        !gui.getWidgetAtPos(sf::Vector2f(mousePos), true)) {
+      project->getToolBar().getSelectedTool()->drawOn(mapPos);
+    }
+    break;
+  }
+  case PIXELSHIFT: {
+    break;
+  }
+
+  case SPRITEBRUSH: {
+    break;
+  }
+  }
+}
 
 void Window::initMenuWidget() {
   gui.removeAllWidgets();
@@ -209,7 +189,7 @@ void Window::createProj() {
   // Vector2u = map size
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
   this->project =
-      std::make_unique<Project>(1, sf::Vector2u(500, 500), mainWindow, gui);
+      std::make_unique<Project>(1, sf::Vector2u(500, 500),"project",1, mainWindow, gui);
 }
 
 void Window::setState(projectState newState) {
@@ -220,7 +200,7 @@ void Window::setState(projectState newState) {
 Window::Window(ClientNetworkManager &manager)
     : mainWindow(sf::VideoMode::getDesktopMode(), "Game name",
                  sf::State::Fullscreen),
-      gui{mainWindow}, manager{manager}, carteRPG_{nullptr} {
+      gui{mainWindow}, manager{manager}, project{nullptr} {
   initWidget();
 }
 // Window::Window(ClientNetworkManager &manager)
@@ -238,10 +218,10 @@ void Window::run() {
         Window::state == projectState::MENU) {
       gui.draw();
     }
-    // else if (Window::state == projectState::GAME && carteRPG_) {
-    //   // Display Game
-    //   carteRPG_->display();
-    // }
+    else if (Window::state == projectState::GAME && project) {
+      // Display Game
+      project->display();
+    }
     mainWindow.display();
   }
 }

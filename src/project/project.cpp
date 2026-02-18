@@ -29,7 +29,7 @@ ToolBar Project::getToolBar(){return toolbar_;}
 sf::View& Project::getView(){return viewMap_;}
 
 void Project::displayScale() {
-  sf::Font police("../../res/police/ARIAL.TTF");
+  sf::Font police("../res/police/ARIAL.TTF");
   sf::Text scaleText(police);
   scaleText.setString("1 metre =" + to_string(getScale()) + " pixels");
   scaleText.setCharacterSize(17);

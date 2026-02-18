@@ -16,6 +16,8 @@ set(SOURCES
     src/project/zoom.cpp
     src/project/move.cpp
     src/project/toolbar.cpp
+    src/project/tool.cpp
+    src/project/project.cpp
 )
 
 add_executable(sfml-app ${SOURCES})
