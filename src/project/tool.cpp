@@ -8,7 +8,10 @@ std::shared_ptr<Map> Tool::getMap() { return this->map_; }
 unsigned int Tool::getScale() { return map_->getScale(); }
 
 Brush::Brush(std::shared_ptr<Map> map) : Tool(map){
- spacing_ = std::min(size_m_.x/2*getScale(),size_m_.y/2*getScale()); 
+  spacing_ = std::min(size_m_.x/2*getScale(),size_m_.y/2*getScale()); 
+  if (spacing_<1)
+    spacing_ = 1.0f;
+
 }
 void Brush::setSize(unsigned int x, unsigned int y = 0) {
   size_m_.x = x;
@@ -17,24 +20,51 @@ void Brush::setSize(unsigned int x, unsigned int y = 0) {
 
 
 
-void Brush::drawOn(sf::Vector2i pos){
-  if(!isDrawing_){
-    isDrawing_ = true;
+void Brush::drawOn(sf::Vector2i pos) {
+    if (!isDrawing_) {
+        isDrawing_ = true;
+        lastPos_ = pos;
+        paint(pos);
+        distance_ = 0;
+        return;
+    }
+
+    // On calcule tout en float pour la précision du vecteur
+    sf::Vector2f start(lastPos_);
+    sf::Vector2f end(pos);
+    sf::Vector2f diff = end - start;
+    
+    float frameDistance = std::sqrt(diff.x * diff.x + diff.y * diff.y);
+    
+    if (frameDistance > 0) {
+        sf::Vector2f unitDir = diff / frameDistance;
+        distance_ += frameDistance; // On ajoute la distance parcourue cette frame
+
+        while (distance_ >= spacing_) {
+            // On calcule où on doit peindre sur le segment actuel
+            // 'travelDist' est la distance depuis 'lastPos_'
+            float travelDist = frameDistance - (distance_ - spacing_);
+            sf::Vector2f paintPosF = start + (unitDir * travelDist);
+            
+            // On convertit en int seulement au moment de peindre
+            paint(sf::Vector2i(
+                static_cast<int>(std::round(paintPosF.x)),
+                static_cast<int>(std::round(paintPosF.y))
+            ));
+            
+            distance_ -= spacing_;
+        }
+    }
     lastPos_ = pos;
-    paint(pos);
-  }
-
-  else{
-
-    sf::Vector2i temp = pos-lastPos_;
-    int distance = sqrt(temp.x*temp.x+temp.y*temp.y);
-    distance_ += distance;
-
-
-
-  }
-
 }
+
+
+void Brush::stopDrawing(){
+  isDrawing_ = false;
+  distance_ =  0;
+}
+
+
 
 PixelBrush::PixelBrush(std::shared_ptr<Map> map) :Brush(map) {
   name_ = PIXELBRUSH;

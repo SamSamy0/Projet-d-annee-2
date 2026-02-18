@@ -114,11 +114,17 @@ void Window::processEvents() {
     }
 
     //Dans un projet
-
     if(state == projectState::GAME && project){
-      project->getMap()->detectZooming(*event); //ZOOM
 
+      project->getMap()->detectZooming(*event); //ZOOM
+      //
       if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){leftClickEvent();}
+      if (auto mouseEvent = event->getIf<sf::Event::MouseButtonReleased>()){
+        if (mouseEvent->button == sf::Mouse::Button::Left){
+          project->getToolBar().getSelectedTool()->stopDrawing();
+        }
+      }
+      
 
 
     }

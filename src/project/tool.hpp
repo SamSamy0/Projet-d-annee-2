@@ -35,7 +35,8 @@ public:
 
   //Action
   virtual void shiftOn(sf::Vector2i pos_1, sf::Vector2i pos_2){}
-  virtual void drawOn(sf::Vector2i pos) {};
+  virtual void drawOn(sf::Vector2i pos) {}
+  virtual void stopDrawing(){}
   // virtual void getMessage(const ClientNetworkManager &netw
   // virtual void sendMessage(const ClientNetworkManager &network) const;
   virtual ~Tool() = default;
@@ -46,13 +47,14 @@ class Brush :public Tool {
 protected:
   sf::Vector2u size_m_ = sf::Vector2u(1, 1);
   bool isDrawing_ = false;
-  int distance_ = 0;
+  int distance_ = 0.0f;
   int spacing_;
   sf::Vector2i lastPos_;
 public:
   Brush(std::shared_ptr<Map>);
   void setSize(unsigned int x, unsigned int y);
   void drawOn(sf::Vector2i pos);
+  void stopDrawing();
   virtual void paint(sf::Vector2i pos) = 0;
   virtual ~Brush() = default;
 };

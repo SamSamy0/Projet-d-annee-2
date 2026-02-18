@@ -25,9 +25,8 @@ int main()
 
     project.getToolBar().selectTool(PIXELBRUSH);
     project.getToolBar().getSelectedTool()->setColor(sf::Color(0,0,255,125));
-    project.getToolBar().getSelectedTool()->setShape(CIRCLE);
-    project.getToolBar().getSelectedTool()->setSize(1,1);
-    project.getToolBar().getSelectedTool()->drawOn(sf::Vector2i(-25,200));
+    project.getToolBar().getSelectedTool()->setShape(DIAMOND);
+    project.getToolBar().getSelectedTool()->setSize(10,10);
 
     while (window.isOpen())
     {
@@ -53,6 +52,14 @@ int main()
                   project.getToolBar().getSelectedTool()->drawOn(mapPos);
         }
         }
+
+      if (auto mouseEvent = event->getIf<sf::Event::MouseButtonReleased>()){
+        if (mouseEvent->button == sf::Mouse::Button::Left){
+          project.getToolBar().getSelectedTool()->stopDrawing();
+        }
+      }
+
+
 
         // Gestion du déplacement
         map->detectMovement();

@@ -37,7 +37,7 @@ class PixelLayer : public Layer {
 public:
   PixelLayer(std::string name, sf::Vector2u size);
 
-  sf::RenderTexture &getTexture();
+  sf::RenderTexture &getTexture() override;
   void drawLayer(sf::RenderWindow& window) override;
   void draw(sf::Drawable &s) override;
   void errase(sf::Drawable &s) override;
