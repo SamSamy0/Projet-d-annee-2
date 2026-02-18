@@ -180,7 +180,7 @@ void Window::initMenuWidget() {
 void Window::createProj() {
   // Notify the server that a Proj is being created by using
   // ClientNetworkManager
-  manager.createProject("Owner", 100.0, 1);
+  manager.createProject("ProjetTest", sf::Vector2u(500,500), 1);
   // Vector2u = map size
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
   this->project =

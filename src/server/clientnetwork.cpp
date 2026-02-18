@@ -10,18 +10,16 @@ std::deque<ServerEvent>& ClientNetworkManager::getQueuEvent(){
 bool ClientNetworkManager::connect(){
     socket.setBlocking(false);
 
-    if (socket.connect({127,0,0,1},5000) == sf::Socket::Done){
+    if (socket.connect({127,0,0,1},5000) == sf::Socket::Status::Done){
         return true;
     }else return false;
 }
-
-
 
 void ClientNetworkManager::getEvent(){
     ServerEvent rep;
     auto packet = std::make_unique<sf::Packet>();
 
-    if (socket.receive(*packet) == sf::Socket::Done){
+    if (socket.receive(*packet) == sf::Socket::Status::Done){
         uint8_t type_mess;
         *packet >> type_mess;
         
@@ -79,7 +77,7 @@ void ClientNetworkManager::getUsersProjects(long long userId) {
     MsgProtocole msg = MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REQ;
 
     packet << static_cast<uint8_t>(msg);
-    packet << userId;
+    packet << static_cast<std::int64_t>(userId);
     
     socket.send(packet);
 }

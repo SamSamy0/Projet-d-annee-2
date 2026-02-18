@@ -5,9 +5,7 @@
 #include <utility>
 
  
-sf::IpAddress Client::getAddress(){
-    return sock->getRemoteAddress();
-}
+
 
 LoginMessage::LoginMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c): Message(c){
     *data_packet >> pseudo >> password;
@@ -23,11 +21,11 @@ void LoginMessage::process(Worker& worker){
     rps->message_type = MsgProtocole::AUTH_RESULT;
 
     rps->packet = std::make_unique<sf::Packet>();
-    *rps->packet << static_cast<sf::Uint8>(MsgProtocole::AUTH_RESULT);
+    *rps->packet << static_cast<std::uint8_t>(MsgProtocole::AUTH_RESULT);
     if (client.id == -1) {
-        *rps->packet << static_cast<sf::Uint8>(0);
+        *rps->packet << static_cast<std::uint8_t>(0);
     } else {
-        *rps->packet << static_cast<sf::Uint8>(1);
+        *rps->packet << static_cast<std::uint8_t>(1);
     }
 
     //mise sur la liste des réponses
@@ -50,11 +48,11 @@ void RegisterMessage::process(Worker& worker) {
     rps->message_type = MsgProtocole::AUTH_RESULT;
 
     rps->packet = std::make_unique<sf::Packet>();
-    *rps->packet << static_cast<sf::Uint8>(MsgProtocole::AUTH_RESULT);
+    *rps->packet << static_cast<std::uint8_t>(MsgProtocole::AUTH_RESULT);
     if (client.id == -1) {
-        *rps->packet << static_cast<sf::Uint8>(0);
+        *rps->packet << static_cast<std::uint8_t>(0);
     } else {
-        *rps->packet << static_cast<sf::Uint8>(1);
+        *rps->packet << static_cast<std::uint8_t>(1);
     }
 
     //mise sur la liste des réponses
@@ -92,10 +90,12 @@ void GetUsersProjectsMessage::process(Worker& worker) {
     rps->message_type = MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP;
 
     rps->packet = std::make_unique<sf::Packet>();
-    *rps->packet << static_cast<sf::Uint8>(MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP);
+    *rps->packet << static_cast<std::uint8_t>(MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP);
+
+    *rps->packet << static_cast<std::uint32_t>(projects.size());
 
     for (const auto& entry : projects) {
-        *rps->packet << entry.projectId;
+        *rps->packet << static_cast<std::uint32_t>(projects.size());
         *rps->packet << entry.name;
         *rps->packet << entry.role;
     }
