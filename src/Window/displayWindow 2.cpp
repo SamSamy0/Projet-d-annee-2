@@ -92,11 +92,7 @@ void Window::initWidget() {
     homeButton->getRenderer()->setTexture("../res/images/accueil.png");
     homeButton->getRenderer()->setBorders({0});
     gui.add(homeButton);
-    // homeButton->onPress(&Window::setState, this, projectState::MENU);
-    // homeButton->onPress([&]() {
-    //   state = projectState::MENU;
-    //   std::cout << "Home pressed\n";
-    // });
+    homeButton->onPress(&Window::setState, this, projectState::MENU);
   }
 }
 void Window::updateTextSize() {
@@ -137,8 +133,9 @@ void Window::processEvents() {
 void Window::leftClickEvent() {
   toolType tool = project->getToolBar().getSelected();
   sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); // mouse position
-  sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
-  sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+  sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos,project->getView()); 
+  sf::Vector2i mapPos(static_cast<int>(pos.x),
+  static_cast<int>(pos.y));
 
   switch (tool) {
   case PIXELBRUSH: {
@@ -188,15 +185,11 @@ void Window::initMenuWidget() {
 void Window::createProj() {
   // Notify the server that a Proj is being created by using
   // ClientNetworkManager
-  // manager.createProject("Owner", 100.0, 1);
+  manager.createProject("Owner", 100.0, 1);
   // Vector2u = map size
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
-  gui.removeAllWidgets();
-  std::cout << "Avant change state" << std::endl;
-  std::cout << "Après change state" << std::endl;
   this->project =
       std::make_unique<Project>(1, sf::Vector2u(500, 500),"project",1, mainWindow, gui);
-  setState(projectState::GAME);
 }
 
 void Window::setState(projectState newState) {
@@ -224,16 +217,11 @@ void Window::run() {
     if (Window::state == projectState::LOGIN ||
         Window::state == projectState::MENU) {
       gui.draw();
-    } else if (Window::state == projectState::GAME && project) {
-      // Display Game
-      std::cout << "Going to display carterpg" << std::endl;
-      project->display();
     }
     else if (Window::state == projectState::GAME && project) {
       // Display Game
       project->display();
     }
-    gui.draw();
     mainWindow.display();
   }
 }
