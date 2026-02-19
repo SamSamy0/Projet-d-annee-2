@@ -1,7 +1,7 @@
 CMakeFiles/sfml-app.dir/src/project/layer.cpp.o: \
- /home/samy/BA2/pa/group-13/src/project/layer.cpp \
+ /home/tomas/ULB2/projet/group-13/src/project/layer.cpp \
  /usr/include/stdc-predef.h \
- /home/samy/BA2/pa/group-13/src/project/layer.hpp \
+ /home/tomas/ULB2/projet/group-13/src/project/layer.hpp \
  /usr/local/include/SFML/Graphics.hpp \
  /usr/local/include/SFML/Graphics/BlendMode.hpp \
  /usr/local/include/SFML/Graphics/Export.hpp \
@@ -274,7 +274,7 @@ CMakeFiles/sfml-app.dir/src/project/layer.cpp.o: \
  /usr/local/include/SFML/System/InputStream.hpp \
  /usr/local/include/SFML/System/MemoryInputStream.hpp \
  /usr/local/include/SFML/System/Sleep.hpp \
- /home/samy/BA2/pa/group-13/src/project/map.hpp \
+ /home/tomas/ULB2/projet/group-13/src/project/map.hpp \
  /usr/include/c++/13/iostream \
- /home/samy/BA2/pa/group-13/src/project/zoom.hpp \
- /home/samy/BA2/pa/group-13/src/project/move.hpp
+ /home/tomas/ULB2/projet/group-13/src/project/zoom.hpp \
+ /home/tomas/ULB2/projet/group-13/src/project/move.hpp

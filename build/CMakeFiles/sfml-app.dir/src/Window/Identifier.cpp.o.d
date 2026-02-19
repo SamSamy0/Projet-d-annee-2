@@ -1,7 +1,7 @@
 CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o: \
- /home/samy/BA2/pa/group-13/src/Window/Identifier.cpp \
+ /home/tomas/ULB2/projet/group-13/src/Window/Identifier.cpp \
  /usr/include/stdc-predef.h \
- /home/samy/BA2/pa/group-13/src/Window/Identifier.hpp \
+ /home/tomas/ULB2/projet/group-13/src/Window/Identifier.hpp \
  /usr/local/include/SFML/Graphics.hpp \
  /usr/local/include/SFML/Graphics/BlendMode.hpp \
  /usr/local/include/SFML/Graphics/Export.hpp \

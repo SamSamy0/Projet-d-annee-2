@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/samy/BA2/pa/group-13
+CMAKE_SOURCE_DIR = /home/tomas/ULB2/projet/group-13
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/samy/BA2/pa/group-13/build
+CMAKE_BINARY_DIR = /home/tomas/ULB2/projet/group-13/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/sfml-app.dir/depend.make
@@ -70,144 +70,144 @@ include CMakeFiles/sfml-app.dir/progress.make
 include CMakeFiles/sfml-app.dir/flags.make
 
 CMakeFiles/sfml-app.dir/main.cpp.o: CMakeFiles/sfml-app.dir/flags.make
-CMakeFiles/sfml-app.dir/main.cpp.o: /home/samy/BA2/pa/group-13/main.cpp
+CMakeFiles/sfml-app.dir/main.cpp.o: /home/tomas/ULB2/projet/group-13/main.cpp
 CMakeFiles/sfml-app.dir/main.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/samy/BA2/pa/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/sfml-app.dir/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/main.cpp.o -MF CMakeFiles/sfml-app.dir/main.cpp.o.d -o CMakeFiles/sfml-app.dir/main.cpp.o -c /home/samy/BA2/pa/group-13/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tomas/ULB2/projet/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/sfml-app.dir/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/main.cpp.o -MF CMakeFiles/sfml-app.dir/main.cpp.o.d -o CMakeFiles/sfml-app.dir/main.cpp.o -c /home/tomas/ULB2/projet/group-13/main.cpp
 
 CMakeFiles/sfml-app.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/samy/BA2/pa/group-13/main.cpp > CMakeFiles/sfml-app.dir/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tomas/ULB2/projet/group-13/main.cpp > CMakeFiles/sfml-app.dir/main.cpp.i
 
 CMakeFiles/sfml-app.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/samy/BA2/pa/group-13/main.cpp -o CMakeFiles/sfml-app.dir/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tomas/ULB2/projet/group-13/main.cpp -o CMakeFiles/sfml-app.dir/main.cpp.s
 
 CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o: CMakeFiles/sfml-app.dir/flags.make
-CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o: /home/samy/BA2/pa/group-13/src/Window/Identifier.cpp
+CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o: /home/tomas/ULB2/projet/group-13/src/Window/Identifier.cpp
 CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/samy/BA2/pa/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o -MF CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o.d -o CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o -c /home/samy/BA2/pa/group-13/src/Window/Identifier.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tomas/ULB2/projet/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o -MF CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o.d -o CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.o -c /home/tomas/ULB2/projet/group-13/src/Window/Identifier.cpp
 
 CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/samy/BA2/pa/group-13/src/Window/Identifier.cpp > CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tomas/ULB2/projet/group-13/src/Window/Identifier.cpp > CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.i
 
 CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/samy/BA2/pa/group-13/src/Window/Identifier.cpp -o CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tomas/ULB2/projet/group-13/src/Window/Identifier.cpp -o CMakeFiles/sfml-app.dir/src/Window/Identifier.cpp.s
 
 CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o: CMakeFiles/sfml-app.dir/flags.make
-CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o: /home/samy/BA2/pa/group-13/src/Window/displayWindow.cpp
+CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o: /home/tomas/ULB2/projet/group-13/src/Window/displayWindow.cpp
 CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/samy/BA2/pa/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o -MF CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o.d -o CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o -c /home/samy/BA2/pa/group-13/src/Window/displayWindow.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tomas/ULB2/projet/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o -MF CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o.d -o CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.o -c /home/tomas/ULB2/projet/group-13/src/Window/displayWindow.cpp
 
 CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/samy/BA2/pa/group-13/src/Window/displayWindow.cpp > CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tomas/ULB2/projet/group-13/src/Window/displayWindow.cpp > CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.i
 
 CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/samy/BA2/pa/group-13/src/Window/displayWindow.cpp -o CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tomas/ULB2/projet/group-13/src/Window/displayWindow.cpp -o CMakeFiles/sfml-app.dir/src/Window/displayWindow.cpp.s
 
 CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o: CMakeFiles/sfml-app.dir/flags.make
-CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o: /home/samy/BA2/pa/group-13/src/server/clientnetwork.cpp
+CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o: /home/tomas/ULB2/projet/group-13/src/server/clientnetwork.cpp
 CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/samy/BA2/pa/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o -MF CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o.d -o CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o -c /home/samy/BA2/pa/group-13/src/server/clientnetwork.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tomas/ULB2/projet/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o -MF CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o.d -o CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.o -c /home/tomas/ULB2/projet/group-13/src/server/clientnetwork.cpp
 
 CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/samy/BA2/pa/group-13/src/server/clientnetwork.cpp > CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tomas/ULB2/projet/group-13/src/server/clientnetwork.cpp > CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.i
 
 CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/samy/BA2/pa/group-13/src/server/clientnetwork.cpp -o CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tomas/ULB2/projet/group-13/src/server/clientnetwork.cpp -o CMakeFiles/sfml-app.dir/src/server/clientnetwork.cpp.s
 
 CMakeFiles/sfml-app.dir/src/server/handler.cpp.o: CMakeFiles/sfml-app.dir/flags.make
-CMakeFiles/sfml-app.dir/src/server/handler.cpp.o: /home/samy/BA2/pa/group-13/src/server/handler.cpp
+CMakeFiles/sfml-app.dir/src/server/handler.cpp.o: /home/tomas/ULB2/projet/group-13/src/server/handler.cpp
 CMakeFiles/sfml-app.dir/src/server/handler.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/samy/BA2/pa/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/sfml-app.dir/src/server/handler.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/server/handler.cpp.o -MF CMakeFiles/sfml-app.dir/src/server/handler.cpp.o.d -o CMakeFiles/sfml-app.dir/src/server/handler.cpp.o -c /home/samy/BA2/pa/group-13/src/server/handler.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tomas/ULB2/projet/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/sfml-app.dir/src/server/handler.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/server/handler.cpp.o -MF CMakeFiles/sfml-app.dir/src/server/handler.cpp.o.d -o CMakeFiles/sfml-app.dir/src/server/handler.cpp.o -c /home/tomas/ULB2/projet/group-13/src/server/handler.cpp
 
 CMakeFiles/sfml-app.dir/src/server/handler.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/src/server/handler.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/samy/BA2/pa/group-13/src/server/handler.cpp > CMakeFiles/sfml-app.dir/src/server/handler.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tomas/ULB2/projet/group-13/src/server/handler.cpp > CMakeFiles/sfml-app.dir/src/server/handler.cpp.i
 
 CMakeFiles/sfml-app.dir/src/server/handler.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/src/server/handler.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/samy/BA2/pa/group-13/src/server/handler.cpp -o CMakeFiles/sfml-app.dir/src/server/handler.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tomas/ULB2/projet/group-13/src/server/handler.cpp -o CMakeFiles/sfml-app.dir/src/server/handler.cpp.s
 
 CMakeFiles/sfml-app.dir/src/project/map.cpp.o: CMakeFiles/sfml-app.dir/flags.make
-CMakeFiles/sfml-app.dir/src/project/map.cpp.o: /home/samy/BA2/pa/group-13/src/project/map.cpp
+CMakeFiles/sfml-app.dir/src/project/map.cpp.o: /home/tomas/ULB2/projet/group-13/src/project/map.cpp
 CMakeFiles/sfml-app.dir/src/project/map.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/samy/BA2/pa/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/sfml-app.dir/src/project/map.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/project/map.cpp.o -MF CMakeFiles/sfml-app.dir/src/project/map.cpp.o.d -o CMakeFiles/sfml-app.dir/src/project/map.cpp.o -c /home/samy/BA2/pa/group-13/src/project/map.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tomas/ULB2/projet/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/sfml-app.dir/src/project/map.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/project/map.cpp.o -MF CMakeFiles/sfml-app.dir/src/project/map.cpp.o.d -o CMakeFiles/sfml-app.dir/src/project/map.cpp.o -c /home/tomas/ULB2/projet/group-13/src/project/map.cpp
 
 CMakeFiles/sfml-app.dir/src/project/map.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/src/project/map.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/samy/BA2/pa/group-13/src/project/map.cpp > CMakeFiles/sfml-app.dir/src/project/map.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tomas/ULB2/projet/group-13/src/project/map.cpp > CMakeFiles/sfml-app.dir/src/project/map.cpp.i
 
 CMakeFiles/sfml-app.dir/src/project/map.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/src/project/map.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/samy/BA2/pa/group-13/src/project/map.cpp -o CMakeFiles/sfml-app.dir/src/project/map.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tomas/ULB2/projet/group-13/src/project/map.cpp -o CMakeFiles/sfml-app.dir/src/project/map.cpp.s
 
 CMakeFiles/sfml-app.dir/src/project/layer.cpp.o: CMakeFiles/sfml-app.dir/flags.make
-CMakeFiles/sfml-app.dir/src/project/layer.cpp.o: /home/samy/BA2/pa/group-13/src/project/layer.cpp
+CMakeFiles/sfml-app.dir/src/project/layer.cpp.o: /home/tomas/ULB2/projet/group-13/src/project/layer.cpp
 CMakeFiles/sfml-app.dir/src/project/layer.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/samy/BA2/pa/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/sfml-app.dir/src/project/layer.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/project/layer.cpp.o -MF CMakeFiles/sfml-app.dir/src/project/layer.cpp.o.d -o CMakeFiles/sfml-app.dir/src/project/layer.cpp.o -c /home/samy/BA2/pa/group-13/src/project/layer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tomas/ULB2/projet/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/sfml-app.dir/src/project/layer.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/project/layer.cpp.o -MF CMakeFiles/sfml-app.dir/src/project/layer.cpp.o.d -o CMakeFiles/sfml-app.dir/src/project/layer.cpp.o -c /home/tomas/ULB2/projet/group-13/src/project/layer.cpp
 
 CMakeFiles/sfml-app.dir/src/project/layer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/src/project/layer.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/samy/BA2/pa/group-13/src/project/layer.cpp > CMakeFiles/sfml-app.dir/src/project/layer.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tomas/ULB2/projet/group-13/src/project/layer.cpp > CMakeFiles/sfml-app.dir/src/project/layer.cpp.i
 
 CMakeFiles/sfml-app.dir/src/project/layer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/src/project/layer.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/samy/BA2/pa/group-13/src/project/layer.cpp -o CMakeFiles/sfml-app.dir/src/project/layer.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tomas/ULB2/projet/group-13/src/project/layer.cpp -o CMakeFiles/sfml-app.dir/src/project/layer.cpp.s
 
 CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o: CMakeFiles/sfml-app.dir/flags.make
-CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o: /home/samy/BA2/pa/group-13/src/project/zoom.cpp
+CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o: /home/tomas/ULB2/projet/group-13/src/project/zoom.cpp
 CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/samy/BA2/pa/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o -MF CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o.d -o CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o -c /home/samy/BA2/pa/group-13/src/project/zoom.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tomas/ULB2/projet/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o -MF CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o.d -o CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o -c /home/tomas/ULB2/projet/group-13/src/project/zoom.cpp
 
 CMakeFiles/sfml-app.dir/src/project/zoom.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/src/project/zoom.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/samy/BA2/pa/group-13/src/project/zoom.cpp > CMakeFiles/sfml-app.dir/src/project/zoom.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tomas/ULB2/projet/group-13/src/project/zoom.cpp > CMakeFiles/sfml-app.dir/src/project/zoom.cpp.i
 
 CMakeFiles/sfml-app.dir/src/project/zoom.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/src/project/zoom.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/samy/BA2/pa/group-13/src/project/zoom.cpp -o CMakeFiles/sfml-app.dir/src/project/zoom.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tomas/ULB2/projet/group-13/src/project/zoom.cpp -o CMakeFiles/sfml-app.dir/src/project/zoom.cpp.s
 
 CMakeFiles/sfml-app.dir/src/project/move.cpp.o: CMakeFiles/sfml-app.dir/flags.make
-CMakeFiles/sfml-app.dir/src/project/move.cpp.o: /home/samy/BA2/pa/group-13/src/project/move.cpp
+CMakeFiles/sfml-app.dir/src/project/move.cpp.o: /home/tomas/ULB2/projet/group-13/src/project/move.cpp
 CMakeFiles/sfml-app.dir/src/project/move.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/samy/BA2/pa/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/sfml-app.dir/src/project/move.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/project/move.cpp.o -MF CMakeFiles/sfml-app.dir/src/project/move.cpp.o.d -o CMakeFiles/sfml-app.dir/src/project/move.cpp.o -c /home/samy/BA2/pa/group-13/src/project/move.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tomas/ULB2/projet/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/sfml-app.dir/src/project/move.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/project/move.cpp.o -MF CMakeFiles/sfml-app.dir/src/project/move.cpp.o.d -o CMakeFiles/sfml-app.dir/src/project/move.cpp.o -c /home/tomas/ULB2/projet/group-13/src/project/move.cpp
 
 CMakeFiles/sfml-app.dir/src/project/move.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/src/project/move.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/samy/BA2/pa/group-13/src/project/move.cpp > CMakeFiles/sfml-app.dir/src/project/move.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tomas/ULB2/projet/group-13/src/project/move.cpp > CMakeFiles/sfml-app.dir/src/project/move.cpp.i
 
 CMakeFiles/sfml-app.dir/src/project/move.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/src/project/move.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/samy/BA2/pa/group-13/src/project/move.cpp -o CMakeFiles/sfml-app.dir/src/project/move.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tomas/ULB2/projet/group-13/src/project/move.cpp -o CMakeFiles/sfml-app.dir/src/project/move.cpp.s
 
 CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o: CMakeFiles/sfml-app.dir/flags.make
-CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o: /home/samy/BA2/pa/group-13/src/project/toolbar.cpp
+CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o: /home/tomas/ULB2/projet/group-13/src/project/toolbar.cpp
 CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o: CMakeFiles/sfml-app.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/samy/BA2/pa/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o -MF CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o.d -o CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o -c /home/samy/BA2/pa/group-13/src/project/toolbar.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/tomas/ULB2/projet/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o -MF CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o.d -o CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o -c /home/tomas/ULB2/projet/group-13/src/project/toolbar.cpp
 
 CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/samy/BA2/pa/group-13/src/project/toolbar.cpp > CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/tomas/ULB2/projet/group-13/src/project/toolbar.cpp > CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.i
 
 CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/samy/BA2/pa/group-13/src/project/toolbar.cpp -o CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/tomas/ULB2/projet/group-13/src/project/toolbar.cpp -o CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.s
 
 # Object files for target sfml-app
 sfml__app_OBJECTS = \
@@ -236,13 +236,29 @@ sfml-app: CMakeFiles/sfml-app.dir/src/project/zoom.cpp.o
 sfml-app: CMakeFiles/sfml-app.dir/src/project/move.cpp.o
 sfml-app: CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o
 sfml-app: CMakeFiles/sfml-app.dir/build.make
-sfml-app: /usr/local/lib/libsfml-network.so.3.0.0
-sfml-app: /usr/local/lib/libtgui.so.1.12.0
-sfml-app: /usr/local/lib/libsfml-graphics.so.3.0.0
-sfml-app: /usr/local/lib/libsfml-window.so.3.0.0
-sfml-app: /usr/local/lib/libsfml-system.so.3.0.0
+sfml-app: /usr/local/lib/libsfml-graphics-s.a
+sfml-app: /usr/local/lib/libsfml-window-s.a
+sfml-app: /usr/local/lib/libsfml-system-s.a
+sfml-app: /usr/local/lib/libsfml-network-s.a
+sfml-app: /usr/local/lib/libtgui-s.a
+sfml-app: /usr/lib/x86_64-linux-gnu/libQt5Network.so.5.15.13
+sfml-app: /usr/lib/x86_64-linux-gnu/libQt5Sql.so.5.15.13
+sfml-app: /usr/local/lib/libsfml-graphics-s.a
+sfml-app: /usr/local/lib/libsfml-window-s.a
+sfml-app: /usr/local/lib/libsfml-system-s.a
+sfml-app: /usr/lib/x86_64-linux-gnu/libXrandr.so
+sfml-app: /usr/lib/x86_64-linux-gnu/libXcursor.so
+sfml-app: /usr/lib/x86_64-linux-gnu/libXrender.so
+sfml-app: /usr/lib/x86_64-linux-gnu/libXfixes.so
+sfml-app: /usr/lib/x86_64-linux-gnu/libXi.so
+sfml-app: /usr/lib/x86_64-linux-gnu/libXext.so
+sfml-app: /usr/lib/x86_64-linux-gnu/libX11.so
+sfml-app: /usr/lib/x86_64-linux-gnu/libGL.so
+sfml-app: /usr/lib/x86_64-linux-gnu/libudev.so
+sfml-app: /usr/lib/x86_64-linux-gnu/libfreetype.so
+sfml-app: /usr/lib/x86_64-linux-gnu/libQt5Core.so.5.15.13
 sfml-app: CMakeFiles/sfml-app.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/samy/BA2/pa/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable sfml-app"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/tomas/ULB2/projet/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable sfml-app"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/sfml-app.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -254,6 +270,6 @@ CMakeFiles/sfml-app.dir/clean:
 .PHONY : CMakeFiles/sfml-app.dir/clean
 
 CMakeFiles/sfml-app.dir/depend:
-	cd /home/samy/BA2/pa/group-13/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/samy/BA2/pa/group-13 /home/samy/BA2/pa/group-13 /home/samy/BA2/pa/group-13/build /home/samy/BA2/pa/group-13/build /home/samy/BA2/pa/group-13/build/CMakeFiles/sfml-app.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/tomas/ULB2/projet/group-13/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tomas/ULB2/projet/group-13 /home/tomas/ULB2/projet/group-13 /home/tomas/ULB2/projet/group-13/build /home/tomas/ULB2/projet/group-13/build /home/tomas/ULB2/projet/group-13/build/CMakeFiles/sfml-app.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/sfml-app.dir/depend
 

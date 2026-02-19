@@ -1,7 +1,7 @@
 CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o: \
- /home/samy/BA2/pa/group-13/src/project/toolbar.cpp \
+ /home/tomas/ULB2/projet/group-13/src/project/toolbar.cpp \
  /usr/include/stdc-predef.h \
- /home/samy/BA2/pa/group-13/src/project/toolbar.hpp \
+ /home/tomas/ULB2/projet/group-13/src/project/toolbar.hpp \
  /usr/include/c++/13/memory /usr/include/c++/13/bits/memoryfwd.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -274,9 +274,9 @@ CMakeFiles/sfml-app.dir/src/project/toolbar.cpp.o: \
  /usr/local/include/SFML/System/InputStream.hpp \
  /usr/local/include/SFML/System/MemoryInputStream.hpp \
  /usr/local/include/SFML/System/Sleep.hpp \
- /home/samy/BA2/pa/group-13/src/project/tool.hpp \
- /home/samy/BA2/pa/group-13/src/project/layer.hpp \
- /home/samy/BA2/pa/group-13/src/project/map.hpp \
+ /home/tomas/ULB2/projet/group-13/src/project/tool.hpp \
+ /home/tomas/ULB2/projet/group-13/src/project/map.hpp \
  /usr/include/c++/13/iostream \
- /home/samy/BA2/pa/group-13/src/project/zoom.hpp \
- /home/samy/BA2/pa/group-13/src/project/move.hpp
+ /home/tomas/ULB2/projet/group-13/src/project/zoom.hpp \
+ /home/tomas/ULB2/projet/group-13/src/project/move.hpp \
+ /home/tomas/ULB2/projet/group-13/src/project/layer.hpp
