@@ -103,7 +103,7 @@ void GetUsersProjectsMessage::process(Worker& worker) {
     worker.rep_queue.push(std::move(rps));
 }
 
-std::unique_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet,Client& client){
+std::unique_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet,Client client){
     uint8_t message_type;
     *data_packet >> message_type;
 

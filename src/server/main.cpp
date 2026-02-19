@@ -10,5 +10,5 @@ int main() {
     MessageQueue m_queue;
     ReponseQueue r_queue;
 
-    ServerNetworkManager servManager;
+    ServerNetworkManager servManager(m_queue,r_queue);
 }

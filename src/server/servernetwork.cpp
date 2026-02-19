@@ -4,6 +4,10 @@
 
 
 
+ServerNetworkManager::ServerNetworkManager(MessageQueue& mes , ReponseQueue& rep)
+: message_queu(mes), rep_queu(rep){}
+
+
 bool ServerNetworkManager::start(){
     if (listener.listen(5000) == sf::Socket::Status::Done){  
         std::cout << "Le server écoute sur le port 5000" << std::endl;
@@ -33,7 +37,7 @@ bool ServerNetworkManager::accept(){
 
 //recois les messages de tout les clients
 void ServerNetworkManager::getMessages(){
-    for (auto& client : client_list){
+    for (auto client : client_list){
 
         auto packet = std::make_shared<sf::Packet>();
         
@@ -80,6 +84,7 @@ void ServerNetworkManager::sendReponse(){
 
 void ServerNetworkManager::run() {
     m_running = true;
+    start();
     std::cout << "[Network] Serveur démarré, prêt à gérer les clients..." << std::endl;
 
     while (m_running) {
