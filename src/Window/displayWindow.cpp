@@ -28,10 +28,9 @@ void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
       usrname->setDefaultText("Username already taken or invalid ");
       pswd->setText("");
     } else {
-      // Change from Login menu -> Game menu
-      // state = projectState::MENU;
+      // Access granted
+      // setState(projectState::MENU);
     }
-    // initMenuWidget();
     setState(projectState::MENU);
   }
 }
@@ -95,7 +94,7 @@ void Window::initWidget() {
     std::cout << "Après texture" << std::endl;
     homeButton->getRenderer()->setBorders({0});
     gui.add(homeButton);
-    // homeButton->onPress(&Window::setState, this, projectState::MENU);
+    homeButton->onPress(&Window::setState, this, projectState::MENU);
     // homeButton->onPress([&]() {
     //   state = projectState::MENU;
     //   std::cout << "Home pressed\n";

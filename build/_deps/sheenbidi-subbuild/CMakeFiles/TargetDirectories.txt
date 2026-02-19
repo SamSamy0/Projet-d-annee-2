@@ -1,3 +1,0 @@
-/home/samy/BA2/pa/group-13/build/_deps/sheenbidi-subbuild/CMakeFiles/sheenbidi-populate.dir
-/home/samy/BA2/pa/group-13/build/_deps/sheenbidi-subbuild/CMakeFiles/edit_cache.dir
-/home/samy/BA2/pa/group-13/build/_deps/sheenbidi-subbuild/CMakeFiles/rebuild_cache.dir
