@@ -90,12 +90,9 @@ void Window::initWidget() {
     auto homeButton = tgui::Button::create();
     homeButton->setSize(30, 30);
     homeButton->setPosition(15, 5);
-    homeButton->getRenderer()->setTexture("../../res/images/accueil.png");
+    homeButton->getRenderer()->setTexture("../res/images/accueil.png");
     homeButton->getRenderer()->setBorders({0});
-    homeButton->onPress([this](){
-        setState(projectState::MENU);
-        std::cout << "Home pressed\n";
-    });
+    homeButton->onPress(&Window::setState, this, projectState::MENU);
     gui.add(homeButton);
   }
 }
@@ -189,14 +186,12 @@ void Window::createProj() {
   // Vector2u = map size
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
   gui.removeAllWidgets();
-  cout << "avant project" << endl;
   this->project = std::make_unique<Project>(1, sf::Vector2u(500, 500), "project", 1, mainWindow, gui);
   setState(projectState::GAME);
 }
 
 void Window::setState(projectState newState) {
   this->state = newState;
-  cout << "je change de state" << endl;
   this->initWidget();
 }
 
@@ -219,11 +214,9 @@ void Window::run() {
 
     if (Window::state == projectState::LOGIN ||
       Window::state == projectState::MENU) {
-      cout << "dans le menu" << endl;
     }
     if (Window::state == projectState::GAME && project) {
       // Display Game
-      cout << "dans carte" << endl;
       project->display();
     }
     gui.draw();
