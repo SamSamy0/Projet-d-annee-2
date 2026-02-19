@@ -16,6 +16,7 @@ class ClientEventHandler{
 
 void handleAuth(ServerEvent& event);
 void handleProjectData(ServerEvent& event);
+void handleMyProjects(ServerEvent& event);
 
 
 #endif

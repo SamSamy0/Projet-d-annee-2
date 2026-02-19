@@ -26,10 +26,9 @@ public:
     ServerEvent popEvent();
     void login(std::string pseudo,std::string password);
     void askRegister(std::string pseudo, std::string password);
-    void createProject(std::string role, float size, float scale);
-    
-    //
+    void createProject(std::string role, sf::Vector2u size, float scale);
     void getProjectData(int project_id);
+    void getUsersProjects(long long id);
 
         
 };

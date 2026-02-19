@@ -5,8 +5,13 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
+#include <TGUI/Layout.hpp>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Text.hpp>
+#include <TGUI/Widgets/EditBox.hpp>
+#include <TGUI/Widgets/ListBox.hpp>
+#include <TGUI/Widgets/ScrollablePanel.hpp>
+#include <TGUI/Widgets/Scrollbar.hpp>
 #include <TGUI/Widgets/TextArea.hpp>
 #include <iostream>
 
@@ -44,6 +49,7 @@ void Window::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   }
   // The identifiers were wrong
   else {
+    usrname->setText("");
     usrname->setDefaultText("Wrong Identifier(s)");
     pswd->setText("");
   }
@@ -111,6 +117,36 @@ void Window::processEvents() {
       if (keyPressed->code == sf::Keyboard::Key::Escape)
         mainWindow.close();
     }
+    if (const auto *mouseClick =
+            event->getIf<sf::Event::MouseButtonPressed>()) {
+      auto popup = gui.get("popup");
+      auto background = gui.get("background");
+      // If popup exists
+      if (popup) {
+        // Gets position of where menu pops
+        sf::Vector2f clickPos(mouseClick->position.x, mouseClick->position.y);
+        // If click outside the menu, then remove it
+        if (!popup->isMouseOnWidget(clickPos)) {
+          gui.remove(popup);
+        }
+      }
+      if (background) {
+        // Cast to Panel to use (->get("dataPanel"))
+        auto backgroundPanel =
+            std::dynamic_pointer_cast<tgui::Panel>(background);
+        auto dataPanel = backgroundPanel->get("dataPanel");
+        sf::Vector2f clickPos(mouseClick->position.x, mouseClick->position.y);
+        if (dataPanel && !dataPanel->isMouseOnWidget(clickPos)) {
+          gui.remove(background);
+        }
+      }
+    }
+    if (event->getIf<sf::Event::MouseWheelScrolled>()) {
+      auto popup = gui.get("popup");
+      if (popup) {
+        gui.remove(popup);
+      }
+    }
 
     // Dans un projet
     if (state == projectState::GAME && project) {
@@ -127,7 +163,6 @@ void Window::processEvents() {
     }
   }
 }
-
 void Window::leftClickEvent() {
   toolType tool = project->getToolBar().getSelected();
   sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); // mouse position
@@ -155,42 +190,154 @@ void Window::leftClickEvent() {
 void Window::initMenuWidget() {
   gui.removeAllWidgets();
   auto title = tgui::Label::create("Liste de projets");
-  title->setPosition("2%", "5%");
+  title->setPosition("15.25%", "5%");
   title->setTextSize(40);
-
   title->getRenderer()->setTextStyle(tgui::TextStyle::Underlined);
   title->getRenderer()->setTextColor(sf::Color::Black);
   gui.add(title);
+  displayProjList();
 
   auto createProjB = tgui::Button::create("Créer Projet");
   createProjB->setPosition({"62.5%", "31.25%"});
   createProjB->setSize({"20%", "4%"});
   gui.add(createProjB);
-  createProjB->onPress(&Window::createProj, this);
-
-  //  signInButton->onPress(&AuthWindow::signIn, this, editBoxUsername,
-  // editBoxPassword);
-
-  // loginButton->onPress(&Window::login, this, editBoxUsername,
-  // editBoxPassword);
+  createProjB->onPress(&Window::askProjectData, this);
 
   auto joinProjB = tgui::Button::create("Rejoindre Projet");
   joinProjB->setPosition({"62.5%", "18.75%"});
   joinProjB->setSize({"20%", "4%"});
   gui.add(joinProjB);
 }
+
+void Window::displayProjList() {
+  auto panel = tgui::ScrollablePanel::create();
+  panel->setPosition(0, "15%");
+  panel->setSize("50%", "50%");
+  gui.add(panel);
+  panel->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Always);
+
+  for (int i = 0; i < projectList.size(); i++) {
+    auto row = tgui::Panel::create();
+    row->setSize("100%", 80);
+    row->setPosition(0, i * 80);
+    auto label = tgui::Label::create(projectList[i].projectName);
+    label->setPosition(0, "center");
+    row->add(label);
+
+    auto btn = tgui::Button::create("...");
+    btn->setSize(30, 30);
+    //
+    btn->setPosition("100% - 40", "center");
+
+    btn->onPress(&Window::showProjectMenu, this, to_string(i));
+
+    row->add(btn);
+
+    panel->add(row);
+  }
+}
+void Window::showProjectMenu(std::string projName) {
+  auto menu = tgui::ListBox::create();
+  menu->addItem("Ouvrir");
+  menu->addItem("Supprimer");
+  menu->setSize(150, 90);
+  menu->setItemHeight(45);
+
+  sf::Vector2i mousePos = gui.getLastMousePosition();
+  menu->setPosition(mousePos.x + 2, mousePos.y + 2);
+
+  gui.add(menu, "popup");
+  menu->setTextSize(20);
+  // menu->onUnfocus([this, menu]() { gui.remove(menu); });
+  menu->onItemSelect([this, menu, projName](const tgui::String &item) {
+    if (item == "Supprimer") {
+      std::cout << "Suppression du projet " << projName << std::endl;
+      // manager.deleteProject(...)
+    } else if (item == "Ouvrir") {
+      std::cout << "Ouverture du projet " << projName << std::endl;
+      setState(projectState::GAME);
+    }
+    gui.remove(menu);
+  });
+}
 void Window::createProj() {
   // Notify the server that a Proj is being created by using
   // ClientNetworkManager
-  // manager.createProject("Owner", 100.0, 1);
-  // Vector2u = map size
-  // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
+  manager.createProject("Owner", sf::Vector2u(500, 500), 1.0);
   gui.removeAllWidgets();
   this->project = std::make_unique<Project>(1, sf::Vector2u(500, 500),
                                             "project", 1, mainWindow, gui);
+
+  projectList.push_back(ProjectData{});
   setState(projectState::GAME);
 }
+void Window::initDataWidget() {
+  // Grey Backgroung
+  auto background = tgui::Panel::create();
+  background->setSize("100%", "100%");
+  background->getRenderer()->setBackgroundColor({40, 40, 40, 150});
+  gui.add(background, "background");
+  background->setTextSize(30);
 
+  // Box for project's data
+  auto data = tgui::Panel::create();
+  data->setSize("35%", "40%");
+  data->setPosition("50%-17.5%", "50%-20% ");
+  data->getRenderer()->setBackgroundColor(tgui::Color::White);
+  background->add(data, "dataPanel");
+
+  auto title = tgui::Label::create("Nouveau projet");
+  title->setPosition("37%", "5%");
+  title->setTextSize(40);
+  title->getRenderer()->setTextStyle(tgui::TextStyle::Underlined);
+  title->getRenderer()->setTextColor(sf::Color::Black);
+  data->add(title);
+
+  auto name = tgui::EditBox::create();
+  name->setSize("80%", "12%");
+  name->setPosition("10%", "20%");
+  name->setDefaultText("Nom: ...");
+  data->add(name);
+
+  auto scale = tgui::EditBox::create();
+  scale->setSize("80%", "12%");
+  scale->setPosition("10%", "42%");
+  scale->setDefaultText("Echelle: ...");
+  data->add(scale);
+
+  auto sizePx = tgui::EditBox::create();
+  sizePx->setSize("80%", "12%");
+  sizePx->setPosition("10%", "64%");
+  sizePx->setDefaultText("Taille (x): ...");
+  data->add(sizePx);
+
+  auto sizePy = tgui::EditBox::create();
+  sizePy->setSize("40%", "12%");
+  sizePy->setPosition("50%", "64%");
+  sizePy->setDefaultText("Taille (y): ...");
+  data->add(sizePy);
+
+  auto valid = tgui::Button::create("Valider");
+  valid->setSize("40%", "12%");
+  valid->setPosition("30%", "90% - 20");
+  data->add(valid);
+  valid->onPress([this, background]() {
+    gui.remove(background);
+    createProj();
+  });
+  // BUG: Need to return values to create Project
+
+  // return Project{scale->getText(), sf::Vector2u{sizeX, sizeY},
+  // name->getText(),
+  //                &this->mainWindow, &this->gui};
+}
+
+ProjectData Window::askProjectData() {
+  initDataWidget();
+  // ProjectData newProj = initDataWidget();
+  // projectList.push_back(newProj);
+  return ProjectData{};
+}
 void Window::setState(projectState newState) {
   this->state = newState;
   this->initWidget();
@@ -202,12 +349,10 @@ Window::Window(ClientNetworkManager &manager)
       gui{mainWindow}, manager{manager}, project{nullptr} {
   initWidget();
 }
-// Window::Window(ClientNetworkManager &manager)
-//     : mainWindow(sf::VideoMode::getDesktopMode(), "Game name",
-//                  sf::State::Fullscreen),
-//       gui{mainWindow}, manager{manager} {
-//   initWidget();
-// }
+
+void Window::setProjectList(std::vector<ProjectData> newlist) {
+  projectList = newlist;
+}
 void Window::run() {
   while (mainWindow.isOpen()) {
     processEvents();
@@ -218,7 +363,6 @@ void Window::run() {
       gui.draw();
     } else if (Window::state == projectState::GAME && project) {
       // Display Game
-      std::cout << "Going to display carterpg" << std::endl;
       project->display();
     }
     gui.draw();

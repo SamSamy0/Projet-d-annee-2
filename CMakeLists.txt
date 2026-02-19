@@ -11,6 +11,7 @@ set(SOURCES
     src/Window/displayWindow.cpp
     src/server/clientnetwork.cpp
     src/server/handler.cpp
+    src/server/protocol.hpp
     src/project/map.cpp
     src/project/project.cpp
     src/project/layer.cpp

@@ -3,9 +3,6 @@
 std::deque<ServerEvent> &ClientNetworkManager::getQueuEvent() {
   return reponse;
 }
-// À ajouter à la fin de clientnetwork.cpp pour débloquer le linker
-bool ClientNetworkManager::hasEvent() { return false; }
-ServerEvent ClientNetworkManager::popEvent() { return {}; }
 
 bool ClientNetworkManager::connect() {
   socket.setBlocking(false);
@@ -52,13 +49,25 @@ void ClientNetworkManager::askRegister(std::string pseudo,
   socket.send(packet);
 }
 
-void ClientNetworkManager::createProject(std::string role, float size,
-                                         float scale) {
+void ClientNetworkManager::createProject(std::string nomProjet,
+                                         sf::Vector2u size, float scale) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_CREATE_PROJECT_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << role << size << scale;
+  packet << nomProjet << size.x << size.y << scale;
+
+  socket.send(packet);
+}
+
+void ClientNetworkManager::getProjectData(int project_id) {}
+
+void ClientNetworkManager::getUsersProjects(long long userId) {
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << static_cast<std::int64_t>(userId);
 
   socket.send(packet);
 }
