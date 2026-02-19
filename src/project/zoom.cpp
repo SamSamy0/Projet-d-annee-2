@@ -1,7 +1,7 @@
 #include "zoom.hpp"
 
 
-Zoom::Zoom() : facteurZoom_{1} {}
+Zoom::Zoom() : facteurZoom_{0.5} {}
 
 float Zoom::getZoom() const { return facteurZoom_; }
 

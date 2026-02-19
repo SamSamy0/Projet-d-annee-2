@@ -8,10 +8,55 @@ Tool::Tool(std::shared_ptr<Map> map) : map_{map} {}
 std::shared_ptr<Map> Tool::getMap() { return this->map_; }
 unsigned int Tool::getScale() { return map_->getScale(); }
 
-Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {}
+Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {
+  spacing_ = std::min(size_m_.x / 2 * getScale(), size_m_.y / 2 * getScale());
+  if (spacing_ < 1)
+    spacing_ = 1.0f;
+}
 void Brush::setSize(unsigned int x, unsigned int y = 0) {
   size_m_.x = x;
   size_m_.y = y;
+}
+
+void Brush::drawOn(sf::Vector2i pos) {
+  if (!isDrawing_) {
+    isDrawing_ = true;
+    lastPos_ = pos;
+    paint(pos);
+    distance_ = 0;
+    return;
+  }
+
+  // On calcule tout en float pour la précision du vecteur
+  sf::Vector2f start(lastPos_);
+  sf::Vector2f end(pos);
+  sf::Vector2f diff = end - start;
+
+  float frameDistance = std::sqrt(diff.x * diff.x + diff.y * diff.y);
+
+  if (frameDistance > 0) {
+    sf::Vector2f unitDir = diff / frameDistance;
+    distance_ += frameDistance; // On ajoute la distance parcourue cette frame
+
+    while (distance_ >= spacing_) {
+      // On calcule où on doit peindre sur le segment actuel
+      // 'travelDist' est la distance depuis 'lastPos_'
+      float travelDist = frameDistance - (distance_ - spacing_);
+      sf::Vector2f paintPosF = start + (unitDir * travelDist);
+
+      // On convertit en int seulement au moment de peindre
+      paint(sf::Vector2i(static_cast<int>(std::round(paintPosF.x)),
+                         static_cast<int>(std::round(paintPosF.y))));
+
+      distance_ -= spacing_;
+    }
+  }
+  lastPos_ = pos;
+}
+
+void Brush::stopDrawing() {
+  isDrawing_ = false;
+  distance_ = 0;
 }
 
 PixelBrush::PixelBrush(std::shared_ptr<Map> map) : Brush(map) {
@@ -24,11 +69,10 @@ void PixelBrush::setColor(sf::Color c) {
 void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setErraser() { is_erraser_ = !is_erraser_; }
 
-void PixelBrush::drawOn(sf::Vector2i pos) {
+void PixelBrush::paint(sf::Vector2i pos) {
   shared_ptr<Layer> pixellayer = map_->getCurrentLayer();
   if (pixellayer->getType() == PIXELLAYER) {
-    sf::Vector2f rounded_pos =
-        sf::Vector2f(std::round(pos.x), std::round(pos.y));
+    sf::Vector2f rounded_pos = sf::Vector2f((pos.x), (pos.y));
 
     switch (shape_) {
     case SQUARE: {
@@ -54,14 +98,15 @@ void PixelBrush::drawOn(sf::Vector2i pos) {
       break;
     }
     case DIAMOND: {
+      pixellayer->getTexture().setSmooth(false);
       unsigned int size_x = (size_m_.x) * getScale();
       unsigned int size_y = (size_m_.y) * getScale();
       sf::ConvexShape diamond(4);
-      diamond.setPoint(0, sf::Vector2f(size_x / 2, 0));      // top point
-      diamond.setPoint(1, sf::Vector2f(size_x, size_y / 2)); // right point
-      diamond.setPoint(2, sf::Vector2f(size_x / 2, size_y)); // botom point
-      diamond.setPoint(3, sf::Vector2f(0, size_y / 2));      // left point
-      diamond.setOrigin(sf::Vector2f(size_x / 2, size_y / 2));
+      diamond.setPoint(0, sf::Vector2f(size_x / 2.0f, 0.0f));   // top point
+      diamond.setPoint(1, sf::Vector2f(size_x, size_y / 2.0f)); // right point
+      diamond.setPoint(2, sf::Vector2f(size_x / 2.0f, size_y)); // botom point
+      diamond.setPoint(3, sf::Vector2f(0.0f, size_y / 2.0f));   // left point
+      diamond.setOrigin(sf::Vector2f(size_x / 2.0f, size_y / 2.0f));
       diamond.setPosition(rounded_pos);
       is_erraser_ ? diamond.setFillColor(sf::Color::Transparent)
                   : diamond.setFillColor(color_);

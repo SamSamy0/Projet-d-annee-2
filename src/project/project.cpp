@@ -9,10 +9,14 @@
 #include <memory>
 #include <string>
 
-Project::Project(unsigned int scale, sf::Vector2u size,
-                 sf::RenderWindow &window, tgui::Gui &gui)
-    : map_{std::make_shared<Map>(1, size, scale)}, window_{window},
-      toolbar_{map_}, gui_{gui} {}
+Project::Project(unsigned int scale, sf::Vector2u size, std::string name,
+                 unsigned int id, sf::RenderWindow &window, tgui::Gui &gui)
+    : map_{std::make_shared<Map>(1, size, scale)}, name_{name}, id_{id},
+      window_{window}, toolbar_{map_}, gui_{gui} {}
+
+unsigned int Project::getId() { return id_; }
+std::string Project::getName() { return name_; }
+void Project::setName(std::string name) { name_ = name; }
 
 unsigned int Project::getScale() { return map_->getScale(); }
 std::shared_ptr<Map> Project::getMap() { return map_; }
@@ -23,7 +27,7 @@ sf::View &Project::getView() { return viewMap_; }
 void Project::displayScale() {
   sf::Font police("../res/police/ARIAL.TTF");
   sf::Text scaleText(police);
-  scaleText.setString("1 metre =" + to_string(getScale()) + " pixels");
+  scaleText.setString("1 metre = " + to_string(getScale()) + " pixels");
   scaleText.setCharacterSize(17);
   scaleText.setFillColor(sf::Color::White);
   scaleText.setPosition(sf::Vector2f(850, 13));
@@ -72,6 +76,4 @@ void Project::display() {
 
   window_.draw(topBar);
   displayScale();
-  gui_.draw();
-  window_.display();
 }

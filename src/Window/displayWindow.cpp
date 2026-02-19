@@ -8,7 +8,7 @@
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Text.hpp>
 #include <TGUI/Widgets/TextArea.hpp>
-// #include <memory>
+#include <iostream>
 
 void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   // NOTE: I have to ask how the usernames are stored in the server
@@ -89,16 +89,10 @@ void Window::initWidget() {
     auto homeButton = tgui::Button::create();
     homeButton->setSize(30, 30);
     homeButton->setPosition(15, 5);
-    std::cout << "Agvant texture" << std::endl;
     homeButton->getRenderer()->setTexture("../res/images/accueil.png");
-    std::cout << "Après texture" << std::endl;
     homeButton->getRenderer()->setBorders({0});
-    gui.add(homeButton);
     homeButton->onPress(&Window::setState, this, projectState::MENU);
-    // homeButton->onPress([&]() {
-    //   state = projectState::MENU;
-    //   std::cout << "Home pressed\n";
-    // });
+    gui.add(homeButton);
   }
 }
 void Window::updateTextSize() {
@@ -119,12 +113,16 @@ void Window::processEvents() {
     }
 
     // Dans un projet
-
     if (state == projectState::GAME && project) {
       project->getMap()->detectZooming(*event); // ZOOM
-
+      //
       if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
         leftClickEvent();
+      }
+      if (auto mouseEvent = event->getIf<sf::Event::MouseButtonReleased>()) {
+        if (mouseEvent->button == sf::Mouse::Button::Left) {
+          project->getToolBar().getSelectedTool()->stopDrawing();
+        }
       }
     }
   }
@@ -188,10 +186,8 @@ void Window::createProj() {
   // Vector2u = map size
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
   gui.removeAllWidgets();
-  std::cout << "Avant change state" << std::endl;
-  std::cout << "Après change state" << std::endl;
-  this->project =
-      std::make_unique<Project>(1, sf::Vector2u(500, 500), mainWindow, gui);
+  this->project = std::make_unique<Project>(1, sf::Vector2u(500, 500),
+                                            "project", 1, mainWindow, gui);
   setState(projectState::GAME);
 }
 

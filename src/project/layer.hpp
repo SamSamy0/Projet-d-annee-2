@@ -20,6 +20,7 @@ protected:
 public:
   Layer(std::string name, sf::Vector2u size);
   typeCouche getType();
+  virtual sf::RenderTexture &getTexture() {}
   virtual void drawLayer(sf::RenderWindow& window) = 0;
   virtual void draw(sf::Drawable &s) = 0;
   virtual void errase(sf::Drawable &s) = 0;
@@ -36,7 +37,7 @@ class PixelLayer : public Layer {
 public:
   PixelLayer(std::string name, sf::Vector2u size);
 
-  sf::RenderTexture &getTexture();
+  sf::RenderTexture &getTexture() override;
   void drawLayer(sf::RenderWindow& window) override;
   void draw(sf::Drawable &s) override;
   void errase(sf::Drawable &s) override;
