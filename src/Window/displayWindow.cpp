@@ -1,7 +1,7 @@
 #include "displayWindow.hpp"
 #include "../project/project.hpp"
 #include "../project/tool.hpp"
-#include "../server/clientnetwork.hpp"
+#include "../client/clientnetwork.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -220,3 +220,10 @@ void Window::run() {
     mainWindow.display();
   }
 }
+
+
+void Window::setLogIn(){
+  isLoggedIn = true;
+}
+
+void addProject()

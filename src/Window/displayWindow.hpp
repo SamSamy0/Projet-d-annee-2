@@ -1,6 +1,6 @@
 #pragma once
 #include "../project/project.hpp"
-#include "../server/clientnetwork.hpp"
+#include "../client/clientnetwork.hpp"
 #include "Identifier.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
