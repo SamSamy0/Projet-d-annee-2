@@ -72,6 +72,10 @@ void CreateProjectMessage::process(Worker& worker) {
 }
 
 
+GetProjectDataMessage::GetProjectDataMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c): Message(c) {
+    // à faitre un jour
+}
+
 
 void GetProjectDataMessage::process(Worker& worker) {
     //à faire un jour

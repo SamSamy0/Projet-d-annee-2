@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QJsonArray>
 
-ProjectsManager::ProjectsManager(const std::string &rootPath = "BigData")
+ProjectsManager::ProjectsManager(const std::string &rootPath)
     : m_rootPath(QString::fromStdString(rootPath))
 {
     QDir dir;
