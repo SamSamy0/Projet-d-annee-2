@@ -17,13 +17,12 @@ Project::Project(unsigned int scale, sf::Vector2u size, std::string name, unsign
 
 
 // ----- [Getters] -----
-
 unsigned int Project::getId() { return id_; }
 unsigned int Project::getScale() { return map_->getScale(); }
 
 std::string Project::getName() { return name_; }
 
-ToolBar Project::getToolBar() { return toolbar_; }
+ToolBar& Project::getToolBar() { return toolbar_; }
 
 std::shared_ptr<Map> Project::getMap() { return map_; }
 

@@ -159,9 +159,20 @@ void Window::initWidget() {
     });
     gui.add(brushButton);
 
+    // Ajout boutton deplacement couche
+    auto shiftButton = tgui::Button::create();
+    shiftButton->setSize(30, 30);
+    shiftButton->setPosition(490, 13);
+    shiftButton->getRenderer()->setTexture("../res/images/couche.png");
+    shiftButton->getRenderer()->setBorders({0});
+    shiftButton->onPress([this]() {
+        project->getToolBar().selectTool(PIXELSHIFT);
+    });
+    gui.add(shiftButton);
+
     // Ajout de la liste des couches
     layersList_ = tgui::ScrollablePanel::create();
-    layersList_->setSize(mainWindow.getSize().x * 0.18, mainWindow.getSize().y * 0.40);
+    layersList_->setSize(mainWindow.getSize().x * 0.18, mainWindow.getSize().y * 0.28);
     layersList_->setPosition(mainWindow.getSize().x * 0.02, mainWindow.getSize().y * 0.14);
     layersList_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
     layersList_->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
@@ -242,41 +253,70 @@ void Window::processEvents() {
     //Dans un projet
     if(state == projectState::GAME && project){
 
-      project->getMap()->detectZooming(*event); //ZOOM
-      //
-      if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){leftClickEvent();}
+      project->getMap()->detectMovement();
+
+      
+      
+      
+    if (const auto *keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+      if (keyPressed->code == sf::Keyboard::Key::LShift){project->getToolBar().selectTool(PIXELSHIFT); std::cout<<"key pressed"<<std::endl;}}
+
+      //TOOLS
+      if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>()){
+        sf::Vector2i mousePos = mousePressed->position; // mouse position
+        sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
+        sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+        project->getToolBar().getSelectedTool()->onPress(mapPos);
+
+      }
+
       if (auto mouseEvent = event->getIf<sf::Event::MouseButtonReleased>()){
         if (mouseEvent->button == sf::Mouse::Button::Left){
-          project->getToolBar().getSelectedTool()->stopDrawing();
+        project->getToolBar().getSelectedTool()->onRelease();
+        }}
+
+      if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>()) {
+        sf::Vector2i mousePos = mouseMoved->position; // mouse position
+        sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
+        sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+        project->getToolBar().getSelectedTool()->onDrag(mapPos);
+      }
+
+
+
+      //SET SIZE
+      if (const auto* wheelEvent = event->getIf<sf::Event::MouseWheelScrolled>()){
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LSystem )|| sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)){
+          // toolType tool = project->getToolBar().getSelected();
+          // if(tool == PIXELBRUSH || tool == SPRITEBRUSH){
+          //   sf::Vector2u size = project->getToolBar().getSelectedTool()->getSize();
+          //   float sizex = size.x;
+          //   float sizey = size.y;
+          //   sf::Vector2u mapSize = project->getMap()->getSize();
+          //   float step = std::min(mapSize.x,mapSize.y)/100.0f;
+          //
+          //   if (wheelEvent->delta > 0){sizex += 1; sizey += 1;}
+          //   else if(wheelEvent->delta <0){sizex -= 1 ; sizey -= 1;}
+          //
+          //
+          //   if (sizex<1){sizex = 1;}
+          //   else if(sizex > mapSize.x ){sizex = mapSize.x;}
+          //   if (sizey<1){sizey = 1;}
+          //   else if(sizey > mapSize.y ){sizey = mapSize.y;}
+          //
+          //   size =  sf::Vector2u(static_cast<unsigned int>(std::round(sizex)), static_cast<unsigned int>(std::round(sizey)));
+          //   project->getToolBar().getSelectedTool()->setSize(size.x,size.y);
+          // }
+        }
+        else {
+          if (!gui.getWidgetBelowMouseCursor(wheelEvent->position, true)) project->getMap()->zooming(wheelEvent); //ZOOM
         }
       }
+      }
+
   }
 }
-}
 
-void Window::leftClickEvent() {
-  toolType tool = project->getToolBar().getSelected();
-  sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow); // mouse position
-  sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
-  sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
-
-  switch (tool) {
-  case PIXELBRUSH: {
-    if (project->getMap()->isInside(mapPos) &&
-        !gui.getWidgetAtPos(sf::Vector2f(mousePos), true)) {
-      project->getToolBar().getSelectedTool()->drawOn(mapPos);
-    }
-    break;
-  }
-  case PIXELSHIFT: {
-    break;
-  }
-
-  case SPRITEBRUSH: {
-    break;
-  }
-  }
-}
 
 void Window::initMenuWidget() {
   gui.removeAllWidgets();
@@ -312,7 +352,7 @@ void Window::createProj() {
   // Vector2u = map size
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
   gui.removeAllWidgets();
-  this->project = std::make_unique<Project>(1, sf::Vector2u(500, 500), "project", 1, mainWindow, gui);
+  this->project = std::make_unique<Project>(5, sf::Vector2u(500, 500), "project", 1, mainWindow, gui);
   setState(projectState::GAME);
 }
 
@@ -341,7 +381,7 @@ void Window::run() {
     if (Window::state == projectState::LOGIN ||
       Window::state == projectState::MENU) {
     }
-    if (Window::state == projectState::GAME && project) {
+    else if (Window::state == projectState::GAME && project) {
       // Display Game
       project->display();
     }

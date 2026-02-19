@@ -20,16 +20,19 @@ void Brush::setSize(unsigned int x, unsigned int y = 0) {
 }
 
 
+sf::Vector2u Brush::getSize(){
+  return sf::Vector2u(size_m_.x,size_m_.y);
+}
 
-void Brush::drawOn(sf::Vector2i pos) {
-    if (!isDrawing_) {
-        isDrawing_ = true;
-        lastPos_ = pos;
-        paint(pos);
-        distance_ = 0;
-        return;
-    }
+void Brush::onPress(sf::Vector2i pos){
+  isDrawing_ = true;
+  lastPos_ = pos;
+  paint(pos);
+  distance_ = 0;
+}
+void Brush::onDrag(sf::Vector2i pos) {
 
+  if(isDrawing_){
     // On calcule tout en float pour la précision du vecteur
     sf::Vector2f start(lastPos_);
     sf::Vector2f end(pos);
@@ -57,10 +60,11 @@ void Brush::drawOn(sf::Vector2i pos) {
         }
     }
     lastPos_ = pos;
+  }
 }
 
 
-void Brush::stopDrawing(){
+void Brush::onRelease(){
   isDrawing_ = false;
   distance_ =  0;
 }
@@ -131,13 +135,38 @@ PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map) {
   name_ = PIXELSHIFT;
 }
 
-void PixelShift::shiftOn(sf::Vector2i pos_1, sf::Vector2i pos_2) {
+void PixelShift::shiftOn(sf::Vector2i v) {
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
-  if (layer->getType() == PIXELLAYER) {
-    sf::Vector2i vect(
-        static_cast<int>(pos_2.x) - static_cast<int>(pos_1.x),
-        static_cast<int>(pos_2.y) -
-            static_cast<int>(pos_1.y)); // on convertit avant la soustraction
-    layer->shift(vect);
-  }
+    layer->shift(v);
 }
+
+
+
+
+  void PixelShift::onPress(sf::Vector2i pos){
+  isDrawing_ = true;
+  lastPos_ = pos;
+}
+  void PixelShift::onDrag(sf::Vector2i pos){
+
+  if(!isDrawing_) return;
+
+  sf::Vector2i delta = pos - lastPos_;
+
+  if(delta.x != 0 || delta.y != 0){
+    std::shared_ptr<Layer> layer = map_->getCurrentLayer();
+    layer->shift(delta);
+
+  }
+  lastPos_ = pos;
+}
+  void PixelShift::onRelease(){
+    if(isDrawing_){
+      std::shared_ptr<Layer> layer = map_->getCurrentLayer();
+        if (layer && layer->getType() == PIXELLAYER) {
+            layer->display(); 
+        }
+  }
+  isDrawing_ = false;
+}
+

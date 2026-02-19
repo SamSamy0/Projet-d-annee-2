@@ -37,7 +37,8 @@ private:
   // void menuWidget();
 
   // Detection in map
-  void leftClickEvent();
+  void toolOnClick();
+  void toolOnRelease();
 
 public:
   // Constructor
