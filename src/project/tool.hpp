@@ -26,6 +26,7 @@ public:
   //Getter
   std::shared_ptr<Map> getMap();
   unsigned int getScale();
+  sf::Vector2u getSize(){}
 
   //Setter
   virtual void setColor(sf::Color c){}
@@ -53,6 +54,7 @@ protected:
 public:
   Brush(std::shared_ptr<Map>);
   void setSize(unsigned int x, unsigned int y);
+  sf::Vector2u getSize();
   void drawOn(sf::Vector2i pos);
   void stopDrawing();
   virtual void paint(sf::Vector2i pos) = 0;

@@ -20,6 +20,9 @@ void Brush::setSize(unsigned int x, unsigned int y = 0) {
 }
 
 
+sf::Vector2u Brush::getSize(){
+  return sf::Vector2u(size_m_.x,size_m_.y);
+}
 
 void Brush::drawOn(sf::Vector2i pos) {
     if (!isDrawing_) {

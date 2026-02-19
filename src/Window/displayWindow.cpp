@@ -116,14 +116,44 @@ void Window::processEvents() {
     //Dans un projet
     if(state == projectState::GAME && project){
 
-      project->getMap()->detectZooming(*event); //ZOOM
-      //
+      
+      
+
+      //DRAW
       if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){leftClickEvent();}
       if (auto mouseEvent = event->getIf<sf::Event::MouseButtonReleased>()){
         if (mouseEvent->button == sf::Mouse::Button::Left){
           project->getToolBar().getSelectedTool()->stopDrawing();
         }
       }
+
+
+      //SET SIZE
+      if (const auto* wheelEvent = event->getIf<sf::Event::MouseWheelScrolled>()){
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)){
+          sf::Vector2u size = project->getToolBar().getSelectedTool()->getSize();
+          float sizex = size.x;
+          float sizey = size.y;
+          sf::Vector2u mapSize = project->getMap()->getSize();
+
+          if (wheelEvent->delta > 0){sizex *= 1.10;sizey *= 1.10;}
+          else if(wheelEvent->delta <0){sizex /=1.10;sizey /=1.10;}
+
+
+          if (sizex<1){sizex = 1;}
+          else if(sizex > mapSize.x ){sizex = mapSize.x;}
+          if (size.y<1){size.y = 1;}
+          else if(sizey > mapSize.y ){sizey = mapSize.y;}
+
+          sizex = static_cast<unsigned int>(sizex);
+          sizey = static_cast<unsigned int>(sizey);
+          project->getToolBar().getSelectedTool()->setSize(sizex,sizey);
+        }
+        else{
+        project->getMap()->zooming(wheelEvent); //ZOOM
+        }
+      }
+
   }
 }
 }
@@ -215,7 +245,7 @@ void Window::run() {
     if (Window::state == projectState::LOGIN ||
       Window::state == projectState::MENU) {
     }
-    if (Window::state == projectState::GAME && project) {
+    else if (Window::state == projectState::GAME && project) {
       // Display Game
       project->display();
     }

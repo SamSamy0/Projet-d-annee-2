@@ -92,15 +92,13 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
     }
 }
 
-void Map::detectZooming(sf::Event event) {
-    if (const auto* mouse = event.getIf<sf::Event::MouseWheelScrolled>()) {
-        if (mouse->delta > 0) { // regarde si l'utilisateur veut faire un zoom avant
+void Map::zooming(sf::Event::MouseWheelScrolled const* event) {
+        if (event->delta > 0) { // regarde si l'utilisateur veut faire un zoom avant
             zoom_.zoomIn(); 
         }
-        else if (mouse->delta < 0) {  // regarde si l'utilisateur veut faire un zoom arrière
+        else if (event->delta < 0) {  // regarde si l'utilisateur veut faire un zoom arrière
             zoom_.zoomOut();
         }
-    }  
 }
 
 void Map::detectMovement()

@@ -37,7 +37,7 @@ public:
     void displayMap(sf::RenderWindow& window, sf::View& viewMap);
     void closeWindowManager(sf::RenderWindow& window, const sf::Event& ev);
     void detectMovement();
-    void detectZooming(sf::Event event);
+    void zooming(sf::Event::MouseWheelScrolled const* event);
     bool isInside(sf::Vector2i pos)const;
 };
 
