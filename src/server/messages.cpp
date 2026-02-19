@@ -119,7 +119,7 @@ std::unique_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet,
         case MsgProtocole::LOB_CREATE_PROJECT_REQ:
             return std::make_unique<CreateProjectMessage>(data_packet, client);
         
-        case MsgProtocole::LOB_PROJECT_DATA_REQ:
+        case MsgProtocole::LOB_PROJECT_LIST_REQ:
             return std::make_unique<GetProjectDataMessage>(data_packet, client);
     };
     
