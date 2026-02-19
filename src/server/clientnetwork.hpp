@@ -7,28 +7,29 @@
 #include "protocol.hpp"
 
 
+
 struct ServerEvent{
-    MsgProtocole message_type;
-    std::unique_ptr<sf::Packet> data_packet;
+    MsgProtocole message_type_;
+    std::unique_ptr<sf::Packet> data_packet_;
 };
 
 
 class ClientNetworkManager{
-    sf::TcpSocket socket;
-    std::deque<ServerEvent> reponse;
+    sf::TcpSocket socket_;
+    std::deque<ServerEvent> reponse_;
     
 public:
         
-    std::deque<ServerEvent>& getQueuEvent();
+    
     bool connect();
     void getEvent();
     bool hasEvent();
     ServerEvent popEvent();
+    std::deque<ServerEvent>& getQueuEvent();
     void login(std::string pseudo,std::string password);
     void askRegister(std::string pseudo, std::string password);
     void createProject(std::string role, sf::Vector2u size, float scale);
-    void getProjectData(int project_id);
-    void getUsersProjects(long long id);
+    void getProjectList();
 
         
 };

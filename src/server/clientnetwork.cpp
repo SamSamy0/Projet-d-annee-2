@@ -3,14 +3,14 @@
 
 
 std::deque<ServerEvent>& ClientNetworkManager::getQueuEvent(){
-    return reponse;
+    return reponse_;
 }
 
 
 bool ClientNetworkManager::connect(){
-    socket.setBlocking(false);
+    socket_.setBlocking(false);
 
-    if (socket.connect({127,0,0,1},5000) == sf::Socket::Status::Done){
+    if (socket_.connect({127,0,0,1},5000) == sf::Socket::Status::Done){
         return true;
     }else return false;
 }
@@ -19,16 +19,21 @@ void ClientNetworkManager::getEvent(){
     ServerEvent rep;
     auto packet = std::make_unique<sf::Packet>();
 
-    if (socket.receive(*packet) == sf::Socket::Status::Done){
+    if (socket_.receive(*packet) == sf::Socket::Status::Done){
         uint8_t type_mess;
         *packet >> type_mess;
         
-        rep.message_type = static_cast<MsgProtocole>(type_mess);
-        rep.data_packet = std::move(packet);
+        rep.message_type_ = static_cast<MsgProtocole>(type_mess);
+        rep.data_packet_ = std::move(packet);
 
-        reponse.push_back(std::move(rep));
+        reponse_.push_back(std::move(rep));
             
     }
+}
+
+
+bool ClientNetworkManager::hasEvent(){
+    return reponse_.empty();
 }
 
 
@@ -39,7 +44,7 @@ void ClientNetworkManager::login(std::string pseudo,std::string password){
     packet << static_cast<uint8_t>(msg);
     packet << pseudo << password ;
 
-    socket.send(packet);
+    socket_.send(packet);
 }
 
 
@@ -50,7 +55,7 @@ void ClientNetworkManager::askRegister(std::string pseudo, std::string password)
     packet << static_cast<uint8_t>(msg);
     packet << pseudo << password ;
 
-    socket.send(packet);
+    socket_.send(packet);
 }
 
 
@@ -61,24 +66,16 @@ void ClientNetworkManager::createProject(std::string nomProjet, sf::Vector2u siz
     packet << static_cast<uint8_t>(msg);
     packet << nomProjet << size.x << size.y << scale ;
 
-    socket.send(packet);
-
+    socket_.send(packet);
 }
 
 
-void ClientNetworkManager::getProjectData(int project_id) {
-
-}
-
-
-
-void ClientNetworkManager::getUsersProjects(long long userId) {
+void ClientNetworkManager::getProjectList() {
     sf::Packet packet;
-    MsgProtocole msg = MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REQ;
+    MsgProtocole msg = MsgProtocole::LOB_PROJECT_LIST_REQ;
 
     packet << static_cast<uint8_t>(msg);
-    packet << static_cast<std::int64_t>(userId);
-    
-    socket.send(packet);
+    socket_.send(packet);
 }
+
 

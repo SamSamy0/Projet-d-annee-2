@@ -2,8 +2,13 @@ cmake_minimum_required(VERSION 3.10)
 project(Projet)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(SFML 3.0 COMPONENTS Graphics Window System Network REQUIRED)
+set(SFML_STATIC_LIBRARIES ON)
+find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System Network)
+
 find_package(TGUI 1.0 REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Core Sql)
+
+
 
 set(SOURCES
     main.cpp
@@ -21,12 +26,16 @@ set(SOURCES
 add_executable(sfml-app ${SOURCES})
 
 target_link_libraries(sfml-app 
-    SFML::Graphics 
-    SFML::Window 
-    SFML::System 
+    SFML::Graphics
+    SFML::Window
+    SFML::System
     SFML::Network
     TGUI::TGUI
-)# set(SOURCES
+    Qt5::Core
+    Qt5::Network
+    Qt5::Sql
+)
+# set(SOURCES
 #     main.cpp
 #     src/Window/Identifier.cpp
 #     src/Window/displayWindow.cpp

@@ -1,4 +1,5 @@
 #include "handler.hpp"
+#include "clientnetwork.hpp"
 
 
 ClientEventHandler::ClientEventHandler(ClientNetworkManager& client_manager): manager_(&client_manager){}
@@ -11,21 +12,23 @@ void ClientEventHandler::trateEventQueu(){
 }
 
 void ClientEventHandler::process(ServerEvent& event){
-    switch(event.message_type){
+    switch(event.message_type_){
         case MsgProtocole::AUTH_RESULT:
             handleAuth(event);
             //mettre le bool IsLoggedIn a true
             break;
-        case MsgProtocole::LOB_PROJECT_DATA_REP:
+        case MsgProtocole::LOB_PROJECT_LIST_REP:
             handleProjectData(event);
             break;
-        case MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP:
-            handleMyProjects(event);
-            break;
-        }
+    }        
 }
 
-void handleMyProjects(ServerEvent& event) {
 
+
+
+HandleRepInWindow::HandleRepInWindow(Window& w): window_(&w){};
+
+void HandleRepInWindow::switchConnectState(bool connect){
+    
 }
 

@@ -4,6 +4,7 @@
 #include <vector>
 #include <deque>
 #include <memory>
+#include <atomic>
 #include <SFML/Network.hpp>
 #include "protocol.hpp"
 #include "messagequeue.hpp"

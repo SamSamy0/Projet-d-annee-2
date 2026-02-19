@@ -1,9 +1,11 @@
 #include "servernetwork.hpp"
 #include <iostream>
+#include <SFML/Network.hpp>
+
 
 
 bool ServerNetworkManager::start(){
-    if (listener.listen(5000) == sf::Socket::Done){  
+    if (listener.listen(5000) == sf::Socket::Status::Done){  
         std::cout << "Le server écoute sur le port 5000" << std::endl;
         listener.setBlocking(false);  // met le listener en non-bloquant
         return true;
@@ -15,14 +17,14 @@ bool ServerNetworkManager::start(){
 bool ServerNetworkManager::accept(){
     auto socket_client = std::make_shared<sf::TcpSocket>();
 
-    if (listener.accept(*socket_client) == sf::Socket::Done) {
+    if (listener.accept(*socket_client) == sf::Socket::Status::Done) {
         socket_client->setBlocking(false);
 
         Client new_client;
         new_client.sock = socket_client;
 
         client_list.push_back(new_client);
-        std::cout << "nouvelle machine connécté: " << socket_client->getRemoteAddress() << std::endl ;
+        std::cout << "nouvelle machine connécté: "<< std::endl ;
 
         return true;
     } else return false;
@@ -35,7 +37,7 @@ void ServerNetworkManager::getMessages(){
 
         auto packet = std::make_shared<sf::Packet>();
         
-        if (client.sock->receive(*packet) == sf::Socket::Done){
+        if (client.sock->receive(*packet) == sf::Socket::Status::Done){
             auto msg = MessageFactory(packet,client);
             message_queu.push(std::move(msg));
         }

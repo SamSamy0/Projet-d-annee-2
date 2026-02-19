@@ -5,7 +5,7 @@
 #include <condition_variable>
 #include <deque>
 #include <memory>
-#include "messages.cpp"
+#include "messages.hpp"
 
 class MessageQueue {
 private:

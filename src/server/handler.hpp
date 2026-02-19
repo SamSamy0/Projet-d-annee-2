@@ -2,21 +2,28 @@
 #define HANDLER_HPP
 
 #include <deque>
-#include "clientnetwork.hpp"
 #include "protocol.hpp"
+#include "displayWindow.hpp"
 
+class ClientNetworkManager;
 
 class ClientEventHandler{
-    ClientNetworkManager* manager_;
+   ClientNetworkManager* manager_;
     public:
-    ClientEventHandler(ClientNetworkManager& client_manageer);
+    ClientEventHandler(ClientNetworkManager& client_manager);
     void process(ServerEvent& event);
     void trateEventQueu();
 };
 
-void handleAuth(ServerEvent& event);
-void handleProjectData(ServerEvent& event);
-void handleMyProjects(ServerEvent& event);
+class HandleRepInWindow{
+    Window* window_;
+    
+    public:
+    HandleRepInWindow(Window& w){};
+    void switchConnectState(bool connect);
+    void addProjectList(std::vector<std::string> project_list);
+};
+
 
 
 #endif
