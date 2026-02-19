@@ -20,7 +20,9 @@ private:
   sf::RenderWindow mainWindow;
   // Authentification Interface
   tgui::Gui gui;
+  tgui::ScrollablePanel::Ptr layersList_ = nullptr;
   std::unique_ptr<Project> project = nullptr;
+  
   void initWidget();
   void updateTextSize();
   void processEvents();
@@ -31,6 +33,7 @@ private:
   void loginWidget();
   void createProj();
   void setState(projectState newState);
+  void refreshLayerList();
   // void menuWidget();
 
   // Detection in map

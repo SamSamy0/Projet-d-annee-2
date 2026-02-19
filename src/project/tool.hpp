@@ -31,7 +31,7 @@ public:
   virtual void setColor(sf::Color c){}
   virtual void setShape(Shape s){}
   virtual void setSize(unsigned int x, unsigned int y){}
-  virtual void setErraser(){}
+  virtual void setErraser(bool val){}
 
   //Action
   virtual void shiftOn(sf::Vector2i pos_1, sf::Vector2i pos_2){}
@@ -69,7 +69,7 @@ public:
   void setColor(sf::Color c) override;
   void setShape(Shape s)override;
   void paint(sf::Vector2i pos) override;
-  void setErraser() override ;
+  void setErraser(bool val) override ;
 };
 //-----------------------------------------------------------------------
 

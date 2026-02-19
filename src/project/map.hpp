@@ -31,6 +31,7 @@ public:
     unsigned int getScale() const;
     bool hasLayer() const;
     vector<shared_ptr<Layer>>& getLayers();
+    Zoom& getZoom();
     shared_ptr<Layer> getCurrentLayer();
     void insertLayer(shared_ptr<Layer> layer);
     void createPixelLayer();
@@ -39,6 +40,8 @@ public:
     void detectMovement();
     void detectZooming(sf::Event event);
     bool isInside(sf::Vector2i pos)const;
+    void setLayerSelected(unsigned int i);
+    unsigned int getLayerSelected() const;
 };
 
 

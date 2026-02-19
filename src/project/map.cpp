@@ -23,10 +23,14 @@ Map::Map(int mapId, sf::Vector2u size , unsigned int scale) :
     createPixelLayer();
 }
 
+Zoom& Map::getZoom() { return zoom_; }
+
 
 sf::Vector2u Map::getSize()const {return size_;}
 
 bool Map::hasLayer()const {return !layers_.empty();}
+
+void Map::setLayerSelected(unsigned int i) { selected_ = i; }
 
 unsigned int Map::getScale() const { return scale_; }
 
@@ -90,6 +94,10 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
     for (auto& layer: layers_) {
         layer->drawLayer(window);
     }
+}
+
+unsigned int Map::getLayerSelected() const {
+    return selected_;
 }
 
 void Map::detectZooming(sf::Event event) {

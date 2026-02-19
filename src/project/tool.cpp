@@ -75,7 +75,7 @@ void PixelBrush::setColor(sf::Color c) {
   color_ = c;
 } // NOTE: PEUT ETRE FAIRE UNE FONCTION PAR R G B A
 void PixelBrush::setShape(Shape s) { shape_ = s; }
-void PixelBrush::setErraser() { is_erraser_ = !is_erraser_; }
+void PixelBrush::setErraser(bool val) { is_erraser_ = val; }
 
 void PixelBrush::paint(sf::Vector2i pos) {
 
