@@ -116,6 +116,8 @@ void Window::processEvents() {
     //Dans un projet
     if(state == projectState::GAME && project){
 
+      project->getMap()->detectMovement();
+
       
       
 
@@ -130,7 +132,7 @@ void Window::processEvents() {
 
       //SET SIZE
       if (const auto* wheelEvent = event->getIf<sf::Event::MouseWheelScrolled>()){
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)){
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LSystem )|| sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl )){
           sf::Vector2u size = project->getToolBar().getSelectedTool()->getSize();
           float sizex = size.x;
           float sizey = size.y;
@@ -142,12 +144,11 @@ void Window::processEvents() {
 
           if (sizex<1){sizex = 1;}
           else if(sizex > mapSize.x ){sizex = mapSize.x;}
-          if (size.y<1){size.y = 1;}
+          if (sizey<1){sizey = 1;}
           else if(sizey > mapSize.y ){sizey = mapSize.y;}
 
-          sizex = static_cast<unsigned int>(sizex);
-          sizey = static_cast<unsigned int>(sizey);
-          project->getToolBar().getSelectedTool()->setSize(sizex,sizey);
+          size =  sf::Vector2u(static_cast<unsigned int>(sizex), static_cast<unsigned int>(sizey));
+          project->getToolBar().getSelectedTool()->setSize(size.x,size.y);
         }
         else{
         project->getMap()->zooming(wheelEvent); //ZOOM
