@@ -8,6 +8,7 @@
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Text.hpp>
 #include <TGUI/Widgets/TextArea.hpp>
+#include <iostream>
 
 void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   // NOTE: I have to ask how the usernames are stored in the server
@@ -89,14 +90,13 @@ void Window::initWidget() {
     auto homeButton = tgui::Button::create();
     homeButton->setSize(30, 30);
     homeButton->setPosition(15, 5);
-    homeButton->getRenderer()->setTexture("../res/images/accueil.png");
+    homeButton->getRenderer()->setTexture("../../res/images/accueil.png");
     homeButton->getRenderer()->setBorders({0});
+    homeButton->onPress([this](){
+        setState(projectState::MENU);
+        std::cout << "Home pressed\n";
+    });
     gui.add(homeButton);
-    // homeButton->onPress(&Window::setState, this, projectState::MENU);
-    // homeButton->onPress([&]() {
-    //   state = projectState::MENU;
-    //   std::cout << "Home pressed\n";
-    // });
   }
 }
 void Window::updateTextSize() {
@@ -128,6 +128,7 @@ void Window::processEvents() {
         }
       }
   }
+}
 }
 
 void Window::leftClickEvent() {
@@ -188,13 +189,14 @@ void Window::createProj() {
   // Vector2u = map size
   // Project newProj(1, sf::Vector2u(500, 500), mainWindow);
   gui.removeAllWidgets();
-  this->project = std::make_unique<Project>(1, sf::Vector2u(500, 500),
-                                            "project", 1, mainWindow, gui);
+  cout << "avant project" << endl;
+  this->project = std::make_unique<Project>(1, sf::Vector2u(500, 500), "project", 1, mainWindow, gui);
   setState(projectState::GAME);
 }
 
 void Window::setState(projectState newState) {
   this->state = newState;
+  cout << "je change de state" << endl;
   this->initWidget();
 }
 
@@ -215,12 +217,13 @@ void Window::run() {
     processEvents();
     mainWindow.clear(sf::Color::White);
 
-    // if (Window::state == projectState::LOGIN ||
-    //     Window::state == projectState::MENU) {
-    //   // gui.draw();
-    // }
+    if (Window::state == projectState::LOGIN ||
+      Window::state == projectState::MENU) {
+      cout << "dans le menu" << endl;
+    }
     if (Window::state == projectState::GAME && project) {
       // Display Game
+      cout << "dans carte" << endl;
       project->display();
     }
     gui.draw();

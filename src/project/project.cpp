@@ -27,9 +27,9 @@ ToolBar Project::getToolBar(){return toolbar_;}
 sf::View& Project::getView(){return viewMap_;}
 
 void Project::displayScale() {
-  sf::Font police("../res/police/ARIAL.TTF");
+  sf::Font police("../../res/police/ARIAL.TTF");
   sf::Text scaleText(police);
-  scaleText.setString("1 metre =" + to_string(getScale()) + " pixels");
+  scaleText.setString("1 metre = " + to_string(getScale()) + " pixels");
   scaleText.setCharacterSize(17);
   scaleText.setFillColor(sf::Color::White);
   scaleText.setPosition(sf::Vector2f(850, 13));
@@ -78,6 +78,4 @@ void Project::display() {
 
   window_.draw(topBar);
   displayScale();
-  gui_.draw();
-  window_.display();
 }
