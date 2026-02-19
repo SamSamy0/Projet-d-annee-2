@@ -2,16 +2,19 @@
 #include "layer.hpp"
 #include "map.hpp"
 
-ToolBar::ToolBar(std::shared_ptr<Map> map) {
+ToolBar::ToolBar(std::shared_ptr<Map> map): selected_{PIXELBRUSH} {
   tools_.push_back(std::make_shared<PixelBrush>(map));
   tools_.push_back(std::make_shared<PixelShift>(map));
+
 }
 
 void ToolBar::selectTool(toolType outil) {
   typeCouche type = getSelectedTool()->getMap()->getCurrentLayer()->getType();
 
-  if ((outil <= 1 && type == PIXELLAYER) || (outil > 1 && type == SPRITELAYER))
+  if ((outil <= 1 && type == PIXELLAYER) || (outil > 1 && type == SPRITELAYER)){
+    std::cout<<selected_<<std::endl;
     selected_ = outil;
+  }
 }
 std::shared_ptr<Tool> ToolBar::getSelectedTool() const {
   return tools_[selected_];

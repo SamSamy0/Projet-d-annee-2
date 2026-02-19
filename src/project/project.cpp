@@ -20,7 +20,7 @@ void Project::setName(std::string name){name_ = name;}
 
 unsigned int Project::getScale() { return map_->getScale(); } 
 std::shared_ptr<Map> Project::getMap(){return map_;}
-ToolBar Project::getToolBar(){return toolbar_;}
+ToolBar& Project::getToolBar(){return toolbar_;}
 
 
 
