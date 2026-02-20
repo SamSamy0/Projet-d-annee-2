@@ -310,7 +310,8 @@ void Window::processEvents() {
           // }
         }
         else {
-          if (!gui.getWidgetBelowMouseCursor(wheelEvent->position, true)) project->getMap()->zooming(wheelEvent); //ZOOM
+          if (!gui.getWidgetBelowMouseCursor(wheelEvent->position, true))
+            project->getMap()->zooming(wheelEvent); //ZOOM
         }
       }
       }

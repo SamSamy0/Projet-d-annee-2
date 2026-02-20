@@ -20,6 +20,7 @@ set(SOURCES
     src/project/tool.cpp
 )
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 add_executable(sfml-app ${SOURCES})
 
 target_link_libraries(sfml-app 
@@ -28,19 +29,4 @@ target_link_libraries(sfml-app
     SFML::System 
     SFML::Network
     TGUI::TGUI
-)# set(SOURCES
-#     main.cpp
-#     src/Window/Identifier.cpp
-#     src/Window/displayWindow.cpp
-#     src/Window/displayWindow.hpp
-#     # src/server/clientnetwork.cpp
-#     # src/server/handler.cpp
-#     # src/project/project.cpp
-#     # src/project/tool.cpp
-#     # src/project/map.cpp
-#     # src/project/layer.cpp
-#     # src/project/zoom.cpp
-#     # src/project/move.cpp
-#     # src/project/toolbar.cpp
-#     
-# )
+)
