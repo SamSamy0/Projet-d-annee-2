@@ -1,22 +1,18 @@
 #!/bin/bash
 
-echo "Installation des dépendances : "
+echo "--------------Installation des dépendances------------------------"
 sudo apt update
-sudo apt install -y build-essential cmake sfml tgui
+sudo apt install -y build-essential cmake libsfml-dev
 
-if [ ! -d "build" ]; then
-    echo "--- Création du dossier build ---"
-    mkdir build
-fi
-
-
+rm -rf build
+mkdir build
 cd build
 
-echo "Configuration : "
+echo "---------------------Configuration------------------"
 cmake ..
 
 
-echo "Compilation : "
+echo "---------------------------Compilation----------------------------"
 make -j$(nproc)
 
 

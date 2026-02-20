@@ -1,3 +1,17 @@
+include(FetchContent)
+
+FetchContent_Declare(
+    TGUI
+    GIT_REPOSITORY https://github.com/texus/TGUI.git
+    GIT_TAG        1.x
+)
+
+set(TGUI_BACKEND SFML_GRAPHICS CACHE STRING "TGUI backend" FORCE)
+
+FetchContent_MakeAvailable(TGUI)
+
+
+
 cmake_minimum_required(VERSION 3.10)
 project(Projet)
 set(CMAKE_CXX_STANDARD 17)
