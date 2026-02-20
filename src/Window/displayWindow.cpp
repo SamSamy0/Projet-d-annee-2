@@ -258,29 +258,30 @@ void Window::processEvents() {
       
       
       
-    if (const auto *keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-      if (keyPressed->code == sf::Keyboard::Key::LShift){project->getToolBar().selectTool(PIXELSHIFT); std::cout<<"key pressed"<<std::endl;}}
 
       //TOOLS
       if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>()){
         sf::Vector2i mousePos = mousePressed->position; // mouse position
-        sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
-        sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
-        project->getToolBar().getSelectedTool()->onPress(mapPos);
+        if (!gui.getWidgetBelowMouseCursor(mousePos, true)){ 
+          sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
+          sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+          project->getToolBar().getSelectedTool()->onPress(mapPos);}
 
       }
 
       if (auto mouseEvent = event->getIf<sf::Event::MouseButtonReleased>()){
         if (mouseEvent->button == sf::Mouse::Button::Left){
+        if (!gui.getWidgetBelowMouseCursor(mouseEvent->position, true)){ 
         project->getToolBar().getSelectedTool()->onRelease();
-        }}
+        }}}
 
       if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>()) {
         sf::Vector2i mousePos = mouseMoved->position; // mouse position
+        if (!gui.getWidgetBelowMouseCursor(mousePos, true)){ 
         sf::Vector2f pos = mainWindow.mapPixelToCoords(mousePos, project->getView());
         sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
         project->getToolBar().getSelectedTool()->onDrag(mapPos);
-      }
+      }}
 
 
 

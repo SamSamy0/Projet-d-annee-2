@@ -12,7 +12,6 @@ void ToolBar::selectTool(toolType outil) {
   typeCouche type = getSelectedTool()->getMap()->getCurrentLayer()->getType();
 
   if ((outil <= 1 && type == PIXELLAYER) || (outil > 1 && type == SPRITELAYER)){
-    std::cout<<selected_<<std::endl;
     selected_ = outil;
   }
 }
