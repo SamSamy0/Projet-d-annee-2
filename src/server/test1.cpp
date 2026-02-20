@@ -8,7 +8,7 @@ int main(){
     sf::Packet pack;
     std::string pseudo = "tomas";
     std::string pass = "Tom123";
-    pack << static_cast<uint8_t>(MsgProtocole::AUTH_REGISTER_REQ) << pseudo << pass;
+    pack << static_cast<uint8_t>(MsgProtocole::AUTH_LOGIN_REQ) << pseudo << pass;
 
     sock.send(pack);
 
@@ -16,6 +16,11 @@ int main(){
     if (sock.receive(recu) == sf::Socket::Status::Done){
         std::cout << "reussi!!!" <<std::endl;
     }
+
+    uint8_t msg;
+    uint8_t reussi;
+    recu >> msg >> reussi;
+    std::cout << static_cast<int>(reussi) <<std::endl;  
 
     std::cout << "reussi!!!" <<std::endl;
 

@@ -11,14 +11,14 @@
 
 struct Reponse{
     std::shared_ptr<Client> client;
-    std::vector<int> id_list;
+    std::vector<long long> id_list;
     MsgProtocole message_type;
-    std::unique_ptr<sf::Packet> packet;
+    std::shared_ptr<sf::Packet> packet;
 };
 
 class ReponseQueue {
 private:
-    std::deque<std::unique_ptr<Reponse>> r_queue;
+    std::deque<std::shared_ptr<Reponse>> r_queue;
     std::mutex r_mutex;
     std::condition_variable r_cv;
     bool r_stopping = false;
@@ -27,8 +27,8 @@ public:
     ReponseQueue() = default;
     ~ReponseQueue() = default;
 
-    void push(std::unique_ptr<Reponse> rps);
-    std::unique_ptr<Reponse> pop();
+    void push(std::shared_ptr<Reponse> rps);
+    std::shared_ptr<Reponse> pop();
     bool isEmpty();
     void stop();
 };

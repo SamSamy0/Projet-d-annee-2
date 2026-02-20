@@ -72,7 +72,7 @@ include CMakeFiles/mon_serveur.dir/flags.make
 mon_serveur_autogen/timestamp: /usr/lib/qt6/libexec/moc
 mon_serveur_autogen/timestamp: CMakeFiles/mon_serveur.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/mnt/c/Users/chinG/Documents/group-13/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC for target mon_serveur"
-	/usr/bin/cmake -E cmake_autogen /mnt/c/Users/chinG/Documents/group-13/build/CMakeFiles/mon_serveur_autogen.dir/AutogenInfo.json ""
+	/usr/bin/cmake -E cmake_autogen /mnt/c/Users/chinG/Documents/group-13/build/CMakeFiles/mon_serveur_autogen.dir/AutogenInfo.json Debug
 	/usr/bin/cmake -E touch /mnt/c/Users/chinG/Documents/group-13/build/mon_serveur_autogen/timestamp
 
 CMakeFiles/mon_serveur.dir/codegen:

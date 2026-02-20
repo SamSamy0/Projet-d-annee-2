@@ -58,18 +58,22 @@ void ServerNetworkManager::sendReponse(){
 
     while (!rep_queu.isEmpty()){
         std::cout << "sendreponse:: pop1 avant" << std::endl;
-        Reponse& rep = *rep_queu.pop();
+        auto rep = rep_queu.pop();
+        if (rep->message_type == MsgProtocole::AUTH_RESULT) {
+            std::cout << "prob de pointeur" << std::endl;
+        }
         std::cout << "sendreponse:: pop1 après" << std::endl;
-        
             //envoi a tout les clients de la liste d'id
-        for (auto id : rep.id_list){
+        for (auto id : rep->id_list){
+            std::cout << "rep Prot id " << static_cast<uint8_t>(rep->message_type) << std::endl; 
             
-            std::cout << "listed ???" << std::endl;
             for (auto& client: client_list){
-                std::cout << "cliented ???" << std::endl;
+                //std::cout << client->id << "  cliented ???" <<std::endl;
+                //std::cout << id << std::endl;
                 if (id == client->id){
                     std::cout << "envoyed ??" << std::endl;
-                    client->sock->send(*(rep.packet));
+                    debugAuthPacket(*rep->packet);
+                    client->sock->send(*(rep->packet));
                 }
             }
         }
@@ -90,6 +94,20 @@ void ServerNetworkManager::run() {
         //pour faire une vérif des messages toutes 10 millisecs
         sf::sleep(sf::milliseconds(1000)); 
     }
+}
+
+void debugAuthPacket(sf::Packet copy) {
+    uint8_t type;
+    uint8_t pseudo;
+    std::cout << copy.getDataSize() << std::endl;
+
+    copy >> type;
+    std::cout << "type de messqages:"<< static_cast<int>(type) << std::endl;
+
+    copy >> pseudo;
+     std::cout << "int reussi:"<< static_cast<int>(pseudo)<< std::endl;
+
+    
 }
 
 

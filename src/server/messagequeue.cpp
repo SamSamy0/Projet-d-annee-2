@@ -1,7 +1,7 @@
 #include "messagequeue.hpp"
 #include <iostream>
 
-void MessageQueue::push(std::unique_ptr<Message> msg) {
+void MessageQueue::push(std::shared_ptr<Message> msg) {
     //std::cout<<"MessageQueue: push()"<<std::endl;
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -10,7 +10,7 @@ void MessageQueue::push(std::unique_ptr<Message> msg) {
     m_cv.notify_one();
 }
 
-std::unique_ptr<Message> MessageQueue::pop() {
+std::shared_ptr<Message> MessageQueue::pop() {
     std::cout<<"MessageQueue: pop()"<<std::endl;
     std::unique_lock<std::mutex> lock(m_mutex);
     m_cv.wait(lock, [this] { 

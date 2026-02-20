@@ -61,7 +61,7 @@ struct GetUsersProjectsMessage : Message {
 };
 
 
-std::unique_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
+std::shared_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
 
 
 

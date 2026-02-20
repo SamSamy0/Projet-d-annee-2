@@ -8,7 +8,7 @@ void Worker::run() {
     std::cout << "[Worker] Démarré et en attente de messages..." << std::endl;
     
     while (m_running) {
-    std::unique_ptr<Message> request = dem_queue.pop();
+    std::shared_ptr<Message> request = dem_queue.pop();
     std::cout << "[Worker] pop()..." << std::endl;
 
         if (request) {

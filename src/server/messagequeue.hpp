@@ -9,7 +9,7 @@
 
 class MessageQueue {
 private:
-    std::deque<std::unique_ptr<Message>> m_queue;
+    std::deque<std::shared_ptr<Message>> m_queue;
     std::mutex m_mutex;
     std::condition_variable m_cv;
     bool m_stopping = false;
@@ -18,8 +18,8 @@ public:
     MessageQueue() = default;
     ~MessageQueue() = default;
 
-    void push(std::unique_ptr<Message> msg);
-    std::unique_ptr<Message> pop();
+    void push(std::shared_ptr<Message> msg);
+    std::shared_ptr<Message> pop();
     void stop();
     bool isEmpty();
 };

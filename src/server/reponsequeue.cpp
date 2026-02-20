@@ -1,7 +1,7 @@
 #include "reponsequeue.hpp"
 #include <iostream>
 
-void ReponseQueue::push(std::unique_ptr<Reponse> rps) {
+void ReponseQueue::push(std::shared_ptr<Reponse> rps) {
     {
         std::cout<<"ReponseQueue: push()"<<std::endl;
         std::lock_guard<std::mutex> lock(r_mutex);
@@ -10,7 +10,7 @@ void ReponseQueue::push(std::unique_ptr<Reponse> rps) {
     r_cv.notify_one();
 }
 
-std::unique_ptr<Reponse> ReponseQueue::pop() {
+std::shared_ptr<Reponse> ReponseQueue::pop() {
     std::cout<<"ReponseQueue: pop()"<<std::endl;
     std::unique_lock<std::mutex> lock(r_mutex);
     r_cv.wait(lock, [this] { 

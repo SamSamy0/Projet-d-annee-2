@@ -27,4 +27,6 @@ public:
     void run();
 };
 
+void debugAuthPacket(sf::Packet copy) ;
+
 #endif
