@@ -25,8 +25,6 @@ class Project{
     sf::View viewUI_;
     std::shared_ptr<Map> map_;
     ToolBar toolbar_;
-    sf::View viewLayerPanel_;
-    float scrollOffset_ = 0.f;
 
 public:
     Project(unsigned int scale, sf::Vector2u size, std::string name, unsigned int id, sf::RenderWindow& window, tgui::Gui& gui);
@@ -41,8 +39,5 @@ public:
     void displayToolBar();
     void displayLeftBar();
     void displayBackground();
-    void initLayerPanelView();
-    void displayLayersScrollable();
-    void handleLayerScroll(float delta);
     sf::View& getView();
 };

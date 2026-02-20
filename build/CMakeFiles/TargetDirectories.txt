@@ -1,0 +1,3 @@
+/Users/itsadoums/dev/projet/projet_annee/group-13/build/CMakeFiles/sfml-app.dir
+/Users/itsadoums/dev/projet/projet_annee/group-13/build/CMakeFiles/edit_cache.dir
+/Users/itsadoums/dev/projet/projet_annee/group-13/build/CMakeFiles/rebuild_cache.dir

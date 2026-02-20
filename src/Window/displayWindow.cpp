@@ -220,12 +220,11 @@ void Window::initWidget() {
     removeLayerButton->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
     removeLayerButton->onClick([this]() {
       vector<shared_ptr<Layer>>& layers = project->getMap()->getLayers();
-      if (layers.size() >= 2) {
-        layers.erase(layers.begin() + project->getMap()->getLayerSelected());
-        unsigned int newLayerSelected = project->getMap()->getLayerSelected() - 1;
-        project->getMap()->setLayerSelected(newLayerSelected);
-        refreshLayerList();
-      }
+      if (layers.size() <= 1) return; 
+      layers.erase(layers.begin() + project->getMap()->getLayerSelected());
+      unsigned int newLayerSelected = project->getMap()->getLayerSelected() - 1;
+      project->getMap()->setLayerSelected(newLayerSelected);
+      refreshLayerList();
       
     });
     gui.add(removeLayerButton);
