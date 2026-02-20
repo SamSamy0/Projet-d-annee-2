@@ -1,10 +1,5 @@
 # RPG creator
 
-## Les bibliothèques
-
-Pour pouvoir utiliser le projet, merci d'installer ces bibliothèques :
-- TGUI 1.12
-- SFML 3
 
 ## Exécution du programme
 
@@ -14,3 +9,9 @@ chmod +x install.sh
 ./install.sh
 ./sfml-app
 ```
+
+## Les bibliothèques
+
+Les bibliothèques suivantes s'installeront automatiquement lors de l'execution de install.sh :
+- TGUI 1.12
+- SFML 3
