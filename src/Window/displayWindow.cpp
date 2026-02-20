@@ -226,4 +226,4 @@ void Window::setLogIn(){
   isLoggedIn = true;
 }
 
-void addProject()
+void addProject();
