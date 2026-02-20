@@ -2,8 +2,13 @@ cmake_minimum_required(VERSION 3.16)
 project(Projet)
 
 set(CMAKE_CXX_STANDARD 17)
-
+set(CMAKE_POLICY_VERSION_MINIMUM "3.5" CACHE STRING "Minimum CMake policy" FORCE)
 include(FetchContent)
+
+
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 
 # 1. Téléchargement et compilation de la SFML 3.0.0
 FetchContent_Declare(
@@ -21,6 +26,7 @@ FetchContent_Declare(
 )
 set(TGUI_BACKEND SFML_GRAPHICS CACHE STRING "TGUI backend" FORCE)
 set(TGUI_SHARED_LIBS ON CACHE BOOL "Build TGUI as a shared library" FORCE)
+set(TGUI_BUILD_FRAMEWORK OFF CACHE BOOL "Build TGUI as a framework on macOS" FORCE)
 FetchContent_MakeAvailable(TGUI)
 
 set(SOURCES
@@ -38,7 +44,6 @@ set(SOURCES
     src/project/tool.cpp
 )
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 add_executable(sfml-app ${SOURCES})
 
 target_link_libraries(sfml-app PRIVATE
