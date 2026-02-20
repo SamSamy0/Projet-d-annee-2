@@ -80,11 +80,11 @@ CreateProjectMessage::CreateProjectMessage(std::shared_ptr<sf::Packet> data_pack
 void CreateProjectMessage::process(Worker& worker) {
     long long id_proj = worker.db_Manager.addProject("test", this->client->id);
     worker.proj_Manager.createProjectJson(id_proj, "test", size.x, size.y, scale);
+
 }
 
 
 GetProjectDataMessage::GetProjectDataMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c): Message(c) {
-    // à faitre un jour
 }
 
 

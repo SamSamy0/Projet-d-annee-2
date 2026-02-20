@@ -5,10 +5,22 @@
 int main(){
     sf::TcpSocket sock;
     sock.connect({127,0,0,1},5000);
+    sf::Packet pac;
+    std::string psuedo = "Chinzorrr";
+    std::string pass = "motdepasse";
+    pac << static_cast<uint8_t>(MsgProtocole::AUTH_REGISTER_REQ) << psuedo << pass;
+    
+    sock.send(pac);
+
+
     sf::Packet pack;
-    std::string pseudo = "tomas";
-    std::string pass = "Tom123";
-    pack << static_cast<uint8_t>(MsgProtocole::AUTH_LOGIN_REQ) << pseudo << pass;
+    std::string nom_proj = "Proj_1_omg";
+    sf::Vector2u taille;
+    taille.x = 1200;
+    taille.y = 800;
+    uint scale = 5;
+    
+    pack << static_cast<uint8_t>(MsgProtocole::LOB_CREATE_PROJECT_REQ) << nom_proj << taille.x << taille.y << scale;
 
     sock.send(pack);
 

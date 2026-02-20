@@ -14,7 +14,7 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
     }
 }
 
-bool ProjectsManager::createProjectJson(int id, const QString &projectName, int width, int height, float scale) {
+bool ProjectsManager::createProjectJson(int id, const QString &projectName, int width, int height, uint scale) {
     if (!ensureDirectoryExists(id)) {
         return false;
     }
@@ -25,7 +25,7 @@ bool ProjectsManager::createProjectJson(int id, const QString &projectName, int 
     root["name"] = projectName;
     root["width"] = width;
     root["height"] = height;
-    root["scale"] = scale;
+    root["scale"] = static_cast<double>(scale);
 
     root["layers"] = emptylayers;
 

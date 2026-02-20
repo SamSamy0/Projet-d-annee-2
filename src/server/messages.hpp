@@ -39,7 +39,7 @@ struct RegisterMessage : Message{
 struct CreateProjectMessage : Message{
     std::string nomProjet;
     sf::Vector2u size;
-    float scale;
+    uint scale;
     
     CreateProjectMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
     void process(Worker& worker) override;
