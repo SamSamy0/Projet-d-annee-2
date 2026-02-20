@@ -135,40 +135,85 @@ void Window::initWidget() {
     });
     gui.add(zoomOutButton);
 
-    // Ajout boutton crayon
-    auto penButton = tgui::Button::create();
+    // ======================
+    // Bouton crayon
+    // ======================
+    tgui::ToggleButton::Ptr penButton = tgui::ToggleButton::create();
     penButton->setSize(25, 25);
     penButton->setPosition(350, 9);
-    penButton->getRenderer()->setTexture("../res/images/crayon.png");
-    penButton->getRenderer()->setBorders({0});
-    penButton->onPress([this]() {
-        project->getToolBar().selectTool(PIXELBRUSH);
-        project->getToolBar().getSelectedTool()->setErraser(false);
+
+    auto penRenderer = penButton->getRenderer();
+    penRenderer->setTexture("../res/images/crayon.png");
+    penRenderer->setBorders({0});
+    penRenderer->setRoundedBorderRadius(12);
+
+    // état normal
+    penRenderer->setBackgroundColor(tgui::Color::Transparent);
+    // état toggle activé ( = down )
+    penRenderer->setBackgroundColorDown(tgui::Color(180, 180, 180));
+    // optionnel : si tu veux un down + hover encore un peu différent
+    penRenderer->setBackgroundColorDownHover(tgui::Color(170, 170, 170));
+
+    penButton->onToggle([this](bool checked) {
+        if (checked) {
+            project->getToolBar().selectTool(PIXELBRUSH);
+            project->getToolBar().getSelectedTool()->setErraser(false);
+
+            
+        }
     });
+
     gui.add(penButton);
 
-    // Ajout boutton gomme
-    auto brushButton = tgui::Button::create();
+
+    // ======================
+    // Bouton gomme
+    // ======================
+    tgui::ToggleButton::Ptr brushButton = tgui::ToggleButton::create();
     brushButton->setSize(30, 30);
     brushButton->setPosition(420, 13);
-    brushButton->getRenderer()->setTexture("../res/images/la-gomme.png");
-    brushButton->getRenderer()->setBorders({0});
-    brushButton->onPress([this]() {
-        project->getToolBar().selectTool(PIXELBRUSH);
-        project->getToolBar().getSelectedTool()->setErraser(true);
+
+    auto brushRenderer = brushButton->getRenderer();
+    brushRenderer->setTexture("../res/images/la-gomme.png");
+    brushRenderer->setBorders({0});
+    brushRenderer->setRoundedBorderRadius(12);
+    brushRenderer->setBackgroundColor(tgui::Color::Transparent);
+    brushRenderer->setBackgroundColorDown(tgui::Color(180, 180, 180));
+    brushRenderer->setBackgroundColorDownHover(tgui::Color(170, 170, 170));
+
+    brushButton->onToggle([this](bool checked) {
+        if (checked) {
+            project->getToolBar().selectTool(PIXELBRUSH);
+            project->getToolBar().getSelectedTool()->setErraser(true);
+        }
     });
+
     gui.add(brushButton);
 
-    // Ajout boutton deplacement couche
-    auto shiftButton = tgui::Button::create();
+
+    // ======================
+    // Bouton déplacement
+    // ======================
+    tgui::ToggleButton::Ptr shiftButton = tgui::ToggleButton::create();
     shiftButton->setSize(30, 30);
     shiftButton->setPosition(490, 13);
-    shiftButton->getRenderer()->setTexture("../res/images/couche.png");
-    shiftButton->getRenderer()->setBorders({0});
-    shiftButton->onPress([this]() {
-        project->getToolBar().selectTool(PIXELSHIFT);
+
+    auto shiftRenderer = shiftButton->getRenderer();
+    shiftRenderer->setTexture("../res/images/couche.png");
+    shiftRenderer->setBorders({0});
+    shiftRenderer->setRoundedBorderRadius(12);
+    shiftRenderer->setBackgroundColor(tgui::Color::Transparent);
+    shiftRenderer->setBackgroundColorDown(tgui::Color(180, 180, 180));
+    shiftRenderer->setBackgroundColorDownHover(tgui::Color(170, 170, 170));
+
+    shiftButton->onToggle([this](bool checked) {
+        if (checked) {
+            project->getToolBar().selectTool(PIXELSHIFT);
+        }
     });
+
     gui.add(shiftButton);
+
 
     // Ajout de la liste des couches
     layersList_ = tgui::ScrollablePanel::create();
@@ -202,6 +247,7 @@ void Window::initWidget() {
     addLayerButton->getRenderer()->setTextColor(tgui::Color::White);
     addLayerButton->getRenderer()->setBorders({1});
     addLayerButton->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+    addLayerButton->getRenderer()->setRoundedBorderRadius(12);
     addLayerButton->onClick([this]() {
       project->getMap()->createPixelLayer();
       refreshLayerList();
@@ -218,6 +264,7 @@ void Window::initWidget() {
     removeLayerButton->getRenderer()->setTextColor(tgui::Color::White);
     removeLayerButton->getRenderer()->setBorders({1});
     removeLayerButton->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+    removeLayerButton->getRenderer()->setRoundedBorderRadius(12);
     removeLayerButton->onClick([this]() {
       vector<shared_ptr<Layer>>& layers = project->getMap()->getLayers();
       if (layers.size() >= 2) {
