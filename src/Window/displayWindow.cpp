@@ -487,18 +487,18 @@ void Window::displayProjList(tgui::Panel::Ptr parent) {
     row->getRenderer()->setBackgroundColor(sf::Color(32, 32, 40));
     row->getRenderer()->setBorders(0);
     row->getRenderer()->setRoundedBorderRadius(8);
-    parent->add(row);
+    // parent->add(row);
     panel->add(row);
 
     auto label = tgui::Label::create(projectList[i].projectName);
-    label->setPosition(58, "center");
+    label->setPosition(58, 15);
     label->setTextSize(15);
     label->getRenderer()->setTextColor(sf::Color(220, 220, 235));
     row->add(label);
 
     auto btn = tgui::Button::create("•••");
     btn->setSize(80, 35);
-    btn->setPosition("100% -90", "center + 10");
+    btn->setPosition("100% -90", 10);
     btn->getRenderer()->setBackgroundColor(sf::Color::Transparent);
     btn->getRenderer()->setBackgroundColorHover(sf::Color(55, 55, 70));
     btn->getRenderer()->setTextColor(sf::Color(140, 140, 160));
