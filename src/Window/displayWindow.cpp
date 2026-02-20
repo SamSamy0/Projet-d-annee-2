@@ -36,9 +36,9 @@ void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
       pswd->setText("");
     } else {
       // Access granted
-      setState(projectState::MENU);
+      // setState(projectState::MENU);
     }
-    // setState(projectState::MENU);
+    setState(projectState::MENU);
   }
 }
 

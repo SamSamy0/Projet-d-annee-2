@@ -1,5 +1,5 @@
 #include "src/Window/displayWindow.hpp"
-// #include "src/server/clientnetwork.hpp"
+#include "src/server/clientnetwork.hpp"
 #include <iostream>
 
 int main() {
