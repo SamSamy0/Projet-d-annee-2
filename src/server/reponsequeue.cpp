@@ -1,7 +1,9 @@
 #include "reponsequeue.hpp"
+#include <iostream>
 
 void ReponseQueue::push(std::unique_ptr<Reponse> rps) {
     {
+        std::cout<<"ReponseQueue: push()"<<std::endl;
         std::lock_guard<std::mutex> lock(r_mutex);
         r_queue.push_back(std::move(rps));
     }
@@ -9,6 +11,7 @@ void ReponseQueue::push(std::unique_ptr<Reponse> rps) {
 }
 
 std::unique_ptr<Reponse> ReponseQueue::pop() {
+    std::cout<<"ReponseQueue: pop()"<<std::endl;
     std::unique_lock<std::mutex> lock(r_mutex);
     r_cv.wait(lock, [this] { 
         return !r_queue.empty() || r_stopping; 
@@ -22,6 +25,7 @@ std::unique_ptr<Reponse> ReponseQueue::pop() {
 }
 
 bool ReponseQueue::isEmpty() {
+    //std::cout<<"ReponseQueue: isEmpty()"<<std::endl;
     std::lock_guard<std::mutex> lock(r_mutex);
     return r_queue.empty();
 }

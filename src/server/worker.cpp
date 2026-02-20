@@ -9,6 +9,7 @@ void Worker::run() {
     
     while (m_running) {
     std::unique_ptr<Message> request = dem_queue.pop();
+    std::cout << "[Worker] pop()..." << std::endl;
 
         if (request) {
             std::cout << "[Worker] Traitement d'un nouveau message..." << std::endl;
@@ -16,6 +17,7 @@ void Worker::run() {
         } else {
             break;
         }
+        sf::sleep(sf::milliseconds(1000)); 
     }
 }
 

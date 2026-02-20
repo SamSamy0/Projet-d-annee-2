@@ -9,9 +9,9 @@ class Worker;
 
 
 struct Message {
-    Client client;
+    std::shared_ptr<Client> client; // On pointe vers le client au lieu de le copier
 
-    explicit Message(const Client& c) : client(c) {}
+    explicit Message(std::shared_ptr<Client> c) : client(c) {}
     virtual void process(Worker& worker) = 0;
     virtual ~Message() = default;
 };
@@ -21,7 +21,7 @@ struct LoginMessage : Message{
     std::string pseudo;
     std::string password;
     
-    LoginMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c);
+    LoginMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
     void process(Worker& worker) override;
 
 };
@@ -31,7 +31,7 @@ struct RegisterMessage : Message{
     std::string pseudo;
     std::string password;
     
-    RegisterMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c);
+    RegisterMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
     void process(Worker& worker) override;
 };
 
@@ -41,7 +41,7 @@ struct CreateProjectMessage : Message{
     sf::Vector2u size;
     float scale;
     
-    CreateProjectMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c);
+    CreateProjectMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
     void process(Worker& worker) override;
 };
 
@@ -49,19 +49,19 @@ struct CreateProjectMessage : Message{
 struct GetProjectDataMessage : Message{
     int projectId_;
 
-    GetProjectDataMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c);
+    GetProjectDataMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
     void process(Worker& worker) override;
 };
 
 struct GetUsersProjectsMessage : Message {
     int userdId_;
 
-    GetUsersProjectsMessage(std::shared_ptr<sf::Packet> data_packet, const Client& c);
+    GetUsersProjectsMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
     void process(Worker& worker) override;
 };
 
 
-std::unique_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet,Client client);
+std::unique_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
 
 
 

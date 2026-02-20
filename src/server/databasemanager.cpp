@@ -1,6 +1,7 @@
 #include "databasemanager.hpp"
 #include <QSqlError>
 #include <QDebug>
+#include <iostream>
 
 DatabaseManager::DatabaseManager() {
     m_db = QSqlDatabase::addDatabase("QSQLITE");
@@ -46,6 +47,7 @@ long long DatabaseManager::verifyLogin(const std::string& pseudo, const std::str
 
 //utiliser un hachage plus tard
 long long DatabaseManager::addUser(const std::string& pseudo, const std::string& password) {
+    std::cout<<"DatabaseManager: addUser()"<<std::endl;
     QString qPseudo = QString::fromStdString(pseudo);
     QString qPassword = QString::fromStdString(password);
 

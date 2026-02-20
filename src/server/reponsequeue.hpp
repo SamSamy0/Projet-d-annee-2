@@ -10,7 +10,7 @@
 
 
 struct Reponse{
-    Client client;
+    std::shared_ptr<Client> client;
     std::vector<int> id_list;
     MsgProtocole message_type;
     std::unique_ptr<sf::Packet> packet;

@@ -13,7 +13,7 @@
 
 class ServerNetworkManager{
     sf::TcpListener listener;
-    std::vector<Client> client_list;
+    std::vector<std::shared_ptr<Client>> client_list;
     MessageQueue& message_queu;
     ReponseQueue& rep_queu;
     std::atomic<bool> m_running;
