@@ -1,7 +1,16 @@
 # RPG creator
 
-Adam Kanoun 000609378
+## Les bibliothèques
 
-Pour compilez correctement, merci d'installez sfml 3 et TGUI.
+Pour pouvoir utiliser le projet, merci d'installer ces bibliothèques :
+- TGUI 1.12
+- SFML 3
 
-Ceci est un fichier Markdown. Suivez donc la [syntaxe appropriée](https://docs.gitlab.com/ee/user/markdown.html).
+## Exécution du programme
+
+Pour pouvoir exécuter le programme, il faut se placer dans le dossier `group-13` (et non dans le dossier `src`). Ensuite, tapez ces commandes :
+```bash
+chmod +x install.sh
+./install.sh
+./sfml-app
+```
