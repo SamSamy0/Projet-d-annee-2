@@ -15,7 +15,6 @@ Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Lay
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
 }
 
-
 Map::Map(int mapId, sf::Vector2u size , unsigned int scale) : 
     id_{mapId}, size_{size},
     scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)}{
@@ -23,10 +22,14 @@ Map::Map(int mapId, sf::Vector2u size , unsigned int scale) :
     createPixelLayer();
 }
 
+Zoom& Map::getZoom() { return zoom_; }
+
 
 sf::Vector2u Map::getSize()const {return size_;}
 
 bool Map::hasLayer()const {return !layers_.empty();}
+
+void Map::setLayerSelected(unsigned int i) { selected_ = i; }
 
 unsigned int Map::getScale() const { return scale_; }
 
@@ -92,6 +95,10 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
     }
 }
 
+unsigned int Map::getLayerSelected() const {
+    return selected_;
+}
+
 void Map::detectZooming(sf::Event event) {
     if (const auto* mouse = event.getIf<sf::Event::MouseWheelScrolled>()) {
         if (mouse->delta > 0) { // regarde si l'utilisateur veut faire un zoom avant
@@ -100,6 +107,15 @@ void Map::detectZooming(sf::Event event) {
         else if (mouse->delta < 0) {  // regarde si l'utilisateur veut faire un zoom arrière
             zoom_.zoomOut();
         }
+    }  
+}
+
+void Map::zooming(sf::Event::MouseWheelScrolled const* event) {
+    if (event->delta > 0) { // regarde si l'utilisateur veut faire un zoom avant
+        zoom_.zoomIn(); 
+    }
+    else if (event->delta < 0) {  // regarde si l'utilisateur veut faire un zoom arrière
+        zoom_.zoomOut();
     }  
 }
 

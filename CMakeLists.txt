@@ -1,47 +1,57 @@
-# 1. Toujours commencer par la version minimum
 cmake_minimum_required(VERSION 3.16)
+project(Projet)
 
-# 2. Déclarer le nom du projet
-project(MonServeurReseau)
-
-# 3. Options de compilation
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_AUTOMOC ON) # Important pour Qt
+set(CMAKE_POLICY_VERSION_MINIMUM "3.5" CACHE STRING "Minimum CMake policy" FORCE)
+include(FetchContent)
 
-# 4. Chercher les bibliothèques
-find_package(Qt6 COMPONENTS Core Network Sql REQUIRED)
-find_package(SFML 3 COMPONENTS Graphics Window System Network REQUIRED)
-find_package(TGUI REQUIRED) 
-find_package(Threads REQUIRED)
 
-# 5. Définir l'exécutable (AJOUTER LA CIBLE)
-# C'est ici qu'on crée "mon_serveur"
-add_executable(mon_serveur 
-    src/server/main.cpp
-    src/server/worker.cpp
-    src/server/servernetwork.cpp
-    src/server/messagequeue.cpp
-    src/server/reponsequeue.cpp      # <--- AJOUTÉ (pour ReponseQueue::pop, stop, etc.)
-    src/server/databasemanager.cpp
-    src/server/projectsmanager.cpp   # <--- AJOUTÉ (pour ProjectsManager)
-    src/server/client.cpp            # <--- AJOUTÉ (pour Client::getAddress)
-    src/server/messages.cpp          # <--- AJOUTÉ (pour MessageFactory)
-    # Ajoutez ici tout autre .cpp présent dans src/server
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+
+# 1. Téléchargement et compilation de la SFML 3.0.0
+FetchContent_Declare(
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG        3.0.0
+)
+FetchContent_MakeAvailable(SFML)
+
+# 2. Téléchargement et configuration de TGUI 
+FetchContent_Declare(
+    TGUI
+    GIT_REPOSITORY https://github.com/texus/TGUI.git
+    GIT_TAG        1.x
+)
+set(TGUI_BACKEND SFML_GRAPHICS CACHE STRING "TGUI backend" FORCE)
+set(TGUI_SHARED_LIBS ON CACHE BOOL "Build TGUI as a shared library" FORCE)
+set(TGUI_BUILD_FRAMEWORK OFF CACHE BOOL "Build TGUI as a framework on macOS" FORCE)
+FetchContent_MakeAvailable(TGUI)
+
+set(SOURCES
+    main.cpp
+    src/Window/Identifier.cpp
+    src/Window/displayWindow.cpp
+    src/server/clientnetwork.cpp
+    src/server/handler.cpp
+    src/server/protocol.hpp
+    src/project/map.cpp
+    src/project/project.cpp
+    src/project/layer.cpp
+    src/project/zoom.cpp
+    src/project/move.cpp
+    src/project/toolbar.cpp
+    src/project/tool.cpp
 )
 
 # 6. Maintenant on peut lier des choses à "mon_serveur"
 target_include_directories(mon_serveur PRIVATE src/server)
 
-target_link_libraries(mon_serveur 
-    PRIVATE 
-    Qt6::Core 
-    Qt6::Network
-    Qt6::Sql
+target_link_libraries(sfml-app PRIVATE
     SFML::Graphics 
     SFML::Window 
     SFML::System 
     SFML::Network
-    tgui
-    Threads::Threads
+    TGUI::TGUI
 )
