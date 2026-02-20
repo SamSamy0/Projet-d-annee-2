@@ -20,7 +20,7 @@ make -j$(nproc)
 if [ $? -eq 0 ]; then
     echo "--------------------------------------"
     echo "Compilation réussie !"
-    echo "L'exécutable se trouve dans le dossier build : "sfml-app"
+    echo "L'exécutable se trouve dans le dossier build : sfml-app"
     echo "--------------------------------------"
 else
     echo "Erreur lors de la compilation."
