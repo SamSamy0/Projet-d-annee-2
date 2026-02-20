@@ -1,23 +1,27 @@
+cmake_minimum_required(VERSION 3.16)
+project(Projet)
+
+set(CMAKE_CXX_STANDARD 17)
+
 include(FetchContent)
 
+# 1. Téléchargement et compilation de la SFML 3.0.0
+FetchContent_Declare(
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG        3.0.0
+)
+FetchContent_MakeAvailable(SFML)
+
+# 2. Téléchargement et configuration de TGUI 
 FetchContent_Declare(
     TGUI
     GIT_REPOSITORY https://github.com/texus/TGUI.git
     GIT_TAG        1.x
 )
-
 set(TGUI_BACKEND SFML_GRAPHICS CACHE STRING "TGUI backend" FORCE)
-
+set(TGUI_SHARED_LIBS ON CACHE BOOL "Build TGUI as a shared library" FORCE)
 FetchContent_MakeAvailable(TGUI)
-
-
-
-cmake_minimum_required(VERSION 3.10)
-project(Projet)
-set(CMAKE_CXX_STANDARD 17)
-
-find_package(SFML 3.0 COMPONENTS Graphics Window System Network REQUIRED)
-find_package(TGUI 1.0 REQUIRED)
 
 set(SOURCES
     main.cpp
@@ -37,7 +41,7 @@ set(SOURCES
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 add_executable(sfml-app ${SOURCES})
 
-target_link_libraries(sfml-app 
+target_link_libraries(sfml-app PRIVATE
     SFML::Graphics 
     SFML::Window 
     SFML::System 

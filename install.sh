@@ -3,7 +3,7 @@
 echo "--------------Installation des dépendances------------------------"
 sudo apt update
 sudo apt upgrade
-sudo apt install -y build-essential cmake libsfml-dev
+sudo apt install -y build-essential cmake
 
 rm -rf build
 mkdir build
