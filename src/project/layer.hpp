@@ -42,7 +42,7 @@ public:
   void draw(sf::Drawable &s) override;
   void errase(sf::Drawable &s) override;
   void shift(sf::Vector2i v)override;
-  void display()override;
+  void display() override;
 };
 class SpriteLayer : public Layer {
   std::vector<sf::Sprite> sprites_;
@@ -53,5 +53,5 @@ public:
   void draw(sf::Drawable &s) override;
   void errase(sf::Drawable &s) override;
   void shift(sf::Vector2i v)override;
-  void display()override;
+  void display() override;
 };

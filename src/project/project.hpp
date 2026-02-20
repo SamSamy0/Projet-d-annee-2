@@ -33,8 +33,11 @@ public:
     void setName(std::string name);
     unsigned int getScale();
     std::shared_ptr<Map> getMap();
-    ToolBar getToolBar();
+    ToolBar& getToolBar();
     void display();
     void displayScale();
+    void displayToolBar();
+    void displayLeftBar();
+    void displayBackground();
     sf::View& getView();
 };

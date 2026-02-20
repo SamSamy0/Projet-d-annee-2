@@ -41,6 +41,7 @@ private:
       {1017LL, 2, "Rho Router"},
   };
 
+  tgui::ScrollablePanel::Ptr layersList_ = nullptr;
   void initWidget();
   void updateTextSize();
   void processEvents();
@@ -59,8 +60,10 @@ private:
   void showProjectMenu(long long id);
   void initDataWidget();
   ProjectData askProjectData();
+  void refreshLayerList();
   // Detection in map
-  void leftClickEvent();
+  void toolOnClick();
+  void toolOnRelease();
 
 public:
   // Constructor
