@@ -659,7 +659,12 @@ void Window::setProjectList(std::vector<ProjectData> newlist) {
   projectList = newlist;
 }
 void Window::run() {
+  manager.connect();
   while (mainWindow.isOpen()) {
+    manager.getEvent();
+
+    handler->trateEventQueu();
+    
     processEvents();
     mainWindow.clear(sf::Color(35, 35, 40));
 
@@ -680,3 +685,7 @@ void Window::setLogIn(){
 }
 
 void addProject();
+
+void Window::set_handler(std::shared_ptr<ClientEventHandler> handle){
+  handler = std::move(handle);
+}

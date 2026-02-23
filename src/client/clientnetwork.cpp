@@ -79,3 +79,8 @@ void ClientNetworkManager::getProjectList() {
 }
 
 
+ServerEvent ClientNetworkManager::popEvent() {
+    auto msg = std::move(reponse_.front());
+    reponse_.pop_front();
+    return msg;
+}

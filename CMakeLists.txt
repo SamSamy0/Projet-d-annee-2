@@ -33,8 +33,8 @@ set(SOURCES
     main.cpp
     src/Window/Identifier.cpp
     src/Window/displayWindow.cpp
-    src/server/clientnetwork.cpp
-    src/server/handler.cpp
+    src/client/clientnetwork.cpp
+    src/client/handler.cpp
     src/server/protocol.hpp
     src/project/map.cpp
     src/project/project.cpp
@@ -45,13 +45,19 @@ set(SOURCES
     src/project/tool.cpp
 )
 
-# 6. Maintenant on peut lier des choses à "mon_serveur"
-target_include_directories(mon_serveur PRIVATE src/server)
+# 1. Ajoute ces lignes JUSTE AVANT ton add_executable
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(HARFBUZZ REQUIRED harfbuzz)
 
+# 2. Ton add_executable reste inchangé
+add_executable(sfml-app ${SOURCES})
+
+# 3. Modifie le target_link_libraries pour inclure les libs HarfBuzz
 target_link_libraries(sfml-app PRIVATE
     SFML::Graphics 
     SFML::Window 
     SFML::System 
     SFML::Network
     TGUI::TGUI
+    ${HARFBUZZ_LIBRARIES}  # <-- AJOUTE CETTE VARIABLE ICI
 )

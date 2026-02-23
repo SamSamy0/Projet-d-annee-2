@@ -1,0 +1,3 @@
+/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/CMakeFiles/sfml-populate.dir
+/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/CMakeFiles/edit_cache.dir
+/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/CMakeFiles/rebuild_cache.dir

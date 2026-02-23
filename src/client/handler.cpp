@@ -2,7 +2,8 @@
 #include "clientnetwork.hpp"
 
 
-ClientEventHandler::ClientEventHandler(ClientNetworkManager& client_manager): manager_(&client_manager){}
+ClientEventHandler::ClientEventHandler(ClientNetworkManager& client_manager, HandleRepInWindow w)
+: manager_(&client_manager),handleWindow_(&w){}
 
 void ClientEventHandler::trateEventQueu(){
     while ((*manager_).hasEvent()){
@@ -26,7 +27,9 @@ void ClientEventHandler::process(ServerEvent& event){
 
 
 
-HandleRepInWindow::HandleRepInWindow(Window& w): window_(&w){};
+HandleRepInWindow::HandleRepInWindow(Window& w): window_(&w){
+    
+}
 
 
 void HandleRepInWindow::switchConnectState(uint8_t connect){

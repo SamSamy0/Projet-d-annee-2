@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/tgui-subbuild/CMakeFiles/tgui-populate"
+		},
+		{
+			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/tgui-subbuild/CMakeFiles/tgui-populate.rule"
+		},
+		{
+			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/tgui-subbuild/CMakeFiles/tgui-populate-complete.rule"
+		},
+		{
+			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/tgui-subbuild/tgui-populate-prefix/src/tgui-populate-stamp/tgui-populate-build.rule"
+		},
+		{
+			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/tgui-subbuild/tgui-populate-prefix/src/tgui-populate-stamp/tgui-populate-configure.rule"
+		},
+		{
+			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/tgui-subbuild/tgui-populate-prefix/src/tgui-populate-stamp/tgui-populate-download.rule"
+		},
+		{
+			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/tgui-subbuild/tgui-populate-prefix/src/tgui-populate-stamp/tgui-populate-install.rule"
+		},
+		{
+			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/tgui-subbuild/tgui-populate-prefix/src/tgui-populate-stamp/tgui-populate-mkdir.rule"
+		},
+		{
+			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/tgui-subbuild/tgui-populate-prefix/src/tgui-populate-stamp/tgui-populate-patch.rule"
+		},
+		{
+			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/tgui-subbuild/tgui-populate-prefix/src/tgui-populate-stamp/tgui-populate-test.rule"
+		},
+		{
+			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/tgui-subbuild/tgui-populate-prefix/src/tgui-populate-stamp/tgui-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"tgui-populate"
+		],
+		"name" : "tgui-populate"
+	}
+}

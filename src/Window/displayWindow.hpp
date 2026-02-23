@@ -1,6 +1,7 @@
 #pragma once
 #include "../project/project.hpp"
-#include "../server/clientnetwork.hpp"
+#include "../client/clientnetwork.hpp"
+#include "../client/handler.hpp"
 #include "ProjectData.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -9,9 +10,12 @@
 #include <vector>
 
 enum class projectState { LOGIN, MENU, GAME };
+
+
 class Window {
 private:
   ClientNetworkManager &manager;
+  std::shared_ptr<ClientEventHandler> handler = nullptr;
   // WARNING: Changer MENU à LOGIN pour la vrai version, là c'est par facilité
   projectState state = projectState::LOGIN;
   bool isLoggedIn = false;
@@ -74,4 +78,5 @@ public:
   // Setter for projectList
   void setProjectList(std::vector<ProjectData> list);
   void run();
+  void set_handler(std::shared_ptr<ClientEventHandler> handler);
 };

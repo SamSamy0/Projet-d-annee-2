@@ -6,7 +6,7 @@
 #include <SFML/Network.hpp>
 #include "protocol.hpp"
 
-
+class ClientEventHandler;
 
 struct ServerEvent{
     MsgProtocole message_type_;
@@ -31,6 +31,7 @@ public:
     void createProject(std::string role, sf::Vector2u size, float scale);
     void getProjectData(int project_id);
     void getUsersProjects(long long id);
+    void getProjectList();
 
         
 };
