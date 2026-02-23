@@ -1,0 +1,354 @@
+{
+  "sprites": [
+    {
+      "id": "barrel_0",
+      "filename": "barrel_0.png",
+      "category": "object",
+      "name": "Barrel",
+      "size_meters_horizontal": 1.0
+    },
+    {
+      "id": "bush_0",
+      "filename": "bush_0.png",
+      "category": "nature",
+      "name": "Bush",
+      "size_meters_horizontal": 1
+    },
+    {
+      "id": "bush_1",
+      "filename": "bush_1.png",
+      "category": "nature",
+      "name": "Bush",
+      "size_meters_horizontal": 1
+    },
+    {
+      "id": "bush_2",
+      "filename": "bush_2.png",
+      "category": "nature",
+      "name": "Bush",
+      "size_meters_horizontal": 1
+    },
+    {
+      "id": "bush_3",
+      "filename": "bush_3.png",
+      "category": "nature",
+      "name": "Bush",
+      "size_meters_horizontal": 1
+    },
+    {
+      "id": "bush_4",
+      "filename": "bush_4.png",
+      "category": "nature",
+      "name": "Bush",
+      "size_meters_horizontal": 1.2
+    },
+    {
+      "id": "campfire_0",
+      "filename": "campfire_0.png",
+      "category": "object",
+      "name": "Campfire",
+      "size_meters_horizontal": 1.0
+    },
+    {
+      "id": "campfire_1",
+      "filename": "campfire_1.png",
+      "category": "object",
+      "name": "Campfire",
+      "size_meters_horizontal": 2.0
+    },
+    {
+      "id": "castle_0",
+      "filename": "castle_0.png",
+      "category": "building",
+      "name": "Castle",
+      "size_meters_horizontal": 20.0
+    },
+    {
+      "id": "chest_0",
+      "filename": "chest_0.png",
+      "category": "object",
+      "name": "Chest",
+      "size_meters_horizontal": 1.0
+    },
+    {
+      "id": "chest_1",
+      "filename": "chest_1.png",
+      "category": "object",
+      "name": "Chest",
+      "size_meters_horizontal": 1.0
+    },
+    {
+      "id": "chest_2",
+      "filename": "chest_2.png",
+      "category": "object",
+      "name": "Chest",
+      "size_meters_horizontal": 1.0
+    },
+    {
+      "id": "chest_3",
+      "filename": "chest_3.png",
+      "category": "object",
+      "name": "Chest",
+      "size_meters_horizontal": 1.0
+    },
+    {
+      "id": "flowerbed_0",
+      "filename": "flowerbed_0.png",
+      "category": "nature",
+      "name": "Flowerbed",
+      "size_meters_horizontal": 1.5
+    },
+    {
+      "id": "fountain_0",
+      "filename": "fountain_0.png",
+      "category": "object",
+      "name": "Fountain",
+      "size_meters_horizontal": 4.0
+    },
+    {
+      "id": "large_rock_4",
+      "filename": "large_rock_4.png",
+      "category": "nature",
+      "name": "Larger Rock",
+      "size_meters_horizontal": 3.0
+    },
+    {
+      "id": "large_rock_0",
+      "filename": "large_rock_0.png",
+      "category": "nature",
+      "name": "Large Rock",
+      "size_meters_horizontal": 1.8
+    },
+    {
+      "id": "large_rock_1",
+      "filename": "large_rock_1.png",
+      "category": "nature",
+      "name": "Large Rock",
+      "size_meters_horizontal": 4.0
+    },
+    {
+      "id": "large_rock_2",
+      "filename": "large_rock_2.png",
+      "category": "nature",
+      "name": "Large Rock",
+      "size_meters_horizontal": 4.0
+    },
+    {
+      "id": "large_rock_3",
+      "filename": "large_rock_3.png",
+      "category": "nature",
+      "name": "Large Rock",
+      "size_meters_horizontal": 2.0
+    },
+    {
+      "id": "logs_0",
+      "filename": "logs_0.png",
+      "category": "object",
+      "name": "Logs",
+      "size_meters_horizontal": 1.6
+    },
+    {
+      "id": "logs_1",
+      "filename": "logs_1.png",
+      "category": "object",
+      "name": "Logs",
+      "size_meters_horizontal": 0.8
+    },
+    {
+      "id": "medium_house_0",
+      "filename": "medium_house_0.png",
+      "category": "building",
+      "name": "Medium House",
+      "size_meters_horizontal": 10.0
+    },
+    {
+      "id": "medium_house_1",
+      "filename": "medium_house_1.png",
+      "category": "building",
+      "name": "Medium House",
+      "size_meters_horizontal": 10.0
+    },
+    {
+      "id": "medium_house_2",
+      "filename": "medium_house_2.png",
+      "category": "building",
+      "name": "Medium House",
+      "size_meters_horizontal": 10.0
+    },
+    {
+      "id": "medium_house_3",
+      "filename": "medium_house_3.png",
+      "category": "building",
+      "name": "Medium House",
+      "size_meters_horizontal": 8.0
+    },
+    {
+      "id": "medium_house_4",
+      "filename": "medium_house_4.png",
+      "category": "building",
+      "name": "Medium House",
+      "size_meters_horizontal": 9.0
+    },
+    {
+      "id": "medium_rock_0",
+      "filename": "medium_rock_0.png",
+      "category": "nature",
+      "name": "Medium Rock",
+      "size_meters_horizontal": 1.0
+    },
+    {
+      "id": "medium_rock_1",
+      "filename": "medium_rock_1.png",
+      "category": "nature",
+      "name": "Medium Rock",
+      "size_meters_horizontal": 1.3
+    },
+    {
+      "id": "mushroom_0",
+      "filename": "mushroom_0.png",
+      "category": "nature",
+      "name": "Mushroom",
+      "size_meters_horizontal": 0.2
+    },
+    {
+      "id": "mushroom_1",
+      "filename": "mushroom_1.png",
+      "category": "nature",
+      "name": "Mushroom",
+      "size_meters_horizontal": 0.2
+    },
+    {
+      "id": "pillar_0",
+      "filename": "pillar_0.png",
+      "category": "object",
+      "name": "Pillar",
+      "size_meters_horizontal": 0.5
+    },
+    {
+      "id": "small_house_0",
+      "filename": "small_house_0.png",
+      "category": "building",
+      "name": "Small House",
+      "size_meters_horizontal": 5.0
+    },
+    {
+      "id": "small_house_1",
+      "filename": "small_house_1.png",
+      "category": "building",
+      "name": "Small House",
+      "size_meters_horizontal": 7.0
+    },
+    {
+      "id": "small_rock_0",
+      "filename": "small_rock_0.png",
+      "category": "nature",
+      "name": "Small Rock",
+      "size_meters_horizontal": 0.5
+    },
+    {
+      "id": "small_rock_1",
+      "filename": "small_rock_1.png",
+      "category": "nature",
+      "name": "Small Rock",
+      "size_meters_horizontal": 0.6
+    },
+    {
+      "id": "small_tower_0",
+      "filename": "small_tower_0.png",
+      "category": "building",
+      "name": "Small Tower",
+      "size_meters_horizontal": 6.0
+    },
+    {
+      "id": "statue_0",
+      "filename": "statue_0.png",
+      "category": "object",
+      "name": "Statue",
+      "size_meters_horizontal": 3.5
+    },
+    {
+      "id": "tent_0",
+      "filename": "tent_0.png",
+      "category": "object",
+      "name": "Tent",
+      "size_meters_horizontal": 3.0
+    },
+    {
+      "id": "tent_1",
+      "filename": "tent_1.png",
+      "category": "object",
+      "name": "Tent",
+      "size_meters_horizontal": 3.0
+    },
+    {
+      "id": "tent_2",
+      "filename": "tent_2.png",
+      "category": "object",
+      "name": "Tent",
+      "size_meters_horizontal": 2
+    },
+    {
+      "id": "tombstone_0",
+      "filename": "tombstone_0.png",
+      "category": "object",
+      "name": "Tombstone",
+      "size_meters_horizontal": 1.2
+    },
+    {
+      "id": "tree_0",
+      "filename": "tree_0.png",
+      "category": "nature",
+      "name": "Tree",
+      "size_meters_horizontal": 3.0
+    },
+    {
+      "id": "tree_1",
+      "filename": "tree_1.png",
+      "category": "nature",
+      "name": "Tree",
+      "size_meters_horizontal": 2.6
+    },
+    {
+      "id": "tree_2",
+      "filename": "tree_2.png",
+      "category": "nature",
+      "name": "Tree",
+      "size_meters_horizontal": 3
+    },
+    {
+      "id": "tree_3",
+      "filename": "tree_3.png",
+      "category": "nature",
+      "name": "Tree",
+      "size_meters_horizontal": 3.2
+    },
+    {
+      "id": "tree_4",
+      "filename": "tree_4.png",
+      "category": "nature",
+      "name": "Tree",
+      "size_meters_horizontal": 3
+    },
+    {
+      "id": "tree_5",
+      "filename": "tree_5.png",
+      "category": "nature",
+      "name": "Tree",
+      "size_meters_horizontal": 3
+    },
+    {
+      "id": "tree_6",
+      "filename": "tree_6.png",
+      "category": "nature",
+      "name": "Tree",
+      "size_meters_horizontal": 3.2
+    },
+    {
+      "id": "tree_7",
+      "filename": "tree_7.png",
+      "category": "nature",
+      "name": "Tree",
+      "size_meters_horizontal": 3
+    }
+  ]
+}
