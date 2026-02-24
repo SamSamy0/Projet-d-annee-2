@@ -3,17 +3,20 @@
 void Window::initMenuWidget() {
   gui.removeAllWidgets();
 
+  // Left Background
   auto leftPanel = tgui::Panel::create();
   leftPanel->setSize("55%", "100%");
   leftPanel->getRenderer()->setBackgroundColor(sf::Color(22, 22, 28));
   gui.add(leftPanel);
 
+  // Title
   auto title = tgui::Label::create("Mes Projets");
   title->setPosition("5%", "6%");
   title->setTextSize(28);
   title->getRenderer()->setTextColor(sf::Color(255, 255, 255));
   leftPanel->add(title);
 
+  // Projects Counter
   auto counter =
       tgui::Label::create(std::to_string(projectList.size()) + " projets");
   counter->setPosition("5%", "11%");

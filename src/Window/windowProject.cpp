@@ -106,6 +106,7 @@ void Window::createProj(tgui::String scale, tgui::String sizeX,
                         tgui::String sizeY, tgui::String name, unsigned int id,
                         sf::RenderWindow &window, tgui::Gui &gui) {
   // NOTE: Need verification if data isn't empty
+  // NOTE: Check with server (chinsou tomas)
   unsigned int scaleInt = scale.toUInt();
   sf::Vector2u size = {sizeX.toUInt(), sizeY.toUInt()};
   std::string nameS = name.toStdString();

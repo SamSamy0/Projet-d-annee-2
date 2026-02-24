@@ -52,6 +52,10 @@ set(SOURCES
     main.cpp
     src/Window/Identifier.cpp
     src/Window/displayWindow.cpp
+    src/Window/windowGame.cpp
+    src/Window/windowProject.cpp
+    src/Window/windowLogin.cpp
+    src/Window/windowMenu.cpp
     src/server/clientnetwork.cpp
     src/server/handler.cpp
     src/server/protocol.hpp
@@ -62,6 +66,7 @@ set(SOURCES
     src/project/move.cpp
     src/project/toolbar.cpp
     src/project/tool.cpp
+    
 )
 
 add_executable(sfml-app ${SOURCES})

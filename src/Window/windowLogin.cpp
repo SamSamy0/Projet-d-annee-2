@@ -1,6 +1,7 @@
 #include "displayWindow.hpp"
 
 void Window::loginWidget() {
+  // SubWindow
   auto back = tgui::Panel::create();
   back->setSize("32%", "42%");
   back->setPosition("34%", "29%");
@@ -9,12 +10,14 @@ void Window::loginWidget() {
   back->getRenderer()->setBorderColor(sf::Color(55, 55, 70));
   gui.add(back, "Main login");
 
+  // Title
   auto title = tgui::Label::create("Bienvenue");
   title->setPosition("32%", "8%");
   title->setTextSize(28);
   title->getRenderer()->setTextColor(sf::Color(240, 240, 255));
   back->add(title);
 
+  // Username
   auto editBoxUsername = tgui::EditBox::create();
   editBoxUsername->setPosition({"10%", "32%"});
   editBoxUsername->setSize({"80%", "13%"});
@@ -30,6 +33,7 @@ void Window::loginWidget() {
   // gui.add(editBoxUsername, "Username");
   back->add(editBoxUsername, "Username");
 
+  // Password
   auto editBoxPassword = tgui::EditBox::copy(editBoxUsername);
   editBoxPassword->getRenderer()->setTextColor(tgui::Color(255, 255, 255));
   editBoxPassword->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -39,6 +43,7 @@ void Window::loginWidget() {
   // gui.add(editBoxPassword, "Password");
   back->add(editBoxPassword);
 
+  // Login Button
   auto loginButton = tgui::Button::create("Connexion");
   loginButton->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
   loginButton->getRenderer()->setBackgroundColorHover(sf::Color(118, 120, 255));
@@ -51,6 +56,7 @@ void Window::loginWidget() {
   // gui.add(loginButton);
   loginButton->onPress(&Window::login, this, editBoxUsername, editBoxPassword);
 
+  // SignIn Button
   auto signInButton = tgui::Button::create("Inscription");
   signInButton->getRenderer()->setTextColor(tgui::Color(170, 170, 200));
   signInButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -66,8 +72,6 @@ void Window::loginWidget() {
 }
 
 void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
-  // NOTE: I have to ask how the usernames are stored in the server
-  // -> Asked Tomas
   // NOTE: I have to put the condition username 3-15 car
 
   // Sending Identifiers to server
