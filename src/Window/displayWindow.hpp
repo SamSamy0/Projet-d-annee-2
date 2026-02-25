@@ -42,6 +42,7 @@ private:
   };
 
   tgui::ScrollablePanel::Ptr layersList_ = nullptr;
+  tgui::Button::Ptr activeMoreButton = nullptr;
   void initWidget();
   void updateTextSize();
   void processEvents();
@@ -50,14 +51,15 @@ private:
   void initMenuWidget();
   bool checkLogin();
   void loginWidget();
-  // void createProj();
   void createProj(tgui::String scale, tgui::String sizeX, tgui::String sizeY,
                   tgui::String name, unsigned int id, sf::RenderWindow &window,
                   tgui::Gui &gui);
+
   ProjectData getProjectData(std::unique_ptr<Project> &proj);
   void setState(projectState newState);
   void displayProjList(tgui::Panel::Ptr parent);
-  void showProjectMenu(long long id);
+  void showProjectMenu(long long id, tgui::Button::Ptr toHover);
+  void closePopup();
   void initDataWidget();
   ProjectData askProjectData();
   void refreshLayerList();
