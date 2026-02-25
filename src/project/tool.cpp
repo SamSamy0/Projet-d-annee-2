@@ -33,17 +33,17 @@ void Brush::onDrag(sf::Vector2i pos) {
     sf::Vector2f end(pos);
     sf::Vector2f diff = end - start;
 
-    float frameDistance = std::sqrt(diff.x * diff.x + diff.y * diff.y);
+    float pixelDistance = std::sqrt(diff.x * diff.x + diff.y * diff.y); // quand on applique le vecteur diff on parcours pixelDistance
 
-    if (frameDistance > 0) {
-      sf::Vector2f unitDir = diff / frameDistance;
-      distance_ += frameDistance; // On ajoute la distance parcourue cette frame
+    if (pixelDistance > 0) {
+      sf::Vector2f dirrection = diff / pixelDistance; //vecteur de longueur 1 qui sert à connetre la dirrection en fonction du signe de x et y
+      distance_ += pixelDistance; // On ajoute la distance parcourue cette frame
 
       while (distance_ >= spacing_) {
         // On calcule où on doit peindre sur le segment actuel
         // 'travelDist' est la distance depuis 'lastPos_'
-        float travelDist = frameDistance - (distance_ - spacing_);
-        sf::Vector2f paintPosF = start + (unitDir * travelDist);
+        float travelDist = pixelDistance - (distance_ - spacing_);
+        sf::Vector2f paintPosF = start + (dirrection * travelDist);
 
         // On convertit en int seulement au moment de peindre
         paint(sf::Vector2i(static_cast<int>(std::round(paintPosF.x)),
