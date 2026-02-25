@@ -1,6 +1,11 @@
-#include "app.hpp"
+#include "../Window/displayWindow.hpp"
+#include "../server/clientnetwork.hpp"
+#include <iostream>
 
 int main() {
-    App myApp;
-    myApp.run();
+  std::cout << "1" << std::endl;
+  ClientNetworkManager manager;
+  Window window(manager);
+  window.run();
+  return 0;
 }
