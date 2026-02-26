@@ -25,26 +25,18 @@ protected:
 
 public:
   Tool(std::shared_ptr<Map> map);
+  // virtual void getMessage(const ClientNetworkManager &netw
+  // virtual void sendMessage(const ClientNetworkManager &network) const;
   //Getter
   std::shared_ptr<Map> getMap();
   unsigned int getScale();
-  sf::Vector2u getSize(){}
 
-  //Setter
-  virtual void setColor(sf::Color c){}
-  virtual void setShape(Shape s){}
-  virtual void setSize(unsigned int x, unsigned int y){}
-  virtual void setErraser(bool val){}
 
   //Action
-  virtual void shiftOn(sf::Vector2i pos_1){}
-  virtual void onPress(sf::Vector2i pos){}
-  virtual void onDrag(sf::Vector2i pos){}
-  virtual void onRelease(){}
+  virtual void onPress(sf::Vector2i pos) = 0;
+  virtual void onDrag(sf::Vector2i pos) = 0;
+  virtual void onRelease() = 0;
 
-  virtual void drawOn(sf::Vector2i pos) {}
-  // virtual void getMessage(const ClientNetworkManager &netw
-  // virtual void sendMessage(const ClientNetworkManager &network) const;
   virtual ~Tool() = default;
 };
 
@@ -72,10 +64,10 @@ class PixelBrush :public Brush {
 
 public:
   PixelBrush(std::shared_ptr<Map> map);
-  void setColor(sf::Color c) override;
-  void setShape(Shape s)override;
-  void paint(sf::Vector2i pos) override;
-  void setErraser(bool val) override ;
+  void setColor(sf::Color c);
+  void setShape(Shape s);
+  void paint(sf::Vector2i pos);
+  void setErraser(bool val);
 };
 //-----------------------------------------------------------------------
 
@@ -91,5 +83,5 @@ public:
   void onPress(sf::Vector2i pos)override;
   void onDrag(sf::Vector2i pos)override;
   void onRelease()override;
-  void shiftOn(sf::Vector2i pos_1) override;
+  void shiftOn(sf::Vector2i pos_1) ;
 };

@@ -46,7 +46,7 @@ void Window::initWidget() {
     penButton->getRenderer()->setBorders({0});
     penButton->onPress([this]() {
       project->getToolBar().selectTool(PIXELBRUSH);
-      project->getToolBar().getSelectedTool()->setErraser(false);
+      dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setErraser(false);
     });
     gui.add(penButton);
 
@@ -58,7 +58,7 @@ void Window::initWidget() {
     brushButton->getRenderer()->setBorders({0});
     brushButton->onPress([this]() {
       project->getToolBar().selectTool(PIXELBRUSH);
-      project->getToolBar().getSelectedTool()->setErraser(true);
+      dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setErraser(true);
     });
     gui.add(brushButton);
 
