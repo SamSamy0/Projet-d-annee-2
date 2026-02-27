@@ -15,7 +15,7 @@ PixelLayer::PixelLayer(std::string name,sf::Vector2u size) : Layer(name, size), 
     texture_.display();
     type_ = PIXELLAYER;
 }
-sf::RenderTexture &PixelLayer::getTexture() { return texture_; }
+LayerContent PixelLayer::getLayerContent() { return &texture_; }
 void PixelLayer::draw(sf::Drawable &s) {
   sf::RenderStates states;
   states.blendMode = sf::BlendNone; 
