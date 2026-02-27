@@ -23,7 +23,7 @@ Les bibliothèques suivantes s'installeront automatiquement lors de l'execution 
 - TGUI 1.12
 - SFML 3
 
-Fonctionnalité pas implémmentées:\
+Fonctionnalité pas implémmentées:
 - Copier et collage d'objets (dans l'outil de sélection)
 - Réorganisation des couches
 - Navigation par clic sur la minimap (la minimap elle-même reste obligatoire) 
