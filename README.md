@@ -1,6 +1,6 @@
 # RPG creator
 
-Etudiants:
+Etudiants:\
 Kanoun Adam 000609378\
 Beatriz de Assunçao Tomas 000615471\
 Adiya Chinzorig 000587607\
