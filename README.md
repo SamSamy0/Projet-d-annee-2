@@ -1,10 +1,10 @@
 # RPG creator
 
 Etudiants:
-Kanoun Adam 000609378
-Beatriz de Assunçao Tomas 000615471
-Adiya Chinzorig 000587607
-Benziani Naïm 000603591
+Kanoun Adam 000609378\
+Beatriz de Assunçao Tomas 000615471\
+Adiya Chinzorig 000587607\
+Benziani Naïm 000603591\
 Contuliano Bravo Samy 000611933
 
 
