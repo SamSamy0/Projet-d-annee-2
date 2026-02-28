@@ -3,15 +3,14 @@
 #include <SFML/Network.hpp>
 
 
-
 ServerNetworkManager::ServerNetworkManager(MessageQueue& mes , ReponseQueue& rep)
-: message_queu(mes), rep_queu(rep){}
+: message_queu_(mes), rep_queu_(rep){}
 
 
 bool ServerNetworkManager::start(){
-    if (listener.listen(5000) == sf::Socket::Status::Done){  
+    if (listener_.listen(5000) == sf::Socket::Status::Done){  
         std::cout << "Le server écoute sur le port 5000" << std::endl;
-        listener.setBlocking(false);  // met le listener en non-bloquant
+        listener_.setBlocking(false);  // met le listener en non-bloquant
         return true;
     }else return false;    
 };
@@ -21,15 +20,15 @@ bool ServerNetworkManager::start(){
 bool ServerNetworkManager::accept(){
     auto socket_client = std::make_shared<sf::TcpSocket>();
 
-    if (listener.accept(*socket_client) == sf::Socket::Status::Done) {
+    if (listener_.accept(*socket_client) == sf::Socket::Status::Done) {
         socket_client->setBlocking(false);
 
         auto new_client = std::make_shared<Client>(); 
         new_client->sock = socket_client;
 
-        client_list.push_back(std::move(new_client));
+        client_list_.push_back(std::move(new_client));
         std::cout << "nouvelle machine connécté: "<< std::endl ;
-        std::cout << client_list.size() << std::endl;
+        std::cout << client_list_.size() << std::endl;
 
         return true;
     } else return false;
@@ -39,14 +38,14 @@ bool ServerNetworkManager::accept(){
 //recois les messages de tout les clients
 void ServerNetworkManager::getMessages(){
     //std::cout<<"getMessage : Entrée"<<std::endl;
-    for (auto client : client_list){
+    for (auto client : client_list_){
         //std::cout<<"getMessage : Dans la boucle"<<std::endl;
         auto packet = std::make_shared<sf::Packet>();
         
         if (client->sock->receive(*packet) == sf::Socket::Status::Done){
             std::cout<<"getMessage : Dans le if, message recu"<<std::endl;
             auto msg = MessageFactory(packet,client);
-            message_queu.push(std::move(msg));
+            message_queu_.push(std::move(msg));
         }
     };
 };
@@ -56,9 +55,9 @@ void ServerNetworkManager::getMessages(){
 void ServerNetworkManager::sendReponse(){
     std::cout << "sendreponse:: Entrée" << std::endl;
 
-    while (!rep_queu.isEmpty()){
+    while (!rep_queu_.isEmpty()){
         std::cout << "sendreponse:: pop1 avant" << std::endl;
-        auto rep = rep_queu.pop();
+        auto rep = rep_queu_.pop();
         if (rep->message_type == MsgProtocole::AUTH_RESULT) {
             std::cout << "prob de pointeur" << std::endl;
         }
@@ -67,12 +66,11 @@ void ServerNetworkManager::sendReponse(){
         for (auto id : rep->id_list){
             std::cout << "rep Prot id " << static_cast<uint8_t>(rep->message_type) << std::endl; 
             
-            for (auto& client: client_list){
+            for (auto& client: client_list_){
                 //std::cout << client->id << "  cliented ???" <<std::endl;
                 //std::cout << id << std::endl;
                 if (id == client->id){
                     std::cout << "envoyed ??" << std::endl;
-                    debugAuthPacket(*rep->packet);
                     client->sock->send(*(rep->packet));
                 }
             }
@@ -81,12 +79,13 @@ void ServerNetworkManager::sendReponse(){
     std::cout << "sendreponse:: sortie" << std::endl;
 };
 
+
 void ServerNetworkManager::run() {
-    m_running = true;
+    m_running_ = true;
     start();
     std::cout << "[Network] Serveur démarré, prêt à gérer les clients..." << std::endl;
 
-    while (m_running) {
+    while (m_running_) {
         accept();
         getMessages();
         sendReponse();
@@ -96,19 +95,6 @@ void ServerNetworkManager::run() {
     }
 }
 
-void debugAuthPacket(sf::Packet copy) {
-    uint8_t type;
-    uint8_t pseudo;
-    std::cout << copy.getDataSize() << std::endl;
-
-    copy >> type;
-    std::cout << "type de messqages:"<< static_cast<int>(type) << std::endl;
-
-    copy >> pseudo;
-     std::cout << "int reussi:"<< static_cast<int>(pseudo)<< std::endl;
-
-    
-}
 
 
 

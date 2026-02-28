@@ -1,25 +1,24 @@
-#ifndef MESSAGES_HPP
-#define MESSAGES_HPP
-
+#pragma once
 #include <memory>
 #include "client.hpp"
 #include <SFML/Network.hpp>
+
 
 class Worker;
 
 
 struct Message {
-    std::shared_ptr<Client> client; // On pointe vers le client au lieu de le copier
+    std::shared_ptr<Client> client_; // On pointe vers le client au lieu de le copier
 
-    explicit Message(std::shared_ptr<Client> c) : client(c) {}
+    explicit Message(std::shared_ptr<Client> c) : client_(c) {}
     virtual void process(Worker& worker) = 0;
     virtual ~Message() = default;
 };
 
 
 struct LoginMessage : Message{
-    std::string pseudo;
-    std::string password;
+    std::string pseudo_;
+    std::string password_;
     
     LoginMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
     void process(Worker& worker) override;
@@ -28,8 +27,8 @@ struct LoginMessage : Message{
 
 
 struct RegisterMessage : Message{
-    std::string pseudo;
-    std::string password;
+    std::string pseudo_;
+    std::string password_;
     
     RegisterMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
     void process(Worker& worker) override;
@@ -37,9 +36,9 @@ struct RegisterMessage : Message{
 
 
 struct CreateProjectMessage : Message{
-    std::string nomProjet;
-    sf::Vector2u size;
-    uint scale;
+    std::string nomProjet_;
+    sf::Vector2u size_;
+    uint scale_;
     
     CreateProjectMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
     void process(Worker& worker) override;
@@ -66,4 +65,3 @@ std::shared_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet,
 
 
 
-#endif

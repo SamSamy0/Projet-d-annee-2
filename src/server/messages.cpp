@@ -6,27 +6,25 @@
 #include <iostream>
 
  
-
-
 LoginMessage::LoginMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c): Message(c){
-    *data_packet >> pseudo >> password;
+    *data_packet >> pseudo_ >> password_;
 }
 
 
 void LoginMessage::process(Worker& worker){
-    client->id = worker.verifyLogin(this->pseudo, this->password);
+    client_->id = worker.verifyLogin(this->pseudo_, this->password_);
 
     //création de la réponse
     auto rps = std::make_shared<Reponse>();
-    rps->client = this->client;
-    rps->id_list.push_back(client->id);
+    rps->client = this->client_;
+    rps->id_list.push_back(client_->id);
     std::cout << rps->id_list[0] << std::endl;
 
     rps->message_type = MsgProtocole::AUTH_RESULT;
 
     rps->packet = std::make_shared<sf::Packet>();
     *rps->packet << static_cast<std::uint8_t>(MsgProtocole::AUTH_RESULT);
-    if (client->id == -1) {
+    if (client_->id == -1) {
         *rps->packet << static_cast<std::uint8_t>(0);
     } else {
         *rps->packet << static_cast<std::uint8_t>(1);
@@ -37,28 +35,26 @@ void LoginMessage::process(Worker& worker){
 }
 
 
-
 RegisterMessage::RegisterMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c): Message(c){
-    *data_packet >> pseudo >> password;
+    *data_packet >> pseudo_ >> password_;
 }
 
 
 void RegisterMessage::process(Worker& worker) {
-    client->id = worker.addUser(this->pseudo, this->password);
-    std::cout << client->id << std::endl;
+    client_->id = worker.addUser(this->pseudo_, this->password_);
+    std::cout << client_->id << std::endl;
     
-
     //création de la réponse
     auto rps = std::make_shared<Reponse>();
-    rps->client = this->client;
-    rps->id_list.push_back(client->id);
+    rps->client = this->client_;
+    rps->id_list.push_back(client_->id);
     std::cout << rps->id_list[0] << std::endl;
 
     rps->message_type = MsgProtocole::AUTH_RESULT;
 
     rps->packet = std::make_shared<sf::Packet>();
     *rps->packet << static_cast<std::uint8_t>(MsgProtocole::AUTH_RESULT);
-    if (client->id == -1) {
+    if (client_->id == -1) {
         *rps->packet << static_cast<std::uint8_t>(0);
     } else {
         *rps->packet << static_cast<std::uint8_t>(1);
@@ -73,13 +69,13 @@ void RegisterMessage::process(Worker& worker) {
 
 
 CreateProjectMessage::CreateProjectMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c): Message(c){
-    *data_packet >> nomProjet >> size.x >> size.y >> scale;
+    *data_packet >> nomProjet_ >> size_.x >> size_.y >> scale_;
 }
 
 
 void CreateProjectMessage::process(Worker& worker) {
-    long long id_proj = worker.db_Manager.addProject("test", this->client->id);
-    worker.proj_Manager.createProjectJson(id_proj, "test", size.x, size.y, scale);
+    long long id_proj = worker.db_Manager.addProject("test", this->client_->id);
+    worker.proj_Manager.createProjectJson(id_proj, "test", size_.x, size_.y, scale_);
 
 }
 
@@ -101,7 +97,7 @@ void GetUsersProjectsMessage::process(Worker& worker) {
     std::vector<ProjectEntry> projects = worker.db_Manager.getAllProjects();
 
     auto rps = std::make_shared<Reponse>();
-    rps->client = this->client;
+    rps->client = this->client_;
     rps->message_type = MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP;
 
     rps->packet = std::make_shared<sf::Packet>();

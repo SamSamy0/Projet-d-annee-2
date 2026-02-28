@@ -1,5 +1,4 @@
-#ifndef SERVERNETWORK_HPP
-#define SERVERNETWORK_HPP
+#pragma once
 
 #include <vector>
 #include <deque>
@@ -12,11 +11,11 @@
 
 
 class ServerNetworkManager{
-    sf::TcpListener listener;
-    std::vector<std::shared_ptr<Client>> client_list;
-    MessageQueue& message_queu;
-    ReponseQueue& rep_queu;
-    std::atomic<bool> m_running;
+    sf::TcpListener listener_;
+    std::vector<std::shared_ptr<Client>> client_list_;
+    MessageQueue& message_queu_;
+    ReponseQueue& rep_queu_;
+    std::atomic<bool> m_running_;
     
 public:
     ServerNetworkManager(MessageQueue& mes , ReponseQueue& rep);
@@ -27,6 +26,4 @@ public:
     void run();
 };
 
-void debugAuthPacket(sf::Packet copy) ;
 
-#endif

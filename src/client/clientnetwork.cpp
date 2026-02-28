@@ -1,7 +1,6 @@
 #include "clientnetwork.hpp"
 
 
-
 std::deque<ServerEvent>& ClientNetworkManager::getQueuEvent(){
     return reponse_;
 }
@@ -14,6 +13,7 @@ bool ClientNetworkManager::connect(){
         return true;
     }else return false;
 }
+
 
 void ClientNetworkManager::getEvent(){
     ServerEvent rep;

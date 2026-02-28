@@ -1,26 +1,19 @@
-#ifndef CLIENTNETWORK_HPP
-#define CLIENTNETWORK_HPP
-
+#pragma once
 #include <memory>
 #include <deque>
 #include <SFML/Network.hpp>
 #include "protocol.hpp"
+#include "serverevent.hpp"
+
 
 class ClientEventHandler;
-
-struct ServerEvent{
-    MsgProtocole message_type_;
-    std::unique_ptr<sf::Packet> data_packet_;
-};
 
 
 class ClientNetworkManager{
     sf::TcpSocket socket_;
     std::deque<ServerEvent> reponse_;
     
-public:
-        
-    
+public:    
     bool connect();
     void getEvent();
     bool hasEvent();
@@ -31,12 +24,10 @@ public:
     void createProject(std::string role, sf::Vector2u size, float scale);
     void getProjectData(int project_id);
     void getUsersProjects(long long id);
-    void getProjectList();
-
-        
+    void getProjectList();     
 };
 
-#endif
+
 
 
 

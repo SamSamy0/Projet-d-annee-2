@@ -2,17 +2,19 @@
 #include "clientnetwork.hpp"
 
 
-ClientEventHandler::ClientEventHandler(ClientNetworkManager& client_manager, HandleRepInWindow w)
+ClientHandler::ClientHandler(ClientNetworkManager& client_manager, ReceiverInWindow w)
 : manager_(&client_manager),handleWindow_(&w){}
 
-void ClientEventHandler::trateEventQueu(){
+
+void ClientHandler::trateEventQueu(){
     while ((*manager_).hasEvent()){
         ServerEvent event = (*manager_).popEvent();
         process(event);
     }
 }
 
-void ClientEventHandler::process(ServerEvent& event){
+
+void ClientHandler::process(ServerEvent& event){
     switch(event.message_type_){
         case MsgProtocole::AUTH_RESULT:
             uint8_t accept;
@@ -27,14 +29,4 @@ void ClientEventHandler::process(ServerEvent& event){
 
 
 
-HandleRepInWindow::HandleRepInWindow(Window& w): window_(&w){
-    
-}
-
-
-void HandleRepInWindow::switchConnectState(uint8_t connect){
-    if (connect == 1){
-        window_->setLogIn();
-    }
-}
 
