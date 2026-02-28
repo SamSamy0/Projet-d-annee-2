@@ -1,4 +1,19 @@
-#include "displayWindow.hpp"
+#include "Window.hpp"
+
+void Window::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
+  manager.login(static_cast<std::string>(usrname->getText()),
+                static_cast<std::string>(pswd->getText()));
+  // If the handler changed isLoggedIn to true, access granted
+  if (isLoggedIn) {
+    setState(projectState::MENU);
+  }
+  // The identifiers were wrong
+  else {
+    usrname->setText("");
+    usrname->setDefaultText("Wrong Identifier(s)");
+    pswd->setText("");
+  }
+}
 
 void Window::loginWidget() {
   // SubWindow
@@ -91,20 +106,5 @@ void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
       // setState(projectState::MENU);
     }
     setState(projectState::MENU);
-  }
-}
-
-void Window::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
-  manager.login(static_cast<std::string>(usrname->getText()),
-                static_cast<std::string>(pswd->getText()));
-  // If the handler changed isLoggedIn to true, access granted
-  if (isLoggedIn) {
-    setState(projectState::MENU);
-  }
-  // The identifiers were wrong
-  else {
-    usrname->setText("");
-    usrname->setDefaultText("Wrong Identifier(s)");
-    pswd->setText("");
   }
 }

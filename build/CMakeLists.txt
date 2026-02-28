@@ -50,10 +50,8 @@ endif()
 
 set(SOURCES
     ../src/client/client.cpp
-    ../src/Window/Identifier.cpp
-    ../src/Window/displayWindow.cpp
+    ../src/Window/Window.cpp
     ../src/Window/windowGame.cpp
-    ../src/Window/windowProject.cpp
     ../src/Window/windowLogin.cpp
     ../src/Window/windowMenu.cpp
     ../src/server/clientnetwork.cpp
