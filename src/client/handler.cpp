@@ -6,7 +6,7 @@ ClientHandler::ClientHandler(ClientNetworkManager& client_manager, ReceiverInWin
 : manager_(&client_manager),handleWindow_(&w){}
 
 
-void ClientHandler::trateEventQueu(){
+void ClientHandler::processEventQueu(){
     while ((*manager_).hasEvent()){
         ServerEvent event = (*manager_).popEvent();
         process(event);

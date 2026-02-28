@@ -3,7 +3,7 @@
 #include <deque>
 #include "protocol.hpp"
 #include "receiverwindow.hpp"
-#include "../Window/displayWindow.hpp"
+#include "../Window/Window.hpp"
 
 
 class Window;             // Forward declaration
@@ -17,7 +17,7 @@ class ClientHandler{
 public:
     ClientHandler(ClientNetworkManager& client_manager, ReceiverInWindow w);
     void process(ServerEvent& event);
-    void trateEventQueu();
+    void processEventQueu();
 };
 
 

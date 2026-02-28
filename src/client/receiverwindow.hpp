@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <cstdint>
-#include "../Window/displayWindow.hpp"
+#include "../Window/Window.hpp"
 
 
 class Window;             // Forward declaration
