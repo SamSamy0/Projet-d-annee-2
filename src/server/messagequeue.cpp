@@ -11,7 +11,7 @@ void MessageQueue::push(std::shared_ptr<Message> msg) {
 }
 
 std::shared_ptr<Message> MessageQueue::pop() {
-    std::cout<<"MessageQueue: pop()"<<std::endl;
+    //std::cout<<"MessageQueue: pop()"<<std::endl;
     std::unique_lock<std::mutex> lock(m_mutex);
     m_cv.wait(lock, [this] { 
         return !m_queue.empty() || m_stopping; 
