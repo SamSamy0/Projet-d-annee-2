@@ -61,11 +61,16 @@ set(SOURCES
     ../src/server/protocol.hpp
     ../src/project/map.cpp
     ../src/project/project.cpp
-    ../src/project/layer.cpp
     ../src/project/zoom.cpp
     ../src/project/move.cpp
     ../src/project/toolbar.cpp
-    ../src/project/tool.cpp
+    ../src/project/Tool/tool.cpp
+    ../src/project/Tool/brush.cpp
+    ../src/project/Tool/pixelbrush.cpp
+    ../src/project/Tool/pixelshift.cpp
+    ../src/project/Layer/layer.cpp
+    ../src/project/Layer/pixellayer.cpp
+    ../src/project/Layer/spritelayer.cpp
     
 )
 
