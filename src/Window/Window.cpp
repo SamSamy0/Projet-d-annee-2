@@ -123,6 +123,10 @@ void Window::run() {
   mainWindow.display();
 }
 
+void Window::setLogIn(){
+  isLoggedIn = true;
+}
+
 // Pour une utilisation sans serveur
 // mais dans ce cas, il faut retirer la boucle dans client.cpp
 //  void Window::run() {
