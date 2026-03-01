@@ -1,4 +1,3 @@
-#include <cmath>
 #include <memory>
 #include "tool.hpp"
 #include "../map.hpp"

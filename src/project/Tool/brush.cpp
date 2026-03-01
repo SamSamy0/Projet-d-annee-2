@@ -1,4 +1,5 @@
 #include "brush.hpp"
+#include <cmath>
 
 Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {
   spacing_ = std::min(size_m_.x / 2 * getScale(), size_m_.y / 2 * getScale());
