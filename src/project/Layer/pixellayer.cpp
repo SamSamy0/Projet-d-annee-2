@@ -1,10 +1,4 @@
-#include "layer.hpp"
-#include "map.hpp"
-#include <memory>
-
-Layer::Layer(std::string name, sf::Vector2u size) : name_{name}, size_{size} {}
-
-typeCouche Layer::getType(){return type_;}
+#include "pixellayer.hpp"
 
 PixelLayer::PixelLayer(std::string name,sf::Vector2u size) : Layer(name, size), offset_(texture_.getTexture()) {
   if(!texture_.resize(size)){
