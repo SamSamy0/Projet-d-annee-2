@@ -1,4 +1,6 @@
 #include "Window.hpp"
+#include "../project/Tool/pixelbrush.hpp"
+#include "../project/Tool/pixelshift.hpp"
 
 void Window::initGameWidget() {
   initToolbar();

@@ -1,6 +1,4 @@
 #include "Window.hpp"
-#include "../project/project.hpp"
-#include "../project/tool.hpp"
 #include "../server/clientnetwork.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
