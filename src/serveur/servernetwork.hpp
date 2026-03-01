@@ -1,0 +1,33 @@
+#ifndef SERVERNETWORK_HPP
+#define SERVERNETWORK_HPP
+
+#include <vector>
+#include <deque>
+#include <memory>
+#include <atomic>
+#include <SFML/Network.hpp>
+#include "protocol.hpp"
+#include "reponse.hpp"
+#include "message.hpp"
+#include "mutexqueue.hpp"
+#include "client.hpp"
+#include <unordered_map>
+
+
+class ServerNetworkManager{
+    sf::TcpListener listener_;
+    MutexQueue<IMessage>& messageQueu_;
+    MutexQueue<Reponse>& repQueu_;
+    std::atomic<bool> mRunning_;
+    std::vector<std::shared_ptr<Client>> client_list;
+public:
+    ServerNetworkManager(MutexQueue<IMessage>& mes , MutexQueue<Reponse>& rep);
+    bool start();
+    bool accept();
+    void getMessages();
+    void sendReponse();
+    void run();    
+    std::unordered_map<long long, std::shared_ptr<Client>> map_;
+};
+
+#endif

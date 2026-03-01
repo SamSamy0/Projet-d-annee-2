@@ -2,22 +2,26 @@
 #include "message.hpp"
 #include "worker.hpp"
 #include "protocol.hpp"
+#include "reponse.hpp"
 
 
 
-LoginMessage::LoginMessage(sf::Packet& dataPacket) {
+LoginMessage::LoginMessage(sf::Packet& dataPacket, std::shared_ptr<Client> client) {
     dataPacket >> pseudo_ >> password_;
+    client_= client;
 }
 
 
 void LoginMessage::process(Worker& worker){
     long long id = worker.verifyLogin(this->pseudo_, this->password_);
+    client_->id = id;
 }
 
 
 
-RegisterMessage::RegisterMessage(sf::Packet& dataPacket) {
+RegisterMessage::RegisterMessage(sf::Packet& dataPacket, std::shared_ptr<Client> client) {
     dataPacket >> pseudo_ >> password_;
+    client_ = client;
 }
 
 
@@ -55,19 +59,23 @@ void GetUsersProjectsMessage::process(Worker& worker) {
 }
 
 
-std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, long long id) {
+std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client> c) {
     uint8_t typeRaw;
+    // On lit le type depuis le shared_ptr (en le déréférençant)
     if (!(data_packet >> typeRaw)) return nullptr;
 
     MsgProtocole type = static_cast<MsgProtocole>(typeRaw);
 
     switch (type) {
-        case MsgProtocole::LOB_CREATE_PROJECT_REQ:
-            return std::make_unique<CreateProjectMessage>(data_packet, id);
+        case MsgProtocole::AUTH_LOGIN_REQ:
+            return std::make_unique<LoginMessage>(data_packet, c);
 
-        case MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP:
-            return std::make_unique<GetUsersProjectsMessage>(data_packet, id);
-            
+        case MsgProtocole::AUTH_REGISTER_REQ:
+            return std::make_unique<RegisterMessage>(data_packet, c);
+
+        case MsgProtocole::LOB_CREATE_PROJECT_REQ:
+            return std::make_unique<CreateProjectMessage>(data_packet, c->id);
+
         default:
             return nullptr;
     }

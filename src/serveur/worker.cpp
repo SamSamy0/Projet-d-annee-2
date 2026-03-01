@@ -1,7 +1,7 @@
 #include "worker.hpp"
 #include <iostream>
 
-Worker::Worker(MutexQueue<IMessage>& demQueue, MutexQueue<IMessage>& repQueue) 
+Worker::Worker(MutexQueue<IMessage>& demQueue, MutexQueue<Reponse>& repQueue) 
     : demQueue_(demQueue), repQueue_(repQueue), mRunning_(true) {}
 
 void Worker::run() {
@@ -14,9 +14,9 @@ void Worker::run() {
         if (request) {
             std::cout << "[Worker] Traitement d'un nouveau message..." << std::endl;
             request->process(*this);
-        }/* else {
+        } else {
             break;
-        }*/
+        }
     }
 }
 
@@ -26,7 +26,6 @@ void Worker::stop() {
     repQueue_.stop(); 
     demQueue_.stop();
 }
-
 
 
 
@@ -65,6 +64,8 @@ int8_t Worker::getRole(const long long userId, const long long projectId) {
 std::vector<ProjectEntry> Worker::getAllProjects() {
     return dbManager_.getAllProjects();
 }
+
+
 
 bool Worker::createProjectJson(int projectId, const std::string &projectName, int width, int height, uint scale) {
     return projManager_.createProjectJson(projectId, QString::fromStdString(projectName), width, height, scale);

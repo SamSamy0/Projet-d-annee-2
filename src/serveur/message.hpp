@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <SFML/Network.hpp>
+#include "client.hpp"
 
 class Worker;
 
@@ -13,20 +14,22 @@ class IMessage {
 
 
 struct LoginMessage : public IMessage{
+    std::shared_ptr<Client> client_;
     std::string pseudo_;
     std::string password_;
     
-    LoginMessage(sf::Packet& dataPacket);
+    LoginMessage(sf::Packet& dataPacket, std::shared_ptr<Client> client);
     void process(Worker& worker) override;
 
 };
 
 
 struct RegisterMessage : IMessage{
+    std::shared_ptr<Client> client_;
     std::string pseudo_;
     std::string password_;
     
-    RegisterMessage(sf::Packet& dataPacket);
+    RegisterMessage(sf::Packet& dataPacket, std::shared_ptr<Client> client);
     void process(Worker& worker) override;
 };
 
@@ -58,4 +61,4 @@ struct GetUsersProjectsMessage : IMessage {
 };
 
 
-std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, long long id);
+std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client> client);

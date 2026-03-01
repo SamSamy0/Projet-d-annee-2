@@ -6,10 +6,11 @@
 #include "message.hpp"
 #include "databasemanager.hpp"
 #include "projectsmanager.hpp"
+#include "reponse.hpp"
 
 class Worker {
 public:
-    explicit Worker(MutexQueue<IMessage>& d_queue, MutexQueue<IMessage>& r_queue);
+    explicit Worker(MutexQueue<IMessage>& d_queue, MutexQueue<Reponse>& r_queue);
     ~Worker() = default;
     void run();
     void stop();
@@ -32,7 +33,7 @@ public:
 private:
     std::atomic<bool> mRunning_;
     MutexQueue<IMessage>& demQueue_;
-    MutexQueue<IMessage>& repQueue_;
+    MutexQueue<Reponse>& repQueue_;
     DatabaseManager dbManager_;
     ProjectsManager projManager_;
 };

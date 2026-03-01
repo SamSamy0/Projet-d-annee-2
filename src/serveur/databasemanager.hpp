@@ -4,18 +4,8 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QString>
-
-struct MemberEntry {
-    long long userId;
-    int8_t role;
-    std::string pseudo;
-};
-
-struct ProjectEntry {
-    long long projectId;
-    int8_t role;
-    std::string name;
-};
+#include "memberentry.hpp"
+#include "projectentry.hpp"
 
 class DatabaseManager {
 public:
