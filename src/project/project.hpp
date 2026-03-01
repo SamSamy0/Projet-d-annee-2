@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "map.hpp"
 #include "toolbar.hpp"
 
 

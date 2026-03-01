@@ -6,7 +6,6 @@
 #include <SFML/Graphics.hpp>
 #include "zoom.hpp"
 #include "move.hpp"
-#include "layer.hpp"
 
 //TODO: DEFINIR DES VALEURS MAX ET MIN POUR LA SIZE, LA SCALE
 
