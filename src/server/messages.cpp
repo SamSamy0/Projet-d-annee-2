@@ -18,7 +18,6 @@ void LoginMessage::process(Worker& worker){
     auto rps = std::make_shared<Reponse>();
     rps->client = this->client_;
     rps->id_list.push_back(client_->id);
-    std::cout << rps->id_list[0] << std::endl;
 
     rps->message_type = MsgProtocole::AUTH_RESULT;
 
@@ -42,13 +41,11 @@ RegisterMessage::RegisterMessage(std::shared_ptr<sf::Packet> data_packet, std::s
 
 void RegisterMessage::process(Worker& worker) {
     client_->id = worker.addUser(this->pseudo_, this->password_);
-    std::cout << client_->id << std::endl;
     
     //création de la réponse
     auto rps = std::make_shared<Reponse>();
     rps->client = this->client_;
     rps->id_list.push_back(client_->id);
-    std::cout << rps->id_list[0] << std::endl;
 
     rps->message_type = MsgProtocole::AUTH_RESULT;
 
@@ -61,9 +58,7 @@ void RegisterMessage::process(Worker& worker) {
     }
 
     //mise sur la liste des réponses
-    std::cout << "j'essaie de push" << std::endl;
     worker.rep_queue.push(std::move(rps));
-    std::cout << "j'ai réussi" << std::endl;
 
 }
 
@@ -94,23 +89,24 @@ GetUsersProjectsMessage::GetUsersProjectsMessage(std::shared_ptr<sf::Packet> dat
 }
 
 void GetUsersProjectsMessage::process(Worker& worker) {
+    
     std::vector<ProjectEntry> projects = worker.db_Manager.getAllProjects();
 
     auto rps = std::make_shared<Reponse>();
     rps->client = this->client_;
-    rps->message_type = MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP;
+    rps->id_list.push_back(client_->id);
+    rps->message_type = MsgProtocole::LOB_PROJECT_LIST_REP;
 
     rps->packet = std::make_shared<sf::Packet>();
-    *rps->packet << static_cast<std::uint8_t>(MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP);
+    *rps->packet << static_cast<std::uint8_t>(MsgProtocole::LOB_PROJECT_LIST_REP);
 
     *rps->packet << static_cast<std::uint32_t>(projects.size());
 
     for (const auto& entry : projects) {
-        *rps->packet << static_cast<std::uint32_t>(projects.size());
+        *rps->packet << static_cast<std::uint32_t>(entry.projectId);
         *rps->packet << entry.name;
         *rps->packet << entry.role;
     }
-
     worker.rep_queue.push(std::move(rps));
 }
 
@@ -122,6 +118,8 @@ std::shared_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet,
 
     MsgProtocole type = static_cast<MsgProtocole>(typeRaw);
 
+    std::cout << "[LOG] "<< to_string(type) << ": recu du client "<< (*c).id << std::endl;
+
     switch (type) {
         case MsgProtocole::AUTH_LOGIN_REQ:
             // Ici, data_packet et c sont déjà des shared_ptr. Pas d'astérisque ici !
@@ -132,6 +130,9 @@ std::shared_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet,
 
         case MsgProtocole::LOB_CREATE_PROJECT_REQ:
             return std::make_shared<CreateProjectMessage>(data_packet, c);
+        
+        case MsgProtocole::LOB_PROJECT_LIST_REQ:
+            return std::make_shared<GetUsersProjectsMessage>(data_packet, c);
 
         default:
             return nullptr;

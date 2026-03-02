@@ -6,7 +6,7 @@
 
 class Worker;
 
-
+//cette structure est utilisé pour représenter les messages recu par les clients
 struct Message {
     std::shared_ptr<Client> client_; // On pointe vers le client au lieu de le copier
 
@@ -15,7 +15,7 @@ struct Message {
     virtual ~Message() = default;
 };
 
-
+//message de connexion
 struct LoginMessage : Message{
     std::string pseudo_;
     std::string password_;
@@ -25,7 +25,7 @@ struct LoginMessage : Message{
 
 };
 
-
+//messages d'inscription
 struct RegisterMessage : Message{
     std::string pseudo_;
     std::string password_;
@@ -34,7 +34,7 @@ struct RegisterMessage : Message{
     void process(Worker& worker) override;
 };
 
-
+//message de creation de projet
 struct CreateProjectMessage : Message{
     std::string nomProjet_;
     sf::Vector2u size_;
@@ -43,7 +43,6 @@ struct CreateProjectMessage : Message{
     CreateProjectMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
     void process(Worker& worker) override;
 };
-
 
 struct GetProjectDataMessage : Message{
     int projectId_;

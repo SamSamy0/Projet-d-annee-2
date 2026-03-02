@@ -14,5 +14,5 @@ class ReceiverInWindow{
 public:
     ReceiverInWindow(Window& w);
     void switchConnectState(uint8_t connect);
-    void addProjectList(std::vector<std::string> project_list);
+    void addProjectToList(ProjectData projet);
 };

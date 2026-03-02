@@ -27,8 +27,7 @@ bool ServerNetworkManager::accept(){
         new_client->sock = socket_client;
 
         client_list_.push_back(std::move(new_client));
-        std::cout << "nouvelle machine connécté: "<< std::endl ;
-        std::cout << client_list_.size() << std::endl;
+        std::cout << "nouvelle machine connécté "<< std::endl ;
 
         return true;
     } else return false;
@@ -37,13 +36,10 @@ bool ServerNetworkManager::accept(){
 
 //recois les messages de tout les clients
 void ServerNetworkManager::getMessages(){
-    //std::cout<<"getMessage : Entrée"<<std::endl;
     for (auto client : client_list_){
-        //std::cout<<"getMessage : Dans la boucle"<<std::endl;
         auto packet = std::make_shared<sf::Packet>();
         
         if (client->sock->receive(*packet) == sf::Socket::Status::Done){
-            std::cout<<"getMessage : Dans le if, message recu"<<std::endl;
             auto msg = MessageFactory(packet,client);
             message_queu_.push(std::move(msg));
         }
@@ -53,30 +49,18 @@ void ServerNetworkManager::getMessages(){
 
 //envoi des reponses au client
 void ServerNetworkManager::sendReponse(){
-    std::cout << "sendreponse:: Entrée" << std::endl;
-
     while (!rep_queu_.isEmpty()){
-        std::cout << "sendreponse:: pop1 avant" << std::endl;
         auto rep = rep_queu_.pop();
-        if (rep->message_type == MsgProtocole::AUTH_RESULT) {
-            std::cout << "prob de pointeur" << std::endl;
-        }
-        std::cout << "sendreponse:: pop1 après" << std::endl;
-            //envoi a tout les clients de la liste d'id
+        //envoi a tout les clients de la liste d'id
         for (auto id : rep->id_list){
-            std::cout << "rep Prot id " << static_cast<uint8_t>(rep->message_type) << std::endl; 
-            
             for (auto& client: client_list_){
-                //std::cout << client->id << "  cliented ???" <<std::endl;
-                //std::cout << id << std::endl;
                 if (id == client->id){
-                    std::cout << "envoyed ??" << std::endl;
+                    std::cout << "[LOG] " << to_string(rep->message_type) << ": au client " << id << std::endl;
                     client->sock->send(*(rep->packet));
                 }
             }
         }
     }
-    std::cout << "sendreponse:: sortie" << std::endl;
 };
 
 

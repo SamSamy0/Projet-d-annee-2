@@ -24,9 +24,7 @@ void ClientNetworkManager::getEvent(){
     if (socket_.receive(*packet) == sf::Socket::Status::Done){
         std::cout <<"####################  messages recu du serveur  ########################" << std::endl;
         uint8_t type_mess;
-        std::cout << static_cast<int>(type_mess) << std::endl;
         *packet >> type_mess;
-        std::cout << static_cast<int>(type_mess) << std::endl;
         
         rep.message_type_ = static_cast<MsgProtocole>(type_mess);
         rep.data_packet_ = std::move(packet);

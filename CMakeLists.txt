@@ -57,6 +57,7 @@ set(SOURCES
     src/Window/windowGame.cpp
     src/Window/windowLogin.cpp
     src/Window/windowMenu.cpp
+    src/Window/ProjectData.cpp
     src/client/clientnetwork.cpp
     src/client/handler.cpp
     src/client/serverevent.hpp
@@ -93,7 +94,7 @@ set(SERVER_SOURCES
     src/server/messagequeue.cpp
     src/server/messages.cpp
     src/server/projectsmanager.cpp
-    src/server/protocol.hpp
+    src/server/protocol.cpp
     src/server/reponsequeue.cpp
     src/server/servernetwork.cpp
     src/server/worker.cpp

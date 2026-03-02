@@ -11,11 +11,11 @@ class HandleRepInWindow;
 class ClientNetworkManager;
 
 class ClientHandler{
-   ClientNetworkManager* manager_;
-   ReceiverInWindow* handleWindow_;
+   ClientNetworkManager& manager_;
+    ReceiverInWindow& handleWindow_;
 
 public:
-    ClientHandler(ClientNetworkManager& client_manager, ReceiverInWindow w);
+    ClientHandler(ClientNetworkManager& client_manager,ReceiverInWindow& w);
     void process(ServerEvent& event);
     void processEventQueu();
 };

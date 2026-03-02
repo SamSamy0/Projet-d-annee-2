@@ -252,6 +252,30 @@ sfml-audio/fast:
 	$(MAKE) $(MAKESILENT) -f _deps/sfml-build/src/SFML/Audio/CMakeFiles/sfml-audio.dir/build.make _deps/sfml-build/src/SFML/Audio/CMakeFiles/sfml-audio.dir/build
 .PHONY : sfml-audio/fast
 
+src/Window/ProjectData.o: src/Window/ProjectData.cpp.o
+.PHONY : src/Window/ProjectData.o
+
+# target to build an object file
+src/Window/ProjectData.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/Window/ProjectData.cpp.o
+.PHONY : src/Window/ProjectData.cpp.o
+
+src/Window/ProjectData.i: src/Window/ProjectData.cpp.i
+.PHONY : src/Window/ProjectData.i
+
+# target to preprocess a source file
+src/Window/ProjectData.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/Window/ProjectData.cpp.i
+.PHONY : src/Window/ProjectData.cpp.i
+
+src/Window/ProjectData.s: src/Window/ProjectData.cpp.s
+.PHONY : src/Window/ProjectData.s
+
+# target to generate assembly for a file
+src/Window/ProjectData.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/Window/ProjectData.cpp.s
+.PHONY : src/Window/ProjectData.cpp.s
+
 src/Window/Window.o: src/Window/Window.cpp.o
 .PHONY : src/Window/Window.o
 
@@ -756,6 +780,30 @@ src/server/projectsmanager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/server/projectsmanager.cpp.s
 .PHONY : src/server/projectsmanager.cpp.s
 
+src/server/protocol.o: src/server/protocol.cpp.o
+.PHONY : src/server/protocol.o
+
+# target to build an object file
+src/server/protocol.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/server/protocol.cpp.o
+.PHONY : src/server/protocol.cpp.o
+
+src/server/protocol.i: src/server/protocol.cpp.i
+.PHONY : src/server/protocol.i
+
+# target to preprocess a source file
+src/server/protocol.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/server/protocol.cpp.i
+.PHONY : src/server/protocol.cpp.i
+
+src/server/protocol.s: src/server/protocol.cpp.s
+.PHONY : src/server/protocol.s
+
+# target to generate assembly for a file
+src/server/protocol.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/src/server/protocol.cpp.s
+.PHONY : src/server/protocol.cpp.s
+
 src/server/reponsequeue.o: src/server/reponsequeue.cpp.o
 .PHONY : src/server/reponsequeue.o
 
@@ -847,6 +895,9 @@ help:
 	@echo "... sfml-network"
 	@echo "... sfml-system"
 	@echo "... sfml-window"
+	@echo "... src/Window/ProjectData.o"
+	@echo "... src/Window/ProjectData.i"
+	@echo "... src/Window/ProjectData.s"
 	@echo "... src/Window/Window.o"
 	@echo "... src/Window/Window.i"
 	@echo "... src/Window/Window.s"
@@ -910,6 +961,9 @@ help:
 	@echo "... src/server/projectsmanager.o"
 	@echo "... src/server/projectsmanager.i"
 	@echo "... src/server/projectsmanager.s"
+	@echo "... src/server/protocol.o"
+	@echo "... src/server/protocol.i"
+	@echo "... src/server/protocol.s"
 	@echo "... src/server/reponsequeue.o"
 	@echo "... src/server/reponsequeue.i"
 	@echo "... src/server/reponsequeue.s"

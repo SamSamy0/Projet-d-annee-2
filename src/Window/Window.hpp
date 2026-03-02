@@ -74,7 +74,7 @@ public:
   // Setter for bool isLoggedIn
   void setLogIn();
   // Setter for projectList
-  void setProjectList(std::vector<ProjectData> list);
+  void addProjectList(ProjectData projet);
   bool isOpen() const;
   void run();
   

@@ -13,8 +13,8 @@ struct MemberEntry {
 
 struct ProjectEntry {
     long long projectId;
-    int8_t role;
     std::string name;
+    int8_t role;
 };
 
 class DatabaseManager {

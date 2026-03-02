@@ -106,10 +106,13 @@ Window::Window(ClientNetworkManager &manager)
   initWidget();
 }
 
-void Window::setProjectList(std::vector<ProjectData> newlist) {
-  projectList = newlist;
+void Window::addProjectList(ProjectData newproj) {
+  projectList.push_back(newproj);
+  initMenuWidget();
 }
+
 bool Window::isOpen() const { return mainWindow.isOpen(); }
+
 
 void Window::run() {
   processEvents();
@@ -119,16 +122,24 @@ void Window::run() {
     case projectState::LOGIN:
       if (isLoggedIn){
         state = projectState::MENU;
+        manager.getProjectList();
+        initMenuWidget();
       }
       gui.draw();
       mainWindow.display();
-    
+      break;
     case projectState::MENU:
       gui.draw();
       mainWindow.display();
+      break;
     case projectState::GAME:
-      ;
+      project->display();
+      gui.draw();
+      mainWindow.display();
+      break;
   };
+
+ 
   
   /*if (Window::state == projectState::GAME && project) {
     // Display Game
