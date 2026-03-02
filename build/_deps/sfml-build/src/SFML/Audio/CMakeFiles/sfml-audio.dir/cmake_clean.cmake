@@ -4,7 +4,6 @@ file(REMOVE_RECURSE
   "../../../lib/libsfml-audio.so"
   "../../../lib/libsfml-audio.so.3.0"
   "../../../lib/libsfml-audio.so.3.0.0"
-  "CMakeFiles/sfml-audio.dir/link.d"
   "CMakeFiles/sfml-audio.dir/AudioDevice.cpp.o"
   "CMakeFiles/sfml-audio.dir/AudioDevice.cpp.o.d"
   "CMakeFiles/sfml-audio.dir/AudioResource.cpp.o"

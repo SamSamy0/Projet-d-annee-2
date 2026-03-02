@@ -1,4 +1,4 @@
-# Install script for directory: /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Network
+# Install script for directory: /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Network
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -37,7 +37,7 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-# Set path to fallback-tool for dependency-resolution.
+# Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "/usr/bin/objdump")
 endif()
@@ -55,8 +55,8 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "bin" OR NOT CMAKE_INSTALL_COMPONENT)
     endif()
   endforeach()
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES
-    "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-build/lib/libsfml-network.so.3.0.0"
-    "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-build/lib/libsfml-network.so.3.0"
+    "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-build/lib/libsfml-network.so.3.0.0"
+    "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-build/lib/libsfml-network.so.3.0"
     )
   foreach(file
       "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libsfml-network.so.3.0.0"
@@ -66,7 +66,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "bin" OR NOT CMAKE_INSTALL_COMPONENT)
        NOT IS_SYMLINK "${file}")
       file(RPATH_CHANGE
            FILE "${file}"
-           OLD_RPATH "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-build/lib:"
+           OLD_RPATH "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-build/lib:"
            NEW_RPATH "")
       if(CMAKE_INSTALL_DO_STRIP)
         execute_process(COMMAND "/usr/bin/strip" "${file}")
@@ -76,12 +76,6 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "bin" OR NOT CMAKE_INSTALL_COMPONENT)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "bin" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-build/lib/libsfml-network.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-build/lib/libsfml-network.so")
 endif()
 
-string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
-       "${CMAKE_INSTALL_MANIFEST_FILES}")
-if(CMAKE_INSTALL_LOCAL_ONLY)
-  file(WRITE "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-build/src/SFML/Network/install_local_manifest.txt"
-     "${CMAKE_INSTALL_MANIFEST_CONTENT}")
-endif()

@@ -1,8 +1,8 @@
 _deps/sfml-build/src/SFML/Window/CMakeFiles/sfml-window.dir/Unix/Display.cpp.o: \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/Display.cpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/Display.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/Display.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/Window/WindowEnums.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/Display.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/Window/WindowEnums.hpp \
  /usr/include/X11/Xlib.h /usr/include/x86_64-linux-gnu/sys/types.h \
  /usr/include/features.h /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -154,9 +154,9 @@ _deps/sfml-build/src/SFML/Window/CMakeFiles/sfml-window.dir/Unix/Display.cpp.o: 
  /usr/include/c++/13/bits/basic_string.tcc \
  /usr/include/c++/13/bits/memory_resource.h /usr/include/c++/13/cstddef \
  /usr/include/c++/13/bits/uses_allocator_args.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Err.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Export.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/Config.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Err.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Export.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/Config.hpp \
  /usr/include/X11/keysym.h /usr/include/X11/keysymdef.h \
  /usr/include/c++/13/mutex /usr/include/c++/13/bits/chrono.h \
  /usr/include/c++/13/ratio /usr/include/c++/13/cstdint \

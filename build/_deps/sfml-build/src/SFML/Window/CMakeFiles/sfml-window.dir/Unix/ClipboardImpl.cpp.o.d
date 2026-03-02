@@ -1,12 +1,12 @@
 _deps/sfml-build/src/SFML/Window/CMakeFiles/sfml-window.dir/Unix/ClipboardImpl.cpp.o: \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/ClipboardImpl.cpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/ClipboardImpl.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/ClipboardImpl.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/Window/WindowEnums.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/String.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Export.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/Config.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Utf.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/ClipboardImpl.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/Window/WindowEnums.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/String.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Export.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/Config.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Utf.hpp \
  /usr/include/c++/13/array /usr/include/c++/13/compare \
  /usr/include/c++/13/initializer_list \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
@@ -160,8 +160,8 @@ _deps/sfml-build/src/SFML/Window/CMakeFiles/sfml-window.dir/Unix/ClipboardImpl.c
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Utf.inl \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/String.inl \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Utf.inl \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/String.inl \
  /usr/include/c++/13/iterator /usr/include/c++/13/bits/stream_iterator.h \
  /usr/include/X11/Xlib.h /usr/include/X11/X.h \
  /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h \
@@ -181,14 +181,14 @@ _deps/sfml-build/src/SFML/Window/CMakeFiles/sfml-window.dir/Unix/ClipboardImpl.c
  /usr/include/c++/13/backward/auto_ptr.h \
  /usr/include/c++/13/pstl/glue_memory_defs.h \
  /usr/include/c++/13/pstl/execution_defs.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/Display.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Clock.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/Display.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Clock.hpp \
  /usr/include/c++/13/chrono /usr/include/c++/13/bits/chrono.h \
  /usr/include/c++/13/ratio /usr/include/c++/13/limits \
  /usr/include/c++/13/bits/parse_numbers.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Err.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Time.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Time.inl \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Err.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Time.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Time.inl \
  /usr/include/c++/13/cassert /usr/include/assert.h \
  /usr/include/X11/Xatom.h /usr/include/c++/13/ostream \
  /usr/include/c++/13/ios /usr/include/c++/13/bits/basic_ios.h \

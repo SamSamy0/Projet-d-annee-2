@@ -1,12 +1,12 @@
 _deps/sfml-build/src/SFML/Window/CMakeFiles/sfml-window.dir/Sensor.cpp.o: \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Window/Sensor.cpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Window/Sensor.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/Window/Sensor.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/Window/Export.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/Config.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Vector3.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Export.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Vector3.inl \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/Window/Sensor.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/Window/Export.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/Config.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Vector3.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Export.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Vector3.inl \
  /usr/include/c++/13/cassert \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -19,10 +19,10 @@ _deps/sfml-build/src/SFML/Window/CMakeFiles/sfml-window.dir/Sensor.cpp.o: \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/cpu_defines.h \
  /usr/include/c++/13/pstl/pstl_config.h /usr/include/assert.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Window/SensorManager.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Window/SensorImpl.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/SensorImpl.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/System/EnumArray.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Window/SensorManager.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Window/SensorImpl.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Window/Unix/SensorImpl.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/System/EnumArray.hpp \
  /usr/include/c++/13/array /usr/include/c++/13/compare \
  /usr/include/c++/13/initializer_list /usr/include/c++/13/type_traits \
  /usr/include/c++/13/bits/functexcept.h \

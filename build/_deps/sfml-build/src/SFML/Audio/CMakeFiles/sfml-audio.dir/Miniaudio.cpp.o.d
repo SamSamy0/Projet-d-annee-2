@@ -1,7 +1,7 @@
 _deps/sfml-build/src/SFML/Audio/CMakeFiles/sfml-audio.dir/Miniaudio.cpp.o: \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Audio/Miniaudio.cpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Audio/Miniaudio.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/extlibs/headers/miniaudio/miniaudio.h \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/extlibs/headers/miniaudio/miniaudio.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \

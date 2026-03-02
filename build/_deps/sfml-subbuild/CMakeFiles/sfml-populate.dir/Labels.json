@@ -2,37 +2,37 @@
 	"sources" : 
 	[
 		{
-			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/CMakeFiles/sfml-populate"
+			"file" : "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/CMakeFiles/sfml-populate"
 		},
 		{
-			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/CMakeFiles/sfml-populate.rule"
+			"file" : "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/CMakeFiles/sfml-populate.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/CMakeFiles/sfml-populate-complete.rule"
+			"file" : "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/CMakeFiles/sfml-populate-complete.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-build.rule"
+			"file" : "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-build.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-configure.rule"
+			"file" : "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-configure.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-download.rule"
+			"file" : "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-download.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-install.rule"
+			"file" : "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-install.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-mkdir.rule"
+			"file" : "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-mkdir.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-patch.rule"
+			"file" : "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-patch.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-test.rule"
+			"file" : "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-test.rule"
 		},
 		{
-			"file" : "/mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-update.rule"
+			"file" : "/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/sfml-populate-prefix/src/sfml-populate-stamp/sfml-populate-update.rule"
 		}
 	],
 	"target" : 

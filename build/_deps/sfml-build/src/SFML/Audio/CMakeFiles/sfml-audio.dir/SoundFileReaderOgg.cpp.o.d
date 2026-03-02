@@ -1,11 +1,11 @@
 _deps/sfml-build/src/SFML/Audio/CMakeFiles/sfml-audio.dir/SoundFileReaderOgg.cpp.o: \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Audio/SoundFileReaderOgg.cpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Audio/SoundFileReaderOgg.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/src/SFML/Audio/SoundFileReaderOgg.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/Audio/SoundFileReader.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/Audio/Export.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/Config.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/Audio/SoundChannel.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/src/SFML/Audio/SoundFileReaderOgg.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/Audio/SoundFileReader.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/Audio/Export.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/Config.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/Audio/SoundChannel.hpp \
  /usr/include/c++/13/optional /usr/include/c++/13/type_traits \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -107,15 +107,15 @@ _deps/sfml-build/src/SFML/Audio/CMakeFiles/sfml-audio.dir/SoundFileReaderOgg.cpp
  /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Err.hpp \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/Export.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Err.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/Export.hpp \
  /usr/include/c++/13/iosfwd /usr/include/c++/13/bits/stringfwd.h \
  /usr/include/c++/13/bits/postypes.h /usr/include/c++/13/cwchar \
  /usr/include/wchar.h /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
- /mnt/c/Users/chinG/Documents/group-13/build/_deps/sfml-src/include/SFML/System/InputStream.hpp \
+ /home/tomas/ULB2/projet/group-13/build/_deps/sfml-src/include/SFML/System/InputStream.hpp \
  /usr/include/c++/13/ostream /usr/include/c++/13/ios \
  /usr/include/c++/13/bits/char_traits.h \
  /usr/include/c++/13/bits/localefwd.h \
