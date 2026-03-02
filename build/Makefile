@@ -252,30 +252,6 @@ sfml-audio/fast:
 	$(MAKE) $(MAKESILENT) -f _deps/sfml-build/src/SFML/Audio/CMakeFiles/sfml-audio.dir/build.make _deps/sfml-build/src/SFML/Audio/CMakeFiles/sfml-audio.dir/build
 .PHONY : sfml-audio/fast
 
-src/Window/ProjectData.o: src/Window/ProjectData.cpp.o
-.PHONY : src/Window/ProjectData.o
-
-# target to build an object file
-src/Window/ProjectData.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/Window/ProjectData.cpp.o
-.PHONY : src/Window/ProjectData.cpp.o
-
-src/Window/ProjectData.i: src/Window/ProjectData.cpp.i
-.PHONY : src/Window/ProjectData.i
-
-# target to preprocess a source file
-src/Window/ProjectData.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/Window/ProjectData.cpp.i
-.PHONY : src/Window/ProjectData.cpp.i
-
-src/Window/ProjectData.s: src/Window/ProjectData.cpp.s
-.PHONY : src/Window/ProjectData.s
-
-# target to generate assembly for a file
-src/Window/ProjectData.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/Window/ProjectData.cpp.s
-.PHONY : src/Window/ProjectData.cpp.s
-
 src/Window/Window.o: src/Window/Window.cpp.o
 .PHONY : src/Window/Window.o
 
@@ -468,29 +444,173 @@ src/client/receiverwindow.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/client/receiverwindow.cpp.s
 .PHONY : src/client/receiverwindow.cpp.s
 
-src/project/layer.o: src/project/layer.cpp.o
-.PHONY : src/project/layer.o
+src/project/Layer/layer.o: src/project/Layer/layer.cpp.o
+.PHONY : src/project/Layer/layer.o
 
 # target to build an object file
-src/project/layer.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/layer.cpp.o
-.PHONY : src/project/layer.cpp.o
+src/project/Layer/layer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Layer/layer.cpp.o
+.PHONY : src/project/Layer/layer.cpp.o
 
-src/project/layer.i: src/project/layer.cpp.i
-.PHONY : src/project/layer.i
+src/project/Layer/layer.i: src/project/Layer/layer.cpp.i
+.PHONY : src/project/Layer/layer.i
 
 # target to preprocess a source file
-src/project/layer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/layer.cpp.i
-.PHONY : src/project/layer.cpp.i
+src/project/Layer/layer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Layer/layer.cpp.i
+.PHONY : src/project/Layer/layer.cpp.i
 
-src/project/layer.s: src/project/layer.cpp.s
-.PHONY : src/project/layer.s
+src/project/Layer/layer.s: src/project/Layer/layer.cpp.s
+.PHONY : src/project/Layer/layer.s
 
 # target to generate assembly for a file
-src/project/layer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/layer.cpp.s
-.PHONY : src/project/layer.cpp.s
+src/project/Layer/layer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Layer/layer.cpp.s
+.PHONY : src/project/Layer/layer.cpp.s
+
+src/project/Layer/pixellayer.o: src/project/Layer/pixellayer.cpp.o
+.PHONY : src/project/Layer/pixellayer.o
+
+# target to build an object file
+src/project/Layer/pixellayer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Layer/pixellayer.cpp.o
+.PHONY : src/project/Layer/pixellayer.cpp.o
+
+src/project/Layer/pixellayer.i: src/project/Layer/pixellayer.cpp.i
+.PHONY : src/project/Layer/pixellayer.i
+
+# target to preprocess a source file
+src/project/Layer/pixellayer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Layer/pixellayer.cpp.i
+.PHONY : src/project/Layer/pixellayer.cpp.i
+
+src/project/Layer/pixellayer.s: src/project/Layer/pixellayer.cpp.s
+.PHONY : src/project/Layer/pixellayer.s
+
+# target to generate assembly for a file
+src/project/Layer/pixellayer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Layer/pixellayer.cpp.s
+.PHONY : src/project/Layer/pixellayer.cpp.s
+
+src/project/Layer/spritelayer.o: src/project/Layer/spritelayer.cpp.o
+.PHONY : src/project/Layer/spritelayer.o
+
+# target to build an object file
+src/project/Layer/spritelayer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Layer/spritelayer.cpp.o
+.PHONY : src/project/Layer/spritelayer.cpp.o
+
+src/project/Layer/spritelayer.i: src/project/Layer/spritelayer.cpp.i
+.PHONY : src/project/Layer/spritelayer.i
+
+# target to preprocess a source file
+src/project/Layer/spritelayer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Layer/spritelayer.cpp.i
+.PHONY : src/project/Layer/spritelayer.cpp.i
+
+src/project/Layer/spritelayer.s: src/project/Layer/spritelayer.cpp.s
+.PHONY : src/project/Layer/spritelayer.s
+
+# target to generate assembly for a file
+src/project/Layer/spritelayer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Layer/spritelayer.cpp.s
+.PHONY : src/project/Layer/spritelayer.cpp.s
+
+src/project/Tool/brush.o: src/project/Tool/brush.cpp.o
+.PHONY : src/project/Tool/brush.o
+
+# target to build an object file
+src/project/Tool/brush.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/brush.cpp.o
+.PHONY : src/project/Tool/brush.cpp.o
+
+src/project/Tool/brush.i: src/project/Tool/brush.cpp.i
+.PHONY : src/project/Tool/brush.i
+
+# target to preprocess a source file
+src/project/Tool/brush.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/brush.cpp.i
+.PHONY : src/project/Tool/brush.cpp.i
+
+src/project/Tool/brush.s: src/project/Tool/brush.cpp.s
+.PHONY : src/project/Tool/brush.s
+
+# target to generate assembly for a file
+src/project/Tool/brush.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/brush.cpp.s
+.PHONY : src/project/Tool/brush.cpp.s
+
+src/project/Tool/pixelbrush.o: src/project/Tool/pixelbrush.cpp.o
+.PHONY : src/project/Tool/pixelbrush.o
+
+# target to build an object file
+src/project/Tool/pixelbrush.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/pixelbrush.cpp.o
+.PHONY : src/project/Tool/pixelbrush.cpp.o
+
+src/project/Tool/pixelbrush.i: src/project/Tool/pixelbrush.cpp.i
+.PHONY : src/project/Tool/pixelbrush.i
+
+# target to preprocess a source file
+src/project/Tool/pixelbrush.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/pixelbrush.cpp.i
+.PHONY : src/project/Tool/pixelbrush.cpp.i
+
+src/project/Tool/pixelbrush.s: src/project/Tool/pixelbrush.cpp.s
+.PHONY : src/project/Tool/pixelbrush.s
+
+# target to generate assembly for a file
+src/project/Tool/pixelbrush.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/pixelbrush.cpp.s
+.PHONY : src/project/Tool/pixelbrush.cpp.s
+
+src/project/Tool/pixelshift.o: src/project/Tool/pixelshift.cpp.o
+.PHONY : src/project/Tool/pixelshift.o
+
+# target to build an object file
+src/project/Tool/pixelshift.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/pixelshift.cpp.o
+.PHONY : src/project/Tool/pixelshift.cpp.o
+
+src/project/Tool/pixelshift.i: src/project/Tool/pixelshift.cpp.i
+.PHONY : src/project/Tool/pixelshift.i
+
+# target to preprocess a source file
+src/project/Tool/pixelshift.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/pixelshift.cpp.i
+.PHONY : src/project/Tool/pixelshift.cpp.i
+
+src/project/Tool/pixelshift.s: src/project/Tool/pixelshift.cpp.s
+.PHONY : src/project/Tool/pixelshift.s
+
+# target to generate assembly for a file
+src/project/Tool/pixelshift.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/pixelshift.cpp.s
+.PHONY : src/project/Tool/pixelshift.cpp.s
+
+src/project/Tool/tool.o: src/project/Tool/tool.cpp.o
+.PHONY : src/project/Tool/tool.o
+
+# target to build an object file
+src/project/Tool/tool.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/tool.cpp.o
+.PHONY : src/project/Tool/tool.cpp.o
+
+src/project/Tool/tool.i: src/project/Tool/tool.cpp.i
+.PHONY : src/project/Tool/tool.i
+
+# target to preprocess a source file
+src/project/Tool/tool.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/tool.cpp.i
+.PHONY : src/project/Tool/tool.cpp.i
+
+src/project/Tool/tool.s: src/project/Tool/tool.cpp.s
+.PHONY : src/project/Tool/tool.s
+
+# target to generate assembly for a file
+src/project/Tool/tool.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/Tool/tool.cpp.s
+.PHONY : src/project/Tool/tool.cpp.s
 
 src/project/map.o: src/project/map.cpp.o
 .PHONY : src/project/map.o
@@ -563,30 +683,6 @@ src/project/project.s: src/project/project.cpp.s
 src/project/project.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/project.cpp.s
 .PHONY : src/project/project.cpp.s
-
-src/project/tool.o: src/project/tool.cpp.o
-.PHONY : src/project/tool.o
-
-# target to build an object file
-src/project/tool.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/tool.cpp.o
-.PHONY : src/project/tool.cpp.o
-
-src/project/tool.i: src/project/tool.cpp.i
-.PHONY : src/project/tool.i
-
-# target to preprocess a source file
-src/project/tool.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/tool.cpp.i
-.PHONY : src/project/tool.cpp.i
-
-src/project/tool.s: src/project/tool.cpp.s
-.PHONY : src/project/tool.s
-
-# target to generate assembly for a file
-src/project/tool.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/client.dir/build.make CMakeFiles/client.dir/src/project/tool.cpp.s
-.PHONY : src/project/tool.cpp.s
 
 src/project/toolbar.o: src/project/toolbar.cpp.o
 .PHONY : src/project/toolbar.o
@@ -895,9 +991,6 @@ help:
 	@echo "... sfml-network"
 	@echo "... sfml-system"
 	@echo "... sfml-window"
-	@echo "... src/Window/ProjectData.o"
-	@echo "... src/Window/ProjectData.i"
-	@echo "... src/Window/ProjectData.s"
 	@echo "... src/Window/Window.o"
 	@echo "... src/Window/Window.i"
 	@echo "... src/Window/Window.s"
@@ -922,9 +1015,27 @@ help:
 	@echo "... src/client/receiverwindow.o"
 	@echo "... src/client/receiverwindow.i"
 	@echo "... src/client/receiverwindow.s"
-	@echo "... src/project/layer.o"
-	@echo "... src/project/layer.i"
-	@echo "... src/project/layer.s"
+	@echo "... src/project/Layer/layer.o"
+	@echo "... src/project/Layer/layer.i"
+	@echo "... src/project/Layer/layer.s"
+	@echo "... src/project/Layer/pixellayer.o"
+	@echo "... src/project/Layer/pixellayer.i"
+	@echo "... src/project/Layer/pixellayer.s"
+	@echo "... src/project/Layer/spritelayer.o"
+	@echo "... src/project/Layer/spritelayer.i"
+	@echo "... src/project/Layer/spritelayer.s"
+	@echo "... src/project/Tool/brush.o"
+	@echo "... src/project/Tool/brush.i"
+	@echo "... src/project/Tool/brush.s"
+	@echo "... src/project/Tool/pixelbrush.o"
+	@echo "... src/project/Tool/pixelbrush.i"
+	@echo "... src/project/Tool/pixelbrush.s"
+	@echo "... src/project/Tool/pixelshift.o"
+	@echo "... src/project/Tool/pixelshift.i"
+	@echo "... src/project/Tool/pixelshift.s"
+	@echo "... src/project/Tool/tool.o"
+	@echo "... src/project/Tool/tool.i"
+	@echo "... src/project/Tool/tool.s"
 	@echo "... src/project/map.o"
 	@echo "... src/project/map.i"
 	@echo "... src/project/map.s"
@@ -934,9 +1045,6 @@ help:
 	@echo "... src/project/project.o"
 	@echo "... src/project/project.i"
 	@echo "... src/project/project.s"
-	@echo "... src/project/tool.o"
-	@echo "... src/project/tool.i"
-	@echo "... src/project/tool.s"
 	@echo "... src/project/toolbar.o"
 	@echo "... src/project/toolbar.i"
 	@echo "... src/project/toolbar.s"
