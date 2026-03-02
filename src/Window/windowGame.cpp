@@ -1,4 +1,6 @@
 #include "Window.hpp"
+#include "../project/Tool/pixelbrush.hpp"
+#include "../project/Tool/pixelshift.hpp"
 
 void Window::initGameWidget() {
   initToolbar();
@@ -33,15 +35,15 @@ void Window::initToolbar() {
   zoomOutButton->onPress([this]() { project->getMap()->getZoom().zoomOut(); });
   gui.add(zoomOutButton);
 
-  // Ajout boutton crayon
-  auto penButton = tgui::Button::create();
-  penButton->setSize(25, 25);
-  penButton->setPosition(350, 9);
-  penButton->getRenderer()->setTexture("../res/images/crayon.png");
-  penButton->getRenderer()->setBorders({0});
-  penButton->onPress([this]() {
-    project->getToolBar().selectTool(PIXELBRUSH);
-    project->getToolBar().getSelectedTool()->setErraser(false);
+    // Ajout boutton crayon
+    auto penButton = tgui::Button::create();
+    penButton->setSize(25, 25);
+    penButton->setPosition(350, 9);
+    penButton->getRenderer()->setTexture("../res/images/crayon.png");
+    penButton->getRenderer()->setBorders({0});
+    penButton->onPress([this]() {
+      project->getToolBar().selectTool(PIXELBRUSH);
+      dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setErraser(false);
   });
   gui.add(penButton);
 
@@ -53,7 +55,7 @@ void Window::initToolbar() {
   brushButton->getRenderer()->setBorders({0});
   brushButton->onPress([this]() {
     project->getToolBar().selectTool(PIXELBRUSH);
-    project->getToolBar().getSelectedTool()->setErraser(true);
+      dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setErraser(true);
   });
   gui.add(brushButton);
 

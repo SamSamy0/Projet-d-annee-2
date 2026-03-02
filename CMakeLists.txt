@@ -52,24 +52,27 @@ find_package(Qt6 REQUIRED COMPONENTS Sql)
 
 #CLIENT
 set(SOURCES
-    src/client/client.cpp
-    src/Window/Window.cpp
-    src/Window/windowGame.cpp
-    src/Window/windowLogin.cpp
-    src/Window/windowMenu.cpp
-    src/Window/ProjectData.cpp
-    src/client/clientnetwork.cpp
-    src/client/handler.cpp
-    src/client/serverevent.hpp
-    src/client/receiverwindow.cpp
-    src/client/protocol.hpp
-    src/project/map.cpp
-    src/project/project.cpp
-    src/project/layer.cpp
-    src/project/zoom.cpp
-    src/project/move.cpp
-    src/project/toolbar.cpp
-    src/project/tool.cpp
+    ../src/client/client.cpp
+    ../src/Window/Window.cpp
+    ../src/Window/windowGame.cpp
+    ../src/Window/windowLogin.cpp
+    ../src/Window/windowMenu.cpp
+    ../src/client/clientnetwork.cpp
+    ../src/client/handler.cpp
+    ../src/client/protocol.hpp
+    ../src/client/receiverwindow.cpp
+    ../src/project/map.cpp
+    ../src/project/project.cpp
+    ../src/project/zoom.cpp
+    ../src/project/move.cpp
+    ../src/project/toolbar.cpp
+    ../src/project/Tool/tool.cpp
+    ../src/project/Tool/brush.cpp
+    ../src/project/Tool/pixelbrush.cpp
+    ../src/project/Tool/pixelshift.cpp
+    ../src/project/Layer/layer.cpp
+    ../src/project/Layer/pixellayer.cpp
+    ../src/project/Layer/spritelayer.cpp
     
 )
 

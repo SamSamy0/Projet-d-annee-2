@@ -1,13 +1,10 @@
-#include "project.hpp"
-#include "layer.hpp"
-#include "map.hpp"
-#include "tool.hpp"
-#include "toolbar.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <memory>
 #include <string>
+#include "project.hpp"
+#include "map.hpp"
 
 const string FONT_PATH {"../res/police/ARIAL.TTF"};
 

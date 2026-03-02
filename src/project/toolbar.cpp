@@ -1,5 +1,7 @@
 #include "toolbar.hpp"
-#include "layer.hpp"
+#include "Layer/layer.hpp"
+#include "Tool/pixelbrush.hpp"
+#include "Tool/pixelshift.hpp"
 #include "map.hpp"
 
 ToolBar::ToolBar(std::shared_ptr<Map> map): selected_{PIXELBRUSH} {

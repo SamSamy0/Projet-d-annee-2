@@ -1,10 +1,4 @@
-#include "layer.hpp"
-#include "map.hpp"
-#include <memory>
-
-Layer::Layer(std::string name, sf::Vector2u size) : name_{name}, size_{size} {}
-
-typeCouche Layer::getType(){return type_;}
+#include "pixellayer.hpp"
 
 PixelLayer::PixelLayer(std::string name,sf::Vector2u size) : Layer(name, size), offset_(texture_.getTexture()) {
   if(!texture_.resize(size)){
@@ -15,7 +9,7 @@ PixelLayer::PixelLayer(std::string name,sf::Vector2u size) : Layer(name, size), 
     texture_.display();
     type_ = PIXELLAYER;
 }
-sf::RenderTexture &PixelLayer::getTexture() { return texture_; }
+LayerContent PixelLayer::getLayerContent() { return &texture_; }
 void PixelLayer::draw(sf::Drawable &s) {
   sf::RenderStates states;
   states.blendMode = sf::BlendNone; 

@@ -2,10 +2,10 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "map.hpp"
-#include "layer.hpp"
 #include <SFML/Config.hpp>
 #include <iostream>
+#include "map.hpp"
+#include "Layer/pixellayer.hpp"
 
 using namespace std;
 
