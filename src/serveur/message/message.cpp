@@ -1,8 +1,7 @@
-#pragma once
 #include "message.hpp"
-#include "worker.hpp"
+#include "../worker.hpp"
 #include "protocol.hpp"
-#include "reponse.hpp"
+#include "../reponse/reponse.hpp"
 
 
 
@@ -61,7 +60,6 @@ void GetUsersProjectsMessage::process(Worker& worker) {
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client> c) {
     uint8_t typeRaw;
-    // On lit le type depuis le shared_ptr (en le déréférençant)
     if (!(data_packet >> typeRaw)) return nullptr;
 
     MsgProtocole type = static_cast<MsgProtocole>(typeRaw);

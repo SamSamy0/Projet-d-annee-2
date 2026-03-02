@@ -2,7 +2,7 @@
 #include <vector>
 #include <utility>
 #include <SFML/Network.hpp>
-#include "projectentry.hpp"
+#include "../datamanager/projectentry.hpp"
 #include "client.hpp"
 
 struct Reponse {

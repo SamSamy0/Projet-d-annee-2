@@ -3,10 +3,10 @@
 
 #include <atomic>
 #include "mutexqueue.hpp"
-#include "message.hpp"
-#include "databasemanager.hpp"
-#include "projectsmanager.hpp"
-#include "reponse.hpp"
+#include "message/message.hpp"
+#include "datamanager/databasemanager.hpp"
+#include "datamanager/projectsmanager.hpp"
+#include "reponse/reponse.hpp"
 
 class Worker {
 public:

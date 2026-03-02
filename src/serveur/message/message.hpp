@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <SFML/Network.hpp>
-#include "client.hpp"
+#include "../client.hpp"
 
 class Worker;
 

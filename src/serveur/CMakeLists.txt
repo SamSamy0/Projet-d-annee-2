@@ -1,42 +1,46 @@
 cmake_minimum_required(VERSION 3.16)
-project(GimpServer)
+project(Server)
 
-# Standard C++17 requis pour SFML 3
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 1. Configuration automatique de Qt (indispensable pour les Q_OBJECT)
+# 1. Configuration Qt
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-# 2. Recherche de Qt6 avec les modules dont tu as besoin
 find_package(Qt6 REQUIRED COMPONENTS Widgets Sql Network)
 
-# 3. Chemins manuels SFML 3.1 (On bypass le fichier config qui bug)
-set(SFML_INCLUDE_DIR "/usr/local/include")
-set(SFML_LIB_DIR "/usr/local/lib")
+# 2. Chemins SFML 3.1 (On utilise ton installation PROPRE dans le home)
+set(SFML_ROOT "$ENV{HOME}/sfml3_install")
+set(SFML_INCLUDE_DIR "${SFML_ROOT}/include")
+set(SFML_LIB_DIR "${SFML_ROOT}/lib")
 
-# 4. Définition de l'exécutable avec TOUS tes fichiers
-add_executable(GimpServer 
+# 3. Définition de l'exécutable
+# J'ai ajouté l'include pour que tes headers dans message/ ou reponse/ soient trouvés
+add_executable(Server 
     main.cpp 
     worker.cpp 
-    message.cpp
-    databasemanager.cpp
-    projectsmanager.cpp
+    message/message.cpp
+    datamanager/databasemanager.cpp
+    datamanager/projectsmanager.cpp
+    servernetwork.cpp
+    reponse/reponse.cpp
 )
 
-# 5. Inclusion des dossiers de headers
-target_include_directories(GimpServer PRIVATE ${SFML_INCLUDE_DIR})
+# 4. Inclusion des dossiers
+target_include_directories(Server PRIVATE 
+    ${SFML_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR} # Pour trouver message/message.hpp etc.
+)
 
-# 6. Liens vers les bibliothèques
-target_link_libraries(GimpServer
+# 5. Liens vers les bibliothèques (On utilise les .so qu'on a compilés)
+target_link_libraries(Server
     PRIVATE
-        Qt6::Widgets
         Qt6::Sql
-        Qt6::Network
-        ${SFML_LIB_DIR}/libsfml-network-s.a
-        ${SFML_LIB_DIR}/libsfml-system-s.a
+        Qt6::Core
+        ${SFML_LIB_DIR}/libsfml-network.so
+        ${SFML_LIB_DIR}/libsfml-system.so
         pthread
         dl
 )
