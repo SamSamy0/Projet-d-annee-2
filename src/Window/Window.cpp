@@ -115,12 +115,27 @@ void Window::run() {
   processEvents();
   mainWindow.clear(sf::Color(35, 35, 40));
 
-  if (Window::state == projectState::GAME && project) {
+  switch (Window::state){
+    case projectState::LOGIN:
+      if (isLoggedIn){
+        state = projectState::MENU;
+      }
+      gui.draw();
+      mainWindow.display();
+    
+    case projectState::MENU:
+      gui.draw();
+      mainWindow.display();
+    case projectState::GAME:
+      ;
+  };
+  
+  /*if (Window::state == projectState::GAME && project) {
     // Display Game
     project->display();
   }
   gui.draw();
-  mainWindow.display();
+  mainWindow.display();*/
 }
 
 void Window::setLogIn(){

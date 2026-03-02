@@ -16,6 +16,9 @@ class Window {
 private:
   ClientNetworkManager &manager;
   sf::RenderWindow mainWindow;
+
+  bool isWatingRep = false;
+
   // WARNING: Changer MENU à LOGIN pour la vrai version, là c'est par facilité
   projectState state = projectState::LOGIN;
   bool isLoggedIn = false;
@@ -27,7 +30,7 @@ private:
 
   tgui::ScrollablePanel::Ptr layersList_ = nullptr;
   tgui::Button::Ptr activeMoreButton = nullptr;
-
+  
   // Window
   void initWidget();
   void processEvents();

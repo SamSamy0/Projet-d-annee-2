@@ -1,3 +1,4 @@
+#include <iostream>
 #include "../Window/Window.hpp"
 #include "clientnetwork.hpp"
 #include "handler.hpp"
@@ -10,12 +11,15 @@ int main() {
   ReceiverInWindow receiver_window(window);
   ClientHandler handler(manager,receiver_window);
   
-  manager.connect();
-  while (window.isOpen()) {
-    manager.getEvent();
-    handler.processEventQueu();
+  if(manager.connect()){
+    while (window.isOpen()) {
+      manager.getEvent();
+      handler.processEventQueu();
+      window.run();
+    }
     window.run();
+  }else{
+    std::cout << "conexion au serveur impossible" << std::endl;
   }
-  window.run();
   return 0;
 }
