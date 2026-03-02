@@ -4,36 +4,28 @@
 
 ReponseSolo::ReponseSolo(long long id) : userId_(id) {}
 
-
-
-
-ReponseAuth::ReponseAuth(std::unique_ptr<sf::TcpSocket> socket, long long id)
-: ReponseSolo(id), userSocket_(std::move(socket)) {
+ReponseAuth::ReponseAuth(std::shared_ptr<Client> client, long long id)
+: ReponseSolo(id), client_(std::move(client)) {
     
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::AUTH_RESULT);
     if (id == -1) {
         dataPacket_ << static_cast<std::uint8_t>(0);
     } else {
         dataPacket_ << static_cast<std::uint8_t>(1);
+        client_->id = id;
     }
 }
 
-void ReponseAuth::envoyer() {/*remplir un jour lol*/}
+void ReponseAuth::envoyer() {
 
-
+}
 
 ReponseProjectData::ReponseProjectData(long long userId) : ReponseSolo(userId) {/*remplir un jour lol*/}
 
 void ReponseProjectData::envoyer() {/*remplir un jour lol*/}
 
-
-
-
-ReponseGroupe::ReponseGroupe(std::vector<long long> usersId) : usersId_(std::move(usersId)) {}
-
-
-ReponseUsersProjects::ReponseUsersProjects(std::vector<long long> usersId, std::vector<ProjectEntry> projects) 
-: ReponseGroupe(usersId) {
+ReponseUsersProjects::ReponseUsersProjects(long long userId, std::vector<ProjectEntry>& projects) 
+: ReponseSolo(userId) {
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP);
 
     dataPacket_ << static_cast<std::uint32_t>(projects.size());
@@ -46,3 +38,8 @@ ReponseUsersProjects::ReponseUsersProjects(std::vector<long long> usersId, std::
 void ReponseUsersProjects::envoyer() {
     //à faire un jour
 }
+
+
+
+ReponseGroupe::ReponseGroupe(std::vector<long long> usersId) : usersId_(std::move(usersId)) {}
+

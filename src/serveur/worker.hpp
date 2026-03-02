@@ -14,6 +14,7 @@ public:
     ~Worker() = default;
     void run();
     void stop();
+    void pushNetwork(std::unique_ptr<Reponse> rps);
 
     long long verifyLogin(const std::string& pseudo, const std::string& password);
     long long addUser(const std::string& pseudo, const std::string& password);

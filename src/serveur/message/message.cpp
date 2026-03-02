@@ -13,7 +13,10 @@ LoginMessage::LoginMessage(sf::Packet& dataPacket, std::shared_ptr<Client> clien
 
 void LoginMessage::process(Worker& worker){
     long long id = worker.verifyLogin(this->pseudo_, this->password_);
-    client_->id = id;
+
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseAuth>(client_, id);
+    worker.pushNetwork(std::move(rps));
 }
 
 
@@ -26,6 +29,10 @@ RegisterMessage::RegisterMessage(sf::Packet& dataPacket, std::shared_ptr<Client>
 
 void RegisterMessage::process(Worker& worker) {
     long long id = worker.addUser(this->pseudo_, this->password_);
+
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseAuth>(client_, id);
+    worker.pushNetwork(std::move(rps));
 }
 
 
@@ -36,8 +43,10 @@ CreateProjectMessage::CreateProjectMessage(sf::Packet& data_packet, long long us
 
 
 void CreateProjectMessage::process(Worker& worker) {
-    long long idProj = worker.addProjectSQL("test", userId_);
-    worker.createProjectJson(idProj, "test", size_.x, size_.y, scale_);
+    if (userId_ >= 0) {
+    long long idProj = worker.addProjectSQL(nomProjet_, userId_);
+    worker.createProjectJson(idProj, nomProjet_, size_.x, size_.y, scale_);
+    }
 }
 
 
@@ -53,8 +62,15 @@ GetUsersProjectsMessage::GetUsersProjectsMessage(sf::Packet& data_packet, long l
 }
 
 void GetUsersProjectsMessage::process(Worker& worker) {
-    std::vector<ProjectEntry> projects = worker.getAllProjects();
+    std::vector<ProjectEntry> projects;
+    if (userId_ == 0) {
+        projects = worker.getAllProjects();
+    }
     std::cout << static_cast<int>(projects.size())<<std::endl;
+
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseUsersProjects>(userId_, projects);
+    worker.pushNetwork(std::move(rps));
 }
 
 
@@ -74,6 +90,8 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
         case MsgProtocole::LOB_CREATE_PROJECT_REQ:
             return std::make_unique<CreateProjectMessage>(data_packet, c->id);
 
+        case MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REQ:
+            return std::make_unique<GetUsersProjectsMessage>(data_packet, c->id);
         default:
             return nullptr;
     }

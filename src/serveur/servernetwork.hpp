@@ -2,7 +2,6 @@
 #define SERVERNETWORK_HPP
 
 #include <vector>
-#include <deque>
 #include <memory>
 #include <atomic>
 #include <SFML/Network.hpp>

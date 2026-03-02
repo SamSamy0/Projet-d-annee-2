@@ -28,6 +28,10 @@ void Worker::stop() {
 }
 
 
+void Worker::pushNetwork(std::unique_ptr<Reponse> rps) {
+    repQueue_.push(std::move(rps));
+}
+
 
 long long Worker::verifyLogin(const std::string& pseudo, const std::string& password) {
     return dbManager_.verifyLogin(pseudo, password);

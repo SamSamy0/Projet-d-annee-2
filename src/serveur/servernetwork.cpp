@@ -26,7 +26,7 @@ bool ServerNetworkManager::start() {
 
 void ServerNetworkManager::listen() {
     while(mRunning_) {
-        if (selector_.wait()) {
+        if (selector_.wait(sf::seconds(5))) {
             if (selector_.isReady(listener_)) {
                 handleNewConnection();
             }

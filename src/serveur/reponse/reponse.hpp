@@ -13,8 +13,6 @@ struct Reponse {
 };
 
 
-
-
 struct ReponseSolo : Reponse {
     long long userId_;
 
@@ -23,9 +21,9 @@ struct ReponseSolo : Reponse {
 };
 
 struct ReponseAuth : ReponseSolo {
-    std::unique_ptr<sf::TcpSocket> userSocket_;
+    std::shared_ptr<Client> client_;
 
-    ReponseAuth(std::unique_ptr<sf::TcpSocket> socket, long long userId);
+    ReponseAuth(std::shared_ptr<Client> client, long long userId);
     void envoyer() override;
 };
 
@@ -34,6 +32,10 @@ struct ReponseProjectData : ReponseSolo {
     void envoyer() override;
 };
 
+struct ReponseUsersProjects : ReponseSolo {
+    ReponseUsersProjects(long long userId, std::vector<ProjectEntry>& projects);
+    void envoyer() override;
+};
 
 
 
@@ -42,9 +44,4 @@ struct ReponseGroupe : Reponse {
 
     protected:
     ReponseGroupe(std::vector<long long> usersId);
-};
-
-struct ReponseUsersProjects : ReponseGroupe {
-    ReponseUsersProjects(std::vector<long long> usersId, std::vector<ProjectEntry> projects);
-    void envoyer() override;
 };
