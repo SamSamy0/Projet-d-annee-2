@@ -29,9 +29,7 @@ class ServerNetworkManager{
     void handleClientMessages();
     void stop();
     bool start();
-    bool accept();
-    void getMessages();
-    void sendReponse();
+    void respond();
 public:
     ServerNetworkManager(MutexQueue<IMessage>& mes , MutexQueue<Reponse>& rep);
 

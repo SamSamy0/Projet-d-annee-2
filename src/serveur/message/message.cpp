@@ -15,7 +15,7 @@ void LoginMessage::process(Worker& worker){
     long long id = worker.verifyLogin(this->pseudo_, this->password_);
 
     std::unique_ptr<Reponse> rps;
-    rps = std::make_unique<ReponseAuth>(client_, id);
+    rps = std::make_unique<ReponseAuth>(std::move(client_), id);
     worker.pushNetwork(std::move(rps));
 }
 
@@ -31,7 +31,7 @@ void RegisterMessage::process(Worker& worker) {
     long long id = worker.addUser(this->pseudo_, this->password_);
 
     std::unique_ptr<Reponse> rps;
-    rps = std::make_unique<ReponseAuth>(client_, id);
+    rps = std::make_unique<ReponseAuth>(std::move(client_), id);
     worker.pushNetwork(std::move(rps));
 }
 
@@ -43,7 +43,7 @@ CreateProjectMessage::CreateProjectMessage(sf::Packet& data_packet, long long us
 
 
 void CreateProjectMessage::process(Worker& worker) {
-    if (userId_ >= 0) {
+    if (userId_ > 0) {
     long long idProj = worker.addProjectSQL(nomProjet_, userId_);
     worker.createProjectJson(idProj, nomProjet_, size_.x, size_.y, scale_);
     }
@@ -78,21 +78,24 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
     uint8_t typeRaw;
     if (!(data_packet >> typeRaw)) return nullptr;
 
-    MsgProtocole type = static_cast<MsgProtocole>(typeRaw);
+    std::cout << static_cast<int>(typeRaw) << "le type du mess" << std::endl;
 
+    MsgProtocole type = static_cast<MsgProtocole>(typeRaw);
     switch (type) {
         case MsgProtocole::AUTH_LOGIN_REQ:
-            return std::make_unique<LoginMessage>(data_packet, c);
+            return std::make_unique<LoginMessage>(data_packet, std::move(c));
 
         case MsgProtocole::AUTH_REGISTER_REQ:
-            return std::make_unique<RegisterMessage>(data_packet, c);
+            return std::make_unique<RegisterMessage>(data_packet, std::move(c));
 
         case MsgProtocole::LOB_CREATE_PROJECT_REQ:
             return std::make_unique<CreateProjectMessage>(data_packet, c->id);
 
         case MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REQ:
             return std::make_unique<GetUsersProjectsMessage>(data_packet, c->id);
+        
         default:
+            std::cout<< "pas de message" << std::endl;
             return nullptr;
     }
 }

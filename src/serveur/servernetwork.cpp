@@ -44,9 +44,8 @@ void ServerNetworkManager::handleNewConnection() {
         socket_client->setBlocking(false);
 
         auto new_client = std::make_shared<Client>(); 
-        new_client->sock = socket_client;
-
         selector_.add(*socket_client);
+        new_client->sock = std::move(socket_client);
 
         client_list.push_back(std::move(new_client));
         std::cout << "nouvelle machine connécté: "<< std::endl ;
@@ -67,6 +66,7 @@ void ServerNetworkManager::handleClientMessages() {
         
         if (status == sf::Socket::Status::Disconnected || status == sf::Socket::Status::Error) {
             selector_.remove(*client->sock);
+            std::cout << "bye mec o7" << std::endl;
             return true;
         }
         return false;
@@ -78,15 +78,12 @@ void ServerNetworkManager::handleClientMessages() {
 
 
 //envoi des reponses au client
-void ServerNetworkManager::sendReponse(){
-    std::cout << "sendreponse:: Entrée" << std::endl;
-
-    while (!repQueu_.isEmpty()){
-        std::cout << "sendreponse:: pop1 avant" << std::endl;
-        auto rep = repQueu_.pop();
-        
+void ServerNetworkManager::respond(){
+    std::unique_ptr<Reponse> rps;
+    while(mRunning_) {
+        rps = repQueu_.pop();
+        rps->envoyer(*this);
     }
-    std::cout << "sendreponse:: sortie" << std::endl;
 };
 
 
@@ -95,15 +92,7 @@ void ServerNetworkManager::run() {
 
     listenThread_ = std::thread(&ServerNetworkManager::listen, this);
 
-    std::cout << "Serveur actif. Tapez 'exit' pour arreter." << std::endl;
-
-    while (mRunning_) {
-        std::string commande;
-        std::cin >> commande; 
-        if (commande == "exit") {
-            mRunning_ = false; // Arrête la boucle du thread réseau aussi !
-        }
-    }
+    respond();
 
     stop(); 
 }

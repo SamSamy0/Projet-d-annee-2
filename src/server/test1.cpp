@@ -8,7 +8,7 @@ int main(){
     sf::Packet pac;
     std::string psuedo = "Chinzorrr";
     std::string pass = "motdepasse";
-    pac << static_cast<uint8_t>(MsgProtocole::AUTH_REGISTER_REQ) << psuedo << pass;
+    pac << static_cast<uint8_t>(MsgProtocole::AUTH_LOGIN_REQ) << psuedo << pass;
     
     sock.send(pac);
 

@@ -6,10 +6,10 @@ Worker::Worker(MutexQueue<IMessage>& demQueue, MutexQueue<Reponse>& repQueue)
 
 void Worker::run() {
     std::cout << "[Worker] Démarré et en attente de messages..." << std::endl;
-    
+    std::unique_ptr<IMessage> request;
     while (mRunning_) {
-    std::unique_ptr<IMessage> request = demQueue_.pop();
-    std::cout << "[Worker] pop()..." << std::endl;
+        request = demQueue_.pop();
+        std::cout << "[Worker] pop()..." << std::endl;
 
         if (request) {
             std::cout << "[Worker] Traitement d'un nouveau message..." << std::endl;
