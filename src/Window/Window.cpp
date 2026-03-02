@@ -119,6 +119,7 @@ void Window::run() {
   mainWindow.clear(sf::Color(35, 35, 40));
 
   switch (Window::state){
+    
     case projectState::LOGIN:
       if (isLoggedIn){
         state = projectState::MENU;
@@ -128,10 +129,12 @@ void Window::run() {
       gui.draw();
       mainWindow.display();
       break;
+    
     case projectState::MENU:
       gui.draw();
       mainWindow.display();
       break;
+    
     case projectState::GAME:
       project->display();
       gui.draw();

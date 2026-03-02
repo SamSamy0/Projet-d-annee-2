@@ -17,7 +17,6 @@ int main() {
       handler.processEventQueu();
       window.run();
     }
-    window.run();
   }else{
     std::cout << "conexion au serveur impossible" << std::endl;
   }
