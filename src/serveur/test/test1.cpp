@@ -12,6 +12,7 @@ int main(){
     
     sock.send(pac);
 
+    sf::sleep(sf::seconds(1.f));
 
     sf::Packet pack;
     std::string nom_proj = "Proj_1_omg";
@@ -20,7 +21,7 @@ int main(){
     taille.y = 800;
     uint scale = 5;
     
-    pack << static_cast<uint8_t>(MsgProtocole::LOB_CREATE_PROJECT_REQ) << nom_proj << taille.x << taille.y << scale;
+    pack << static_cast<uint8_t>(MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REQ);
 
     sock.send(pack);
 
@@ -36,6 +37,14 @@ int main(){
 
     std::cout << "reussi!!!" <<std::endl;
 
+    sf::Packet recu2;
+    if (sock.receive(recu) == sf::Socket::Status::Done){
+        std::cout << "reussi!!!" <<std::endl;
+    }
+    uint8_t msg2;
+    uint32_t reussi2;
+    recu >> msg2 >> reussi2;
+    std::cout << static_cast<int>(reussi2) <<std::endl;  
 
     return 0;
 }

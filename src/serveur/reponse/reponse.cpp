@@ -38,9 +38,11 @@ ReponseProjectData::ReponseProjectData(long long userId) : ReponseSolo(userId) {
 
 ReponseUsersProjects::ReponseUsersProjects(long long userId, std::vector<ProjectEntry>& projects) 
 : ReponseSolo(userId) {
+    std::cout << "je fais le pack de projet" << std::endl;
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP);
 
     dataPacket_ << static_cast<std::uint32_t>(projects.size());
+    std::cout << static_cast<int>(projects.size()) << std::endl;
 
     for (const auto& entry : projects) {
         dataPacket_ << static_cast<uint64_t>(entry.projectId) << entry.name << entry.role;

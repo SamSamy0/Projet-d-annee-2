@@ -63,7 +63,7 @@ GetUsersProjectsMessage::GetUsersProjectsMessage(sf::Packet& data_packet, long l
 
 void GetUsersProjectsMessage::process(Worker& worker) {
     std::vector<ProjectEntry> projects;
-    if (userId_ == 0) {
+    if (userId_ != 0) {
         projects = worker.getAllProjects();
     }
     std::cout << static_cast<int>(projects.size())<<std::endl;
