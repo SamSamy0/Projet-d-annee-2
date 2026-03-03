@@ -1,3 +1,0 @@
-/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/CMakeFiles/sfml-populate.dir
-/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/CMakeFiles/edit_cache.dir
-/home/tomas/ULB2/projet/group-13/build/_deps/sfml-subbuild/CMakeFiles/rebuild_cache.dir
