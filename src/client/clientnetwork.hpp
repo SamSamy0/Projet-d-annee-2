@@ -25,6 +25,7 @@ public:
     void getProjectData(int project_id);
     void getUsersProjects(long long id);
     void getProjectList();     
+    void deleteProject(long long project_id);
 };
 
 

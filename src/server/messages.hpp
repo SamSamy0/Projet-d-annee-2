@@ -44,21 +44,24 @@ struct CreateProjectMessage : Message{
     void process(Worker& worker) override;
 };
 
-struct GetProjectDataMessage : Message{
-    int projectId_;
-
-    GetProjectDataMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
-    void process(Worker& worker) override;
-};
-
-struct GetUsersProjectsMessage : Message {
+//message de demande de la liste des projets
+struct GetProjectsListMessage : Message {
     int userdId_;
 
-    GetUsersProjectsMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
+    GetProjectsListMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
+    void process(Worker& worker) override;
+};
+
+//message de supression d'un projet
+struct DeleteProjectMessage : Message {
+    long long projectId_;
+
+    DeleteProjectMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
     void process(Worker& worker) override;
 };
 
 
+//constructeur de messages
 std::shared_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c);
 
 

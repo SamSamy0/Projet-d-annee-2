@@ -42,6 +42,13 @@ bool ClientNetworkManager::hasEvent(){
 }
 
 
+ServerEvent ClientNetworkManager::popEvent() {
+    auto msg = std::move(reponse_.front());
+    reponse_.pop_front();
+    return msg;
+}
+
+
 void ClientNetworkManager::login(std::string pseudo,std::string password){
     sf::Packet packet;
     MsgProtocole msg = MsgProtocole::AUTH_LOGIN_REQ;
@@ -84,8 +91,10 @@ void ClientNetworkManager::getProjectList() {
 }
 
 
-ServerEvent ClientNetworkManager::popEvent() {
-    auto msg = std::move(reponse_.front());
-    reponse_.pop_front();
-    return msg;
+void ClientNetworkManager::deleteProject(long long project_id){
+    sf::Packet packet;
+    MsgProtocole msg = MsgProtocole::LOB_DEL_PROJECT_REQ;
+
+    packet << static_cast<uint32_t>(project_id);
+    socket_.send(packet);
 }

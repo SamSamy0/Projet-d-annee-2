@@ -9,8 +9,6 @@
 LoginMessage::LoginMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c): Message(c){
     *data_packet >> pseudo_ >> password_;
 }
-
-
 void LoginMessage::process(Worker& worker){
     client_->id = worker.verifyLogin(this->pseudo_, this->password_);
 
@@ -37,9 +35,7 @@ void LoginMessage::process(Worker& worker){
 RegisterMessage::RegisterMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c): Message(c){
     *data_packet >> pseudo_ >> password_;
 }
-
-
-void RegisterMessage::process(Worker& worker) {
+void RegisterMessage::process(Worker& worker){
     client_->id = worker.addUser(this->pseudo_, this->password_);
     
     //création de la réponse
@@ -56,39 +52,24 @@ void RegisterMessage::process(Worker& worker) {
     } else {
         *rps->packet << static_cast<std::uint8_t>(1);
     }
-
     //mise sur la liste des réponses
     worker.rep_queue.push(std::move(rps));
-
 }
 
 
 CreateProjectMessage::CreateProjectMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c): Message(c){
     *data_packet >> nomProjet_ >> size_.x >> size_.y >> scale_;
 }
-
-
-void CreateProjectMessage::process(Worker& worker) {
+void CreateProjectMessage::process(Worker& worker){
     long long id_proj = worker.db_Manager.addProject("test", this->client_->id);
     worker.proj_Manager.createProjectJson(id_proj, "test", size_.x, size_.y, scale_);
-
 }
 
 
-GetProjectDataMessage::GetProjectDataMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c): Message(c) {
-}
-
-
-void GetProjectDataMessage::process(Worker& worker) {
-    //à faire un jour
-}
-
-GetUsersProjectsMessage::GetUsersProjectsMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c): Message(c) {
+GetProjectsListMessage::GetProjectsListMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c): Message(c) {
     *data_packet >> userdId_;
-
 }
-
-void GetUsersProjectsMessage::process(Worker& worker) {
+void GetProjectsListMessage::process(Worker& worker){
     
     std::vector<ProjectEntry> projects = worker.db_Manager.getAllProjects();
 
@@ -111,7 +92,18 @@ void GetUsersProjectsMessage::process(Worker& worker) {
 }
 
 
-std::shared_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c) {
+DeleteProjectMessage::DeleteProjectMessage(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c): Message(c){
+    uint32_t id;
+    *data_packet >> id;
+    projectId_ = static_cast<long long>(id);
+}
+void DeleteProjectMessage::process(Worker& worker){
+    // TODO
+}
+
+
+
+std::shared_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet, std::shared_ptr<Client> c){
     uint8_t typeRaw;
     // On lit le type depuis le shared_ptr (en le déréférençant)
     if (!(*data_packet >> typeRaw)) return nullptr;
@@ -132,7 +124,9 @@ std::shared_ptr<Message> MessageFactory(std::shared_ptr<sf::Packet> data_packet,
             return std::make_shared<CreateProjectMessage>(data_packet, c);
         
         case MsgProtocole::LOB_PROJECT_LIST_REQ:
-            return std::make_shared<GetUsersProjectsMessage>(data_packet, c);
+            return std::make_shared<GetProjectsListMessage>(data_packet, c);
+        case MsgProtocole::LOB_DEL_PROJECT_REQ:
+            return std::make_shared<DeleteProjectMessage>(data_packet, c);
 
         default:
             return nullptr;
