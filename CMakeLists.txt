@@ -92,13 +92,12 @@ target_link_libraries(client PRIVATE
 
 set(SERVER_SOURCES
     src/server/client.cpp
-    src/server/databasemanager.cpp
+    src/server/datamanager/databasemanager.cpp
     src/server/main.cpp
-    src/server/messagequeue.cpp
-    src/server/messages.cpp
-    src/server/projectsmanager.cpp
+    src/server/message/message.cpp
+    src/server/datamanager/projectsmanager.cpp
+    src/server/reponse/reponse.cpp
     src/server/protocol.cpp
-    src/server/reponsequeue.cpp
     src/server/servernetwork.cpp
     src/server/worker.cpp
 )

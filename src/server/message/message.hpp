@@ -53,10 +53,10 @@ struct GetProjectDataMessage : IMessage{
     void process(Worker& worker) override;
 };
 
-struct GetUsersProjectsMessage : IMessage {
+struct GetProjectsListMessage : IMessage {
     long long userId_;
 
-    GetUsersProjectsMessage(sf::Packet& dataPacket, long long userId);
+    GetProjectsListMessage(sf::Packet& dataPacket, long long userId);
     void process(Worker& worker) override;
 };
 

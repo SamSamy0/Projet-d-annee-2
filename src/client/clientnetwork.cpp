@@ -64,7 +64,7 @@ void ClientNetworkManager::askRegister(std::string pseudo, std::string password)
 }
 
 
-void ClientNetworkManager::createProject(std::string nomProjet, sf::Vector2u size, float scale){
+void ClientNetworkManager::createProject(std::string nomProjet, sf::Vector2u size, uint scale){
     sf::Packet packet;
     MsgProtocole msg = MsgProtocole::LOB_CREATE_PROJECT_REQ;
     

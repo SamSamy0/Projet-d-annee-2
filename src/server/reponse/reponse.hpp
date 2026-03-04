@@ -3,7 +3,7 @@
 #include <utility>
 #include <SFML/Network.hpp>
 #include "../datamanager/projectentry.hpp"
-#include "client.hpp"
+#include "../client.hpp"
 
 class ServerNetworkManager;
 
