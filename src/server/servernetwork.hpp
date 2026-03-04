@@ -1,5 +1,4 @@
-#ifndef SERVERNETWORK_HPP
-#define SERVERNETWORK_HPP
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -38,4 +37,4 @@ public:
     std::unordered_map<long long, std::shared_ptr<Client>> map_;
 };
 
-#endif
+

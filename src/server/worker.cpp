@@ -12,7 +12,6 @@ void Worker::run() {
         std::cout << "[Worker] pop()..." << std::endl;
 
         if (request) {
-            std::cout << "[Worker] Traitement d'un nouveau message..." << std::endl;
             request->process(*this);
         } else {
             break;

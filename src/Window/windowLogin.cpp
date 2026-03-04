@@ -1,0 +1,120 @@
+#include "Window.hpp"
+
+void Window::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
+  manager.login(static_cast<std::string>(usrname->getText()),
+                static_cast<std::string>(pswd->getText()));
+  // If the handler changed isLoggedIn to true, access granted
+  /*if (isLoggedIn) {
+    setState(projectState::MENU);
+  }
+  // The identifiers were wrong
+  else {
+    usrname->setText("");
+    usrname->setDefaultText("Wrong Identifier(s)");
+    pswd->setText("");
+  }*/
+}
+
+void Window::loginWidget() {
+  // SubWindow
+  auto back = tgui::Panel::create();
+  back->setSize("32%", "42%");
+  back->setPosition("34%", "29%");
+  back->getRenderer()->setBackgroundColor(tgui::Color(28, 28, 36));
+  back->getRenderer()->setRoundedBorderRadius(12);
+  back->getRenderer()->setBorderColor(sf::Color(55, 55, 70));
+  gui.add(back, "Main login");
+
+  // Title
+  auto title = tgui::Label::create("Bienvenue");
+  title->setPosition("32%", "8%");
+  title->setTextSize(28);
+  title->getRenderer()->setTextColor(sf::Color(240, 240, 255));
+  back->add(title);
+
+  // Username
+  auto editBoxUsername = tgui::EditBox::create();
+  editBoxUsername->setPosition({"10%", "32%"});
+  editBoxUsername->setSize({"80%", "13%"});
+  editBoxUsername->setDefaultText("Pseudonyme...");
+  editBoxUsername->getRenderer()->setBackgroundColor(sf::Color(20, 20, 28));
+  editBoxUsername->getRenderer()->setBackgroundColorHover(
+      sf::Color(24, 24, 34));
+  editBoxUsername->getRenderer()->setTextColor(sf::Color::White);
+  editBoxUsername->getRenderer()->setDefaultTextColor(sf::Color(90, 90, 115));
+  editBoxUsername->getRenderer()->setBorders(1);
+  editBoxUsername->getRenderer()->setBorderColor(sf::Color(55, 55, 75));
+  editBoxUsername->getRenderer()->setRoundedBorderRadius(6);
+  // gui.add(editBoxUsername, "Username");
+  back->add(editBoxUsername, "Username");
+
+  // Password
+  auto editBoxPassword = tgui::EditBox::copy(editBoxUsername);
+  editBoxPassword->getRenderer()->setTextColor(tgui::Color(255, 255, 255));
+  editBoxPassword->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+  editBoxPassword->setPosition({"10%", "50%"});
+  editBoxPassword->setDefaultText("Mot de Passe...");
+  editBoxPassword->setPasswordCharacter('*');
+  // gui.add(editBoxPassword, "Password");
+  back->add(editBoxPassword);
+
+  // Login Button
+  auto loginButton = tgui::Button::create("Connexion");
+  loginButton->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
+  loginButton->getRenderer()->setBackgroundColorHover(sf::Color(118, 120, 255));
+  loginButton->getRenderer()->setTextColor(sf::Color::White);
+  loginButton->getRenderer()->setBorders(0);
+  loginButton->getRenderer()->setRoundedBorderRadius(8);
+  loginButton->setPosition({"53%", "72%"});
+  loginButton->setSize({"37%", "13%"});
+  back->add(loginButton);
+  // gui.add(loginButton);
+  loginButton->onPress(&Window::login, this, editBoxUsername, editBoxPassword);
+
+  // SignIn Button
+  auto signInButton = tgui::Button::create("Inscription");
+  signInButton->getRenderer()->setTextColor(tgui::Color(170, 170, 200));
+  signInButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+  signInButton->getRenderer()->setBackgroundColorHover(sf::Color(45, 45, 60));
+  signInButton->getRenderer()->setBorders(1);
+  signInButton->getRenderer()->setBorderColor(sf::Color(70, 70, 95));
+  signInButton->setPosition("10%", "72%");
+  signInButton->setSize("37%", "13%");
+  back->add(signInButton);
+  // gui.add(signInButton);
+  signInButton->onPress(&Window::signIn, this, editBoxUsername,
+                        editBoxPassword);
+}
+
+void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
+  // NOTE: I have to put the condition username 3-15 car
+
+  // Sending Identifiers to server
+  // NOTE: Need to forbid empty usrnames
+  
+
+  if (usrname->getText() != "") {
+  manager.askRegister(static_cast<std::string>(usrname->getText()),
+                      static_cast<std::string>(pswd->getText()));
+  std::cout << usrname->getText() << "   " << pswd->getText() << std::endl;
+  }
+
+  
+  /*if (!isLoggedIn) {
+    // Ask another Usrname
+    usrname->setText("");
+    usrname->setDefaultText("Username already taken or invalid ");
+    pswd->setText("");
+  } else {
+    // Access granted
+    setState(projectState::MENU);
+  } */
+    
+  
+  
+   
+}
+
+
+
+

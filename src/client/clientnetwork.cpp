@@ -1,5 +1,5 @@
 #include "clientnetwork.hpp"
-
+#include <iostream>
 
 
 std::deque<ServerEvent>& ClientNetworkManager::getQueuEvent(){
@@ -8,18 +8,21 @@ std::deque<ServerEvent>& ClientNetworkManager::getQueuEvent(){
 
 
 bool ClientNetworkManager::connect(){
-    socket_.setBlocking(false);
+    socket_.setBlocking(true);
 
     if (socket_.connect({127,0,0,1},5000) == sf::Socket::Status::Done){
+        socket_.setBlocking(false);
         return true;
     }else return false;
 }
+
 
 void ClientNetworkManager::getEvent(){
     ServerEvent rep;
     auto packet = std::make_unique<sf::Packet>();
 
     if (socket_.receive(*packet) == sf::Socket::Status::Done){
+        std::cout <<"####################  messages recu du serveur  ########################" << std::endl;
         uint8_t type_mess;
         *packet >> type_mess;
         
@@ -27,13 +30,15 @@ void ClientNetworkManager::getEvent(){
         rep.data_packet_ = std::move(packet);
 
         reponse_.push_back(std::move(rep));
+
+        
             
     }
 }
 
 
 bool ClientNetworkManager::hasEvent(){
-    return reponse_.empty();
+    return !reponse_.empty();
 }
 
 
@@ -79,3 +84,8 @@ void ClientNetworkManager::getProjectList() {
 }
 
 
+ServerEvent ClientNetworkManager::popEvent() {
+    auto msg = std::move(reponse_.front());
+    reponse_.pop_front();
+    return msg;
+}

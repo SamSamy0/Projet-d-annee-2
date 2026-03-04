@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <SFML/Graphics.hpp>
-#include "tool.hpp"
+#include "Tool/tool.hpp"
 
 
 
@@ -13,7 +13,7 @@ struct parameters{
 class ToolBar {
 
   std::vector<std::shared_ptr<Tool>> tools_;
-  toolType selected_ = PIXELBRUSH;
+  toolType selected_;
   public:
     ToolBar(std::shared_ptr<Map> map);
     void selectTool(toolType outil);

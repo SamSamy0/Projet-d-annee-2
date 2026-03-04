@@ -54,3 +54,6 @@ enum class MsgProtocole: uint8_t{
     CHAT_LOCK_LAYER_REP,
 
 };
+
+
+std::string to_string(MsgProtocole msg);

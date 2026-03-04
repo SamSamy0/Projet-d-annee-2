@@ -6,7 +6,6 @@
 #include <SFML/Graphics.hpp>
 #include "zoom.hpp"
 #include "move.hpp"
-#include "layer.hpp"
 
 //TODO: DEFINIR DES VALEURS MAX ET MIN POUR LA SIZE, LA SCALE
 
@@ -31,14 +30,18 @@ public:
     unsigned int getScale() const;
     bool hasLayer() const;
     vector<shared_ptr<Layer>>& getLayers();
+    Zoom& getZoom();
     shared_ptr<Layer> getCurrentLayer();
     void insertLayer(shared_ptr<Layer> layer);
     void createPixelLayer();
     void displayMap(sf::RenderWindow& window, sf::View& viewMap);
     void closeWindowManager(sf::RenderWindow& window, const sf::Event& ev);
     void detectMovement();
-    void detectZooming(sf::Event event);
+    void zooming(sf::Event::MouseWheelScrolled const* event);
     bool isInside(sf::Vector2i pos)const;
+    void setLayerSelected(unsigned int i);
+    void detectZooming(sf::Event event);
+    unsigned int getLayerSelected() const;
 };
 
 

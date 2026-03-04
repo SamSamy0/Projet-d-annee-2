@@ -105,19 +105,6 @@ void ServerNetworkManager::stop() {
     }
 }
 
-void debugAuthPacket(sf::Packet copy) {
-    uint8_t type;
-    uint8_t pseudo;
-    std::cout << copy.getDataSize() << std::endl;
-
-    copy >> type;
-    std::cout << "type de messqages:"<< static_cast<int>(type) << std::endl;
-
-    copy >> pseudo;
-     std::cout << "int reussi:"<< static_cast<int>(pseudo)<< std::endl;
-
-    
-}
 
 
 
