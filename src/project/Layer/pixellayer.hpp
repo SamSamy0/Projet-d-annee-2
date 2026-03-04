@@ -10,7 +10,7 @@ public:
   PixelLayer(std::string name, sf::Vector2u size);
 
   LayerContent getLayerContent() override;
-  void drawLayer(sf::RenderWindow& window) override;
+  void drawLayer(sf::RenderTarget& target) override;
   void draw(sf::Drawable &s) override;
   void errase(sf::Drawable &s) override;
   void shift(sf::Vector2i v)override;

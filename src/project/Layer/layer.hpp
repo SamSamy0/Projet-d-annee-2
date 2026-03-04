@@ -19,7 +19,7 @@ public:
   Layer(std::string name, sf::Vector2u size);
   LayerType getType();
   virtual LayerContent getLayerContent() = 0;
-  virtual void drawLayer(sf::RenderWindow& window) = 0;
+  virtual void drawLayer(sf::RenderTarget& target) = 0;
   virtual void draw(sf::Drawable &s) = 0;
   virtual void errase(sf::Drawable &s) = 0;
   virtual void shift(sf::Vector2i v) = 0;
