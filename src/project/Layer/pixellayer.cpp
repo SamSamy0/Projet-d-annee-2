@@ -15,7 +15,7 @@ void PixelLayer::draw(sf::Drawable &s) {
   states.blendMode = sf::BlendNone; 
   texture_.draw(s,states);
 }
-void PixelLayer::errase(sf::Drawable &s) {
+void PixelLayer::erase(sf::Drawable &s) {
   texture_.draw(s, sf::BlendNone);
 }
 

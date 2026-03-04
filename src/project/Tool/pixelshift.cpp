@@ -1,16 +1,18 @@
 #include "pixelshift.hpp"
-#include "../Layer/layer.hpp"
+#include "../Layer/pixellayer.hpp"
 #include "../map.hpp"
 
 
 
 PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map) {
-  name_ = PIXELSHIFT;
+  type_ = PIXELSHIFT;
 }
 
 void PixelShift::shiftOn(sf::Vector2i v) {
-  std::shared_ptr<Layer> layer = map_->getCurrentLayer();
-  layer->shift(v);
+  std::shared_ptr<Layer> pixellayer = map_->getCurrentLayer();
+  if(pixellayer->getType() == PIXELLAYER){
+  pixellayer->shift(v);
+  }
 }
 
 void PixelShift::onPress(sf::Vector2i pos) {

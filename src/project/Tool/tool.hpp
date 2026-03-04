@@ -8,12 +8,17 @@ class Layer;
 enum ToolType{
   PIXELBRUSH,
   PIXELSHIFT,
-  SPRITEBRUSH,};
+  SPRITEBRUSH,
+  SPRITEERASER,
+  SPRITESHIFT,
+  };
+
 
 enum Shape {
   SQUARE, 
   DIAMOND, 
-  CIRCLE };
+  CIRCLE
+};
 
 
 
@@ -21,7 +26,7 @@ enum Shape {
 class Tool {
 protected:
   std::shared_ptr<Map> map_;
-  ToolType name_;
+  ToolType type_;
   bool isDrawing_ = false;
   sf::Vector2i lastPos_;
 
@@ -31,7 +36,8 @@ public:
   // virtual void sendMessage(const ClientNetworkManager &network) const;
   //Getter
   std::shared_ptr<Map> getMap();
-  unsigned int getScale();
+  unsigned int getScale()const;
+  ToolType getType()const;
 
 
   //Action

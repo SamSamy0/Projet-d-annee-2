@@ -6,18 +6,18 @@
 
 
 PixelBrush::PixelBrush(std::shared_ptr<Map> map) : Brush(map) {
-  name_ = PIXELBRUSH;
+  type_ = PIXELBRUSH;
 }
 
 void PixelBrush::setColor(sf::Color c) {
   color_ = c;
 } // NOTE: PEUT ETRE FAIRE UNE FONCTION PAR R G B A
 void PixelBrush::setShape(Shape s) { shape_ = s; }
-void PixelBrush::setErraser(bool val) { is_erraser_ = val; }
+void PixelBrush::setEraser(bool val) { is_eraser_ = val; }
 
 void PixelBrush::paint(sf::Vector2i pos) {
   shared_ptr<Layer> pixellayer = map_->getCurrentLayer();
-  if (pixellayer->getType() == PIXELLAYER) {
+  if (pixellayer->getType() != PIXELLAYER) {return;}
     sf::Vector2f rounded_pos = sf::Vector2f((pos.x), (pos.y));
 
     switch (shape_) {
@@ -27,9 +27,9 @@ void PixelBrush::paint(sf::Vector2i pos) {
       unsigned int offset = size / 2;
       square.setOrigin(sf::Vector2f(offset, offset));
       square.setPosition(rounded_pos);
-      is_erraser_ ? square.setFillColor(sf::Color::Transparent)
+      is_eraser_ ? square.setFillColor(sf::Color::Transparent)
                   : square.setFillColor(color_);
-      is_erraser_ ? pixellayer->errase(square) : pixellayer->draw(square);
+      is_eraser_ ? pixellayer->erase(square) : pixellayer->draw(square);
       break;
     }
     case CIRCLE: {
@@ -38,9 +38,9 @@ void PixelBrush::paint(sf::Vector2i pos) {
       sf::CircleShape circle(radius);
       circle.setOrigin(sf::Vector2f(radius, radius));
       circle.setPosition(rounded_pos);
-      is_erraser_ ? circle.setFillColor(sf::Color::Transparent)
+      is_eraser_ ? circle.setFillColor(sf::Color::Transparent)
                   : circle.setFillColor(color_);
-      is_erraser_ ? pixellayer->errase(circle) : pixellayer->draw(circle);
+      is_eraser_ ? pixellayer->erase(circle) : pixellayer->draw(circle);
       break;
     }
     case DIAMOND: {
@@ -54,13 +54,12 @@ void PixelBrush::paint(sf::Vector2i pos) {
       diamond.setPoint(3, sf::Vector2f(0.0f, size_y / 2.0f));   // left point
       diamond.setOrigin(sf::Vector2f(size_x / 2.0f, size_y / 2.0f));
       diamond.setPosition(rounded_pos);
-      is_erraser_ ? diamond.setFillColor(sf::Color::Transparent)
+      is_eraser_ ? diamond.setFillColor(sf::Color::Transparent)
                   : diamond.setFillColor(color_);
-      is_erraser_ ? pixellayer->errase(diamond) : pixellayer->draw(diamond);
+      is_eraser_ ? pixellayer->erase(diamond) : pixellayer->draw(diamond);
 
       break;
     }
     }
-  }
 }
 

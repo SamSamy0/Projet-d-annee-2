@@ -12,7 +12,7 @@ public:
   LayerContent getLayerContent() override;
   void drawLayer(sf::RenderTarget& target) override;
   void draw(sf::Drawable &s) override;
-  void errase(sf::Drawable &s) override;
+  void erase(sf::Drawable &s) override;
   void shift(sf::Vector2i v)override;
   void display() override;
 };

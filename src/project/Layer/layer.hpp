@@ -21,7 +21,7 @@ public:
   virtual LayerContent getLayerContent() = 0;
   virtual void drawLayer(sf::RenderTarget& target) = 0;
   virtual void draw(sf::Drawable &s) = 0;
-  virtual void errase(sf::Drawable &s) = 0;
+  virtual void erase(sf::Drawable &s) = 0;
   virtual void shift(sf::Vector2i v) = 0;
   virtual void display() = 0;
   virtual ~Layer() = default;
