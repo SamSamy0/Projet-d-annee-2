@@ -5,20 +5,23 @@ class ClientNetworkManager;
 class Map;
 class Layer;
 
-enum toolType{PIXELBRUSH,
-PIXELSHIFT,
-SPRITEBRUSH,};
+enum ToolType{
+  PIXELBRUSH,
+  PIXELSHIFT,
+  SPRITEBRUSH,};
 
-enum Shape { SQUARE, DIAMOND, CIRCLE };
+enum Shape {
+  SQUARE, 
+  DIAMOND, 
+  CIRCLE };
 
 
 
 
-//-------------------------TOOL------------------------------------
 class Tool {
 protected:
   std::shared_ptr<Map> map_;
-  toolType name_;
+  ToolType name_;
   bool isDrawing_ = false;
   sf::Vector2i lastPos_;
 
@@ -39,8 +42,6 @@ public:
   virtual ~Tool() = default;
 };
 
-//-----------------------------PIXELBRUSH---------------------------
-//-----------------------------------------------------------------------
 
 
 

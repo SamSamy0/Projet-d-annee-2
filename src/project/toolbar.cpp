@@ -10,8 +10,8 @@ ToolBar::ToolBar(std::shared_ptr<Map> map): selected_{PIXELBRUSH} {
 
 }
 
-void ToolBar::selectTool(toolType outil) {
-  typeCouche type = getSelectedTool()->getMap()->getCurrentLayer()->getType();
+void ToolBar::selectTool(ToolType outil) {
+  LayerType type = getSelectedTool()->getMap()->getCurrentLayer()->getType();
 
   if ((outil <= 1 && type == PIXELLAYER) || (outil > 1 && type == SPRITELAYER)){
     selected_ = outil;
@@ -20,4 +20,4 @@ void ToolBar::selectTool(toolType outil) {
 std::shared_ptr<Tool> ToolBar::getSelectedTool() const {
   return tools_[selected_];
 }
-toolType ToolBar::getSelected() const { return selected_; }
+ToolType ToolBar::getSelected() const { return selected_; }

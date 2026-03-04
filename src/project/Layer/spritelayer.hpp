@@ -7,6 +7,7 @@ class SpriteLayer : public Layer {
 
 public:
   SpriteLayer(); // TODO: à définir
+  LayerContent getLayerContent() override;
   void drawLayer(sf::RenderWindow& window) override;
   void draw(sf::Drawable &s) override;
   void errase(sf::Drawable &s) override;

@@ -25,7 +25,7 @@ void PixelLayer::shift(sf::Vector2i v){
 
 
 void PixelLayer::drawLayer(sf::RenderWindow& window) {
-  if (!Masked_) {
+  if (!masked_) {
     sf::Sprite layer{texture_.getTexture()};
     window.draw(layer);
   }

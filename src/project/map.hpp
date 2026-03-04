@@ -15,7 +15,6 @@ using namespace std;
 class Layer;
 
 class Map {
-    // shared_ptr<Project> project;
     int id_;
     sf::Vector2u size_;
     unsigned int scale_;
@@ -28,20 +27,20 @@ public:
     Map(int mapId,sf::Vector2u size , unsigned int scale);
     sf::Vector2u getSize() const;
     unsigned int getScale() const;
-    bool hasLayer() const;
-    vector<shared_ptr<Layer>>& getLayers();
     Zoom& getZoom();
+    vector<shared_ptr<Layer>>& getLayers();
     shared_ptr<Layer> getCurrentLayer();
+    unsigned int getLayerSelected() const;
+    void setLayerSelected(unsigned int i);
+    bool hasLayer() const;
     void insertLayer(shared_ptr<Layer> layer);
     void createPixelLayer();
     void displayMap(sf::RenderWindow& window, sf::View& viewMap);
     void closeWindowManager(sf::RenderWindow& window, const sf::Event& ev);
     void detectMovement();
     void zooming(sf::Event::MouseWheelScrolled const* event);
-    bool isInside(sf::Vector2i pos)const;
-    void setLayerSelected(unsigned int i);
+    bool isInside(sf::Vector2i pos)const; //WARNING: ne sert à rien pour l'instant
     void detectZooming(sf::Event event);
-    unsigned int getLayerSelected() const;
 };
 
 

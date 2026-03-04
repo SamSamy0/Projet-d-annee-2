@@ -3,7 +3,7 @@
 #include <memory>
 
 
-enum typeCouche{PIXELLAYER,
+enum LayerType{PIXELLAYER,
 SPRITELAYER};
 
 using LayerContent = std::variant<sf::RenderTexture*, std::vector<sf::Sprite>*>;
@@ -12,12 +12,12 @@ class Layer {
 protected:
   std::string name_;
   sf::Vector2u size_;
-  bool Masked_ = false;
-  typeCouche type_;
+  bool masked_ = false;
+  LayerType type_;
 
 public:
   Layer(std::string name, sf::Vector2u size);
-  typeCouche getType();
+  LayerType getType();
   virtual LayerContent getLayerContent() = 0;
   virtual void drawLayer(sf::RenderWindow& window) = 0;
   virtual void draw(sf::Drawable &s) = 0;
