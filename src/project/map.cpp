@@ -6,6 +6,7 @@
 #include <iostream>
 #include "map.hpp"
 #include "Layer/pixellayer.hpp"
+#include "Layer/spritelayer.hpp"
 
 using namespace std;
 
@@ -41,7 +42,14 @@ void Map::insertLayer(shared_ptr<Layer> layer) { layers_.insert(layers_.begin()+
 
 void Map::createPixelLayer(){
 
-    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>("Nouvelle Couche",size_);
+    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>("Nouvelle Couche",size_); //TODO: changer le nom de la couche en fonction de sa profondeur
+    layers_.push_back(pixellayer);
+    layers_.size() ==1? selected_ = 0: selected_+=1;
+}
+
+
+void Map::createSpriteLayer(){
+    shared_ptr<SpriteLayer> pixellayer = make_shared<SpriteLayer>("Nouvelle Couche",size_); //TODO: changer le nom de la couche en fonction de sa profondeur
     layers_.push_back(pixellayer);
     layers_.size() ==1? selected_ = 0: selected_+=1;
 }

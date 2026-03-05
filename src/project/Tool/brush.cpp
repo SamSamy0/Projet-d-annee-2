@@ -6,6 +6,7 @@ Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {
   if (spacing_ < 1)
     spacing_ = 1.0f;
 }
+
 void Brush::setSize(unsigned int x, unsigned int y = 0) {
   size_m_.x = x;
   size_m_.y = y;

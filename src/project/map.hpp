@@ -35,6 +35,7 @@ public:
     bool hasLayer() const;
     void insertLayer(shared_ptr<Layer> layer);
     void createPixelLayer();
+    void createSpriteLayer();
     void displayMap(sf::RenderWindow& window, sf::View& viewMap);
     void closeWindowManager(sf::RenderWindow& window, const sf::Event& ev);
     void detectMovement();
