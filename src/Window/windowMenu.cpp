@@ -254,7 +254,7 @@ void Window::createProj(tgui::String scale, tgui::String sizeX,
   std::string nameS = name.toStdString();
   // Notify the server that a Proj is being created by using
   // ClientNetworkManager
-  manager.createProject("Owner", size, scaleInt);
+  manager.createProject(nameS, size, scaleInt);
   gui.removeAllWidgets();
 
   this->project =
