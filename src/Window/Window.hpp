@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../project/project.hpp"
 #include "../client/clientnetwork.hpp"
 #include "../project/map.hpp"
+#include "../project/project.hpp"
 #include "ProjectData.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -11,7 +11,6 @@
 #include <vector>
 
 enum class projectState { LOGIN, MENU, GAME };
-
 
 class Window {
 private:
@@ -31,7 +30,7 @@ private:
 
   tgui::ScrollablePanel::Ptr layersList_ = nullptr;
   tgui::Button::Ptr activeMoreButton = nullptr;
-  
+
   // Window
   void initWidget();
   void processEvents();
@@ -49,10 +48,14 @@ private:
   // Menu Window
   void initMenuWidget();
   void displayProjList(tgui::Panel::Ptr parent);
-  void showProjectMenu(long long id, tgui::Button::Ptr toHover);
+  void showProjectMenu(ProjectData, tgui::Button::Ptr toHover);
   void closePopup();
   void initDataWidget();
+  bool checkInput(tgui::EditBox::Ptr scale, tgui::EditBox::Ptr sizeX,
+                  tgui::EditBox::Ptr sizeY);
+  bool boxError(tgui::EditBox::Ptr box);
   void createProj(tgui::String scale, tgui::String sizeX, tgui::String sizeY,
+
                   tgui::String name, unsigned int id, sf::RenderWindow &window,
                   tgui::Gui &gui);
   ProjectData getProjectData(std::unique_ptr<Project> &proj);
@@ -78,5 +81,4 @@ public:
   void addProjectList(ProjectData projet);
   bool isOpen() const;
   void run();
-  
 };

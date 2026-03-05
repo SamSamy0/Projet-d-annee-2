@@ -95,12 +95,13 @@ void Window::displayProjList(tgui::Panel::Ptr parent) {
     btn->getRenderer()->setBorders(0);
     btn->getRenderer()->setRoundedBorderRadius(6);
     row->add(btn, "BtnMore");
-    btn->onPress(&Window::showProjectMenu, this, projectList[i].projectId, btn);
+    btn->onPress(&Window::showProjectMenu, this, projectList[i], btn);
     btn->setTextSize(20);
   }
 }
 
-void Window::showProjectMenu(long long id, tgui::Button::Ptr toHover) {
+void Window::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
+  long long id = project.projectId;
   activeMoreButton = toHover;
   activeMoreButton->getRenderer()->setBackgroundColor(sf::Color(55, 55, 70));
   auto menu = tgui::ListBox::create();
@@ -110,6 +111,10 @@ void Window::showProjectMenu(long long id, tgui::Button::Ptr toHover) {
   menu->getRenderer()->setTextColor(tgui::Color::White);
   menu->addItem("Ouvrir");
   menu->addItem("Supprimer");
+  // If Editor or Owner
+  if (project.role == 0 || project.role == 1) {
+    menu->addItem("Renommer");
+  }
   menu->setSize(150, 90);
   menu->setItemHeight(45);
 
@@ -133,6 +138,9 @@ void Window::showProjectMenu(long long id, tgui::Button::Ptr toHover) {
     } else if (item == "Ouvrir") {
       std::cout << "Ouverture du projet " << std::endl;
       setState(projectState::GAME);
+    } else if (item == "Renommer") {
+      // TODO: Create a Rename Edit box that pop either in the middle of the
+      // screen or aside the moreButton
     }
     gui.remove(menu);
     // toHover->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -203,6 +211,7 @@ void Window::initDataWidget() {
   sizePx->getRenderer()->setBorderColor(sf::Color(55, 55, 70));
   sizePx->getRenderer()->setBackgroundColorFocused(tgui::Color::White);
   data->add(sizePx);
+  // sizePx->onTextChange(&Window::checkInput, this, sizePx, sizePx->getText());
 
   auto sizePy = tgui::EditBox::create();
   sizePy->setInputValidator("[0-9]*");
@@ -215,6 +224,7 @@ void Window::initDataWidget() {
   sizePy->getRenderer()->setBorderColor(sf::Color(55, 55, 70));
   sizePy->getRenderer()->setBackgroundColorFocused(tgui::Color::White);
   data->add(sizePy);
+  // sizePy->onTextChange(&Window::checkInput, this, sizePy, sizePy->getText());
 
   auto valid = tgui::Button::create("Valider");
   valid->setSize("40%", "12%");
@@ -225,23 +235,40 @@ void Window::initDataWidget() {
   valid->getRenderer()->setBorders(0);
   valid->getRenderer()->setRoundedBorderRadius(8);
   data->add(valid);
-  // valid->onPress([this, background]() {
-  //   gui.remove(background);
-  //   createProj();
-  //   // createProj(unsigned int scale, sf::Vector2u size, std::string name,
-  //   //                     unsigned int id, sf::RenderWindow &window,
-  //   //                     tgui::Gui &gui);
-  // });
   valid->onPress([this, scale, sizePx, sizePy, name]() {
     // Les getText() sont appelés au moment du clic !
-    this->createProj(scale->getText(), sizePx->getText(), sizePy->getText(),
-                     name->getText(), 0, this->mainWindow, this->gui);
+    if (checkInput(scale, sizePx, sizePy))
+      this->createProj(scale->getText(), sizePx->getText(), sizePy->getText(),
+                       name->getText(), 0, this->mainWindow, this->gui);
   });
   // BUG: Need to return values to create Project
 
   // return Project{scale->getText(), sf::Vector2u{sizeX, sizeY},
   // name->getText(),
   //                &this->mainWindow, &this->gui};
+}
+
+bool Window::boxError(tgui::EditBox::Ptr box) {
+  box->getRenderer()->setBorderColor(sf::Color::Red);
+  box->getRenderer()->setDefaultTextColor(sf::Color::Red);
+  box->setText("");
+  box->setDefaultText("Changer la donnée");
+  return false;
+}
+bool Window::checkInput(tgui::EditBox::Ptr scale, tgui::EditBox::Ptr sizePx,
+                        tgui::EditBox::Ptr sizePy) {
+  bool res = true;
+  std::cout << "utilisé" << std::endl;
+  if (scale->getText().empty() || scale->getText().toUInt() == 0) {
+    res = boxError(scale);
+  }
+  if (sizePx->getText().empty() || sizePx->getText().toUInt() == 0) {
+    res = boxError(sizePx);
+  }
+  if (sizePy->getText().empty() || sizePy->getText().toUInt() == 0) {
+    res = boxError(sizePy);
+  }
+  return res;
 }
 
 void Window::createProj(tgui::String scale, tgui::String sizeX,
