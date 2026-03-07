@@ -9,5 +9,4 @@ public:
   void onPress(sf::Vector2i pos)override;
   void onDrag(sf::Vector2i pos)override;
   void onRelease()override;
-  void shiftOn(sf::Vector2i v) ;
 };

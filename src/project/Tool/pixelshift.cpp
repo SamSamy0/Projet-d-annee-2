@@ -8,12 +8,6 @@ PixelShift::PixelShift(std::shared_ptr<Map> map) : Tool(map) {
   type_ = PIXELSHIFT;
 }
 
-void PixelShift::shiftOn(sf::Vector2i v) {
-  std::shared_ptr<Layer> pixellayer = map_->getCurrentLayer();
-  if(pixellayer->getType() == PIXELLAYER){
-  pixellayer->shift(v);
-  }
-}
 
 void PixelShift::onPress(sf::Vector2i pos) {
   isDrawing_ = true;
@@ -32,11 +26,6 @@ void PixelShift::onDrag(sf::Vector2i pos) {
   lastPos_ = pos;
 }
 void PixelShift::onRelease() {
-  if (isDrawing_) {
-    std::shared_ptr<Layer> layer = map_->getCurrentLayer();
-    if (layer && layer->getType() == PIXELLAYER) {
-      layer->display();
-    }
-  }
   isDrawing_ = false;
+  lastPos_ = sf::Vector2i(0,0);
 }

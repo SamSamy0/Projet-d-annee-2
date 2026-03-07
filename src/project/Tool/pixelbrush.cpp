@@ -1,5 +1,6 @@
 #include "pixelbrush.hpp"
 #include "../Layer/layer.hpp"
+#include "../Layer/pixellayer.hpp"
 #include "../map.hpp"
 #include <memory>
 
@@ -16,9 +17,12 @@ void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setEraser(bool val) { is_eraser_ = val; }
 
 void PixelBrush::paint(sf::Vector2i pos) {
-  shared_ptr<Layer> pixellayer = map_->getCurrentLayer();
-  if (pixellayer->getType() != PIXELLAYER) {return;}
-    sf::Vector2f rounded_pos = sf::Vector2f((pos.x), (pos.y));
+  /* Draw a shape one the layer*/
+  shared_ptr<Layer> layer = map_->getCurrentLayer();
+  if (!layer || layer->getType() != PIXELLAYER) {return;}
+    shared_ptr<PixelLayer> pixellayer = (static_pointer_cast<PixelLayer>(layer));
+    sf::Vector2i shifted_pos = sf::Vector2i(pos.x -pixellayer->getOffset().x,pos.y -pixellayer->getOffset().y);
+    sf::Vector2f rounded_pos = sf::Vector2f((shifted_pos.x), (shifted_pos.y));
 
     switch (shape_) {
     case SQUARE: {

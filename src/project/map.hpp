@@ -19,6 +19,8 @@ class Map {
     sf::Vector2u size_;
     unsigned int scale_;
     vector<shared_ptr<Layer>> layers_;
+    sf::RenderTexture render_texture_;
+    sf::Sprite sprite_;
     Zoom zoom_;
     Move move_;
     unsigned int selected_;

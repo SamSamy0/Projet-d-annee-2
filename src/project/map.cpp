@@ -12,13 +12,17 @@ using namespace std;
 
 
 Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
-    id_{mapId}, size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)}{
+    id_{mapId}, size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
+    if (!render_texture_.resize(size)){} //TODO: gérer l'erreur
+    sprite_.setTexture(render_texture_.getTexture(),true);
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
 }
 
 Map::Map(int mapId, sf::Vector2u size , unsigned int scale) : 
     id_{mapId}, size_{size},
-    scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)}{
+    scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
+    if (!render_texture_.resize(size)){} //TODO: gérer l'erreur
+    sprite_.setTexture(render_texture_.getTexture(),true);
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
     createPixelLayer();
 }
@@ -97,11 +101,23 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
 
     // On règle la fenêtre et on l'affiche
    
-    window.draw(map);
+render_texture_.clear(sf::Color::White); 
+
+    // 3. Dessin restrictif (Clipping)
+    // Les calques se dessinent sur la texture interne, et non plus sur la fenêtre
     for (auto& layer: layers_) {
-        layer->drawLayer(window);
+        layer->drawLayer(render_texture_);
     }
+    
+    // Validation du rendu en mémoire vidéo
+    render_texture_.display();
+
+
+    // 4. Affichage du résultat final
+    // On dessine le canevas aplati et rogné sur la fenêtre principale
+    window.draw(sprite_);
 }
+
 
 unsigned int Map::getLayerSelected() const {
     return selected_;

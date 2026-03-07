@@ -4,7 +4,7 @@ PixelLayer::PixelLayer(std::string name,sf::Vector2u size) : Layer(name, size), 
   if(!texture_.resize(size)){
     // NOTE:GERER L'ERREUR 
     }
-    offset_.setTexture(texture_.getTexture());
+    offset_.setTexture(texture_.getTexture(),true);
     texture_.clear(sf::Color::Transparent);
     texture_.display();
     type_ = PIXELLAYER;
@@ -15,6 +15,12 @@ void PixelLayer::draw(sf::Drawable &s) {
   states.blendMode = sf::BlendNone; 
   texture_.draw(s,states);
 }
+
+
+  sf::Vector2i PixelLayer::getOffset() const{
+  return sf::Vector2i(static_cast<int>(offset_.getPosition().x),static_cast<int>(offset_.getPosition().y));
+}
+
 void PixelLayer::erase(sf::Drawable &s) {
   texture_.draw(s, sf::BlendNone);
 }
@@ -26,26 +32,11 @@ void PixelLayer::shift(sf::Vector2i v){
 
 void PixelLayer::drawLayer(sf::RenderTarget& target) {
   if (!masked_) {
-    sf::Sprite layer{texture_.getTexture()};
-    target.draw(layer);
+    target.draw(offset_);
   }
 }
 
 
 void PixelLayer::display() {
-    sf::Vector2f mouvement = offset_.getPosition();
-
-    if (mouvement.x == 0.0f && mouvement.y == 0.0f) {
-        return; 
-    }
-
-    sf::Texture currentTexture = texture_.getTexture();
-    sf::Sprite tempSprite(currentTexture);
-    tempSprite.setPosition(sf::Vector2f(mouvement.x, mouvement.y));
-
-    texture_.clear(sf::Color::Transparent);
-    texture_.draw(tempSprite);
     texture_.display();
-
-    offset_.setPosition(sf::Vector2f(0, 0));
 }
