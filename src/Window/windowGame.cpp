@@ -128,7 +128,7 @@ void Window::initLayerPanel() {
   removeLayerButton->getRenderer()->setTextColor(tgui::Color::White);
   removeLayerButton->getRenderer()->setBorders({1});
   removeLayerButton->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
-  removeLayerButton->onClick([this]() {
+  removeLayerButton->onClick([this]() { //TODO: EN FAIRE UNE FONCTION + SECURISER LA FONCTION 
     vector<shared_ptr<Layer>> &layers = project->getMap()->getLayers();
     if (layers.size() <= 1)
       return;
