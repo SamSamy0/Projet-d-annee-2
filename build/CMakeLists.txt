@@ -65,6 +65,8 @@ set(SOURCES
     ../src/project/Tool/tool.cpp
     ../src/project/Tool/brush.cpp
     ../src/project/Tool/pixelbrush.cpp
+    ../src/project/Tool/shift.cpp
+    ../src/project/Tool/spriteshift.cpp
     ../src/project/Tool/pixelshift.cpp
     ../src/project/Layer/layer.cpp
     ../src/project/Layer/pixellayer.cpp

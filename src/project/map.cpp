@@ -61,7 +61,9 @@ void Map::createSpriteLayer(){
 shared_ptr<Layer> Map::getCurrentLayer(){
     if(layers_.size() == 0){
     return nullptr;}
-    else{return layers_[selected_];}
+    if(layers_.size() >= selected_)
+        selected_ = layers_.size()-1;
+    return layers_[selected_];
 }
 
 
@@ -99,22 +101,15 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
     
     viewMap.setCenter(sf::Vector2f(move_.positionX_ + (float)(size_.x) / 2, move_.positionY_ + (float)(size_.y) / 2));
 
-    // On règle la fenêtre et on l'affiche
    
-render_texture_.clear(sf::Color::White); 
+    render_texture_.clear(sf::Color::White); 
 
-    // 3. Dessin restrictif (Clipping)
-    // Les calques se dessinent sur la texture interne, et non plus sur la fenêtre
     for (auto& layer: layers_) {
-        layer->drawLayer(render_texture_);
+        // We are drawing all the layers on the texture of the map
+        layer->drawLayer(render_texture_); 
     }
-    
-    // Validation du rendu en mémoire vidéo
+    // And then we display the texture of the map 
     render_texture_.display();
-
-
-    // 4. Affichage du résultat final
-    // On dessine le canevas aplati et rogné sur la fenêtre principale
     window.draw(sprite_);
 }
 
