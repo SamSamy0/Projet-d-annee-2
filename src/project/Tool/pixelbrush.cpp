@@ -48,7 +48,7 @@ void PixelBrush::paint(sf::Vector2i pos) {
       break;
     }
     case DIAMOND: {
-      // pixellayer->getLayerContent().setSmooth(false);
+      pixellayer->getTexture().setSmooth(false);
       unsigned int size_x = (size_m_.x) * getScale();
       unsigned int size_y = (size_m_.y) * getScale();
       sf::ConvexShape diamond(4);

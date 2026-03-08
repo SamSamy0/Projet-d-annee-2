@@ -6,7 +6,6 @@
 enum LayerType{PIXELLAYER,
 SPRITELAYER};
 
-using LayerContent = std::variant<sf::RenderTexture*, std::vector<sf::Sprite>*>;
 
 class Layer {
 protected:
@@ -18,7 +17,6 @@ protected:
 public:
   Layer(std::string name, sf::Vector2u size);
   LayerType getType();
-  virtual LayerContent getLayerContent() = 0;
   virtual void drawLayer(sf::RenderTarget& target) = 0;
   virtual void draw(sf::Drawable &s) = 0;
   virtual void erase(sf::Drawable &s) = 0;
