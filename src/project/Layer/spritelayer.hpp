@@ -12,5 +12,4 @@ public:
   void draw(sf::Drawable &s) override{}
   void erase(sf::Drawable &s) override{}
   void shift(sf::Vector2i v)override;
-  void display() override{}
 };
