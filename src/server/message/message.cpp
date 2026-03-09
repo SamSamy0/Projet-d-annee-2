@@ -74,6 +74,17 @@ void GetProjectsListMessage::process(Worker& worker) {
     worker.pushNetwork(std::move(rps));
 }
 
+DeleteProjectMessage::DeleteProjectMessage(sf::Packet& data_packet, long long userId) {
+    userId_ = userId;
+    data_packet >> projectId_;
+}
+
+void DeleteProjectMessage::process(Worker& worker) {
+    if (worker.getRole(userId_, projectId_) == 2) {
+        worker.deleteProject(projectId_);
+    }
+}
+
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client> c) {
     uint8_t typeRaw;

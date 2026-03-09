@@ -60,5 +60,13 @@ struct GetProjectsListMessage : IMessage {
     void process(Worker& worker) override;
 };
 
+struct DeleteProjectMessage : IMessage {
+    long long userId_;
+    int projectId_;
+
+    DeleteProjectMessage(sf::Packet& dataPacket, long long userId);
+    void process(Worker& worker) override;
+};
+
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client> client);
