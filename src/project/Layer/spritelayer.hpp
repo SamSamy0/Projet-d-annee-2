@@ -8,8 +8,9 @@ class SpriteLayer : public Layer {
 
 public:
   SpriteLayer(std::string name, sf::Vector2u size);
-  void drawLayer(sf::RenderTarget& target) override;
-  void draw(sf::Drawable &s) override{}
+  sf::Vector2i getOffset();
+  void draw(sf::Sprite &s) ;
   void erase(sf::Drawable &s) override{}
   void shift(sf::Vector2i v)override;
+  void drawLayer(sf::RenderTarget& target) override;
 };

@@ -203,7 +203,7 @@ void Window::handleGameEvents(const std::optional<sf::Event> &event) {
         float sizex = size.x;
         float sizey = size.y;
         sf::Vector2u mapSize = project->getMap()->getSize();
-        float step = std::min(mapSize.x, mapSize.y) / 100.0f;
+        float step = std::min(mapSize.x, mapSize.y) / 200.0f;
 
         if (wheelEvent->delta > 0) {
           sizex += step;

@@ -7,6 +7,11 @@ SpriteLayer::SpriteLayer(std::string name, sf::Vector2u size): Layer(name,size){
 
  
 
+sf::Vector2i SpriteLayer::getOffset(){return offset_;}
+
+void SpriteLayer::draw(sf::Sprite &s){
+  sprites_.push_back(s);
+}
 
 void SpriteLayer::shift(sf::Vector2i v) {offset_ += v;}
 

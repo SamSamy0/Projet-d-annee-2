@@ -12,5 +12,6 @@ class SpriteEraser : public Brush{
 
 public:
   SpriteEraser(std::shared_ptr<Map> map);
+  void setShape(Shape s);
   void paint(sf::Vector2i pos);
 };

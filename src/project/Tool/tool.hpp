@@ -14,7 +14,7 @@ enum ToolType{
   };
 
 
-enum Shape {
+enum Shape { //WARNING: PEUT ETRE PAS AU BON ENDROIT DANS LE CODE 
   SQUARE, 
   DIAMOND, 
   CIRCLE
