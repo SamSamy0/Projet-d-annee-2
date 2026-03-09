@@ -14,7 +14,7 @@ DatabaseManager::DatabaseManager() {
 
         query.exec("CREATE TABLE IF NOT EXISTS users ("
                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                   "pseudo TEXT UNIQUE COLLATE NOCASE, "
+                   "pseudo TEXT UNIQUE COLLATE NOCASE CHECK(LENGTH(name) BETWEEN 3 AND 15), "
                    "password TEXT)");
         query.exec("CREATE TABLE IF NOT EXISTS projects ("
                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -222,3 +222,29 @@ std::vector<ProjectEntry> DatabaseManager::getAllProjects() {
     }
     return projects;
 }
+
+bool DatabaseManager::removeLink(const long long userId, const long long projectId) {
+    QSqlQuery query;
+    query.prepare("DELETE FROM links WHERE user_id = :uId AND project_id = :pId");
+    query.bindValue(":uId", userId);
+    query.bindValue(":pId", projectId);
+
+    if (!query.exec()) {
+        qDebug() << "Erreur suppression lien:" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool DatabaseManager::removeProject(const long long projectId) {
+    QSqlQuery query;
+    query.prepare("DELETE FROM projects WHERE id = :pId");
+    query.bindValue(":pId", projectId);
+
+    if (!query.exec()) {
+        qDebug() << "Erreur suppression projet:" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+

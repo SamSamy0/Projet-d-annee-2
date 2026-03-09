@@ -12,11 +12,12 @@ public:
     bool createProjectJson(int id, const QString &projectName, int width, int height, uint scale);
     QJsonObject loadProjectJson(int id);
     bool saveImage(int id, const QString &fileName, const QByteArray &data);
+    bool deleteProject(int id);
 
 private:
     QString getProjectPath(int id) const;
     bool ensureDirectoryExists(int id) const;
-    QString m_rootPath;
+    QString rootPath_;
 };
 
 #endif

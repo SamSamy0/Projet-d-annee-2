@@ -6,11 +6,11 @@
 #include <QJsonArray>
 
 ProjectsManager::ProjectsManager(const std::string &rootPath)
-    : m_rootPath(QString::fromStdString(rootPath))
+    : rootPath_(QString::fromStdString(rootPath))
 {
     QDir dir;
-    if (!dir.exists(m_rootPath)) {
-        dir.mkpath(m_rootPath);
+    if (!dir.exists(rootPath_)) {
+        dir.mkpath(rootPath_);
     }
 }
 
@@ -88,7 +88,7 @@ QJsonObject ProjectsManager::loadProjectJson(int id) {
 }
 
 QString ProjectsManager::getProjectPath(int id) const {
-    return m_rootPath + "/project_" + QString::number(id);
+    return rootPath_ + "/project_" + QString::number(id);
 }
 
 bool ProjectsManager::ensureDirectoryExists(int id) const {
@@ -100,4 +100,17 @@ bool ProjectsManager::ensureDirectoryExists(int id) const {
         return false;
     }
     return true;
+}
+
+bool ProjectsManager::deleteProject(int id) {
+    QString path = getProjectPath(id);
+    QDir dir(path);
+
+    if (dir.exists())
+
+    if (dir.removeRecursively()) {
+        return true;
+    }
+    qCritical() << "Erreur de suppression de projet pour l'ID:" << id;
+    return false;
 }
