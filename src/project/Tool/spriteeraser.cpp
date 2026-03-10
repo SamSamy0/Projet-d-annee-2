@@ -3,22 +3,24 @@
 #include "../Layer/spritelayer.hpp"
 #include "../map.hpp"
 #include <memory>
-#include <algorithm>
+#include <iostream>
 
 
 
 
 
-SpriteEraser::SpriteEraser(std::shared_ptr<Map> map): Brush(map){}
+SpriteEraser::SpriteEraser(std::shared_ptr<Map> map): Brush(map){
+  type_ = SPRITEERASER;
+}
 
 void SpriteEraser::setShape(Shape s){shape_ = s;}
 
 bool SpriteEraser::checkColision(sf::Vector2i pos, sf::FloatRect r ){
   //border of the sprite
-  float up = r.position.y;
-  float left = r.position.x;
-  float down =r.position.y+ r.size.y;
-  float right =r.position.x + r.size.x;
+  int up = r.position.y;
+  int left = r.position.x;
+  int down =r.position.y+ r.size.y;
+  int right =r.position.x + r.size.x;
 
 
   //closest point of the sprite from the mouse

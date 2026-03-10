@@ -1,6 +1,7 @@
 #include "Window.hpp"
 #include "../project/Tool/pixelbrush.hpp"
 #include "../project/Tool/pixelshift.hpp"
+#include "../project/map.hpp"
 #include <memory>
 
 void Window::initGameWidget() {

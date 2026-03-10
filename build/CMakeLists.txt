@@ -63,11 +63,12 @@ set(SOURCES
     ../src/project/move.cpp
     ../src/project/toolbar.cpp
     ../src/project/Tool/tool.cpp
+    ../src/project/Tool/shift.cpp
     ../src/project/Tool/brush.cpp
     ../src/project/Tool/pixelbrush.cpp
-    ../src/project/Tool/shift.cpp
-    ../src/project/Tool/spriteshift.cpp
     ../src/project/Tool/pixelshift.cpp
+    ../src/project/Tool/spriteshift.cpp
+    ../src/project/Tool/spriteeraser.cpp
     ../src/project/Layer/layer.cpp
     ../src/project/Layer/pixellayer.cpp
     ../src/project/Layer/spritelayer.cpp

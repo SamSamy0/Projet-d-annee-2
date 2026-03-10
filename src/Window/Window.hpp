@@ -1,7 +1,6 @@
 #pragma once
 #include "../project/project.hpp"
 #include "../server/clientnetwork.hpp"
-#include "../project/map.hpp"
 #include "ProjectData.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>

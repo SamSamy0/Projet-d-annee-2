@@ -3,7 +3,9 @@
 
 
 
-SpriteLayer::SpriteLayer(std::string name, sf::Vector2u size): Layer(name,size){}
+SpriteLayer::SpriteLayer(std::string name, sf::Vector2u size): Layer(name,size){
+  type_ = SPRITELAYER;
+}
 
  
 
