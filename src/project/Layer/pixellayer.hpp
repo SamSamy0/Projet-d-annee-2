@@ -9,10 +9,10 @@ class PixelLayer : public Layer {
 public:
   PixelLayer(std::string name, sf::Vector2u size);
 
-  sf::Vector2i getOffset() const;
+  sf::Vector2i getOffset() const override;
   sf::RenderTexture& getTexture();
   void draw(sf::Drawable &s);
-  void erase(sf::Drawable &s) override;
+  void erase(sf::Drawable &s);
   void shift(sf::Vector2i v)override;
   void drawLayer(sf::RenderTarget& target) override;
   void display();

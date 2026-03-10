@@ -3,7 +3,7 @@
 
 class Brush :public Tool {
 protected:
-  sf::Vector2u size_m_ = sf::Vector2u(1, 1);
+  sf::Vector2i size_m_ = sf::Vector2i(1, 1); //TODO :CHANGER EN FLOAT ET VERIFIER QUE C'EST BIEN ARRONDI A CHAQUE FOIS QU'ON APPLIQUE LA SCALE
   int distance_ = 0.0f;
   int spacing_;
 public:
