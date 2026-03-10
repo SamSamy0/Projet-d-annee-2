@@ -5,23 +5,19 @@ class ClientNetworkManager;
 class Map;
 class Layer;
 
-enum ToolType{
+enum ToolType {
   PIXELBRUSH,
   PIXELSHIFT,
   SPRITEBRUSH,
   SPRITEERASER,
   SPRITESHIFT,
-  };
-
-
-enum Shape { //WARNING: PEUT ETRE PAS AU BON ENDROIT DANS LE CODE 
-  SQUARE, 
-  DIAMOND, 
-  CIRCLE
 };
 
-
-
+enum Shape { // WARNING: PEUT ETRE PAS AU BON ENDROIT DANS LE CODE
+  SQUARE,
+  DIAMOND,
+  CIRCLE
+};
 
 class Tool {
 protected:
@@ -34,21 +30,15 @@ public:
   Tool(std::shared_ptr<Map> map);
   // virtual void getMessage(const ClientNetworkManager &netw
   // virtual void sendMessage(const ClientNetworkManager &network) const;
-  //Getter
+  // Getter
   std::shared_ptr<Map> getMap();
-  unsigned int getScale()const;
-  ToolType getType()const;
+  unsigned int getScale() const;
+  ToolType getType() const;
 
-
-  //Action
+  // Action
   virtual void onPress(sf::Vector2i pos) = 0;
   virtual void onDrag(sf::Vector2i pos) = 0;
   virtual void onRelease() = 0;
 
   virtual ~Tool() = default;
 };
-
-
-
-
-

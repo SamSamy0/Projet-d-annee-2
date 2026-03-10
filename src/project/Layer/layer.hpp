@@ -1,11 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <memory>
 
-
-enum LayerType{PIXELLAYER,
-SPRITELAYER};
-
+enum LayerType { PIXELLAYER, SPRITELAYER };
 
 class Layer {
 protected:
@@ -19,6 +15,6 @@ public:
   LayerType getType();
   virtual sf::Vector2i getOffset() const = 0;
   virtual void shift(sf::Vector2i v) = 0;
-  virtual void drawLayer(sf::RenderTarget& target) = 0;
+  virtual void drawLayer(sf::RenderTarget &target) = 0;
   virtual ~Layer() = default;
 };

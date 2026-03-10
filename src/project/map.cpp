@@ -68,10 +68,10 @@ shared_ptr<Layer> Map::getCurrentLayer(){
 
 
 
-bool Map::isInside(sf::Vector2i pos)const{
-    return (pos.x >= 0 && pos.x < static_cast<int>(size_.x) &&
-    pos.y >= 0 && pos.y < static_cast<int>(size_.y));
-}
+// bool Map::isInside(sf::Vector2i pos)const{
+//     return (pos.x >= 0 && pos.x < static_cast<int>(size_.x) &&
+//     pos.y >= 0 && pos.y < static_cast<int>(size_.y));
+// }
 
 void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
 

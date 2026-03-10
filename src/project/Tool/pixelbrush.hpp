@@ -1,8 +1,7 @@
-#pragma once 
+#pragma once
 #include "brush.hpp"
 
-
-class PixelBrush :public Brush {
+class PixelBrush : public Brush {
   sf::Color color_ = sf::Color::Black;
   Shape shape_ = SQUARE;
   bool is_eraser_ = false;

@@ -1,12 +1,7 @@
 #pragma once
 #include "brush.hpp"
 
-
-
-
-
-
-class SpriteEraser : public Brush{
+class SpriteEraser : public Brush {
 
   Shape shape_ = SQUARE;
 
