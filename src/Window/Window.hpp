@@ -11,6 +11,7 @@
 #include <vector>
 
 enum class projectState { LOGIN, MENU, GAME };
+enum class focusPopup { CREATE, RENAME };
 
 class Window {
 private:
@@ -47,10 +48,17 @@ private:
 
   // Menu Window
   void initMenuWidget();
+  void shareProj();
+  void joinProj();
   void displayProjList(tgui::Panel::Ptr parent);
   void showProjectMenu(ProjectData, tgui::Button::Ptr toHover);
+  void popupRename(tgui::Panel::Ptr back);
+  // void popupRename();
+  void popupCreate(tgui::Panel::Ptr background);
+  // void popupCreate();
   void closePopup();
-  void initDataWidget();
+  void initInputWidget(focusPopup focus);
+  void createPopup();
   bool checkInput(tgui::EditBox::Ptr scale, tgui::EditBox::Ptr sizeX,
                   tgui::EditBox::Ptr sizeY);
   bool boxError(tgui::EditBox::Ptr box);
