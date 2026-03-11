@@ -20,7 +20,6 @@ private:
 
   bool isWatingRep = false;
 
-  // WARNING: Changer MENU à LOGIN pour la vrai version, là c'est par facilité
   projectState state = projectState::LOGIN;
   bool isLoggedIn = false;
   // Authentification Interface
@@ -49,15 +48,14 @@ private:
   // Menu Window
   void initMenuWidget();
   void shareProj();
-  void joinProj();
+  void joinProj(tgui::Panel::Ptr panel);
   void displayProjList(tgui::Panel::Ptr parent);
   void showProjectMenu(ProjectData, tgui::Button::Ptr toHover);
-  void popupRename(tgui::Panel::Ptr back);
-  // void popupRename();
+  void initInputWidget(focusPopup focus, ProjectData project = ProjectData{});
+  void popupRename(tgui::Panel::Ptr back, ProjectData project);
   void popupCreate(tgui::Panel::Ptr background);
-  // void popupCreate();
+  void exitAction(tgui::Panel::Ptr background);
   void closePopup();
-  void initInputWidget(focusPopup focus);
   void createPopup();
   bool checkInput(tgui::EditBox::Ptr scale, tgui::EditBox::Ptr sizeX,
                   tgui::EditBox::Ptr sizeY);

@@ -7,6 +7,7 @@ struct ProjectData {
   long long projectId;
   int8_t role;
   std::string projectName;
+  void setName(std::string newName);
 
   void print();
 };

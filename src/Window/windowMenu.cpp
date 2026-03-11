@@ -59,27 +59,75 @@ void Window::initMenuWidget() {
   joinProjB->getRenderer()->setBorders(1);
   joinProjB->getRenderer()->setBorderColor(sf::Color(60, 60, 80));
   joinProjB->getRenderer()->setRoundedBorderRadius(8);
-  joinProjB->onPress(&Window::joinProj, this);
+  joinProjB->onPress(&Window::joinProj, this, rightPanel);
   rightPanel->add(joinProjB);
 
-  auto shareProjB = tgui::Button::create("Partager un projet");
-  shareProjB->setPosition("10%", "20%");
-  shareProjB->setSize("80%", "6%");
-  shareProjB->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
-  shareProjB->getRenderer()->setBackgroundColorHover(sf::Color(55, 55, 70));
-  shareProjB->getRenderer()->setTextColor(sf::Color(180, 180, 200));
-  shareProjB->getRenderer()->setBorders(1);
-  shareProjB->getRenderer()->setBorderColor(sf::Color(60, 60, 80));
-  shareProjB->getRenderer()->setRoundedBorderRadius(8);
-  shareProjB->onPress(&Window::shareProj, this);
-  rightPanel->add(shareProjB);
+  // auto shareProjB = tgui::Button::create("Partager un projet");
+  // shareProjB->setPosition("10%", "20%");
+  // shareProjB->setSize("80%", "6%");
+  // shareProjB->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
+  // shareProjB->getRenderer()->setBackgroundColorHover(sf::Color(55, 55, 70));
+  // shareProjB->getRenderer()->setTextColor(sf::Color(180, 180, 200));
+  // shareProjB->getRenderer()->setBorders(1);
+  // shareProjB->getRenderer()->setBorderColor(sf::Color(60, 60, 80));
+  // shareProjB->getRenderer()->setRoundedBorderRadius(8);
+  // shareProjB->onPress(&Window::shareProj, this);
+  // rightPanel->add(shareProjB);
 }
-void Window::joinProj() {}
+void Window::joinProj(tgui::Panel::Ptr panel) {
+  auto joinPanel = tgui::Panel::create();
+  joinPanel->setSize("80%", "30%");
+  joinPanel->setPosition("10%", "40%");
+  joinPanel->getRenderer()->setBackgroundColor(sf::Color(35, 35, 40));
+  joinPanel->getRenderer()->setRoundedBorderRadius(8);
+  panel->add(joinPanel, "joinPanel");
+
+  // Title
+  auto title = tgui::Label::create("Rejoindre un Projet");
+  title->setPosition("25%", "3%");
+  // title->setTextSize(10);
+  title->getRenderer()->setTextColor(sf::Color(180, 180, 200));
+  joinPanel->add(title);
+
+  // Enter Token
+  auto enterTok = tgui::Label::create("Entrez un token");
+  enterTok->setPosition("2.5%", "30%");
+  enterTok->getRenderer()->setTextSize(40);
+  enterTok->getRenderer()->setTextColor(sf::Color(180, 180, 200));
+  joinPanel->add(enterTok);
+
+  // TokenBox
+  auto token = tgui::EditBox::create();
+  token->setDefaultText("Token");
+  token->getRenderer()->setTextSize(40);
+  token->getRenderer()->setRoundedBorderRadius(8);
+  token->setSize("80%", "15%");
+  token->setPosition("2.5%", "45%");
+  joinPanel->add(token);
+
+  // Valid Button
+  auto valid = tgui::Button::create("Valider");
+  valid->setSize("40%", "12%");
+  valid->setPosition("30%", "75%");
+  valid->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
+  valid->getRenderer()->setBackgroundColorHover(sf::Color::Cyan);
+  valid->getRenderer()->setTextColor(sf::Color::White);
+  valid->getRenderer()->setBorders(0);
+  valid->getRenderer()->setRoundedBorderRadius(8);
+  joinPanel->add(valid);
+  valid->onPress([this, panel, joinPanel, token]() {
+    // NOTE: need to add verification from server
+    if (!token->getText().empty())
+      panel->remove(joinPanel);
+    else
+      boxError(token);
+  });
+}
 void Window::shareProj() {}
 void Window::displayProjList(tgui::Panel::Ptr parent) {
   auto panel = tgui::ScrollablePanel::create();
   panel->setPosition("5%", "18%");
-  panel->setSize("90%", "78%");
+  panel->setSize("90%", "60%");
   panel->getRenderer()->setBackgroundColor(sf::Color::Transparent);
   panel->getRenderer()->setBorders(0);
   parent->add(panel, "projPanel");
@@ -131,44 +179,52 @@ void Window::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   // if (project.role == 0 || project.role == 1) {
   menu->addItem("Renommer");
   // }
+  menu->addItem("Dupliquer");
+  menu->addItem("Partager");
+  menu->addItem("Quitter");
   float menuHeight = menu->getItemCount() * 45;
   menu->setSize(150, menuHeight);
   menu->setItemHeight(45);
 
   menu->setPosition(btnPos.x - 150, btnPos.y);
-  std::cout << "Bouton cliqué à : x=" << btnPos.x << " y=" << btnPos.y
-            << std::endl;
-  // std::cout << "Menu placé à : x=" << menu->getPosition().x.getValue()
-  //           << " y=" << menu->getPosition().y.getValue() << std::endl;
-  sf::Vector2i mousePos = gui.getLastMousePosition();
 
   gui.add(menu, "popup");
   menu->setTextSize(20);
   // menu->onUnfocus([this, menu]() { gui.remove(menu); });
-  menu->onItemSelect([this, menu, id, toHover](const tgui::String &item) {
-    if (item == "Supprimer") {
-      auto it = std::find_if(
-          projectList.begin(), projectList.end(),
-          [id](const ProjectData &p) { return p.projectId == id; });
-      if (it != projectList.end()) {
-        projectList.erase(it);
-        std::cout << "Suppression du projet " << id << std::endl;
-        initMenuWidget();
-      }
-      // manager.deleteProject(...)
-    } else if (item == "Ouvrir") {
-      std::cout << "Ouverture du projet " << std::endl;
-      setState(projectState::GAME);
-    } else if (item == "Renommer") {
-      std::cout << "appuyé" << std::endl;
-      // WARNING: Ask Server for a Rename function !
-      // popupRename();
-      initInputWidget(focusPopup::RENAME);
-      // mainWindow.close();
-    }
-    this->gui.remove(menu);
-    // toHover->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-  });
+  menu->onItemSelect(
+      [this, menu, id, toHover, project](const tgui::String &item) {
+        // Delete Action
+        if (item == "Supprimer") {
+          auto it = std::find_if(
+              projectList.begin(), projectList.end(),
+              [id](const ProjectData &p) { return p.projectId == id; });
+
+          if (it != projectList.end()) {
+            projectList.erase(it);
+            std::cout << "Suppression du projet " << id << std::endl;
+            initMenuWidget();
+          }
+          // manager.deleteProject(...)
+          // Open Action
+        } else if (item == "Ouvrir") {
+          std::cout << "Ouverture du projet " << std::endl;
+          setState(projectState::GAME);
+          // Rename Action
+        } else if (item == "Renommer") {
+          std::cout << "appuyé" << std::endl;
+          // WARNING: Ask Server for a Rename function !
+          // NOTE: Sending project reference to server with "project"
+          initInputWidget(focusPopup::RENAME, project);
+        } else if (item == "Dupliquer") {
+        } else if (item == "Partager") {
+        } else if (item == "Quitter") {
+        }
+        activeMoreButton->getRenderer()->setBackgroundColor(
+            tgui::Color::Transparent);
+
+        this->gui.remove(menu);
+        // toHover->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+      });
 }
 
 void Window::closePopup() {
@@ -181,32 +237,31 @@ void Window::closePopup() {
   }
 }
 
-void Window::popupRename(tgui::Panel::Ptr rrbackground) {
-  // void Window::popupRename() {
-  // auto rbackground = tgui::Panel::create();
-  // rbackground->setSize("100%", "100%");
-  // rbackground->getRenderer()->setBackgroundColor({40, 40, 40, 150});
-  // // gui.add(background, "background");
-  // rbackground->setTextSize(30);
-  // rbackground->moveToFront();
-  // rbackground->setFocused(true);
-  gui.add(rrbackground, "rbackground");
+void Window::exitAction(tgui::Panel::Ptr background) {
+  auto back = std::dynamic_pointer_cast<tgui::Panel>(background);
+  auto pan = back->get("Panel");
+  gui.remove(pan);
+  gui.remove(back);
+}
+
+void Window::popupRename(tgui::Panel::Ptr renameBackground,
+                         ProjectData project) {
+  gui.add(renameBackground, "rbackground");
+
   // Box for project's renamePanel
-  std::cout << "popup Créé" << std::endl;
   auto renamePanel = tgui::Panel::create();
   renamePanel->setSize("35%", "30%");
   renamePanel->setPosition("50% - 17.5%", "50% - 10%");
   renamePanel->getRenderer()->setBackgroundColor(tgui::Color(40, 40, 40));
-  std::cout << "x " << renamePanel->getPosition().x << " y "
-            << renamePanel->getPosition().y << std::endl;
-  rrbackground->add(renamePanel, "renamePanel");
-  //
-  auto rtitle = tgui::Label::create("Renommer le projet");
+  renameBackground->add(renamePanel, "Panel");
+  // Title
+  std::string oldName = project.projectName;
+  auto rtitle = tgui::Label::create("Renommer le projet: \n " + oldName);
   rtitle->getRenderer()->setTextColor(tgui::Color::White);
-  rtitle->setPosition("30%", "5%");
+  rtitle->setPosition("25%", "5%");
   rtitle->setTextSize(24);
   renamePanel->add(rtitle);
-  //
+  // Rename Box
   auto rname = tgui::EditBox::create();
   rname->setSize("80%", "12%");
   rname->setPosition("10%", "35%");
@@ -216,27 +271,37 @@ void Window::popupRename(tgui::Panel::Ptr rrbackground) {
   rname->getRenderer()->setBorderColor(sf::Color(55, 55, 70));
   rname->getRenderer()->setBackgroundColorFocused(tgui::Color::White);
   renamePanel->add(rname);
-  //
-  // auto rvalid = tgui::Button::create("Valider");
-  // rvalid->setSize("40%", "12%");
-  // rvalid->setPosition("30%", "75%");
-  // rvalid->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
-  // rvalid->getRenderer()->setBackgroundColorHover(sf::Color(118, 120, 255));
-  // rvalid->getRenderer()->setTextColor(sf::Color::White);
-  // rvalid->getRenderer()->setBorders(0);
-  // rvalid->getRenderer()->setRoundedBorderRadius(8);
-  // renamePanel->add(rvalid);
-  // // valid->onPress([this, name]() {
-  // //   // Les getText() sont appelés au moment du clic !
-  // //   // if (checkInput(scale, sizePx, sizePy))
-  // //   //   this->createProj(scale->getText(), sizePx->getText(),
-  // //   //   sizePy->getText(),
-  // //   //                    name->getText(), 0, this->mainWindow,
-  // //   this->gui);
-  // //   )}
+  // Valid Button
+  auto rvalid = tgui::Button::create("Valider");
+  rvalid->setSize("40%", "12%");
+  rvalid->setPosition("30%", "75%");
+  rvalid->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
+  rvalid->getRenderer()->setBackgroundColorHover(sf::Color(118, 120, 255));
+  rvalid->getRenderer()->setTextColor(sf::Color::White);
+  rvalid->getRenderer()->setBorders(0);
+  rvalid->getRenderer()->setRoundedBorderRadius(8);
+  renamePanel->add(rvalid);
+  // Exit Button
+  auto exitB = tgui::Button::create("x");
+  exitB->setSize("10%", "10%");
+  exitB->setPosition("0%", "0%");
+  exitB->getRenderer()->setBackgroundColor(sf::Color::Red);
+  exitB->getRenderer()->setBackgroundColorHover(sf::Color::White);
+  exitB->getRenderer()->setTextColor(sf::Color::Black);
+  exitB->getRenderer()->setBorders(0);
+  renamePanel->add(exitB);
+  exitB->onPress([this, renameBackground]() { exitAction(renameBackground); });
+
+  rvalid->onPress([this, rname, project, renameBackground]() {
+    // TODO: Need to send new Name to server
+    tgui::String newName = rname->getText();
+
+    // project.setName("bonjour");
+    exitAction(renameBackground);
+  });
 }
 
-void Window::initInputWidget(focusPopup focus) {
+void Window::initInputWidget(focusPopup focus, ProjectData project) {
   // Grey Backgroung
   auto background = tgui::Panel::create();
   background->setSize("100%", "100%");
@@ -254,31 +319,20 @@ void Window::initInputWidget(focusPopup focus) {
     break;
   }
   case (focusPopup::RENAME): {
-    popupRename(background);
+    popupRename(background, project);
     // popupRename();
     break;
   }
   }
-
-  // return Project{scale->getText(), sf::Vector2u{sizeX, sizeY},
-  // name->getText(),
-  //                &this->mainWindow, &this->gui};
 }
+
 void Window::popupCreate(tgui::Panel::Ptr background) {
-  // void Window::popupCreate() {
-  // auto background = tgui::Panel::create();
-  // background->setSize("100%", "100%");
-  // background->getRenderer()->setBackgroundColor({40, 40, 40, 150});
-  // // gui.add(background, "background");
-  // background->setTextSize(30);
-  // background->moveToFront();
-  // background->setFocused(true);
   gui.add(background);
   auto data = tgui::Panel::create();
   data->setSize("35%", "40%");
   data->setPosition("50%-17.5%", "50%-20% ");
   data->getRenderer()->setBackgroundColor(tgui::Color(40, 40, 40));
-  background->add(data, "dataPanel");
+  background->add(data, "Panel");
 
   auto title = tgui::Label::create("Nouveau projet");
   title->getRenderer()->setTextColor(tgui::Color::White);
@@ -319,8 +373,6 @@ void Window::popupCreate(tgui::Panel::Ptr background) {
   sizePx->getRenderer()->setBorderColor(sf::Color(55, 55, 70));
   sizePx->getRenderer()->setBackgroundColorFocused(tgui::Color::White);
   data->add(sizePx);
-  // sizePx->onTextChange(&Window::checkInput, this, sizePx,
-  // sizePx->getText());
 
   auto sizePy = tgui::EditBox::create();
   sizePy->setInputValidator("[0-9]*");
@@ -333,9 +385,19 @@ void Window::popupCreate(tgui::Panel::Ptr background) {
   sizePy->getRenderer()->setBorderColor(sf::Color(55, 55, 70));
   sizePy->getRenderer()->setBackgroundColorFocused(tgui::Color::White);
   data->add(sizePy);
-  // sizePy->onTextChange(&Window::checkInput, this, sizePy,
-  // sizePy->getText());
 
+  // Exit Button
+  auto exitB = tgui::Button::create("x");
+  exitB->setSize("10%", "10%");
+  exitB->setPosition("0%", "0%");
+  exitB->getRenderer()->setBackgroundColor(sf::Color::Red);
+  exitB->getRenderer()->setBackgroundColorHover(sf::Color::White);
+  exitB->getRenderer()->setTextColor(sf::Color::Black);
+  exitB->getRenderer()->setBorders(0);
+  data->add(exitB);
+  exitB->onPress([this, background]() { exitAction(background); });
+
+  // Valid Button
   auto valid = tgui::Button::create("Valider");
   valid->setSize("40%", "12%");
   valid->setPosition("30%", "90% - 20");
@@ -363,7 +425,6 @@ bool Window::boxError(tgui::EditBox::Ptr box) {
 bool Window::checkInput(tgui::EditBox::Ptr scale, tgui::EditBox::Ptr sizePx,
                         tgui::EditBox::Ptr sizePy) {
   bool res = true;
-  std::cout << "utilisé" << std::endl;
   if (scale->getText().empty() || scale->getText().toUInt() == 0) {
     res = boxError(scale);
   }
@@ -398,8 +459,6 @@ void Window::createProj(tgui::String scale, tgui::String sizeX,
 
 ProjectData Window::askProjectData() {
   initInputWidget(focusPopup::CREATE);
-  // ProjectData newProj = initDataWidget();
-  // projectList.push_back(newProj);
   return ProjectData{};
 }
 
