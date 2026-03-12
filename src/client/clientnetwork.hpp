@@ -22,9 +22,17 @@ public:
     void login(std::string pseudo,std::string password);
     void askRegister(std::string pseudo, std::string password);
     void createProject(std::string role, sf::Vector2u size, uint scale);
-    void getProjectData(int project_id);
     void getUsersProjects(long long id);
-    void getProjectList();     
+    void getProjectList(); 
+    
+    void getProjectData(int project_id);
+    void delProject();
+    void renameProject();
+    void createProjectCode();
+    void joinProject();
+    void syncPaint();
+    void sendMessageChat();
+
 };
 
 

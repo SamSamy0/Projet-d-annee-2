@@ -51,13 +51,6 @@ void CreateProjectMessage::process(Worker& worker) {
 }
 
 
-GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, long long userId) {
-}
-
-
-void GetProjectDataMessage::process(Worker& worker) {
-}
-
 GetProjectsListMessage::GetProjectsListMessage(sf::Packet& data_packet, long long userId) {
     userId_ = userId;
 }
@@ -83,6 +76,13 @@ void DeleteProjectMessage::process(Worker& worker) {
     if (worker.getRole(userId_, projectId_) == 2) {
         worker.deleteProject(projectId_);
     }
+}
+
+GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, long long userId) {
+}
+
+
+void GetProjectDataMessage::process(Worker& worker) {
 }
 
 

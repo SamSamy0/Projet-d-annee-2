@@ -10,6 +10,7 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::LOB_CREATE_PROJECT_REQ: return "LOB_CREATE_PROJECT_REQ";
         case MsgProtocole::LOB_PROJECT_LIST_REQ: return "LOB_PROJECT_LIST_REQ";
         case MsgProtocole::LOB_PROJECT_LIST_REP: return "LOB_PROJECT_LIST_REP";
+        case MsgProtocole::LOB_DEL_PROJECT_REQ: return "LOB_DEL_PROJECT_REQ";
         case MsgProtocole::LOB_SHARE_PROJECT_REQ: return "LOB_SHARE_PROJECT_REQ";
         case MsgProtocole::LOB_SHARE_PROJECT_REP: return "LOB_SHARE_PROJECT_REP";
         case MsgProtocole::LOB_JOIN_PROJECT_REQ: return "LOB_JOIN_PROJECT_REQ";
