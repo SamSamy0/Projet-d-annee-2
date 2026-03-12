@@ -91,15 +91,15 @@ target_link_libraries(client PRIVATE
 #SERVEUR
 
 set(SERVER_SOURCES
-    src/server/client.cpp
-    src/server/datamanager/databasemanager.cpp
-    src/server/main.cpp
-    src/server/message/message.cpp
-    src/server/datamanager/projectsmanager.cpp
-    src/server/reponse/reponse.cpp
-    src/server/protocol.cpp
-    src/server/servernetwork.cpp
-    src/server/worker.cpp
+    ../src/server/client.cpp
+    ../src/server/datamanager/databasemanager.cpp
+    ../src/server/main.cpp
+    ../src/server/message/message.cpp
+    ../src/server/datamanager/projectsmanager.cpp
+    ../src/server/reponse/reponse.cpp
+    ../src/server/protocol.cpp
+    ../src/server/servernetwork.cpp
+    ../src/server/worker.cpp
 )
 
 add_executable(server ${SERVER_SOURCES})
