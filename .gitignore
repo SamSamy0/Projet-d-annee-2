@@ -2,3 +2,7 @@
 bin
 build/*
 !build/CMakeLists.txt
+
+#Fichier qui enlève les erreurs liée à QT dans nvim
+compile_commands.json
+.cache/
