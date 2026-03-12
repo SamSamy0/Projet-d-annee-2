@@ -1,6 +1,7 @@
 #pragma once
 #include "move.hpp"
 #include "zoom.hpp"
+#include "assetmanager.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
@@ -24,6 +25,7 @@ class Map {
   Zoom zoom_;
   Move move_;
   unsigned int selected_;
+  AssetManager spritemanager_;
 
 public:
   Map(int mapId, sf::Vector2u size, unsigned int scale,vector<shared_ptr<Layer>> layers);
