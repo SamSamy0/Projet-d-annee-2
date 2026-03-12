@@ -4,7 +4,7 @@ void Window::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   manager.login(static_cast<std::string>(usrname->getText()),
                 static_cast<std::string>(pswd->getText()));
   // If the handler changed isLoggedIn to true, access granted
-  if (isLoggedIn) {
+  /*if (isLoggedIn) {
     setState(projectState::MENU);
   }
   // The identifiers were wrong
@@ -12,7 +12,7 @@ void Window::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
     usrname->setText("");
     usrname->setDefaultText("Wrong Identifier(s)");
     pswd->setText("");
-  }
+  }*/
 }
 
 void Window::loginWidget() {
@@ -91,20 +91,30 @@ void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
 
   // Sending Identifiers to server
   // NOTE: Need to forbid empty usrnames
-  if (usrname->getText() != "") {
-    manager.askRegister(static_cast<std::string>(usrname->getText()),
-                        static_cast<std::string>(pswd->getText()));
-    std::cout << usrname->getText() << "   " << pswd->getText() << std::endl;
+  
 
-    if (!isLoggedIn) {
-      // Ask another Usrname
-      usrname->setText("");
-      usrname->setDefaultText("Username already taken or invalid ");
-      pswd->setText("");
-    } else {
-      // Access granted
-      // setState(projectState::MENU);
-    }
-    setState(projectState::MENU);
+  if (usrname->getText() != "") {
+  manager.askRegister(static_cast<std::string>(usrname->getText()),
+                      static_cast<std::string>(pswd->getText()));
+  std::cout << usrname->getText() << "   " << pswd->getText() << std::endl;
   }
+
+  
+  /*if (!isLoggedIn) {
+    // Ask another Usrname
+    usrname->setText("");
+    usrname->setDefaultText("Username already taken or invalid ");
+    pswd->setText("");
+  } else {
+    // Access granted
+    setState(projectState::MENU);
+  } */
+    
+  
+  
+   
 }
+
+
+
+

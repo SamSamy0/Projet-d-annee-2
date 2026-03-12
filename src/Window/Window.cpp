@@ -1,5 +1,7 @@
 #include "Window.hpp"
-#include "../server/clientnetwork.hpp"
+#include "../project/project.hpp"
+#include "../project/Tool/tool.hpp"
+#include "../client/clientnetwork.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -104,21 +106,54 @@ Window::Window(ClientNetworkManager &manager)
   initWidget();
 }
 
-void Window::setProjectList(std::vector<ProjectData> newlist) {
-  projectList = newlist;
+void Window::addProjectList(ProjectData newproj) {
+  projectList.push_back(newproj);
+  initMenuWidget();
 }
+
 bool Window::isOpen() const { return mainWindow.isOpen(); }
+
 
 void Window::run() {
   processEvents();
   mainWindow.clear(sf::Color(35, 35, 40));
 
-  if (Window::state == projectState::GAME && project) {
+  switch (Window::state){
+    
+    case projectState::LOGIN:
+      if (isLoggedIn){
+        state = projectState::MENU;
+        manager.getProjectList();
+        initMenuWidget();
+      }
+      gui.draw();
+      mainWindow.display();
+      break;
+    
+    case projectState::MENU:
+      gui.draw();
+      mainWindow.display();
+      break;
+    
+    case projectState::GAME:
+      project->display();
+      gui.draw();
+      mainWindow.display();
+      break;
+  };
+
+ 
+  
+  /*if (Window::state == projectState::GAME && project) {
     // Display Game
     project->display();
   }
   gui.draw();
-  mainWindow.display();
+  mainWindow.display();*/
+}
+
+void Window::setLogIn(){
+  isLoggedIn = true;
 }
 
 // Pour une utilisation sans serveur

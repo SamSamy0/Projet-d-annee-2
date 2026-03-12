@@ -1,6 +1,8 @@
 #pragma once
+
 #include "../project/project.hpp"
-#include "../server/clientnetwork.hpp"
+#include "../client/clientnetwork.hpp"
+#include "../project/map.hpp"
 #include "ProjectData.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -9,10 +11,15 @@
 #include <vector>
 
 enum class projectState { LOGIN, MENU, GAME };
+
+
 class Window {
 private:
   ClientNetworkManager &manager;
   sf::RenderWindow mainWindow;
+
+  bool isWatingRep = false;
+
   // WARNING: Changer MENU à LOGIN pour la vrai version, là c'est par facilité
   projectState state = projectState::LOGIN;
   bool isLoggedIn = false;
@@ -24,7 +31,7 @@ private:
 
   tgui::ScrollablePanel::Ptr layersList_ = nullptr;
   tgui::Button::Ptr activeMoreButton = nullptr;
-
+  
   // Window
   void initWidget();
   void processEvents();
@@ -68,7 +75,8 @@ public:
   // Setter for bool isLoggedIn
   void setLogIn();
   // Setter for projectList
-  void setProjectList(std::vector<ProjectData> list);
+  void addProjectList(ProjectData projet);
   bool isOpen() const;
   void run();
+  
 };

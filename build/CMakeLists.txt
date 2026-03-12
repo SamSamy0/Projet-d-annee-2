@@ -46,17 +46,21 @@ endif()
 
 #------------------------------------------------------------------------------------------
 
+#---------------------------------Qt6-------------------------------------------------------
+find_package(Qt6 REQUIRED COMPONENTS Sql)
+#------------------------------------------------------------------------------------------
 
-
+#CLIENT
 set(SOURCES
     ../src/client/client.cpp
     ../src/Window/Window.cpp
     ../src/Window/windowGame.cpp
     ../src/Window/windowLogin.cpp
     ../src/Window/windowMenu.cpp
-    ../src/server/clientnetwork.cpp
-    ../src/server/handler.cpp
-    ../src/server/protocol.hpp
+    ../src/client/clientnetwork.cpp
+    ../src/client/handler.cpp
+    ../src/client/protocol.hpp
+    ../src/client/receiverwindow.cpp
     ../src/project/map.cpp
     ../src/project/project.cpp
     ../src/project/zoom.cpp
@@ -75,6 +79,8 @@ set(SOURCES
     
 )
 
+
+
 add_executable(client ${SOURCES})
 
 target_link_libraries(client PRIVATE
@@ -83,5 +89,27 @@ target_link_libraries(client PRIVATE
     SFML::System 
     SFML::Network
     TGUI::TGUI
+)
+
+#SERVEUR
+
+set(SERVER_SOURCES
+    ../src/server/client.cpp
+    ../src/server/datamanager/databasemanager.cpp
+    ../src/server/main.cpp
+    ../src/server/message/message.cpp
+    ../src/server/datamanager/projectsmanager.cpp
+    ../src/server/reponse/reponse.cpp
+    ../src/server/protocol.cpp
+    ../src/server/servernetwork.cpp
+    ../src/server/worker.cpp
+)
+
+add_executable(server ${SERVER_SOURCES})
+
+target_link_libraries(server PRIVATE
+    SFML::System
+    SFML::Network
+    Qt6::Sql
 )
 
