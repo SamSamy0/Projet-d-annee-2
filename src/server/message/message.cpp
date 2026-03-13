@@ -108,6 +108,9 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
 
         case MsgProtocole::LOB_PROJECT_LIST_REQ:
             return std::make_unique<GetProjectsListMessage>(data_packet, c->id);
+
+        case MsgProtocole::LOB_DEL_PROJECT_REQ:
+            return std::make_unique<DeleteProjectMessage>(data_packet, c->id);
         
         case MsgProtocole::LOB_GET_PROJECT_DATA_REQ:
             return std::make_unique<GetProjectDataMessage>(data_packet,c->id);
