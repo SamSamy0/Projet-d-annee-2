@@ -5,13 +5,8 @@
 
 class UserMessage : public MessageChat {
     string message_;
-    static Date currentDate() {
-        time_t t = time(nullptr);
-        tm* now = localtime(&t);
-        return Date(now->tm_mday, now->tm_mon + 1, now->tm_year - 100);
-    }
+    static Date currentDate();
     public :
-        UserMessage(const string& pseudo, const string& message)
-            : MessageChat(User(pseudo), currentDate(), MessageType::USER), message_(message) {}
+        UserMessage(const string& pseudo, const string& message);
         string getTexte() const;
 };

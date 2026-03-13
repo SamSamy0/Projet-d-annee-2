@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 include(FetchContent)
 
 project(Projet)
@@ -61,9 +62,14 @@ set(CMAKE_AUTOMOC ON)  # ← nécessaire pour Qt
 set(SOURCES
     ../src/client/client.cpp
     ../src/Window/Window.cpp
-    ../src/Window/windowGame.cpp
     ../src/Window/windowLogin.cpp
     ../src/Window/windowMenu.cpp
+    ../src/Window/projectWidgets/windowGame.cpp
+    ../src/Window/projectWidgets/toolBarWidgets.cpp
+    ../src/Window/projectWidgets/layerWidgets.cpp
+    ../src/Window/projectWidgets/chatWidgets.cpp
+    ../src/Window/projectWidgets/toolbarOptionsWidgets/penOptions.cpp
+    ../src/Window/projectWidgets/toolbarOptionsWidgets/eraserOptions.cpp
     ../src/client/clientnetwork.cpp
     ../src/client/handler.cpp
     ../src/client/protocol.hpp
