@@ -44,6 +44,16 @@ struct CreateProjectMessage : IMessage{
     void process(Worker& worker) override;
 };
 
+struct RenameProjectMessage: IMessage{
+    long long userID_;
+    int projectId_;
+    std::string newName_;
+
+    RenameProjectMessage(sf::Packet& dataPacket, long long userId);
+    void process(Worker& worker) override;
+    
+};
+
 
 struct GetProjectDataMessage : IMessage{
     long long userId_;

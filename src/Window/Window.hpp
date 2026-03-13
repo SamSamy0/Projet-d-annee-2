@@ -85,6 +85,7 @@ public:
   void setLogIn();
   // Setter for projectList
   void addProjectList(ProjectData projet);
+  void updateProjectNameInList(long long id, const std::string &name);
   bool isOpen() const;
   void run();
 };

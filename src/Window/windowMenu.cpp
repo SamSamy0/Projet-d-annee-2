@@ -1,5 +1,6 @@
 #include "Window.hpp"
 #include <SFML/Graphics/Color.hpp>
+#include <string>
 
 void Window::initMenuWidget() {
   gui.removeAllWidgets();
@@ -212,7 +213,6 @@ void Window::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
           // Rename Action
         } else if (item == "Renommer") {
           std::cout << "appuyé" << std::endl;
-          // WARNING: Ask Server for a Rename function !
           // NOTE: Sending project reference to server with "project"
           initInputWidget(focusPopup::RENAME, project);
         } else if (item == "Dupliquer") {
@@ -293,11 +293,14 @@ void Window::popupRename(tgui::Panel::Ptr renameBackground,
   exitB->onPress([this, renameBackground]() { exitAction(renameBackground); });
 
   rvalid->onPress([this, rname, project, renameBackground]() {
-    // TODO: Need to send new Name to server
-    tgui::String newName = rname->getText();
+    std::cout << "Renaming project id: " << project.projectId << std::endl;
+    std::string newName = static_cast<std::string>(rname->getText());
+    if (!newName.empty()) {
+      manager.renameProject(project.projectId, newName);
+      exitAction(renameBackground);
 
-    // project.setName("bonjour");
-    exitAction(renameBackground);
+    } else
+      (boxError(rname));
   });
 }
 

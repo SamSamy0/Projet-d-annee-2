@@ -73,6 +73,15 @@ void ClientNetworkManager::createProject(std::string nomProjet, sf::Vector2u siz
 
     socket_.send(packet);
 }
+void ClientNetworkManager::renameProject(int projectId, std::string newName){
+    sf::Packet packet;
+    MsgProtocole msg = MsgProtocole::LOB_RENAME_PROJECT_REQ;
+
+    packet <<static_cast<uint8_t>(msg);
+    packet <<projectId << newName;
+
+    socket_.send(packet);
+}
 
 
 void ClientNetworkManager::getProjectList() {

@@ -96,6 +96,19 @@ long long DatabaseManager::addProject(const std::string& name, const long long u
     return -1;
 }
 
+bool DatabaseManager::updateProjectName(const long long projectId, const std::string & newName){
+    QSqlQuery query;
+    query.prepare("Update projects SET name = :n WHERE id = :i");
+    query.bindValue(":n", QString::fromStdString(newName));
+    query.bindValue(":i", static_cast<qlonglong>(projectId));
+    if(query.exec()){
+        return query.numRowsAffected()>0;
+    }
+    qDebug() << "Erreur DatabaseManager (updateProjectName):" <<query.lastError().text();
+    return false;
+
+    
+};
 bool DatabaseManager::changeRole(const long long userId, const long long projectId, const int8_t role) {
     QSqlQuery query;
 

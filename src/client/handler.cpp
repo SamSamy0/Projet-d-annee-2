@@ -43,6 +43,18 @@ void ClientHandler::process(ServerEvent& event){
             }
 
             break;
+        case MsgProtocole::LOB_RENAME_PROJECT_REP:{
+            uint8_t success;
+            uint32_t projectId;
+            std::string newName;
+            *(event.data_packet_) >> success >> projectId >> newName;
+            if (success){
+                handleWindow_.updateProjectNameInList(projectId, newName);
+            }
+            break;
+                
+        }
+            
     }        
 }
 

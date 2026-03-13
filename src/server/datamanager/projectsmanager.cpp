@@ -59,6 +59,25 @@ bool ProjectsManager::saveImage(int id, const QString &fileName, const QByteArra
     return false;
 }
 
+bool ProjectsManager::updateProjectName(int id, const QString& newName){
+    QJsonObject root = loadProjectJson(id);
+    if (root.isEmpty())return false;
+    root["name"] = newName;
+    QString filePath = getProjectPath(id) + "/donnees.json";
+    QFile file(filePath);
+
+    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        QJsonDocument doc(root);
+        file.write(doc.toJson(QJsonDocument::Indented));
+        file.close();
+        return true;
+    }
+
+    qCritical() << "Impossible d'ouvrir le fichier en écriture :" << filePath;
+    return false;
+    
+}
+
 QJsonObject ProjectsManager::loadProjectJson(int id) {
     QString filePath = getProjectPath(id) + "/donnees.json";
     QFile file(filePath);

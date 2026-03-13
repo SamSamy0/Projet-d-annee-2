@@ -111,6 +111,16 @@ void Window::addProjectList(ProjectData newproj) {
   projectList.push_back(newproj);
   initMenuWidget();
 }
+void Window::updateProjectNameInList(long long id, const std::string &name) {
+  for (auto &projData : projectList) {
+    if (projData.projectId == id) {
+      projData.projectName = name;
+      break;
+    }
+  }
+  //Refreshing project list
+  initMenuWidget();
+}
 
 bool Window::isOpen() const { return mainWindow.isOpen(); }
 

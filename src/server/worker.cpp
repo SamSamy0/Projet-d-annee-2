@@ -68,6 +68,12 @@ std::vector<ProjectEntry> Worker::getAllProjects() {
     return dbManager_.getAllProjects();
 }
 
+bool Worker::renameProject(int projectId, const std::string& newName){
+    bool dbRename = dbManager_.updateProjectName(projectId, newName);
+    bool jsonRename = projManager_.updateProjectName(projectId, QString::fromStdString(newName));
+    return dbRename && jsonRename;
+    
+}
 
 
 bool Worker::createProjectJson(int projectId, const std::string &projectName, int width, int height, uint scale) {
