@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>
 #include "toolbar.hpp"
+#include "./Chat/chat.hpp"
 
 
 class Tool;
@@ -15,7 +16,7 @@ class User;
 
 class Project{
     // std::vector<User> users;
-    // Chat chat;
+    Chat chat_;
     std::string name_;
     unsigned int id_;
     sf::RenderWindow& window_;
@@ -33,10 +34,10 @@ public:
     unsigned int getScale();
     std::shared_ptr<Map> getMap();
     ToolBar& getToolBar();
+    Chat& getChat();
     void display();
     void displayScale();
     void displayToolBar();
-    void displayLeftBar();
     void displayBackground();
     sf::View& getView();
 };

@@ -21,6 +21,8 @@ std::string Project::getName() { return name_; }
 
 ToolBar& Project::getToolBar() { return toolbar_; }
 
+Chat& Project::getChat() { return chat_; }
+
 std::shared_ptr<Map> Project::getMap() { return map_; }
 
 sf::View &Project::getView() { return viewMap_; }
@@ -37,28 +39,9 @@ void Project::displayScale() {
   scaleText.setString("1m = " + to_string(getScale()) + " px");
   scaleText.setCharacterSize(17);
   scaleText.setFillColor(sf::Color::Black);
-  scaleText.setPosition(sf::Vector2f(window_.getSize().x * 0.16, window_.getSize().y * 0.995 + 10));
+  scaleText.setPosition(sf::Vector2f(window_.getSize().x * 0.16f, window_.getSize().y * 0.97f));
 
   window_.draw(scaleText);
-}
-
-void Project::displayToolBar() {
-  sf::RectangleShape toolbar;
-
-  toolbar.setSize(sf::Vector2f(window_.getSize().x, window_.getSize().y * 0.05));
-  toolbar.setFillColor(sf::Color(50, 56, 66));
-
-  window_.draw(toolbar);
-}
-
-void Project::displayLeftBar() {
-  sf::RectangleShape leftbar;
-
-  leftbar.setPosition(sf::Vector2f(window_.getSize().x * 0.01, window_.getSize().y * 0.07));
-  leftbar.setSize(sf::Vector2f(window_.getSize().x * 0.13, window_.getSize().y));
-  leftbar.setFillColor(sf::Color(50, 56, 66));
-
-  window_.draw(leftbar);
 }
 
 void Project::displayBackground() {
@@ -69,7 +52,7 @@ void Project::displayBackground() {
 
   sf::RectangleShape left;
 
-  left.setPosition(sf::Vector2f(0, window_.getSize().y * 0.05));
+  left.setPos pour pouvoir modifier depuis du coup ma fonctionition(sf::Vector2f(0, window_.getSize().y * 0.05));
   left.setSize(sf::Vector2f(window_.getSize().x * 0.15, window_.getSize().y));
   left.setFillColor(sf::Color(36, 40, 47));
 
@@ -85,7 +68,5 @@ void Project::display() {
   window_.setView(viewUI_);
 
   displayBackground();
-  displayToolBar();
-  displayLeftBar();
   displayScale();
 }

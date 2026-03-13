@@ -1,6 +1,7 @@
 #include "Window.hpp"
 
 void Window::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
+  currentUser_ = User(static_cast<std::string>(usrname->getText()));
   manager.login(static_cast<std::string>(usrname->getText()),
                 static_cast<std::string>(pswd->getText()));
   // If the handler changed isLoggedIn to true, access granted
@@ -94,6 +95,7 @@ void Window::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   
 
   if (usrname->getText() != "") {
+  currentUser_ = User(static_cast<std::string>(usrname->getText()));
   manager.askRegister(static_cast<std::string>(usrname->getText()),
                       static_cast<std::string>(pswd->getText()));
   std::cout << usrname->getText() << "   " << pswd->getText() << std::endl;

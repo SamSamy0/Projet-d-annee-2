@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../project/project.hpp"
+#include "../project/user.hpp"
 #include "../client/clientnetwork.hpp"
 #include "../project/map.hpp"
 #include "ProjectData.hpp"
@@ -19,6 +20,8 @@ private:
   sf::RenderWindow mainWindow;
 
   bool isWatingRep = false;
+  bool isToolSelected_ = false;
+  User currentUser_;
 
   // WARNING: Changer MENU à LOGIN pour la vrai version, là c'est par facilité
   projectState state = projectState::LOGIN;
@@ -29,9 +32,21 @@ private:
   // Temporary (until server is OK)
   std::vector<ProjectData> projectList = {};
 
+  tgui::Panel::Ptr layerPanel_ = nullptr;
   tgui::ScrollablePanel::Ptr layersList_ = nullptr;
   tgui::Button::Ptr activeMoreButton = nullptr;
-  
+
+  // Chat widget
+  tgui::Panel::Ptr chatPanel_ = nullptr;
+  tgui::ScrollablePanel::Ptr chatMessages_ = nullptr;
+  tgui::EditBox::Ptr chatInput_ = nullptr;
+  tgui::Button::Ptr chatSendButton_ = nullptr;
+
+  // Pen options panel
+  tgui::Panel::Ptr penOptionsPanel_ = nullptr;
+  // Eraser options panel
+  tgui::Panel::Ptr eraserOptionsPanel_ = nullptr;
+
   // Window
   void initWidget();
   void processEvents();
@@ -62,6 +77,10 @@ private:
   void initGameWidget();
   void initToolbar();
   void initLayerPanel();
+  void initChatWidget();
+  void initPenOptions();
+  void initEraserOptions();
+  void refreshChat();
   void refreshLayerList();
   void handleGameEvents(const std::optional<sf::Event> &event);
   // Detection in map
