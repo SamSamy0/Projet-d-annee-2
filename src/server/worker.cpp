@@ -72,7 +72,15 @@ bool Worker::renameProject(int projectId, const std::string& newName){
     bool dbRename = dbManager_.updateProjectName(projectId, newName);
     bool jsonRename = projManager_.updateProjectName(projectId, QString::fromStdString(newName));
     return dbRename && jsonRename;
-    
+}
+
+bool Worker::duplicateProject(int oldId, const std::string& newName, long long userId){
+    long long newId = dbManager_.dupProj(newName, userId);
+    // Duplication didn't work
+    if (newId == -1) return false;
+    bool cpyFldr = projManager_.copyProjectFolder(oldId, newId);
+    bool updtJson = projManager_.updateJsonDup(newId, QString::fromStdString(newName));
+    return cpyFldr && updtJson;
 }
 
 

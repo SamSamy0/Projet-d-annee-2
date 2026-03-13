@@ -32,8 +32,12 @@ struct ReponseAuth : ReponseSolo {
 
 struct ReponseRenameProject: ReponseSolo{
 
-    ReponseRenameProject(long long userID_, int projectId_, std::string NewName, bool success);
+    ReponseRenameProject(long long userID_, int projectId_, std::string newName, bool success);
     // virtual void envoyer(ServerNetworkManager& servManager) override;
+};
+
+struct ReponseDuplicateProject: ReponseSolo{
+    ReponseDuplicateProject(long long userId_, int projectId_, std::string newName, bool success);
 };
 
 struct ReponseProjectData : ReponseSolo {

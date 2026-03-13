@@ -78,6 +78,74 @@ bool ProjectsManager::updateProjectName(int id, const QString& newName){
     
 }
 
+bool ProjectsManager::copyProjectFolder(int oldId, int newId){
+    QString srcPath = getProjectPath(oldId);
+    QString destinationPath = getProjectPath(newId);
+    return copyRecursively(srcPath, destinationPath);
+}
+
+// bool ProjectsManager::copyRecursively(const QString& srcPath, const QString& destinationPath){
+//     QDir dir(srcPath);
+//     if (! dir.exists())
+//         return false ;
+//     QDir dstDir;
+//     dstDir.mkpath(destinationPath);
+//     //Copy directory
+//     foreach (QString dirName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+//         QFile::copy(srcPath + "/" + dirName , destinationPath + "/" + dirName);
+//     }
+//     //Copy fils in directory and subdirectory
+//     foreach (QString fileName, dir.entryList(QDir::Files)) {
+//         QFile::copy(srcPath + "/" + fileName, destinationPath + "/" + fileName);
+//     }
+//     return true;
+// }
+bool ProjectsManager::copyRecursively(const QString &srcFilePath,
+                            const QString &tgtFilePath)
+{
+    QFileInfo srcFileInfo(srcFilePath);
+    if (srcFileInfo.isDir()) {
+        QDir targetDir(tgtFilePath);
+        targetDir.cdUp();
+        if (!targetDir.mkdir(QFileInfo(tgtFilePath).fileName()))
+            return false;
+        QDir sourceDir(srcFilePath);
+        QStringList fileNames = sourceDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
+        foreach (const QString &fileName, fileNames) {
+            const QString newSrcFilePath
+                    = srcFilePath + QLatin1Char('/') + fileName;
+            const QString newTgtFilePath
+                    = tgtFilePath + QLatin1Char('/') + fileName;
+            if (!copyRecursively(newSrcFilePath, newTgtFilePath))
+                return false;
+        }
+    } else {
+        if (!QFile::copy(srcFilePath, tgtFilePath))
+            return false;
+    }
+    return true;
+}
+bool ProjectsManager::updateJsonDup(int newId, const QString& newName){
+    QJsonObject root = loadProjectJson(newId);
+    if (root.isEmpty())return false;
+    root["name"] = newName;
+    root["id"] = newId;
+    QString filePath = getProjectPath(newId) + "/donnees.json";
+    QFile file(filePath);
+
+    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        QJsonDocument doc(root);
+        file.write(doc.toJson(QJsonDocument::Indented));
+        file.close();
+        return true;
+    }
+
+    qCritical() << "Impossible d'ouvrir le fichier en écriture :" << filePath;
+    return false;
+    
+}
+
+
 QJsonObject ProjectsManager::loadProjectJson(int id) {
     QString filePath = getProjectPath(id) + "/donnees.json";
     QFile file(filePath);

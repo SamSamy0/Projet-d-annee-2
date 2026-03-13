@@ -40,9 +40,13 @@ ReponseRenameProject::ReponseRenameProject(long long userId, int projectId, std:
     dataPacket_<<newName;;
 }
 
-// void ReponseRenameProject::envoyer(ServerNetworkManager& servManager){
-//     client_->sock->
-// }
+ReponseDuplicateProject::ReponseDuplicateProject(long long userId, int projectId, std::string newName, bool success): ReponseSolo(userId){
+    dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_DUPLICATE_PROJECT_REP);
+    dataPacket_ << static_cast<std::uint8_t>(success ?1:0);
+    dataPacket_ <<static_cast<std::uint32_t>(projectId);
+    dataPacket_<<newName;;
+    
+}
 
 ReponseProjectData::ReponseProjectData(long long userId) : ReponseSolo(userId) {/*remplir un jour lol*/}
 

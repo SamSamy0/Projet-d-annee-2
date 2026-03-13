@@ -1,5 +1,6 @@
 #include "Window.hpp"
 #include <SFML/Graphics/Color.hpp>
+#include <TGUI/Widgets/Panel.hpp>
 #include <string>
 
 void Window::initMenuWidget() {
@@ -216,6 +217,7 @@ void Window::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
           // NOTE: Sending project reference to server with "project"
           initInputWidget(focusPopup::RENAME, project);
         } else if (item == "Dupliquer") {
+          initInputWidget(focusPopup::DUPLICATE, project);
         } else if (item == "Partager") {
         } else if (item == "Quitter") {
         }
@@ -244,8 +246,8 @@ void Window::exitAction(tgui::Panel::Ptr background) {
   gui.remove(back);
 }
 
-void Window::popupRename(tgui::Panel::Ptr renameBackground,
-                         ProjectData project) {
+void Window::popupRename(tgui::Panel::Ptr renameBackground, ProjectData project,
+                         focusPopup view) {
   gui.add(renameBackground, "rbackground");
 
   // Box for project's renamePanel
@@ -256,7 +258,11 @@ void Window::popupRename(tgui::Panel::Ptr renameBackground,
   renameBackground->add(renamePanel, "Panel");
   // Title
   std::string oldName = project.projectName;
-  auto rtitle = tgui::Label::create("Renommer le projet: \n " + oldName);
+  tgui::Label::Ptr rtitle;
+  if (view == focusPopup::RENAME)
+    rtitle = tgui::Label::create("Renommer le projet: \n " + oldName);
+  else 
+    rtitle = tgui::Label::create("Dupliquer le projet: \n " + oldName);
   rtitle->getRenderer()->setTextColor(tgui::Color::White);
   rtitle->setPosition("25%", "5%");
   rtitle->setTextSize(24);
@@ -285,23 +291,37 @@ void Window::popupRename(tgui::Panel::Ptr renameBackground,
   auto exitB = tgui::Button::create("x");
   exitB->setSize("10%", "10%");
   exitB->setPosition("0%", "0%");
-  exitB->getRenderer()->setBackgroundColor(sf::Color::Red);
+  exitB->getRenderer()->setBackgroundColor(sf::Color(102,178,255));
   exitB->getRenderer()->setBackgroundColorHover(sf::Color::White);
   exitB->getRenderer()->setTextColor(sf::Color::Black);
   exitB->getRenderer()->setBorders(0);
   renamePanel->add(exitB);
   exitB->onPress([this, renameBackground]() { exitAction(renameBackground); });
 
-  rvalid->onPress([this, rname, project, renameBackground]() {
-    std::cout << "Renaming project id: " << project.projectId << std::endl;
-    std::string newName = static_cast<std::string>(rname->getText());
-    if (!newName.empty()) {
-      manager.renameProject(project.projectId, newName);
-      exitAction(renameBackground);
+  rvalid->onPress([this, rname, project, renameBackground, view]() {
+    if (view == focusPopup::RENAME) {
+      std::cout << "Renaming project id: " << project.projectId << std::endl;
+      std::string newName = static_cast<std::string>(rname->getText());
+      if (!newName.empty()) {
+        manager.renameProject(project.projectId, newName);
+        exitAction(renameBackground);
 
-    } else
-      (boxError(rname));
+      } else
+        (boxError(rname));
+    } else if (view == focusPopup::DUPLICATE) {
+      std::string newName = static_cast<std::string>(rname->getText());
+      if (!newName.empty()) {
+        std::cout <<"duplicating projects id: " <<project.projectId <<std::endl;
+        manager.dupProj(project.projectId, newName);
+        exitAction(renameBackground);
+
+      } else
+        (boxError(rname));
+    }
   });
+}
+void Window::updateList(){
+  initMenuWidget();
 }
 
 void Window::initInputWidget(focusPopup focus, ProjectData project) {
@@ -322,12 +342,74 @@ void Window::initInputWidget(focusPopup focus, ProjectData project) {
     break;
   }
   case (focusPopup::RENAME): {
-    popupRename(background, project);
+    popupRename(background, project, focusPopup::RENAME);
     // popupRename();
     break;
   }
+  case (focusPopup::DUPLICATE): {
+    popupRename(background, project, focusPopup::DUPLICATE);
+  }
   }
 }
+// void Window::popupDuplicate(tgui::Panel::Ptr dbackground, ProjectData
+// project) {
+//   gui.add(dbackground, "dbackground");
+//
+//   // Box for project's duplicatePanel
+//   auto duplicatePanel = tgui::Panel::create();
+//   duplicatePanel->setSize("35%", "30%");
+//   duplicatePanel->setPosition("50% - 17.5%", "50% - 10%");
+//   duplicatePanel->getRenderer()->setBackgroundColor(tgui::Color(40, 40, 40));
+//   dbackground->add(duplicatePanel, "Panel");
+//   // Title
+//   std::string oldName = project.projectName;
+//   auto dtitle = tgui::Label::create("Renommer le projet: \n " + oldName);
+//   dtitle->getRenderer()->setTextColor(tgui::Color::White);
+//   dtitle->setPosition("25%", "5%");
+//   dtitle->setTextSize(24);
+//   duplicatePanel->add(dtitle);
+//   // Rename Box
+//   auto dname = tgui::EditBox::create();
+//   dname->setSize("80%", "12%");
+//   dname->setPosition("10%", "35%");
+//   dname->setDefaultText("Choisissez un nouveau nom ");
+//   dname->getRenderer()->setRoundedBorderRadius(8);
+//   dname->getRenderer()->setBackgroundColor(tgui::Color(28, 28, 36));
+//   dname->getRenderer()->setBorderColor(sf::Color(55, 55, 70));
+//   dname->getRenderer()->setBackgroundColorFocused(tgui::Color::White);
+//   duplicatePanel->add(dname);
+//   // Valid Button
+//   auto dvalid = tgui::Button::create("Valider");
+//   dvalid->setSize("40%", "12%");
+//   dvalid->setPosition("30%", "75%");
+//   dvalid->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
+//   dvalid->getRenderer()->setBackgroundColorHover(sf::Color(118, 120, 255));
+//   dvalid->getRenderer()->setTextColor(sf::Color::White);
+//   dvalid->getRenderer()->setBorders(0);
+//   dvalid->getRenderer()->setRoundedBorderRadius(8);
+//   duplicatePanel->add(dvalid);
+//   // Exit Button
+//   auto exitB = tgui::Button::create("x");
+//   exitB->setSize("10%", "10%");
+//   exitB->setPosition("0%", "0%");
+//   exitB->getRenderer()->setBackgroundColor(sf::Color::Red);
+//   exitB->getRenderer()->setBackgroundColorHover(sf::Color::White);
+//   exitB->getRenderer()->setTextColor(sf::Color::Black);
+//   exitB->getRenderer()->setBorders(0);
+//   duplicatePanel->add(exitB);
+//   exitB->onPress([this, dbackground]() { exitAction(dbackground); });
+//
+//   dvalid->onPress([this, dname, project, dbackground]() {
+//     std::cout << "Renaming project id: " << project.projectId << std::endl;
+//     std::string newName = static_cast<std::string>(dname->getText());
+//     if (!newName.empty()) {
+//       manager.renameProject(project.projectId, newName);
+//       exitAction(dbackground);
+//
+//     } else
+//       (boxError(dname));
+//   });
+// }
 
 void Window::popupCreate(tgui::Panel::Ptr background) {
   gui.add(background);

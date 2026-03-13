@@ -13,6 +13,9 @@ public:
   QJsonObject loadProjectJson(int id);
   bool saveImage(int id, const QString &fileName, const QByteArray &data);
   bool updateProjectName(int id, const QString &newName);
+  bool copyProjectFolder(int oldId, int newId);
+  bool copyRecursively(const QString &srcPath, const QString& destinationPath);
+  bool updateJsonDup(int newId, const QString& newName);
 
 private:
   QString getProjectPath(int id) const;

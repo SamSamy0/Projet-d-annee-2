@@ -11,7 +11,7 @@
 #include <vector>
 
 enum class projectState { LOGIN, MENU, GAME };
-enum class focusPopup { CREATE, RENAME };
+enum class focusPopup { CREATE, RENAME, DUPLICATE };
 
 class Window {
 private:
@@ -52,8 +52,10 @@ private:
   void displayProjList(tgui::Panel::Ptr parent);
   void showProjectMenu(ProjectData, tgui::Button::Ptr toHover);
   void initInputWidget(focusPopup focus, ProjectData project = ProjectData{});
-  void popupRename(tgui::Panel::Ptr back, ProjectData project);
+  void popupRename(tgui::Panel::Ptr back, ProjectData project, focusPopup view);
   void popupCreate(tgui::Panel::Ptr background);
+  void popupDuplicate(tgui::Panel::Ptr background, ProjectData project,
+                      focusPopup view);
   void exitAction(tgui::Panel::Ptr background);
   void closePopup();
   void createPopup();
@@ -86,6 +88,7 @@ public:
   // Setter for projectList
   void addProjectList(ProjectData projet);
   void updateProjectNameInList(long long id, const std::string &name);
+  void updateList();
   bool isOpen() const;
   void run();
 };
