@@ -17,6 +17,7 @@ void ClientHandler::processEventQueu(){
 
 void ClientHandler::process(ServerEvent& event){
     switch(event.message_type_){
+        
         case MsgProtocole::AUTH_RESULT:
             uint8_t accept;
             *(event.data_packet_) >> accept;
@@ -42,6 +43,9 @@ void ClientHandler::process(ServerEvent& event){
                 handleWindow_.addProjectToList(projet);
             }
 
+            break;
+        
+        case MsgProtocole::LOB_GET_PROJECT_DATA_REP:
             break;
     }        
 }

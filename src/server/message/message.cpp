@@ -1,6 +1,6 @@
 #include "message.hpp"
 #include "../worker.hpp"
-#include "../protocol.hpp"
+#include "../../common/protocol.hpp"
 #include "../reponse/reponse.hpp"
 
 
@@ -78,9 +78,11 @@ void DeleteProjectMessage::process(Worker& worker) {
     }
 }
 
-GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, long long userId) {
-}
 
+GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, long long userId) {
+    userId_ = userId;
+    data_packet >> projectId_;
+}
 
 void GetProjectDataMessage::process(Worker& worker) {
 }
@@ -106,6 +108,9 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
 
         case MsgProtocole::LOB_PROJECT_LIST_REQ:
             return std::make_unique<GetProjectsListMessage>(data_packet, c->id);
+        
+        case MsgProtocole::LOB_GET_PROJECT_DATA_REQ:
+            return std::make_unique<GetProjectDataMessage>(data_packet,c->id);
         
         default:
             std::cout<< "pas de message" << std::endl;

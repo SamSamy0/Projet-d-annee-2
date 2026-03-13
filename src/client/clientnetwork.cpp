@@ -22,7 +22,6 @@ void ClientNetworkManager::getEvent(){
     auto packet = std::make_unique<sf::Packet>();
 
     if (socket_.receive(*packet) == sf::Socket::Status::Done){
-        std::cout <<"####################  messages recu du serveur  ########################" << std::endl;
         uint8_t type_mess;
         *packet >> type_mess;
         
@@ -30,15 +29,19 @@ void ClientNetworkManager::getEvent(){
         rep.data_packet_ = std::move(packet);
 
         reponse_.push_back(std::move(rep));
-
-        
-            
     }
 }
 
 
 bool ClientNetworkManager::hasEvent(){
     return !reponse_.empty();
+}
+
+
+ServerEvent ClientNetworkManager::popEvent() {
+    auto msg = std::move(reponse_.front());
+    reponse_.pop_front();
+    return msg;
 }
 
 
@@ -84,8 +87,11 @@ void ClientNetworkManager::getProjectList() {
 }
 
 
-ServerEvent ClientNetworkManager::popEvent() {
-    auto msg = std::move(reponse_.front());
-    reponse_.pop_front();
-    return msg;
+void ClientNetworkManager::getProjectData(long long project_id){
+    sf::Packet packet;
+    MsgProtocole msg = MsgProtocole::LOB_GET_PROJECT_DATA_REQ;
+
+    packet << static_cast<uint8_t>(msg);
+    packet << static_cast<int>(project_id);
+    socket_.send(packet);
 }

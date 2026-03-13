@@ -25,7 +25,7 @@ public:
     void getUsersProjects(long long id);
     void getProjectList(); 
     
-    void getProjectData(int project_id);
+    void getProjectData(long long project_id);
     void delProject();
     void renameProject();
     void createProjectCode();
