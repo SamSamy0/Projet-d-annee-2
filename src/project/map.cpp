@@ -40,10 +40,20 @@ vector<shared_ptr<Layer>>& Map::getLayers() { return layers_; }
 void Map::insertLayer(shared_ptr<Layer> layer) { layers_.insert(layers_.begin()+selected_+1, layer) ; }
 
 void Map::createPixelLayer(){
+    int n = 1;
+    bool taken;
+    do {
+        taken = false;
+        std::string candidate = "Couche Pixel (" + std::to_string(n) + ")";
+        for (const auto& layer : layers_) {
+            if (layer->getName() == candidate) { taken = true; break; }
+        }
+        if (taken) n++;
+    } while (taken);
 
-    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>("Nouvelle Couche",size_);
+    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>("Couche Pixel (" + std::to_string(n) + ")", size_);
     layers_.push_back(pixellayer);
-    layers_.size() ==1? selected_ = 0: selected_+=1;
+    layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
 }
 
 shared_ptr<Layer> Map::getCurrentLayer(){

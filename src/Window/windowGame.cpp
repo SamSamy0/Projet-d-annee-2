@@ -1,4 +1,5 @@
 #include "Window.hpp"
+#include "../project/Layer/layer.hpp"
 #include "../project/Tool/pixelbrush.hpp"
 #include "../project/Tool/pixelshift.hpp"
 #include "../project/Chat/userMessage.hpp"
@@ -133,7 +134,7 @@ void Window::initLayerPanel() {
 
   // Liste des couches
   layersList_ = tgui::ScrollablePanel::create();
-  layersList_->setSize(width * 0.18, height * 0.42);
+  layersList_->setSize(width * 0.18, height * 0.38);
   layersList_->setPosition(width * 0.01, height * 0.05);
   layersList_->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   layersList_->getRenderer()->setBorders({1});
@@ -145,7 +146,7 @@ void Window::initLayerPanel() {
   vector<shared_ptr<Layer>> &layers = project->getMap()->getLayers();
   unsigned int selected = project->getMap()->getLayerSelected();
   for (size_t i = 0; i < layers.size(); i++) {
-    auto layerButton = tgui::Button::create("Couche " + std::to_string(i + 1));
+    auto layerButton = tgui::Button::create(layers[i]->getName());
     bool isSelected = (i == selected);
     layerButton->getRenderer()->setBackgroundColor(isSelected ? tgui::Color(60, 130, 200) : tgui::Color(36, 40, 47));
     layerButton->getRenderer()->setBackgroundColorHover(isSelected ? tgui::Color(75, 150, 220) : tgui::Color(50, 56, 66));
@@ -163,10 +164,27 @@ void Window::initLayerPanel() {
   }
   layersList_->setContentSize(sf::Vector2f(width * 0.17, layers.size() * height * 0.055));
 
+  // Bouton "M/U" (Masquer / Démasquer)
+  auto maskButton = tgui::Button::create("M/U");
+  maskButton->setSize(width * 0.18, height * 0.04);
+  maskButton->setPosition(width * 0.01, height * 0.44);
+  maskButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+  maskButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+  maskButton->getRenderer()->setTextColor(tgui::Color::White);
+  maskButton->getRenderer()->setBorders({0});
+  maskButton->getRenderer()->setRoundedBorderRadius(8);
+  maskButton->onClick([this]() {
+    auto& layers = project->getMap()->getLayers();
+    unsigned int sel = project->getMap()->getLayerSelected();
+    if (sel < layers.size())
+      layers[sel]->setMasked(!layers[sel]->getMasked());
+  });
+  layerPanel_->add(maskButton);
+
   // Bouton "Ajouter couche"
   auto addLayerButton = tgui::Button::create("Ajouter couche");
   addLayerButton->setSize(width * 0.18, height * 0.04);
-  addLayerButton->setPosition(width * 0.01, height * 0.48);
+  addLayerButton->setPosition(width * 0.01, height * 0.485);
   addLayerButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
   addLayerButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
   addLayerButton->getRenderer()->setTextColor(tgui::Color::White);
@@ -206,7 +224,7 @@ void Window::refreshLayerList() {
   const vector<shared_ptr<Layer>> &layers = project->getMap()->getLayers();
   unsigned int selected = project->getMap()->getLayerSelected();
   for (size_t i = 0; i < layers.size(); i++) {
-    auto layerButton = tgui::Button::create("Couche " + std::to_string(i + 1));
+    auto layerButton = tgui::Button::create(layers[i]->getName());
     bool isSelected = (i == selected);
     layerButton->getRenderer()->setBackgroundColor(isSelected ? tgui::Color(60, 130, 200) : tgui::Color(36, 40, 47));
     layerButton->getRenderer()->setBackgroundColorHover(isSelected ? tgui::Color(75, 150, 220) : tgui::Color(50, 56, 66));
@@ -423,28 +441,52 @@ void Window::initPenOptions() {
   penOptionsPanel_->setVisible(false);
   gui.add(penOptionsPanel_);
 
-  // --- TAILLE ---
-  auto sizeInputBox = tgui::EditBox::create();
-  sizeInputBox->setSize(width * 0.06, height * 0.04);
-  sizeInputBox->setPosition(width * 0.008, height * 0.011);
-  sizeInputBox->setDefaultText("1");
-  sizeInputBox->setInputValidator("[0-9]*");
-  sizeInputBox->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
-  sizeInputBox->getRenderer()->setTextColor(tgui::Color::White);
-  sizeInputBox->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
-  sizeInputBox->getRenderer()->setBorders({1});
-  sizeInputBox->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
-  sizeInputBox->onTextChange([this, sizeInputBox]() {
-    if (sizeInputBox->getText().empty()) return;
-    unsigned int size = static_cast<unsigned int>(std::stoi(sizeInputBox->getText().toStdString()));
-    if (size < 1) size = 1;
+  // --- TAILLE (L × H) ---
+  auto sizeXInput = tgui::EditBox::create();
+  sizeXInput->setSize(width * 0.04, height * 0.04);
+  sizeXInput->setPosition(width * 0.008, height * 0.011);
+  sizeXInput->setDefaultText("L");
+  sizeXInput->setInputValidator("[0-9]*");
+  sizeXInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+  sizeXInput->getRenderer()->setTextColor(tgui::Color::White);
+  sizeXInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
+  sizeXInput->getRenderer()->setBorders({1});
+  sizeXInput->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+  penOptionsPanel_->add(sizeXInput);
+
+  auto sizeYInput = tgui::EditBox::create();
+  sizeYInput->setSize(width * 0.04, height * 0.04);
+  sizeYInput->setPosition(width * 0.052, height * 0.011);
+  sizeYInput->setDefaultText("l");
+  sizeYInput->setInputValidator("[0-9]*");
+  sizeYInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+  sizeYInput->getRenderer()->setTextColor(tgui::Color::White);
+  sizeYInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
+  sizeYInput->getRenderer()->setBorders({1});
+  sizeYInput->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+  sizeYInput->setVisible(false);
+  penOptionsPanel_->add(sizeYInput);
+
+  sizeXInput->onTextChange([this, sizeXInput, sizeYInput]() {
+    if (sizeXInput->getText().empty()) return;
+    unsigned int sizeX = static_cast<unsigned int>(std::stoi(sizeXInput->getText().toStdString()));
+    if (sizeX < 1) sizeX = 1;
+    unsigned int sizeY = sizeYInput->getText().empty() ? 1 : static_cast<unsigned int>(std::stoi(sizeYInput->getText().toStdString()));
+    if (sizeY < 1) sizeY = 1;
     auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
-    if (brush) brush->setSize(size, size);
+    if (brush) brush->setSize(sizeX, sizeY);
   });
-  penOptionsPanel_->add(sizeInputBox);
+  sizeYInput->onTextChange([this, sizeXInput, sizeYInput]() {
+    if (sizeYInput->getText().empty()) return;
+    unsigned int sizeX = sizeXInput->getText().empty() ? 1 : static_cast<unsigned int>(std::stoi(sizeXInput->getText().toStdString()));
+    if (sizeX < 1) sizeX = 1;
+    unsigned int sizeY = static_cast<unsigned int>(std::stoi(sizeYInput->getText().toStdString()));
+    if (sizeY < 1) sizeY = 1;
+    auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
+    if (brush) brush->setSize(sizeX, sizeY);
+  });
 
   // --- FORMES ---
-  
 
 
   auto squareButton  = tgui::Button::create("Carré");
@@ -457,12 +499,13 @@ void Window::initPenOptions() {
   squareButton->getRenderer()->setTextColor(tgui::Color::White);
   squareButton->getRenderer()->setBorders({0});
   squareButton->getRenderer()->setRoundedBorderRadius(4);
-  squareButton->onPress([this, squareButton, diamondButton, circleButton]() {
+  squareButton->onPress([this, squareButton, diamondButton, circleButton, sizeYInput]() {
     auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
     if (brush) brush->setShape(SQUARE);
     squareButton->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
     diamondButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     circleButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+    sizeYInput->setVisible(false);
   });
   penOptionsPanel_->add(squareButton);
   squareButton->setTextSize(12);
@@ -473,12 +516,13 @@ void Window::initPenOptions() {
   diamondButton->getRenderer()->setTextColor(tgui::Color::White);
   diamondButton->getRenderer()->setBorders({0});
   diamondButton->getRenderer()->setRoundedBorderRadius(4);
-  diamondButton->onPress([this, squareButton, diamondButton, circleButton]() {
+  diamondButton->onPress([this, squareButton, diamondButton, circleButton, sizeYInput]() {
     auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
     if (brush) brush->setShape(DIAMOND);
     squareButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     diamondButton->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
     circleButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+    sizeYInput->setVisible(true);
   });
   penOptionsPanel_->add(diamondButton);
   diamondButton->setTextSize(12);
@@ -489,12 +533,13 @@ void Window::initPenOptions() {
   circleButton->getRenderer()->setTextColor(tgui::Color::White);
   circleButton->getRenderer()->setBorders({0});
   circleButton->getRenderer()->setRoundedBorderRadius(4);
-  circleButton->onPress([this, squareButton, diamondButton, circleButton]() {
+  circleButton->onPress([this, squareButton, diamondButton, circleButton, sizeYInput]() {
     auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
     if (brush) brush->setShape(CIRCLE);
     squareButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     diamondButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     circleButton->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
+    sizeYInput->setVisible(false);
   });
   penOptionsPanel_->add(circleButton);
   circleButton->setTextSize(12);
@@ -597,72 +642,70 @@ void Window::initPenOptions() {
   });
   penOptionsPanel_->add(yellowButton);
 
-  // --- RGB PERSONNALISÉ ---
-  auto rLabel = tgui::Label::create("R");
-  rLabel->setSize(width * 0.014, height * 0.04);
-  rLabel->setPosition(width * 0.522, height * 0.011);
-  rLabel->getRenderer()->setTextColor(tgui::Color::White);
-  penOptionsPanel_->add(rLabel);
-
+  // --- RGBA PERSONNALISÉ (R, G, B, A — A=0 = Transparent) ---
   auto rInput = tgui::EditBox::create();
   rInput->setSize(width * 0.038, height * 0.04);
-  rInput->setPosition(width * 0.544, height * 0.011);
-  rInput->setText("0");
+  rInput->setPosition(width * 0.522, height * 0.011);
+  rInput->setDefaultText("R");
   rInput->setInputValidator("[0-9]*");
   rInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   rInput->getRenderer()->setTextColor(tgui::Color::White);
+  rInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
   rInput->getRenderer()->setBorders({1});
   rInput->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
   penOptionsPanel_->add(rInput);
 
-  auto gLabel = tgui::Label::create("G");
-  gLabel->setSize(width * 0.014, height * 0.04);
-  gLabel->setPosition(width * 0.59, height * 0.011);
-  gLabel->getRenderer()->setTextColor(tgui::Color::White);
-  penOptionsPanel_->add(gLabel);
-
   auto gInput = tgui::EditBox::create();
   gInput->setSize(width * 0.038, height * 0.04);
-  gInput->setPosition(width * 0.608, height * 0.011);
-  gInput->setText("0");
+  gInput->setPosition(width * 0.564, height * 0.011);
+  gInput->setDefaultText("G");
   gInput->setInputValidator("[0-9]*");
   gInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   gInput->getRenderer()->setTextColor(tgui::Color::White);
+  gInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
   gInput->getRenderer()->setBorders({1});
   gInput->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
   penOptionsPanel_->add(gInput);
 
-  auto bLabel = tgui::Label::create("B");
-  bLabel->setSize(width * 0.014, height * 0.04);
-  bLabel->setPosition(width * 0.654, height * 0.011);
-  bLabel->getRenderer()->setTextColor(tgui::Color::White);
-  penOptionsPanel_->add(bLabel);
-
   auto bInput = tgui::EditBox::create();
   bInput->setSize(width * 0.038, height * 0.04);
-  bInput->setPosition(width * 0.672, height * 0.011);
-  bInput->setText("0");
+  bInput->setPosition(width * 0.606, height * 0.011);
+  bInput->setDefaultText("B");
   bInput->setInputValidator("[0-9]*");
   bInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   bInput->getRenderer()->setTextColor(tgui::Color::White);
+  bInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
   bInput->getRenderer()->setBorders({1});
   bInput->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
   penOptionsPanel_->add(bInput);
 
+  auto aInput = tgui::EditBox::create();
+  aInput->setSize(width * 0.038, height * 0.04);
+  aInput->setPosition(width * 0.648, height * 0.011);
+  aInput->setDefaultText("A");
+  aInput->setInputValidator("[0-9]*");
+  aInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+  aInput->getRenderer()->setTextColor(tgui::Color::White);
+  aInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
+  aInput->getRenderer()->setBorders({1});
+  aInput->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+  penOptionsPanel_->add(aInput);
+
   auto applyRgbBtn = tgui::Button::create("OK");
   applyRgbBtn->setSize(width * 0.033, height * 0.04);
-  applyRgbBtn->setPosition(width * 0.716, height * 0.011);
+  applyRgbBtn->setPosition(width * 0.690, height * 0.011);
   applyRgbBtn->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
   applyRgbBtn->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
   applyRgbBtn->getRenderer()->setTextColor(tgui::Color::White);
   applyRgbBtn->getRenderer()->setBorders({0});
   applyRgbBtn->getRenderer()->setRoundedBorderRadius(4);
-  applyRgbBtn->onPress([this, rInput, gInput, bInput]() {
-    int r = rInput->getText().empty() ? 0 : std::min(255, std::stoi(rInput->getText().toStdString()));
-    int g = gInput->getText().empty() ? 0 : std::min(255, std::stoi(gInput->getText().toStdString()));
-    int b = bInput->getText().empty() ? 0 : std::min(255, std::stoi(bInput->getText().toStdString()));
+  applyRgbBtn->onPress([this, rInput, gInput, bInput, aInput]() {
+    int r = rInput->getText().empty() ? 0   : std::min(255, std::stoi(rInput->getText().toStdString()));
+    int g = gInput->getText().empty() ? 0   : std::min(255, std::stoi(gInput->getText().toStdString()));
+    int b = bInput->getText().empty() ? 0   : std::min(255, std::stoi(bInput->getText().toStdString()));
+    int a = aInput->getText().empty() ? 255 : std::min(255, std::stoi(aInput->getText().toStdString()));
     auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
-    if (brush) brush->setColor(sf::Color(r, g, b));
+    if (brush) brush->setColor(sf::Color(r, g, b, a));
   });
   penOptionsPanel_->add(applyRgbBtn);
 }

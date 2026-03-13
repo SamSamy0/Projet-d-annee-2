@@ -18,6 +18,9 @@ protected:
 public:
   Layer(std::string name, sf::Vector2u size);
   typeCouche getType();
+  std::string getName() const;
+  bool getMasked() const;
+  void setMasked(bool masked);
   virtual LayerContent getLayerContent() = 0;
   virtual void drawLayer(sf::RenderWindow& window) = 0;
   virtual void draw(sf::Drawable &s) = 0;

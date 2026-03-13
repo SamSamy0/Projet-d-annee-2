@@ -52,7 +52,7 @@ void Project::displayBackground() {
 
   sf::RectangleShape left;
 
-  left.setPos pour pouvoir modifier depuis du coup ma fonctionition(sf::Vector2f(0, window_.getSize().y * 0.05));
+  left.setPosition(sf::Vector2f(0, window_.getSize().y * 0.05));
   left.setSize(sf::Vector2f(window_.getSize().x * 0.15, window_.getSize().y));
   left.setFillColor(sf::Color(36, 40, 47));
 
