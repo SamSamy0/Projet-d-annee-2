@@ -64,7 +64,7 @@ void Map::createSpriteLayer(){
 shared_ptr<Layer> Map::getCurrentLayer(){
     if(layers_.size() == 0){
     return nullptr;}
-    if(layers_.size() >= selected_)
+    if(selected_ >= layers_.size())
         selected_ = layers_.size()-1;
     return layers_[selected_];
 }
