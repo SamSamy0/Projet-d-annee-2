@@ -15,6 +15,11 @@ void PixelBrush::setColor(sf::Color c) {
 void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setErraser(bool val) { is_erraser_ = val; }
 
+
+  bool PixelBrush::getErraser() const{
+  return is_erraser_;
+}
+
 void PixelBrush::paint(sf::Vector2i pos) {
   shared_ptr<Layer> pixellayer = map_->getCurrentLayer();
   if (pixellayer->getType() == PIXELLAYER) {

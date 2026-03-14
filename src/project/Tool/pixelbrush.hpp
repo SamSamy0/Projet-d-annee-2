@@ -13,4 +13,5 @@ public:
   void setShape(Shape s);
   void paint(sf::Vector2i pos);
   void setErraser(bool val);
+  bool getErraser() const;
 };

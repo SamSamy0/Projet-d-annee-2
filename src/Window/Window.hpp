@@ -86,6 +86,7 @@ private:
   // Detection in map
   void toolOnClick();
   void toolOnRelease();
+  void checkTypeTool(LayerType previous_type);
 
 public:
   // Constructor

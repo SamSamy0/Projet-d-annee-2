@@ -1,5 +1,7 @@
 #include "../Window.hpp"
 #include "../../project/Layer/layer.hpp"
+#include "../../project/Tool/pixelbrush.hpp"
+#include <memory>
 
 void Window::initLayerPanel() {
   float width  = mainWindow.getSize().x;
@@ -50,7 +52,9 @@ void Window::initLayerPanel() {
     layerButton->setSize(width * 0.16, height * 0.05);
     layerButton->setPosition(width * 0.01, i * height * 0.055);
     layerButton->onClick([this, i]() {
+      LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->setLayerSelected(static_cast<unsigned int>(i));
+      checkTypeTool(type);
       refreshLayerList();
     });
     layersList_->add(layerButton);
@@ -99,10 +103,12 @@ void Window::initLayerPanel() {
   removeLayerButton->onClick([this]() {
     vector<shared_ptr<Layer>> &layers = project->getMap()->getLayers();
     if (layers.size() <= 1) return;
+    LayerType type = project->getMap()->getCurrentLayer()->getType();
     unsigned int selected = project->getMap()->getLayerSelected();
     layers.erase(layers.begin() + selected);
     unsigned int newSelected = (selected > 0) ? selected - 1 : 0;
     project->getMap()->setLayerSelected(newSelected);
+    checkTypeTool(type);
     refreshLayerList();
   });
   layerPanel_->add(removeLayerButton);
@@ -127,9 +133,53 @@ void Window::refreshLayerList() {
     layerButton->setSize(width * 0.16, height * 0.05);
     layerButton->setPosition(width * 0.01, i * height * 0.055);
     layerButton->onClick([this, i]() {
+      LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->setLayerSelected(static_cast<unsigned int>(i));
+      checkTypeTool(type);
       refreshLayerList();
     });
     layersList_->add(layerButton);
+  }
+}
+
+
+void Window::checkToolType(LayerType previous_type){
+  LayerType current_type = project->getMap()->getCurrentLayer()->getType();
+
+  if(previous_type == current_type)
+    return;
+
+
+  ToolBar toolbar = project->getToolBar();
+  ToolType tooltype = project->getToolBar().getSelected();
+
+  switch (tooltype){
+    case PIXELBRUSH:{
+      bool erraser = static_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->getErraser();
+      if(erraser){
+        toolbar.selectTool(SPRITEERASER);
+      }
+      else{toolbar.selectTool(SPRITEBRUSH);}
+
+      break;
+    }
+    case PIXELSHIFT:{
+      toolbar.selectTool(SPRITESHIFT);
+      break;
+    }
+    case SPRITEBRUSH:{
+      toolbar.selectTool(PIXELBRUSH);
+      static_pointer_cast<PixelBrush>(toolbar.getSelectedTool())->setErraser(false);
+      break;
+    }
+    case SPRITESHIFT:{
+      toolbar.selectTool(PIXELSHIFT);
+      break;
+    }
+    case SPRITEERASER :{
+      toolbar.selectTool(PIXELBRUSH);
+      static_pointer_cast<PixelBrush>(toolbar.getSelectedTool())->setErraser(true);
+      break;
+    }
   }
 }
