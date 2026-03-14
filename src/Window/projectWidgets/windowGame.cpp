@@ -32,9 +32,7 @@ void Window::handleGameEvents(const std::optional<sf::Event> &event) {
   //ON RELEASE
   if (auto mouseEvent = event->getIf<sf::Event::MouseButtonReleased>()) {
     if (mouseEvent->button == sf::Mouse::Button::Left) {
-      if (!gui.getWidgetBelowMouseCursor(mouseEvent->position, true)) {
         project->getToolBar().getSelectedTool()->onRelease();
-      }
     }
   }
 
