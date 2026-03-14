@@ -1,8 +1,10 @@
 #include "servernetwork.hpp"
 #include "worker.hpp"
 #include <thread>
+#include <QCoreApplication>
 
-int main() {
+int main(int argc, char *argv[]) {
+    QCoreApplication app(argc, argv);
     MutexQueue<IMessage> mesQ;
     MutexQueue<Reponse> repQ;
     ServerNetworkManager servManager(mesQ, repQ);

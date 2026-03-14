@@ -4,6 +4,9 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QJsonArray>
+//#include <QImage>
+//#include <QColor>
+
 
 ProjectsManager::ProjectsManager(const std::string &rootPath)
     : rootPath_(QString::fromStdString(rootPath))
@@ -113,4 +116,11 @@ bool ProjectsManager::deleteProject(int id) {
     }
     qCritical() << "Erreur de suppression de projet pour l'ID:" << id;
     return false;
+}
+
+void ProjectsManager::addCalque(int projetId, int largeur, int hauteur, int calqueId) {
+
+    QString path = getProjectPath(projetId);
+
+    
 }
