@@ -1,5 +1,5 @@
 #include "reponse.hpp"
-#include "../protocol.hpp"
+#include "../../common/protocol.hpp"
 #include "../servernetwork.hpp"
 
 

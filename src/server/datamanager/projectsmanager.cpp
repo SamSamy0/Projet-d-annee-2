@@ -4,8 +4,8 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QJsonArray>
-//#include <QImage>
-//#include <QColor>
+#include <QImage>
+#include <QColor>
 
 
 ProjectsManager::ProjectsManager(const std::string &rootPath)
@@ -207,7 +207,13 @@ bool ProjectsManager::deleteProject(int id) {
 
 void ProjectsManager::addCalque(int projetId, int largeur, int hauteur, int calqueId) {
 
-    QString path = getProjectPath(projetId);
+    QString destPath = getProjectPath(projetId) + "/images/calque_" + QString::number(calqueId) + ".png";
+    QImage image(largeur, hauteur, QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+    if (image.save(destPath, "PNG")) {
+        qDebug() << "Nouveau calque sauvegardé avec succès :" << destPath;
 
-    
+    } else {
+        qWarning() << "Erreur : Impossible de créer le fichier PNG pour le calque :" << destPath;
+    }
 }

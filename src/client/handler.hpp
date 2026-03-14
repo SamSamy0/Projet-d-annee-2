@@ -1,7 +1,7 @@
 #pragma once
 
 #include <deque>
-#include "protocol.hpp"
+#include "../common/protocol.hpp"
 #include "receiverwindow.hpp"
 #include "../Window/Window.hpp"
 

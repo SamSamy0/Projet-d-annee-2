@@ -2,7 +2,7 @@
 #include <memory>
 #include <deque>
 #include <SFML/Network.hpp>
-#include "protocol.hpp"
+#include "../common/protocol.hpp"
 #include "serverevent.hpp"
 
 

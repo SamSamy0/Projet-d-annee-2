@@ -47,7 +47,7 @@ endif()
 #------------------------------------------------------------------------------------------
 
 #---------------------------------Qt6-------------------------------------------------------
-find_package(Qt6 REQUIRED COMPONENTS Sql)
+find_package(Qt6 REQUIRED COMPONENTS Sql Gui)
 #------------------------------------------------------------------------------------------
 
 #CLIENT
@@ -59,7 +59,7 @@ set(SOURCES
     ../src/Window/windowMenu.cpp
     ../src/client/clientnetwork.cpp
     ../src/client/handler.cpp
-    ../src/client/protocol.hpp
+    ../src/common/protocol.hpp
     ../src/client/receiverwindow.cpp
     ../src/project/map.cpp
     ../src/project/project.cpp
@@ -97,7 +97,7 @@ set(SERVER_SOURCES
     src/server/message/message.cpp
     src/server/datamanager/projectsmanager.cpp
     src/server/reponse/reponse.cpp
-    src/server/protocol.cpp
+    src/common/protocol.cpp
     src/server/servernetwork.cpp
     src/server/worker.cpp
 )
@@ -108,5 +108,6 @@ target_link_libraries(server PRIVATE
     SFML::System
     SFML::Network
     Qt6::Sql
+    Qt6::Gui
 )
 
