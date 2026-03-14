@@ -8,10 +8,12 @@
 
 const string FONT_PATH {"../res/police/ARIAL.TTF"};
 
-// Constructeur
+// Constructors
 Project::Project(unsigned int scale, sf::Vector2u size, std::string name, unsigned int id, sf::RenderWindow &window, tgui::Gui &gui)
     : map_{std::make_shared<Map>(1, size, scale)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
 
+Project::Project(unsigned int scale, sf::Vector2u size, std::string name, unsigned int id, sf::RenderWindow &window, tgui::Gui &gui, std::vector<std::shared_ptr<Layer>> layers)
+    : map_{std::make_shared<Map>(1, size, scale,layers)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
 
 // ----- [Getters] -----
 unsigned int Project::getId() { return id_; }
@@ -21,6 +23,8 @@ std::string Project::getName() { return name_; }
 
 ToolBar& Project::getToolBar() { return toolbar_; }
 
+Chat& Project::getChat() { return chat_; }
+
 std::shared_ptr<Map> Project::getMap() { return map_; }
 
 sf::View &Project::getView() { return viewMap_; }
@@ -29,7 +33,7 @@ sf::View &Project::getView() { return viewMap_; }
 void Project::setName(std::string name) { name_ = name; }
 
 
-// Affichage
+// Display
 void Project::displayScale() {
   sf::Font police(FONT_PATH);
   sf::Text scaleText(police);
@@ -37,28 +41,9 @@ void Project::displayScale() {
   scaleText.setString("1m = " + to_string(getScale()) + " px");
   scaleText.setCharacterSize(17);
   scaleText.setFillColor(sf::Color::Black);
-  scaleText.setPosition(sf::Vector2f(window_.getSize().x * 0.16, window_.getSize().y * 0.995 + 10));
+  scaleText.setPosition(sf::Vector2f(window_.getSize().x * 0.16f, window_.getSize().y * 0.97f));
 
   window_.draw(scaleText);
-}
-
-void Project::displayToolBar() {
-  sf::RectangleShape toolbar;
-
-  toolbar.setSize(sf::Vector2f(window_.getSize().x, window_.getSize().y * 0.05));
-  toolbar.setFillColor(sf::Color(50, 56, 66));
-
-  window_.draw(toolbar);
-}
-
-void Project::displayLeftBar() {
-  sf::RectangleShape leftbar;
-
-  leftbar.setPosition(sf::Vector2f(window_.getSize().x * 0.01, window_.getSize().y * 0.07));
-  leftbar.setSize(sf::Vector2f(window_.getSize().x * 0.13, window_.getSize().y));
-  leftbar.setFillColor(sf::Color(50, 56, 66));
-
-  window_.draw(leftbar);
 }
 
 void Project::displayBackground() {
@@ -85,7 +70,5 @@ void Project::display() {
   window_.setView(viewUI_);
 
   displayBackground();
-  displayToolBar();
-  displayLeftBar();
   displayScale();
 }

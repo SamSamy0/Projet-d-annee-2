@@ -10,11 +10,15 @@ Contuliano Bravo Samy 000611933
 
 ## Exécution du programme
 
-Pour pouvoir exécuter le programme, il faut se placer dans le dossier `group-13` (et non dans le dossier `src`). Ensuite, tapez ces commandes :
+Pour pouvoir compiler le programme, il faut se placer dans le dossier `group-13` (et non dans le dossier `src`). Ensuite, tapez ces commandes :
 ```bash
 chmod +x install.sh
 ./install.sh
-./sfml-app
+```
+Enfin les executables seront dans le dossier bin
+```bash
+./server
+./client
 ```
 
 ## Les bibliothèques

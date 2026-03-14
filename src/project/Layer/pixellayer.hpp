@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 #include "layer.hpp"
 
 class PixelLayer : public Layer {
@@ -9,10 +9,11 @@ class PixelLayer : public Layer {
 public:
   PixelLayer(std::string name, sf::Vector2u size);
 
-  LayerContent getLayerContent() override;
-  void drawLayer(sf::RenderWindow& window) override;
-  void draw(sf::Drawable &s) override;
-  void errase(sf::Drawable &s) override;
-  void shift(sf::Vector2i v)override;
-  void display() override;
+  sf::Vector2i getOffset() const override;
+  sf::RenderTexture &getTexture();
+  void draw(sf::Drawable &s);
+  void erase(sf::Drawable &s);
+  void shift(sf::Vector2i v) override;
+  void drawLayer(sf::RenderTarget &target) override;
+  void display();
 };

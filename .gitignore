@@ -1,4 +1,5 @@
 .vscode
+.cache
 bin
 build/*
 !build/CMakeLists.txt
@@ -6,3 +7,5 @@ build/*
 #Fichier qui enlève les erreurs liée à QT dans nvim
 compile_commands.json
 .cache/
+src/server/test
+src/server/CMakeLists.txt

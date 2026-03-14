@@ -6,18 +6,23 @@
 #include <iostream>
 #include "map.hpp"
 #include "Layer/pixellayer.hpp"
+#include "Layer/spritelayer.hpp"
 
 using namespace std;
 
 
 Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
-    id_{mapId}, size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)}{
+    id_{mapId}, size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
+    if (!render_texture_.resize(size)){} //TODO: gérer l'erreur
+    sprite_.setTexture(render_texture_.getTexture(),true);
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
 }
 
 Map::Map(int mapId, sf::Vector2u size , unsigned int scale) : 
     id_{mapId}, size_{size},
-    scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)}{
+    scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
+    if (!render_texture_.resize(size)){} //TODO: gérer l'erreur
+    sprite_.setTexture(render_texture_.getTexture(),true);
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
     createPixelLayer();
 }
@@ -40,24 +45,36 @@ vector<shared_ptr<Layer>>& Map::getLayers() { return layers_; }
 void Map::insertLayer(shared_ptr<Layer> layer) { layers_.insert(layers_.begin()+selected_+1, layer) ; }
 
 void Map::createPixelLayer(){
-
-    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>("Nouvelle Couche",size_);
+    int n = layers_.size() + 1;
+    std::string name = "Couche Pixel (" + std::to_string(n) + ")";
+    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(name, size_);
     layers_.push_back(pixellayer);
     layers_.size() ==1? selected_ = 0: selected_+=1;
+}
+
+
+void Map::createSpriteLayer(){
+    int n = layers_.size() + 1;
+    std::string name = "Couche Pixel (" + std::to_string(n) + ")";
+    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(name,size_); //TODO: changer le nom de la couche en fonction de sa profondeur
+    layers_.push_back(spritelayer);
+    layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
 }
 
 shared_ptr<Layer> Map::getCurrentLayer(){
     if(layers_.size() == 0){
     return nullptr;}
-    else{return layers_[selected_];}
+    if(selected_ >= layers_.size())
+        selected_ = layers_.size()-1;
+    return layers_[selected_];
 }
 
 
 
-bool Map::isInside(sf::Vector2i pos)const{
-    return (pos.x >= 0 && pos.x < static_cast<int>(size_.x) &&
-    pos.y >= 0 && pos.y < static_cast<int>(size_.y));
-}
+// bool Map::isInside(sf::Vector2i pos)const{
+//     return (pos.x >= 0 && pos.x < static_cast<int>(size_.x) &&
+//     pos.y >= 0 && pos.y < static_cast<int>(size_.y));
+// }
 
 void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
 
@@ -87,13 +104,18 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
     
     viewMap.setCenter(sf::Vector2f(move_.positionX_ + (float)(size_.x) / 2, move_.positionY_ + (float)(size_.y) / 2));
 
-    // On règle la fenêtre et on l'affiche
    
-    window.draw(map);
+    render_texture_.clear(sf::Color::White); 
+
     for (auto& layer: layers_) {
-        layer->drawLayer(window);
+        // We are drawing all the layers on the texture of the map
+        layer->drawLayer(render_texture_); 
     }
+    // And then we display the texture of the map 
+    render_texture_.display();
+    window.draw(sprite_);
 }
+
 
 unsigned int Map::getLayerSelected() const {
     return selected_;
