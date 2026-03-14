@@ -26,7 +26,7 @@ class AssetManager{
 public:
   AssetManager() = default;
   void loadFromJson();
-  std::shared_ptr<Asset> getAsset(const std::string& id);
+  Asset* getAsset(const std::string& id);
 
 
 
