@@ -1,7 +1,11 @@
 #include "handler.hpp"
 #include "clientnetwork.hpp"
 #include <iostream>
-
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QByteArray>
+#include <SFML/Network.hpp>
+#include <QDebug>
 
 ClientHandler::ClientHandler(ClientNetworkManager& client_manager,ReceiverInWindow& w)
 : manager_(client_manager), handleWindow_(w) {}
@@ -18,13 +22,13 @@ void ClientHandler::processEventQueu(){
 void ClientHandler::process(ServerEvent& event){
     switch(event.message_type_){
         
-        case MsgProtocole::AUTH_RESULT:
+        case MsgProtocole::AUTH_RESULT:{
             uint8_t accept;
             *(event.data_packet_) >> accept;
             handleWindow_.switchConnectState(accept);
             break;
-        
-        case MsgProtocole::LOB_PROJECT_LIST_REP:
+        }
+        case MsgProtocole::LOB_PROJECT_LIST_REP:{
             uint32_t size;
             *(event.data_packet_) >> size;
 
@@ -44,9 +48,21 @@ void ClientHandler::process(ServerEvent& event){
             }
 
             break;
-        
-        case MsgProtocole::LOB_GET_PROJECT_DATA_REP:
+        }
+        case MsgProtocole::LOB_GET_PROJECT_DATA_REP:{
+            std::uint32_t jsonSize;
+            *(event.data_packet_) >> jsonSize;
+
+            const char* ptrDonnees = (const char*)(*(event.data_packet_)).getData() + sizeof(jsonSize);
+            QByteArray jsonBytes(ptrDonnees, jsonSize);
+
+            QJsonDocument doc = QJsonDocument::fromJson(jsonBytes);
+            QJsonObject entete = doc.object();
+
+            std::cout << entete["id"].toInt() << std::endl;
+
             break;
+        }
         case MsgProtocole::LOB_RENAME_PROJECT_REP:{
             uint8_t success;
             uint32_t projectId;
@@ -56,8 +72,7 @@ void ClientHandler::process(ServerEvent& event){
                 handleWindow_.updateProjectNameInList(projectId, newName);
             }
             break;
-                
-        }
+        } 
         case MsgProtocole::LOB_DUPLICATE_PROJECT_REP:{
             uint8_t success;
             uint32_t projectId;
@@ -80,6 +95,7 @@ void ClientHandler::process(ServerEvent& event){
             uint32_t newProjectId;
             *(event.data_packet_) >> newProjectId ;
             handleWindow_.updateCreatedProjectId(newProjectId);
+            break;
         }
     }        
 }
