@@ -15,17 +15,21 @@ void Window::initGameWidget() {
 void Window::handleGameEvents(const std::optional<sf::Event> &event) {
   if (!chatInput_->isFocused())
     project->getMap()->detectMovement();
+  // ON PRESS
   if (const auto *mousePressed =
           event->getIf<sf::Event::MouseButtonPressed>()) {
-    sf::Vector2i mousePos = mousePressed->position; // mouse position
-    if (!gui.getWidgetBelowMouseCursor(mousePos, true)) {
-      sf::Vector2f pos =
-          mainWindow.mapPixelToCoords(mousePos, project->getView());
-      sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
-      project->getToolBar().getSelectedTool()->onPress(mapPos);
+    if (mousePressed->button == sf::Mouse::Button::Left) {
+      sf::Vector2i mousePos = mousePressed->position; // mouse position
+      if (!gui.getWidgetBelowMouseCursor(mousePos, true)) {
+        sf::Vector2f pos =
+            mainWindow.mapPixelToCoords(mousePos, project->getView());
+        sf::Vector2i mapPos(static_cast<int>(pos.x), static_cast<int>(pos.y));
+        project->getToolBar().getSelectedTool()->onPress(mapPos);
+      }
     }
   }
 
+  //ON RELEASE
   if (auto mouseEvent = event->getIf<sf::Event::MouseButtonReleased>()) {
     if (mouseEvent->button == sf::Mouse::Button::Left) {
       if (!gui.getWidgetBelowMouseCursor(mouseEvent->position, true)) {
@@ -34,6 +38,7 @@ void Window::handleGameEvents(const std::optional<sf::Event> &event) {
     }
   }
 
+  // ON DRAG
   if (const auto *mouseMoved = event->getIf<sf::Event::MouseMoved>()) {
     sf::Vector2i mousePos = mouseMoved->position; // mouse position
     if (!gui.getWidgetBelowMouseCursor(mousePos, true)) {

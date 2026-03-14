@@ -11,7 +11,7 @@ ToolBar::ToolBar(std::shared_ptr<Map> map): selected_{NONETOOL} {
   tools_.push_back(std::make_shared<NoneTool>(map));
   tools_.push_back(std::make_shared<PixelBrush>(map));
   tools_.push_back(std::make_shared<PixelShift>(map));
-  tools_.push_back(std::make_shared<PixelShift>(map));
+  tools_.push_back(std::make_shared<PixelBrush>(map));
   tools_.push_back(std::make_shared<SpriteEraser>(map));
   tools_.push_back(std::make_shared<SpriteShift>(map));
 }
@@ -19,7 +19,7 @@ ToolBar::ToolBar(std::shared_ptr<Map> map): selected_{NONETOOL} {
 void ToolBar::selectTool(ToolType outil) {
   LayerType type = getSelectedTool()->getMap()->getCurrentLayer()->getType();
 
-  if ((outil > 0 && outil <= 1 && type == PIXELLAYER) || (outil > 0 && outil > 1 && type == SPRITELAYER)){
+  if ((outil > 0 && outil <= 2 && type == PIXELLAYER) || (outil > 0 && outil > 2 && type == SPRITELAYER)){
     selected_ = outil;
   }
 }
