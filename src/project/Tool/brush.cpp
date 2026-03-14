@@ -1,18 +1,38 @@
 #include "brush.hpp"
+#include "../map.hpp"
 #include <cmath>
 
 Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {
-  spacing_ = std::min(size_m_.x / 2 * getScale(), size_m_.y / 2 * getScale());
+  spacing_ = std::min(size_m_.x / 2.0f * getScale(), size_m_.y / 2.0f * getScale());
   if (spacing_ < 1)
     spacing_ = 1.0f;
 }
 
-void Brush::setSize(unsigned int x, unsigned int y = 0) {
+void Brush::setSize(float x, float y = 1) { //WARNING: la valeur par défaut je suis pas sur
+  sf::Vector2u mapSize = getMap()->getSize();
   size_m_.x = x;
   size_m_.y = y;
+  float scale = getMap()->getScale();
+  float minSize = 1/scale;
+  sf::Vector2f maxSize = sf::Vector2f(mapSize.x/scale,mapSize.y/scale);
+
+  if (x < minSize) {
+    size_m_.x = minSize;
+  } else if ( x > maxSize.x) {
+    size_m_.x = mapSize.x;
+  }
+  if (y < 1) {
+    size_m_.y = 1;
+  } else if (y > mapSize.y) {
+    size_m_.y = mapSize.y;
+  }
+
+  spacing_ = std::min(size_m_.x / 2.0f * getScale(), size_m_.y / 2.0f * getScale());
+  if (spacing_ < 1)
+    spacing_ = 1.0f;
 }
 
-sf::Vector2u Brush::getSize() { return sf::Vector2u(size_m_.x, size_m_.y); }
+sf::Vector2f Brush::getSize() { return sf::Vector2f(size_m_.x, size_m_.y); }
 
 void Brush::onPress(sf::Vector2i pos) {
   isDrawing_ = true;

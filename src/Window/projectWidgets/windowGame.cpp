@@ -49,9 +49,10 @@ void Window::handleGameEvents(const std::optional<sf::Event> &event) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LSystem) ||
         sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
       std::shared_ptr<Tool> tool = project->getToolBar().getSelectedTool();
+
       if (tool->getType() == PIXELBRUSH || tool->getType() == SPRITEBRUSH || tool->getType() == SPRITEERASER) {
         std::shared_ptr<Brush> brush = static_pointer_cast<Brush>(tool); 
-        sf::Vector2u size = brush->getSize();
+        sf::Vector2f size = brush->getSize();
         float sizex = size.x;
         float sizey = size.y;
         sf::Vector2u mapSize = project->getMap()->getSize();
@@ -65,21 +66,9 @@ void Window::handleGameEvents(const std::optional<sf::Event> &event) {
           sizey -= step;
         }
 
-        if (sizex < 1) {
-          sizex = 1;
-        } else if (sizex > mapSize.x) {
-          sizex = mapSize.x;
-        }
-        if (sizey < 1) {
-          sizey = 1;
-        } else if (sizey > mapSize.y) {
-          sizey = mapSize.y;
-        }
 
-        size = sf::Vector2u(static_cast<unsigned int>(std::round(sizex)),
-                            static_cast<unsigned
-                            int>(std::round(sizey)));
-        brush->setSize(size.x, size.y);
+        brush->setSize(sizex, sizey);
+
       }
     } else {
       if (!gui.getWidgetBelowMouseCursor(wheelEvent->position, true))
