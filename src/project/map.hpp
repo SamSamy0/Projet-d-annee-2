@@ -12,7 +12,6 @@
 
 using namespace std;
 
-// class Project;
 class Layer;
 
 class Map {

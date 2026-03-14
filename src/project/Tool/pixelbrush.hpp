@@ -11,5 +11,6 @@ public:
   void setColor(sf::Color c);
   void setShape(Shape s);
   void paint(sf::Vector2i pos);
+  bool getEraser() const;
   void setEraser(bool val);
 };

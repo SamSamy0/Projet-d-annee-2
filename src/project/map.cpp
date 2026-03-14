@@ -45,23 +45,26 @@ vector<shared_ptr<Layer>>& Map::getLayers() { return layers_; }
 void Map::insertLayer(shared_ptr<Layer> layer) { layers_.insert(layers_.begin()+selected_+1, layer) ; }
 
 void Map::createPixelLayer(){
-
-    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>("Nouvelle Couche",size_); //TODO: changer le nom de la couche en fonction de sa profondeur
+    int n = layers_.size() + 1;
+    std::string name = "Couche Pixel (" + std::to_string(n) + ")";
+    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(name, size_);
     layers_.push_back(pixellayer);
     layers_.size() ==1? selected_ = 0: selected_+=1;
 }
 
 
 void Map::createSpriteLayer(){
-    shared_ptr<SpriteLayer> pixellayer = make_shared<SpriteLayer>("Nouvelle Couche",size_); //TODO: changer le nom de la couche en fonction de sa profondeur
-    layers_.push_back(pixellayer);
-    layers_.size() ==1? selected_ = 0: selected_+=1;
+    int n = layers_.size() + 1;
+    std::string name = "Couche Pixel (" + std::to_string(n) + ")";
+    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(name,size_); //TODO: changer le nom de la couche en fonction de sa profondeur
+    layers_.push_back(spritelayer);
+    layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
 }
 
 shared_ptr<Layer> Map::getCurrentLayer(){
     if(layers_.size() == 0){
     return nullptr;}
-    if(layers_.size() >= selected_)
+    if(selected_ >= layers_.size())
         selected_ = layers_.size()-1;
     return layers_[selected_];
 }

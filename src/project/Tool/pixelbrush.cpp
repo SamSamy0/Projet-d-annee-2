@@ -14,6 +14,11 @@ void PixelBrush::setColor(sf::Color c) {
 void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setEraser(bool val) { is_eraser_ = val; }
 
+
+  bool PixelBrush::getEraser() const{
+  return is_eraser_;
+}
+
 void PixelBrush::paint(sf::Vector2i pos) {
   /* Draw a shape one the layer*/
   shared_ptr<Layer> layer = map_->getCurrentLayer();
