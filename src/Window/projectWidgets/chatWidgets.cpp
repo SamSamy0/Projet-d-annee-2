@@ -74,7 +74,7 @@ void Window::refreshChat() {
 
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
-  auto& messages = project->getChat().getMessages();
+  const auto& messages = project->getChat().getMessages();
   float positionY = 4.0;
   float authorDataHeight = height * 0.022;
 

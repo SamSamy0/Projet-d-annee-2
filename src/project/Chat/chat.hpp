@@ -19,12 +19,11 @@ class MessageChat {
         MessageType type_;
     public :
         MessageChat() = default;
-        MessageChat(const User& author, const Date& date, MessageType type)
-            : author_(author), date_(date), type_(type) {}
+        MessageChat(const User& author, const Date& date, MessageType type);
         virtual string getTexte() const = 0;
-        User getAuthor() const { return author_; }
-        Date getDate() const { return date_; }
-        MessageType getType() const { return type_; }
+        User getAuthor() const;
+        Date getDate() const;
+        MessageType getType() const;
 };
 
 class Chat {

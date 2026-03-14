@@ -55,7 +55,7 @@ void Window::initLayerPanel() {
     });
     layersList_->add(layerButton);
   }
-  // Bouton "M/U" (Masquer / Démasquer)
+  // Création du toggle bouton masqué/démasqué
   auto maskButton = tgui::Button::create("M/U");
   maskButton->setSize(width * 0.18, height * 0.04);
   maskButton->setPosition(width * 0.01, height * 0.44);
@@ -66,13 +66,13 @@ void Window::initLayerPanel() {
   maskButton->getRenderer()->setRoundedBorderRadius(8);
   maskButton->onClick([this]() {
     auto& layers = project->getMap()->getLayers();
-    unsigned int sel = project->getMap()->getLayerSelected();
-    if (sel < layers.size())
-      layers[sel]->setMasked(!layers[sel]->getMasked());
+    unsigned int selectedLayer = project->getMap()->getLayerSelected();
+    if (selectedLayer < layers.size())
+      layers[selectedLayer]->setMasked(!layers[selectedLayer]->getMasked());
   });
   layerPanel_->add(maskButton);
 
-  // Bouton "Ajouter couche"
+  // Création du bouton ajouter une couche (pour l'instant direct couche pixel)
   auto addLayerButton = tgui::Button::create("Ajouter couche");
   addLayerButton->setSize(width * 0.18, height * 0.04);
   addLayerButton->setPosition(width * 0.01, height * 0.485);
@@ -87,7 +87,7 @@ void Window::initLayerPanel() {
   });
   layerPanel_->add(addLayerButton);
 
-  // Bouton "Supprimer couche"
+  // Création du bouton supprimer une couche
   auto removeLayerButton = tgui::Button::create("Supprimer couche");
   removeLayerButton->setSize(width * 0.18, height * 0.04);
   removeLayerButton->setPosition(width * 0.01, height * 0.53);
@@ -99,9 +99,10 @@ void Window::initLayerPanel() {
   removeLayerButton->onClick([this]() {
     vector<shared_ptr<Layer>> &layers = project->getMap()->getLayers();
     if (layers.size() <= 1) return;
-    layers.erase(layers.begin() + project->getMap()->getLayerSelected());
-    unsigned int newLayerSelected = project->getMap()->getLayerSelected() - 1;
-    project->getMap()->setLayerSelected(newLayerSelected);
+    unsigned int selected = project->getMap()->getLayerSelected();
+    layers.erase(layers.begin() + selected);
+    unsigned int newSelected = (selected > 0) ? selected - 1 : 0;
+    project->getMap()->setLayerSelected(newSelected);
     refreshLayerList();
   });
   layerPanel_->add(removeLayerButton);
