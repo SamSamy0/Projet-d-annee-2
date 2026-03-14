@@ -52,9 +52,9 @@ void Window::initLayerPanel() {
     layerButton->setSize(width * 0.16, height * 0.05);
     layerButton->setPosition(width * 0.01, i * height * 0.055);
     layerButton->onClick([this, i]() {
-      // LayerType type = project->getMap()->getCurrentLayer()->getType();
+      LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->setLayerSelected(static_cast<unsigned int>(i));
-      // checkTypeTool(type);
+      checkTypeTool(type);
       refreshLayerList();
     });
     layersList_->add(layerButton);
