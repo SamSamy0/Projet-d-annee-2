@@ -18,6 +18,8 @@ public:
   bool updateJsonDup(int newId, const QString& newName);
   bool deleteProject(int id);
   void addCalque(int projetId, int largeur, int hauteur, int calqueId);
+  QByteArray getByteJson(int projetId);
+  QByteArray getByteImages(int projetId);
 
 private:
   QString getProjectPath(int id) const;

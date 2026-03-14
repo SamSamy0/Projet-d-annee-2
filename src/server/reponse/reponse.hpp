@@ -4,6 +4,7 @@
 #include <SFML/Network.hpp>
 #include "../datamanager/projectentry.hpp"
 #include "../client.hpp"
+#include <QFile>
 
 class ServerNetworkManager;
 
@@ -41,7 +42,7 @@ struct ReponseDuplicateProject: ReponseSolo{
 };
 
 struct ReponseProjectData : ReponseSolo {
-    ReponseProjectData(long long userId);
+    ReponseProjectData(long long userId, QByteArray jsonData);
 };
 
 struct ReponseUsersProjects : ReponseSolo {

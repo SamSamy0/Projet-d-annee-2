@@ -217,3 +217,18 @@ void ProjectsManager::addCalque(int projetId, int largeur, int hauteur, int calq
         qWarning() << "Erreur : Impossible de créer le fichier PNG pour le calque :" << destPath;
     }
 }
+
+QByteArray ProjectsManager::getByteJson(int projetId) {
+    QString filePath = getProjectPath(projetId) + "/donnees.json";
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Erreur : Impossible d'ouvrir le fichier JSON :" << filePath;
+        return QByteArray();
+    }
+
+    QByteArray donneesJson = file.readAll();
+
+    file.close();
+    return donneesJson;
+}

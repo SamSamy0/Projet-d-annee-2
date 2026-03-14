@@ -32,6 +32,7 @@ public:
     bool createProjectJson(int id, const std::string &projectName, int width, int height, uint scale);
     QJsonObject loadProjectJson(int id);
     bool saveImage(int id, const std::string &fileName, const QByteArray &data);
+    QByteArray getByteJson(int projetId);
 
 
 private:

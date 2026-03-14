@@ -111,6 +111,11 @@ GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, long long 
 }
 
 void GetProjectDataMessage::process(Worker& worker) {
+    QByteArray jsonData = worker.getByteJson(projectId_);
+
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseProjectData>(userId_, jsonData);
+    worker.pushNetwork(std::move(rps));
 }
 
 

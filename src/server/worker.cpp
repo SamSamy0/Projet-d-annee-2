@@ -102,3 +102,7 @@ bool Worker::deleteProject(int projectId) {
     }
     return false;
 }
+
+QByteArray Worker::getByteJson(int projectId) {
+    return projManager_.getByteJson(projectId);
+}
