@@ -75,8 +75,12 @@ void ClientHandler::process(ServerEvent& event){
                 
             }
             break;
-                    }
-            
+        }
+        case MsgProtocole::LOB_CREATE_PROJECT_REP : {
+            uint32_t newProjectId;
+            *(event.data_packet_) >> newProjectId ;
+            handleWindow_.updateCreatedProjectId(newProjectId);
+        }
     }        
 }
 

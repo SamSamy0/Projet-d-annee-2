@@ -91,4 +91,5 @@ public:
   void updateList();
   bool isOpen() const;
   void run();
+  void updateCreatedProjectId(uint32_t projId);
 };

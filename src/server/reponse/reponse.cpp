@@ -64,8 +64,14 @@ ReponseUsersProjects::ReponseUsersProjects(long long userId, std::vector<Project
     }
 }
 
+ReponseCreateProject::ReponseCreateProject(long long userId, int projectId) : ReponseSolo(userId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_CREATE_PROJECT_REP);
+
+    dataPacket_ << projectId;
+}
 
 ReponseGroupe::ReponseGroupe(std::vector<long long> usersId) : usersId_(std::move(usersId)) {}
+
 
 void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
     for (auto Id : usersId_) {
@@ -75,6 +81,5 @@ void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
         }
     } 
 }
-
 
 

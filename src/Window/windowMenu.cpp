@@ -206,7 +206,7 @@ void Window::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
             std::cout << "Suppression du projet " << id << std::endl;
             initMenuWidget();
           }
-          // manager.deleteProject(...)
+          manager.delProject(id);
           // Open Action
         } else if (item == "Ouvrir") {
           std::cout << "Ouverture du projet " << std::endl;
@@ -549,4 +549,8 @@ ProjectData Window::askProjectData() {
 
 ProjectData Window::getProjectData(std::unique_ptr<Project> &newProj) {
   return ProjectData{newProj->getId(), 0, newProj->getName()};
+}
+
+void Window::updateCreatedProjectId(uint32_t projId) {
+  projectList.back().projectId = projId;
 }

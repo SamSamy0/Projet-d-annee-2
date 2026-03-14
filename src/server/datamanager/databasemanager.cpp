@@ -14,7 +14,7 @@ DatabaseManager::DatabaseManager() {
 
         query.exec("CREATE TABLE IF NOT EXISTS users ("
                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                   "pseudo TEXT UNIQUE COLLATE NOCASE CHECK(LENGTH(name) BETWEEN 3 AND 15), "
+                   "pseudo TEXT UNIQUE COLLATE NOCASE CHECK(LENGTH(pseudo) BETWEEN 3 AND 15), "
                    "password TEXT)");
         query.exec("CREATE TABLE IF NOT EXISTS projects ("
                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -52,7 +52,9 @@ long long DatabaseManager::addUser(const std::string &pseudo,
                                    const std::string &password) {
   std::cout << "DatabaseManager: addUser()" << std::endl;
   QString qPseudo = QString::fromStdString(pseudo);
+  qDebug() << "pseudo" <<qPseudo;
   QString qPassword = QString::fromStdString(password);
+  qDebug() << "mdp" << qPassword;
 
   QSqlQuery query;
   query.prepare("INSERT INTO users (pseudo, password) VALUES (:p, :pw)");

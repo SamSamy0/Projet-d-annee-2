@@ -48,7 +48,9 @@ struct ReponseUsersProjects : ReponseSolo {
     ReponseUsersProjects(long long userId, std::vector<ProjectEntry>& projects);
 };
 
-
+struct ReponseCreateProject : ReponseSolo {
+    ReponseCreateProject(long long userId, int projectId_);
+};
 
 struct ReponseGroupe : Reponse {
     std::vector<long long> usersId_;

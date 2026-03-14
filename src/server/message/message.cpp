@@ -44,9 +44,11 @@ CreateProjectMessage::CreateProjectMessage(sf::Packet& data_packet, long long us
 
 void CreateProjectMessage::process(Worker& worker) {
     if (userId_ > 0) {
-    std::cout << "enft pas connecté" << std::endl;
     long long idProj = worker.addProjectSQL(nomProjet_, userId_);
     worker.createProjectJson(idProj, nomProjet_, size_.x, size_.y, scale_);
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseCreateProject>(userId_, idProj);
+    worker.pushNetwork(std::move(rps));
     }
 }
 
