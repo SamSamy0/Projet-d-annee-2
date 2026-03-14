@@ -47,6 +47,36 @@ void ClientHandler::process(ServerEvent& event){
         
         case MsgProtocole::LOB_GET_PROJECT_DATA_REP:
             break;
+        case MsgProtocole::LOB_RENAME_PROJECT_REP:{
+            uint8_t success;
+            uint32_t projectId;
+            std::string newName;
+            *(event.data_packet_) >> success >> projectId >> newName;
+            if (success){
+                handleWindow_.updateProjectNameInList(projectId, newName);
+            }
+            break;
+                
+        }
+        case MsgProtocole::LOB_DUPLICATE_PROJECT_REP:{
+            uint8_t success;
+            uint32_t projectId;
+            std::string newName;
+            *(event.data_packet_) >> success >> projectId >> newName;
+            if (success){
+                ProjectData projet;
+
+                projet.projectId = projectId;
+                projet.projectName = newName;
+                //Owner
+                projet.role = 2;
+
+                handleWindow_.addProjectToList(projet);
+                
+            }
+            break;
+                    }
+            
     }        
 }
 

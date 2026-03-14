@@ -50,6 +50,30 @@ void CreateProjectMessage::process(Worker& worker) {
     }
 }
 
+RenameProjectMessage::RenameProjectMessage(sf::Packet& dataPacket, long long userId){
+    dataPacket >> projectId_ >> newName_;
+    userID_ = userId;
+}
+
+void RenameProjectMessage::process(Worker& worker){
+    bool success = worker.renameProject(projectId_, newName_);
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseRenameProject>(userID_, projectId_, newName_, success);
+    worker.pushNetwork(std::move(rps));
+}
+
+DuplicateProjectMessage::DuplicateProjectMessage(sf::Packet& dataPacket, long long userId){
+    dataPacket >> projectId_ >> newName;
+    userId_ = userId;
+}
+
+void DuplicateProjectMessage::process(Worker& worker){
+    bool success = worker.duplicateProject(projectId_, newName, userId_);
+    std::unique_ptr<Reponse>rps;
+    rps = std::make_unique<ReponseDuplicateProject>(userId_, projectId_, newName, success);
+    worker.pushNetwork(std::move(rps));
+}
+
 
 GetProjectsListMessage::GetProjectsListMessage(sf::Packet& data_packet, long long userId) {
     userId_ = userId;
@@ -114,6 +138,12 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
         
         case MsgProtocole::LOB_GET_PROJECT_DATA_REQ:
             return std::make_unique<GetProjectDataMessage>(data_packet,c->id);
+        
+        case MsgProtocole::LOB_RENAME_PROJECT_REQ:
+            return std::make_unique<RenameProjectMessage>(data_packet, c->id);
+        
+        case MsgProtocole::LOB_DUPLICATE_PROJECT_REQ:
+            return std::make_unique<DuplicateProjectMessage>(data_packet, c->id);
         
         default:
             std::cout<< "pas de message" << std::endl;

@@ -22,6 +22,9 @@ public:
     void login(std::string pseudo,std::string password);
     void askRegister(std::string pseudo, std::string password);
     void createProject(std::string role, sf::Vector2u size, uint scale);
+    void renameProject(int projectId, std::string newName);
+    void dupProj(int projectId, std::string newName);
+    void getProjectData(int project_id);
     void getUsersProjects(long long id);
     void getProjectList(); 
     
