@@ -2,35 +2,8 @@
 #include "../map.hpp"
 #include <cmath>
 
-Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {
-  spacing_ = std::min(size_m_.x * getScale(), size_m_.y * getScale());
-  if (spacing_ < 1)
-    spacing_ = 1.0f;
-}
+Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {}
 
-void Brush::setSize(float x, float y = 1) { //WARNING: la valeur par défaut je suis pas sur
-  sf::Vector2u mapSize = getMap()->getSize();
-  size_m_.x = x;
-  size_m_.y = y;
-  float scale = getMap()->getScale();
-  float minSize = 1.0f/scale; //minsize in metter
-  sf::Vector2f maxSize = sf::Vector2f(mapSize.x/scale,mapSize.y/scale);
-
-  if (x < minSize) {
-    size_m_.x = minSize;
-  } else if ( x > maxSize.x) {
-    size_m_.x = maxSize.x;
-  }
-  if (y < minSize) {
-    size_m_.y = minSize;
-  } else if (y > mapSize.y) {
-    size_m_.y = maxSize.y;
-  }
-
-  spacing_ = std::min(size_m_.x * getScale(), size_m_.y * getScale());
-  if (spacing_ < 1)
-    spacing_ = 1.0f;
-}
 
 sf::Vector2f Brush::getSize() { return sf::Vector2f(size_m_.x, size_m_.y); }
 

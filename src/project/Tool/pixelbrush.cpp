@@ -6,11 +6,41 @@
 
 PixelBrush::PixelBrush(std::shared_ptr<Map> map) : Brush(map) {
   type_ = PIXELBRUSH;
+  spacing_ = std::min(size_m_.x/1.5f * getScale(), size_m_.y/1.5f * getScale());
+  if (spacing_ < 1)
+    spacing_ = 1.0f;
 }
 
-void PixelBrush::setColor(sf::Color c) {
-  color_ = c;
-} // NOTE: PEUT ETRE FAIRE UNE FONCTION PAR R G B A
+
+
+
+void PixelBrush::setSize(float x, float y = 1) { //WARNING: la valeur par défaut je suis pas sur
+  
+  /* change the size and change the spacing in function of it */
+  sf::Vector2u mapSize = getMap()->getSize();
+  size_m_.x = x;
+  size_m_.y = y;
+  float scale = getMap()->getScale();
+  float minSize = 1.0f/scale; //minsize in metter
+  sf::Vector2f maxSize = sf::Vector2f(mapSize.x/scale,mapSize.y/scale);
+
+  if (x < minSize) {
+    size_m_.x = minSize;
+  } else if ( x > maxSize.x) {
+    size_m_.x = maxSize.x;
+  }
+  if (y < minSize) {
+    size_m_.y = minSize;
+  } else if (y > mapSize.y) {
+    size_m_.y = maxSize.y;
+  }
+
+  spacing_ = std::min(size_m_.x/1.5f * getScale(), size_m_.y/1.5f * getScale());
+  if (spacing_ < 1)
+    spacing_ = 1.0f;
+}
+
+void PixelBrush::setColor(sf::Color c) {color_ = c;} 
 void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setEraser(bool val) { is_eraser_ = val; }
 

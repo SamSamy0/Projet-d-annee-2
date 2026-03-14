@@ -12,6 +12,8 @@ class SpriteBrush : public Brush{
 
 public:
   void paint(sf::Vector2i pos);
+  void setSize(float x, float y);
+  void setOffset();
 
 
 

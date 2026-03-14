@@ -10,6 +10,7 @@ public:
   PixelBrush(std::shared_ptr<Map> map);
   void setColor(sf::Color c);
   void setShape(Shape s);
+  void setSize(float x, float y);
   void paint(sf::Vector2i pos);
   bool getEraser() const;
   void setEraser(bool val);
