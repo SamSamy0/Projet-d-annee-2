@@ -24,3 +24,7 @@ void ReceiverInWindow::updateProjectNameInList(long long id, const std::string& 
 void ReceiverInWindow::updateCreatedProjectId(uint32_t projId) {
     window_->updateCreatedProjectId(projId);
 }
+
+void ReceiverInWindow::setState(){
+    window_->setState(projectState::GAME);
+}

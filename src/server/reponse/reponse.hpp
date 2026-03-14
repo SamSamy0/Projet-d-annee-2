@@ -42,7 +42,7 @@ struct ReponseDuplicateProject: ReponseSolo{
 };
 
 struct ReponseProjectData : ReponseSolo {
-    ReponseProjectData(long long userId, QByteArray jsonData);
+    ReponseProjectData(long long userId, QByteArray& jsonData);
 };
 
 struct ReponseUsersProjects : ReponseSolo {

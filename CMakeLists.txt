@@ -86,6 +86,7 @@ target_link_libraries(client PRIVATE
     SFML::System 
     SFML::Network
     TGUI::TGUI
+    Qt6::Sql
 )
 
 #SERVEUR

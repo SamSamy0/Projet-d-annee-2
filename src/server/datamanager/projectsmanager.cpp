@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QImage>
 #include <QColor>
+#include <iostream>
 
 
 ProjectsManager::ProjectsManager(const std::string &rootPath)
@@ -230,5 +231,8 @@ QByteArray ProjectsManager::getByteJson(int projetId) {
     QByteArray donneesJson = file.readAll();
 
     file.close();
+    
+
+
     return donneesJson;
 }

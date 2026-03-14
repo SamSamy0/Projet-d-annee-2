@@ -48,14 +48,14 @@ ReponseDuplicateProject::ReponseDuplicateProject(long long userId, int projectId
     
 }
 
-ReponseProjectData::ReponseProjectData(long long userId, QByteArray jsonData) : ReponseSolo(userId) {
+ReponseProjectData::ReponseProjectData(long long userId, QByteArray& jsonData) : ReponseSolo(userId) {
     dataPacket_<<static_cast<std::uint8_t> (MsgProtocole::LOB_GET_PROJECT_DATA_REP);
 
     QByteArray jsonCompresse = qCompress(jsonData, 9);
     dataPacket_ << static_cast<std::uint32_t>(jsonCompresse.size());
     dataPacket_.append(jsonCompresse.constData(), jsonCompresse.size());
+    std::cout << "MESSAGE CREER" << std::endl;
 }
-
 
 ReponseUsersProjects::ReponseUsersProjects(long long userId, std::vector<ProjectEntry>& projects) 
 : ReponseSolo(userId) {

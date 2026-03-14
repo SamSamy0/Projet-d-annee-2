@@ -50,16 +50,41 @@ void ClientHandler::process(ServerEvent& event){
             break;
         }
         case MsgProtocole::LOB_GET_PROJECT_DATA_REP:{
+            std::cout << "DONNEES DU PROJET RECU" << std::endl;
+
             std::uint32_t jsonSize;
+            // On suppose que l'octet d'en-tête (MsgProtocole) a déjà été extrait du flux (stream >>) 
+            // juste avant pour déclencher cet événement. On lit donc la taille.
             *(event.data_packet_) >> jsonSize;
 
-            const char* ptrDonnees = (const char*)(*(event.data_packet_)).getData() + sizeof(jsonSize);
-            QByteArray jsonBytes(ptrDonnees, jsonSize);
+            // 1. Calcul du BON offset (1 octet pour le type de message + 4 octets pour la taille)
+            size_t offset = sizeof(std::uint8_t) + sizeof(std::uint32_t);
+            const char* ptrDonnees = (const char*)(*(event.data_packet_)).getData() + offset;
 
-            QJsonDocument doc = QJsonDocument::fromJson(jsonBytes);
-            QJsonObject entete = doc.object();
+            // 2. Récupération des données COMPRESSÉES
+            QByteArray donneesCompressees(ptrDonnees, jsonSize);
 
-            std::cout << entete["id"].toInt() << std::endl;
+            // 3. DÉCOMPRESSION des données (Étape cruciale qui manquait)
+            QByteArray jsonBytes = qUncompress(donneesCompressees);
+
+            // Vérification de sécurité pour s'assurer que la décompression a réussi
+            if (jsonBytes.isEmpty()) {
+                std::cerr << "Erreur : La décompression a échoué ou les données sont vides." << std::endl;
+            } else {
+                // 4. Lecture du JSON sur les données en clair
+                QJsonDocument doc = QJsonDocument::fromJson(jsonBytes);
+                QJsonObject entete = doc.object();
+
+                std::cout << entete["name"].toString().toStdString() << std::endl;
+                std::cout << entete["width"].toInt() << std::endl;
+                std::cout << entete["height"].toInt() << std::endl;
+                std::cout << entete["scale"].toInt() << std::endl;
+                
+                std::cout << "Lecture JSON réussie." << std::endl;
+            }
+
+            
+            handleWindow_.setState();
 
             break;
         }

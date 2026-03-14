@@ -36,7 +36,7 @@ private:
   void processEvents();
   void handleWindowEvents(const std::optional<sf::Event> &event);
   void handlePopupEvents(const std::optional<sf::Event> &event);
-  void setState(projectState newState);
+  
   void updateTextSize();
 
   // Login Window
@@ -80,6 +80,7 @@ private:
   void toolOnRelease();
 
 public:
+  void setState(projectState newState);
   // Constructor
   Window(ClientNetworkManager &manager);
   Window();

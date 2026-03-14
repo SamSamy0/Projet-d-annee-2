@@ -210,7 +210,9 @@ void Window::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
           // Open Action
         } else if (item == "Ouvrir") {
           std::cout << "Ouverture du projet " << std::endl;
-          setState(projectState::GAME);
+          manager.getProjectData(id);
+      
+          
           // Rename Action
         } else if (item == "Renommer") {
           std::cout << "appuyé" << std::endl;

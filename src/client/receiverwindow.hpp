@@ -17,4 +17,5 @@ public:
     void addProjectToList(ProjectData projet);
     void updateProjectNameInList(long long id, const std::string& name);
     void updateCreatedProjectId(uint32_t ProjectId);
+    void setState();
 };
