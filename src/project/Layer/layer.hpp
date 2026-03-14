@@ -1,31 +1,23 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <memory>
 
-
-enum typeCouche{PIXELLAYER,
-SPRITELAYER};
-
-using LayerContent = std::variant<sf::RenderTexture*, std::vector<sf::Sprite>*>;
+enum LayerType { PIXELLAYER, SPRITELAYER };
 
 class Layer {
 protected:
   std::string name_;
   sf::Vector2u size_;
-  bool Masked_ = false;
-  typeCouche type_;
+  bool masked_ = false;
+  LayerType type_;
 
 public:
   Layer(std::string name, sf::Vector2u size);
-  typeCouche getType();
   std::string getName() const;
+  LayerType getType();
   bool getMasked() const;
   void setMasked(bool masked);
-  virtual LayerContent getLayerContent() = 0;
-  virtual void drawLayer(sf::RenderWindow& window) = 0;
-  virtual void draw(sf::Drawable &s) = 0;
-  virtual void errase(sf::Drawable &s) = 0;
+  virtual sf::Vector2i getOffset() const = 0;
   virtual void shift(sf::Vector2i v) = 0;
-  virtual void display() = 0;
+  virtual void drawLayer(sf::RenderTarget &target) = 0;
   virtual ~Layer() = default;
 };

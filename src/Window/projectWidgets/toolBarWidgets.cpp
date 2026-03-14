@@ -58,7 +58,7 @@ void Window::initToolbar() {
   penButton->getRenderer()->setOpacity(0.4);
   penButton->onPress([this, penButton, brushButton, shiftButton]() {
     project->getToolBar().selectTool(PIXELBRUSH);
-    dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setErraser(false);
+    dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setEraser(false);
     penButton->getRenderer()->setOpacity(1.0);
     brushButton->getRenderer()->setOpacity(0.4);
     shiftButton->getRenderer()->setOpacity(0.4);
@@ -80,7 +80,7 @@ void Window::initToolbar() {
   brushButton->getRenderer()->setOpacity(0.4);
   brushButton->onPress([this, penButton, brushButton, shiftButton]() {
     project->getToolBar().selectTool(PIXELBRUSH);
-    dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setErraser(true);
+    dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setEraser(true);
     penButton->getRenderer()->setOpacity(0.4);
     brushButton->getRenderer()->setOpacity(1.0);
     shiftButton->getRenderer()->setOpacity(0.4);

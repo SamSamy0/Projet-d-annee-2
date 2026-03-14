@@ -8,10 +8,12 @@
 
 const string FONT_PATH {"../res/police/ARIAL.TTF"};
 
-// Constructeur
+// Constructors
 Project::Project(unsigned int scale, sf::Vector2u size, std::string name, unsigned int id, sf::RenderWindow &window, tgui::Gui &gui)
     : map_{std::make_shared<Map>(1, size, scale)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
 
+Project::Project(unsigned int scale, sf::Vector2u size, std::string name, unsigned int id, sf::RenderWindow &window, tgui::Gui &gui, std::vector<std::shared_ptr<Layer>> layers)
+    : map_{std::make_shared<Map>(1, size, scale,layers)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
 
 // ----- [Getters] -----
 unsigned int Project::getId() { return id_; }
@@ -31,7 +33,7 @@ sf::View &Project::getView() { return viewMap_; }
 void Project::setName(std::string name) { name_ = name; }
 
 
-// Affichage
+// Display
 void Project::displayScale() {
   sf::Font police(FONT_PATH);
   sf::Text scaleText(police);

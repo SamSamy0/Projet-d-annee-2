@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries" FORCE)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
 
 # ── macOS spécifique ──────────────────────────────────────────────
 if(APPLE)
@@ -80,9 +80,12 @@ set(SOURCES
     ../src/project/move.cpp
     ../src/project/toolbar.cpp
     ../src/project/Tool/tool.cpp
+    ../src/project/Tool/shift.cpp
     ../src/project/Tool/brush.cpp
     ../src/project/Tool/pixelbrush.cpp
     ../src/project/Tool/pixelshift.cpp
+    ../src/project/Tool/spriteshift.cpp
+    ../src/project/Tool/spriteeraser.cpp
     ../src/project/Layer/layer.cpp
     ../src/project/Layer/pixellayer.cpp
     ../src/project/Layer/spritelayer.cpp
@@ -112,15 +115,15 @@ endif()
 
 # ── SERVEUR ──────────────────────────────────────────────────────
 set(SERVER_SOURCES
-    src/server/client.cpp
-    src/server/datamanager/databasemanager.cpp
-    src/server/main.cpp
-    src/server/message/message.cpp
-    src/server/datamanager/projectsmanager.cpp
-    src/server/reponse/reponse.cpp
-    src/server/protocol.cpp
-    src/server/servernetwork.cpp
-    src/server/worker.cpp
+    ../src/server/client.cpp
+    ../src/server/datamanager/databasemanager.cpp
+    ../src/server/main.cpp
+    ../src/server/message/message.cpp
+    ../src/server/datamanager/projectsmanager.cpp
+    ../src/server/reponse/reponse.cpp
+    ../src/server/protocol.cpp
+    ../src/server/servernetwork.cpp
+    ../src/server/worker.cpp
 )
 
 add_executable(server ${SERVER_SOURCES})

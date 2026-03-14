@@ -4,6 +4,7 @@
 #include "../project/user.hpp"
 #include "../client/clientnetwork.hpp"
 #include "../project/map.hpp"
+#include "../project/Layer/layer.hpp"
 #include "ProjectData.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
