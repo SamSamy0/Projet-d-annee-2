@@ -6,17 +6,17 @@
 
 
 
-struct parameters{
-
-};
+// struct parameters{
+//
+// };
 
 class ToolBar {
 
   std::vector<std::shared_ptr<Tool>> tools_;
-  toolType selected_;
+  ToolType selected_;
   public:
     ToolBar(std::shared_ptr<Map> map);
-    void selectTool(toolType outil);
+    void selectTool(ToolType tool);
     std::shared_ptr<Tool> getSelectedTool() const;
-    toolType getSelected() const;
+    ToolType getSelected() const;
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include "toolbar.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -6,7 +7,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "toolbar.hpp"
+#include "Chat/chat.hpp"
 
 
 class Tool;
@@ -15,7 +16,7 @@ class User;
 
 class Project{
     // std::vector<User> users;
-    // Chat chat;
+    Chat chat_;
     std::string name_;
     unsigned int id_;
     sf::RenderWindow& window_;
@@ -27,16 +28,17 @@ class Project{
 
 public:
     Project(unsigned int scale, sf::Vector2u size, std::string name, unsigned int id, sf::RenderWindow& window, tgui::Gui& gui);
+    Project(unsigned int scale, sf::Vector2u size, std::string name, unsigned int id, sf::RenderWindow& window, tgui::Gui& gui, std::vector<std::shared_ptr<Layer>> layers);
     unsigned int getId();
     std::string getName();
     void setName(std::string name);
     unsigned int getScale();
     std::shared_ptr<Map> getMap();
     ToolBar& getToolBar();
+    Chat& getChat();
     void display();
     void displayScale();
     void displayToolBar();
-    void displayLeftBar();
     void displayBackground();
     sf::View& getView();
 };
