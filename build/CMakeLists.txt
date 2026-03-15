@@ -75,16 +75,20 @@ set(SOURCES
     ../src/client/protocol.hpp
     ../src/client/receiverwindow.cpp
     ../src/project/map.cpp
-    ../src/project/project.cpp
-    ../src/project/zoom.cpp
     ../src/project/move.cpp
+    ../src/project/project.cpp
     ../src/project/toolbar.cpp
+    ../src/project/zoom.cpp
+    ../src/project/assetmanager.cpp
+
+    ../src/project/Tool/brush.cpp
     ../src/project/Tool/tool.cpp
     ../src/project/Tool/shift.cpp
-    ../src/project/Tool/brush.cpp
     ../src/project/Tool/nonetool.cpp
+
     ../src/project/Tool/pixelbrush.cpp
     ../src/project/Tool/pixelshift.cpp
+    ../src/project/Tool/spritebrush.cpp
     ../src/project/Tool/spriteshift.cpp
     ../src/project/Tool/spriteeraser.cpp
     ../src/project/Layer/layer.cpp
@@ -104,6 +108,7 @@ target_link_libraries(client PRIVATE
     SFML::System
     SFML::Network
     TGUI::TGUI
+    Qt6::Core   # ← ajouté
 )
 
 # Fix RPATH sur macOS pour trouver les .dylib
