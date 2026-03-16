@@ -1,5 +1,6 @@
 #include "brush.hpp"
 #include "../map.hpp"
+#include "../Layer/layer.hpp"
 #include <cmath>
 
 Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {
@@ -37,10 +38,12 @@ void Brush::setSize(float x, float y = 1) { //WARNING: la valeur par défaut je 
 sf::Vector2f Brush::getSize() { return sf::Vector2f(size_m_.x, size_m_.y); }
 
 void Brush::onPress(sf::Vector2i pos) {
-  isDrawing_ = true;
-  lastPos_ = pos;
-  paint(pos);
-  distance_ = 0;
+  if(!map_->getCurrentLayer()->isMasked()){
+    isDrawing_ = true;
+    lastPos_ = pos;
+    paint(pos);
+    distance_ = 0;
+  }
 }
 void Brush::onDrag(sf::Vector2i pos) {
   /*Interpolation Function */

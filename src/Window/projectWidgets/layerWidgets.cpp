@@ -76,7 +76,7 @@ void GameView::initLayerPanel() {
     auto& layers = project->getMap()->getLayers();
     unsigned int selectedLayer = project->getMap()->getLayerSelected();
     if (selectedLayer < layers.size())
-      layers[selectedLayer]->setMasked(!layers[selectedLayer]->getMasked());
+      layers[selectedLayer]->setMasked(!layers[selectedLayer]->isMasked());
   });
   layerPanel_->add(maskButton);
 
