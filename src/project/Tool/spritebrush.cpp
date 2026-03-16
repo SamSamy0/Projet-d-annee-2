@@ -36,6 +36,9 @@ void SpriteBrush::removeAsset(const std::string& id){
     assets_.erase(iterator);
 }
 
+
+void SpriteBrush::clearAsset(){assets_.clear();}
+
 Asset* SpriteBrush::getAsset(){
   /*Return a randow selected Asset */
   return assets_[rand()%assets_.size()];

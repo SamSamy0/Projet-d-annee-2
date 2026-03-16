@@ -15,5 +15,6 @@ public:
   void setSize(float x, float y)override;
   void addAsset(const std::string& id);
   void removeAsset(const std::string& id);
+  void clearAsset();
 
 };
