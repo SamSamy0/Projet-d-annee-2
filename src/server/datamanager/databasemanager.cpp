@@ -32,7 +32,6 @@ DatabaseManager::DatabaseManager() {
 // renvoie l'id de l'utilisateur sinon -1
 long long DatabaseManager::verifyLogin(const std::string &pseudo,
                                        const std::string &password) {
-  std::cout << "DatabaseManager: verifyLogin()" << std::endl;
   QString qPseudo = QString::fromStdString(pseudo);
   QString qPassword = QString::fromStdString(password);
 
@@ -50,11 +49,8 @@ long long DatabaseManager::verifyLogin(const std::string &pseudo,
 // utiliser un hachage plus tard
 long long DatabaseManager::addUser(const std::string &pseudo,
                                    const std::string &password) {
-  std::cout << "DatabaseManager: addUser()" << std::endl;
   QString qPseudo = QString::fromStdString(pseudo);
-  qDebug() << "pseudo" <<qPseudo;
   QString qPassword = QString::fromStdString(password);
-  qDebug() << "mdp" << qPassword;
 
   QSqlQuery query;
   query.prepare("INSERT INTO users (pseudo, password) VALUES (:p, :pw)");

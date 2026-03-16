@@ -1,6 +1,6 @@
 #pragma once   // un seul acces a la fois
 #include <cstdint>
-
+#include <string>
 
 enum class MsgProtocole: uint8_t{
     AUTH_LOGIN_REQ,
@@ -59,3 +59,5 @@ enum class MsgProtocole: uint8_t{
     CHAT_LOCK_LAYER_REP,
 
 };
+
+std::string to_string(MsgProtocole msg);

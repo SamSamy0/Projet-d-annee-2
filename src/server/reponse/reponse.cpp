@@ -29,7 +29,6 @@ void ReponseAuth::envoyer(ServerNetworkManager& servManage) {
     
     if (userId_ != 0) {
         servManage.map_[userId_] = std::move(client_);
-        std::cout << "le map est mis à jour" << std::endl;
     }
 }
 
@@ -54,16 +53,13 @@ ReponseProjectData::ReponseProjectData(long long userId, QByteArray& jsonData) :
     QByteArray jsonCompresse = qCompress(jsonData, 9);
     dataPacket_ << static_cast<std::uint32_t>(jsonCompresse.size());
     dataPacket_.append(jsonCompresse.constData(), jsonCompresse.size());
-    std::cout << "MESSAGE CREER" << std::endl;
 }
 
 ReponseUsersProjects::ReponseUsersProjects(long long userId, std::vector<ProjectEntry>& projects) 
 : ReponseSolo(userId) {
-    std::cout << "je fais le pack de projet" << std::endl;
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_PROJECT_LIST_REP);
 
     dataPacket_ << static_cast<std::uint32_t>(projects.size());
-    std::cout << static_cast<int>(projects.size()) << std::endl;
 
     for (const auto& entry : projects) {
         dataPacket_ << static_cast<uint32_t>(entry.projectId) << entry.name << entry.role;
