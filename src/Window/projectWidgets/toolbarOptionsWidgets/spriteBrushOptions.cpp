@@ -1,5 +1,6 @@
 #include "../../Window.hpp"
 #include "../../../project/Tool/spritebrush.hpp"
+#include <iostream>
 
 void Window::initSpriteBrushOptions() {
     float width  = mainWindow.getSize().x;
@@ -56,13 +57,16 @@ void Window::initSpriteBrushOptions() {
         std::string assetId = id;
         auto selected = std::make_shared<bool>(false);
         btn->onClick([this, btn, assetId, selected]() {
+            cout << "appuyé" <<endl;
             auto tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+            cout << "avant check" <<endl;
             if (!tool) return;
-
+            cout << "apres check" <<endl;
             *selected = !*selected;
             if (*selected) {
                 btn->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
                 tool->addAsset(assetId);
+                cout << "bingo" <<endl;
             } else {
                 btn->getRenderer()->setBorderColor(tgui::Color::Transparent);
                 tool->removeAsset(assetId);

@@ -1,6 +1,7 @@
 #include "../Window.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
 #include "../../project/Tool/pixelshift.hpp"
+#include "../../project/Layer/layer.hpp"
 
 void Window::initToolbar() {
   float width  = mainWindow.getSize().x;
@@ -58,8 +59,13 @@ void Window::initToolbar() {
   penButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   penButton->getRenderer()->setOpacity(0.4);
   penButton->onPress([this, penButton, brushButton, shiftButton, spriteBrushButton]() {
-    project->getToolBar().selectTool(PIXELBRUSH);
-    dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setEraser(false);
+    LayerType layerType = project->getMap()->getCurrentLayer()->getType();
+    if (layerType == SPRITELAYER) {
+      project->getToolBar().selectTool(SPRITEBRUSH);
+    } else {
+      project->getToolBar().selectTool(PIXELBRUSH);
+      dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setEraser(false);
+    }
     penButton->getRenderer()->setOpacity(1.0);
     brushButton->getRenderer()->setOpacity(0.4);
     shiftButton->getRenderer()->setOpacity(0.4);
@@ -84,8 +90,13 @@ void Window::initToolbar() {
   brushButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   brushButton->getRenderer()->setOpacity(0.4);
   brushButton->onPress([this, penButton, brushButton, shiftButton, spriteBrushButton]() {
-    project->getToolBar().selectTool(PIXELBRUSH);
-    dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setEraser(true);
+    LayerType layerType = project->getMap()->getCurrentLayer()->getType();
+    if (layerType == SPRITELAYER) {
+      project->getToolBar().selectTool(SPRITEERASER);
+    } else {
+      project->getToolBar().selectTool(PIXELBRUSH);
+      dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setEraser(true);
+    }
     penButton->getRenderer()->setOpacity(0.4);
     brushButton->getRenderer()->setOpacity(1.0);
     shiftButton->getRenderer()->setOpacity(0.4);
@@ -110,7 +121,12 @@ void Window::initToolbar() {
   shiftButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   shiftButton->getRenderer()->setOpacity(0.4);
   shiftButton->onPress([this, penButton, brushButton, shiftButton, spriteBrushButton]() {
-    project->getToolBar().selectTool(PIXELSHIFT);
+    LayerType layerType = project->getMap()->getCurrentLayer()->getType();
+    if (layerType == SPRITELAYER) {
+      project->getToolBar().selectTool(SPRITESHIFT);
+    } else {
+      project->getToolBar().selectTool(PIXELSHIFT);
+    }
     penButton->getRenderer()->setOpacity(0.4);
     brushButton->getRenderer()->setOpacity(0.4);
     shiftButton->getRenderer()->setOpacity(1.0);
