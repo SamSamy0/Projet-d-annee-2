@@ -21,7 +21,7 @@ void Window::initEraserOptions() {
   sizeInputBox->setSize(width * 0.06, height * 0.04);
   sizeInputBox->setPosition(width * 0.008, height * 0.011);
   sizeInputBox->setDefaultText("1");
-  sizeInputBox->setInputValidator("[0-9]*");
+  sizeInputBox->setInputValidator("[0-9]*\\.?[0-9]*");
   sizeInputBox->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   sizeInputBox->getRenderer()->setTextColor(tgui::Color::White);
   sizeInputBox->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -29,10 +29,8 @@ void Window::initEraserOptions() {
   sizeInputBox->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
   sizeInputBox->onTextChange([this, sizeInputBox]() {
     if (sizeInputBox->getText().empty()) return;
-    unsigned int size = static_cast<unsigned int>(std::stoi(sizeInputBox->getText().toStdString()));
-    if (size < 1) {
-        size = 1;
-    }
+    float size = std::stof(sizeInputBox->getText().toStdString());
+
     auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
     if (brush) {
         brush->setSize(size, size);
