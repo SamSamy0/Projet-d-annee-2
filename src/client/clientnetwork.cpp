@@ -8,7 +8,7 @@ std::deque<ServerEvent> &ClientNetworkManager::getQueuEvent() {
 bool ClientNetworkManager::connect() {
   socket_.setBlocking(true);
 
-  if (socket_.connect({127, 0, 0, 1}, 5000) == sf::Socket::Status::Done) {
+  if (socket_.connect({127, 0, 0, 1}, 5001) == sf::Socket::Status::Done) {
     socket_.setBlocking(false);
     return true;
   } else
