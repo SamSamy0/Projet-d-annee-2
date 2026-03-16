@@ -55,17 +55,15 @@ void SpriteEraser::paint(sf::Vector2i pos) {
   if (!spritelayer)
     return;
 
-  std::vector<sf::Sprite> &sprites = spritelayer->getSprites();
+  /*I had two choices : use the id or the index of the sprite
+   * i chosed to use the id because its cleaner more logical even if complexity is higher */
+  const std::vector<SpriteObject> &sprites = spritelayer->getSprites();
   pos -= spritelayer->getOffset();
-  bool hit = false;
-  int depth;
 
   for (int i = sprites.size() - 1; i >= 0; i--) {
-    if (checkColision(pos, sprites[i].getGlobalBounds())) {
-      hit = true;
-      depth = i;
+    if (checkColision(pos, sprites[i].sprite.getGlobalBounds())) {
+      spritelayer->erase(sprites[i].id);
       break;
     }
   }
-  if (hit){spritelayer->erase(depth);}
 }
