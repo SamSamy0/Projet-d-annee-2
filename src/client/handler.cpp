@@ -99,21 +99,18 @@ void ClientHandler::process(ServerEvent& event){
             break;
         } 
         case MsgProtocole::LOB_DUPLICATE_PROJECT_REP:{
-            uint8_t success;
             uint32_t projectId;
             std::string newName;
-            *(event.data_packet_) >> success >> projectId >> newName;
-            if (success){
-                ProjectData projet;
+            *(event.data_packet_) >> projectId >> newName;
+            ProjectData projet;
 
-                projet.projectId = projectId;
-                projet.projectName = newName;
-                //Owner
-                projet.role = 2;
+            projet.projectId = projectId;
+            projet.projectName = newName;
+            //Owner
+            projet.role = 2;
 
-                handleWindow_.addProjectToList(projet);
+            handleWindow_.addProjectToList(projet);
                 
-            }
             break;
         }
         case MsgProtocole::LOB_CREATE_PROJECT_REP : {
