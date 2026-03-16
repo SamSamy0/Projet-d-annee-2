@@ -6,6 +6,7 @@ class Map;
 class Layer;
 
 enum ToolType {
+  NONETOOL,
   PIXELBRUSH,
   PIXELSHIFT,
   SPRITEBRUSH,

@@ -12,21 +12,21 @@ DatabaseManager::DatabaseManager() {
     QSqlQuery query;
     query.exec("PRAGMA foreign_keys = ON;");
 
-    query.exec("CREATE TABLE IF NOT EXISTS users ("
-               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-               "pseudo TEXT UNIQUE COLLATE NOCASE, "
-               "password TEXT)");
-    query.exec("CREATE TABLE IF NOT EXISTS projects ("
-               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-               "name TEXT)");
-    query.exec("CREATE TABLE IF NOT EXISTS links ("
-               "user_id INTEGER, "
-               "project_id INTEGER, "
-               "role INTEGER, "
-               "PRIMARY KEY (user_id, project_id), "
-               "FOREIGN KEY (user_id) REFERENCES users(id),"
-               "FOREIGN KEY (project_id) REFERENCES projects(id))");
-  }
+        query.exec("CREATE TABLE IF NOT EXISTS users ("
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                   "pseudo TEXT UNIQUE COLLATE NOCASE CHECK(LENGTH(pseudo) BETWEEN 3 AND 15), "
+                   "password TEXT)");
+        query.exec("CREATE TABLE IF NOT EXISTS projects ("
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                   "name TEXT)");
+        query.exec("CREATE TABLE IF NOT EXISTS links ("
+                    "user_id INTEGER, "
+                    "project_id INTEGER, "
+                    "role INTEGER, "
+                    "PRIMARY KEY (user_id, project_id), "
+                    "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,"
+                    "FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE)");
+    }
 }
 
 // renvoie l'id de l'utilisateur sinon -1
@@ -52,7 +52,9 @@ long long DatabaseManager::addUser(const std::string &pseudo,
                                    const std::string &password) {
   std::cout << "DatabaseManager: addUser()" << std::endl;
   QString qPseudo = QString::fromStdString(pseudo);
+  qDebug() << "pseudo" <<qPseudo;
   QString qPassword = QString::fromStdString(password);
+  qDebug() << "mdp" << qPassword;
 
   QSqlQuery query;
   query.prepare("INSERT INTO users (pseudo, password) VALUES (:p, :pw)");
@@ -259,3 +261,29 @@ std::vector<ProjectEntry> DatabaseManager::getAllProjects() {
   }
   return projects;
 }
+
+bool DatabaseManager::removeLink(const long long userId, const long long projectId) {
+    QSqlQuery query;
+    query.prepare("DELETE FROM links WHERE user_id = :uId AND project_id = :pId");
+    query.bindValue(":uId", userId);
+    query.bindValue(":pId", projectId);
+
+    if (!query.exec()) {
+        qDebug() << "Erreur suppression lien:" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool DatabaseManager::removeProject(const long long projectId) {
+    QSqlQuery query;
+    query.prepare("DELETE FROM projects WHERE id = :pId");
+    query.bindValue(":pId", projectId);
+
+    if (!query.exec()) {
+        qDebug() << "Erreur suppression projet:" << query.lastError().text();
+        return false;
+    }
+    return true;
+}
+

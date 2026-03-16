@@ -1,5 +1,5 @@
 #include "reponse.hpp"
-#include "../protocol.hpp"
+#include "../../common/protocol.hpp"
 #include "../servernetwork.hpp"
 
 
@@ -48,8 +48,14 @@ ReponseDuplicateProject::ReponseDuplicateProject(long long userId, int projectId
     
 }
 
-ReponseProjectData::ReponseProjectData(long long userId) : ReponseSolo(userId) {/*remplir un jour lol*/}
+ReponseProjectData::ReponseProjectData(long long userId, QByteArray& jsonData) : ReponseSolo(userId) {
+    dataPacket_<<static_cast<std::uint8_t> (MsgProtocole::LOB_GET_PROJECT_DATA_REP);
 
+    QByteArray jsonCompresse = qCompress(jsonData, 9);
+    dataPacket_ << static_cast<std::uint32_t>(jsonCompresse.size());
+    dataPacket_.append(jsonCompresse.constData(), jsonCompresse.size());
+    std::cout << "MESSAGE CREER" << std::endl;
+}
 
 ReponseUsersProjects::ReponseUsersProjects(long long userId, std::vector<ProjectEntry>& projects) 
 : ReponseSolo(userId) {
@@ -64,8 +70,14 @@ ReponseUsersProjects::ReponseUsersProjects(long long userId, std::vector<Project
     }
 }
 
+ReponseCreateProject::ReponseCreateProject(long long userId, int projectId) : ReponseSolo(userId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_CREATE_PROJECT_REP);
+
+    dataPacket_ << projectId;
+}
 
 ReponseGroupe::ReponseGroupe(std::vector<long long> usersId) : usersId_(std::move(usersId)) {}
+
 
 void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
     for (auto Id : usersId_) {
@@ -75,6 +87,5 @@ void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
         }
     } 
 }
-
 
 

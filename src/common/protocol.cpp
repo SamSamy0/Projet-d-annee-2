@@ -10,14 +10,15 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::LOB_CREATE_PROJECT_REQ: return "LOB_CREATE_PROJECT_REQ";
         case MsgProtocole::LOB_PROJECT_LIST_REQ: return "LOB_PROJECT_LIST_REQ";
         case MsgProtocole::LOB_PROJECT_LIST_REP: return "LOB_PROJECT_LIST_REP";
+        case MsgProtocole::LOB_DEL_PROJECT_REQ: return "LOB_DEL_PROJECT_REQ";
         case MsgProtocole::LOB_SHARE_PROJECT_REQ: return "LOB_SHARE_PROJECT_REQ";
         case MsgProtocole::LOB_SHARE_PROJECT_REP: return "LOB_SHARE_PROJECT_REP";
         case MsgProtocole::LOB_JOIN_PROJECT_REQ: return "LOB_JOIN_PROJECT_REQ";
         case MsgProtocole::LOB_IMPORT_PROJECT_REQ: return "LOB_IMPORT_PROJECT_REQ";
         case MsgProtocole::LOB_EXPORT_PNG_PROJECT_REQ: return "LOB_EXPORT_PNG_PROJECT_REQ";
         case MsgProtocole::LOB_EXPORT_JSON_PROJECT_REP: return "LOB_EXPORT_JSON_PROJECT_REP";
-        case MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REQ: return "LOB_GET_MY_PROJECTS_DATA_REQ";
-        case MsgProtocole::LOB_GET_MY_PROJECTS_DATA_REP: return "LOB_GET_MY_PROJECTS_DATA_REP";
+        case MsgProtocole::LOB_GET_PROJECT_DATA_REQ: return "LOB_GET_MY_PROJECTS_DATA_REQ";
+        case MsgProtocole::LOB_GET_PROJECT_DATA_REP: return "LOB_GET_MY_PROJECTS_DATA_REP";
         case MsgProtocole::LOB_RENAME_PROJECT_REQ: return "LOB_RENAME_PROJECT_REQ";
         case MsgProtocole::LOB_RENAME_PROJECT_REP: return "LOB_RENAME_PROJECT_REP";
         case MsgProtocole::MAP_CREATE_LAYER_REQ: return "MAP_CREATE_LAYER_REQ";

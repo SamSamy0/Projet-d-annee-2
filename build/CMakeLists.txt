@@ -55,7 +55,7 @@ else()
 endif()
 
 # ── Qt6 ──────────────────────────────────────────────────────────
-find_package(Qt6 REQUIRED COMPONENTS Core Sql)  # ← Core ajouté obligatoire
+find_package(Qt6 REQUIRED COMPONENTS Core Sql Gui)  # ← Core ajouté obligatoire
 set(CMAKE_AUTOMOC ON)  # ← nécessaire pour Qt
 
 # ── CLIENT ───────────────────────────────────────────────────────
@@ -72,7 +72,6 @@ set(SOURCES
     ../src/Window/projectWidgets/toolbarOptionsWidgets/eraserOptions.cpp
     ../src/client/clientnetwork.cpp
     ../src/client/handler.cpp
-    ../src/client/protocol.hpp
     ../src/client/receiverwindow.cpp
     ../src/project/map.cpp
     ../src/project/project.cpp
@@ -82,6 +81,7 @@ set(SOURCES
     ../src/project/Tool/tool.cpp
     ../src/project/Tool/shift.cpp
     ../src/project/Tool/brush.cpp
+    ../src/project/Tool/nonetool.cpp
     ../src/project/Tool/pixelbrush.cpp
     ../src/project/Tool/pixelshift.cpp
     ../src/project/Tool/spriteshift.cpp
@@ -93,6 +93,7 @@ set(SOURCES
     ../src/project/Chat/userMessage.cpp
     ../src/project/Chat/systemNotification.cpp
     ../src/project/Chat/date.cpp
+    ../src/common/protocol.cpp
 )
 
 add_executable(client ${SOURCES})
@@ -103,6 +104,8 @@ target_link_libraries(client PRIVATE
     SFML::System
     SFML::Network
     TGUI::TGUI
+    Qt6::Core   # ← ajouté
+    Qt6::Sql
 )
 
 # Fix RPATH sur macOS pour trouver les .dylib
@@ -121,7 +124,7 @@ set(SERVER_SOURCES
     ../src/server/message/message.cpp
     ../src/server/datamanager/projectsmanager.cpp
     ../src/server/reponse/reponse.cpp
-    ../src/server/protocol.cpp
+    ../src/common/protocol.cpp
     ../src/server/servernetwork.cpp
     ../src/server/worker.cpp
 )
@@ -133,6 +136,7 @@ target_link_libraries(server PRIVATE
     SFML::Network
     Qt6::Core   # ← ajouté
     Qt6::Sql
+    Qt6::Gui
 )
 
 if(APPLE)

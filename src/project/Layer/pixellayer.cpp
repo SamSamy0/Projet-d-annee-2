@@ -22,9 +22,7 @@ sf::Vector2i PixelLayer::getOffset() const {
 }
 
 void PixelLayer::draw(sf::Drawable &s) {
-  sf::RenderStates states;
-  states.blendMode = sf::BlendNone;
-  texture_.draw(s, states);
+  texture_.draw(s);
 }
 
 void PixelLayer::erase(sf::Drawable &s) { texture_.draw(s, sf::BlendNone); }

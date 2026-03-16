@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../client/clientnetwork.hpp"
-#include "../project/Layer/layer.hpp"
-#include "../project/map.hpp"
 #include "../project/project.hpp"
 #include "../project/user.hpp"
+#include "../client/clientnetwork.hpp"
+#include "../project/map.hpp"
+#include "../project/Layer/layer.hpp"
 #include "ProjectData.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -52,7 +52,7 @@ private:
   void processEvents();
   void handleWindowEvents(const std::optional<sf::Event> &event);
   void handlePopupEvents(const std::optional<sf::Event> &event);
-  void setState(projectState newState);
+  
   void updateTextSize();
 
   // Login Window
@@ -101,6 +101,7 @@ private:
   void checkTypeTool(LayerType previous_type);
 
 public:
+  void setState(projectState newState);
   // Constructor
   Window(ClientNetworkManager &manager);
   Window();
@@ -112,4 +113,5 @@ public:
   void updateList();
   bool isOpen() const;
   void run();
+  void updateCreatedProjectId(uint32_t projId);
 };

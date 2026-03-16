@@ -23,6 +23,8 @@ public:
     std::string getName(const long long projectId);
     int8_t getRole(const long long userId, const long long projectId);
     std::vector<ProjectEntry> getAllProjects();
+    bool removeLink(const long long userId, const long long projectId);
+    bool removeProject(const long long projectId);
 private:
     QSqlDatabase m_db;
 };

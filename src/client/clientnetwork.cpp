@@ -33,7 +33,17 @@ void ClientNetworkManager::getEvent() {
   }
 }
 
-bool ClientNetworkManager::hasEvent() { return !reponse_.empty(); }
+bool ClientNetworkManager::hasEvent(){
+    return !reponse_.empty();
+}
+
+
+ServerEvent ClientNetworkManager::popEvent() {
+    auto msg = std::move(reponse_.front());
+    reponse_.pop_front();
+    return msg;
+}
+
 
 void ClientNetworkManager::login(std::string pseudo, std::string password) {
   sf::Packet packet;
@@ -93,8 +103,22 @@ void ClientNetworkManager::getProjectList() {
   socket_.send(packet);
 }
 
-ServerEvent ClientNetworkManager::popEvent() {
-  auto msg = std::move(reponse_.front());
-  reponse_.pop_front();
-  return msg;
+void ClientNetworkManager::getProjectData(long long project_id){
+    sf::Packet packet;
+    MsgProtocole msg = MsgProtocole::LOB_GET_PROJECT_DATA_REQ;
+
+    packet << static_cast<uint8_t>(msg);
+    packet << static_cast<int>(project_id);
+    socket_.send(packet);
 }
+
+
+void ClientNetworkManager::delProject(long long project_id){
+    sf::Packet packet;
+    MsgProtocole msg = MsgProtocole::LOB_DEL_PROJECT_REQ;
+
+    packet << static_cast<uint8_t>(msg);
+    packet << static_cast<int>(project_id);
+    socket_.send(packet);
+}
+

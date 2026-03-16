@@ -5,6 +5,7 @@
 
 
 class SpriteBrush : public Brush{
+  std::vector<sf::Sprite> sprites_;
 
 
 

@@ -2,7 +2,7 @@
 #include <memory>
 #include <deque>
 #include <SFML/Network.hpp>
-#include "protocol.hpp"
+#include "../common/protocol.hpp"
 #include "serverevent.hpp"
 
 
@@ -26,7 +26,16 @@ public:
     void dupProj(int projectId, std::string newName);
     void getProjectData(int project_id);
     void getUsersProjects(long long id);
-    void getProjectList();     
+    void getProjectList(); 
+    
+    void getProjectData(long long project_id);
+    void delProject(long long project_id);
+    void renameProject();
+    void createProjectCode();
+    void joinProject();
+    void syncPaint();
+    void sendMessageChat();
+
 };
 
 

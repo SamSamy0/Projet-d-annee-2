@@ -1,6 +1,6 @@
 #include "message.hpp"
 #include "../worker.hpp"
-#include "../protocol.hpp"
+#include "../../common/protocol.hpp"
 #include "../reponse/reponse.hpp"
 
 
@@ -44,9 +44,11 @@ CreateProjectMessage::CreateProjectMessage(sf::Packet& data_packet, long long us
 
 void CreateProjectMessage::process(Worker& worker) {
     if (userId_ > 0) {
-    std::cout << "enft pas connecté" << std::endl;
     long long idProj = worker.addProjectSQL(nomProjet_, userId_);
     worker.createProjectJson(idProj, nomProjet_, size_.x, size_.y, scale_);
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseCreateProject>(userId_, idProj);
+    worker.pushNetwork(std::move(rps));
     }
 }
 
@@ -75,13 +77,6 @@ void DuplicateProjectMessage::process(Worker& worker){
 }
 
 
-GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, long long userId) {
-}
-
-
-void GetProjectDataMessage::process(Worker& worker) {
-}
-
 GetProjectsListMessage::GetProjectsListMessage(sf::Packet& data_packet, long long userId) {
     userId_ = userId;
 }
@@ -95,6 +90,31 @@ void GetProjectsListMessage::process(Worker& worker) {
 
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseUsersProjects>(userId_, projects);
+    worker.pushNetwork(std::move(rps));
+}
+
+DeleteProjectMessage::DeleteProjectMessage(sf::Packet& data_packet, long long userId) {
+    userId_ = userId;
+    data_packet >> projectId_;
+}
+
+void DeleteProjectMessage::process(Worker& worker) {
+    if (worker.getRole(userId_, projectId_) == 2) {
+        worker.deleteProject(projectId_);
+    }
+}
+
+
+GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, long long userId) {
+    userId_ = userId;
+    data_packet >> projectId_;
+}
+
+void GetProjectDataMessage::process(Worker& worker) {
+    QByteArray jsonData = worker.getByteJson(projectId_);
+
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseProjectData>(userId_, jsonData);
     worker.pushNetwork(std::move(rps));
 }
 
@@ -119,6 +139,12 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
 
         case MsgProtocole::LOB_PROJECT_LIST_REQ:
             return std::make_unique<GetProjectsListMessage>(data_packet, c->id);
+
+        case MsgProtocole::LOB_DEL_PROJECT_REQ:
+            return std::make_unique<DeleteProjectMessage>(data_packet, c->id);
+        
+        case MsgProtocole::LOB_GET_PROJECT_DATA_REQ:
+            return std::make_unique<GetProjectDataMessage>(data_packet,c->id);
         
         case MsgProtocole::LOB_RENAME_PROJECT_REQ:
             return std::make_unique<RenameProjectMessage>(data_packet, c->id);

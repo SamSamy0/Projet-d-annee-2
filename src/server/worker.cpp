@@ -95,3 +95,14 @@ QJsonObject Worker::loadProjectJson(int projectId) {
 bool Worker::saveImage(int projectId, const std::string &fileName, const QByteArray &data) {
     return projManager_.saveImage(projectId, QString::fromStdString(fileName), data);
 }
+
+bool Worker::deleteProject(int projectId) {
+    if (dbManager_.removeProject(projectId) and projManager_.deleteProject(projectId)) {
+        return true;
+    }
+    return false;
+}
+
+QByteArray Worker::getByteJson(int projectId) {
+    return projManager_.getByteJson(projectId);
+}
