@@ -21,6 +21,7 @@ public:
   AssetManager();
   void loadFromJson();
   Asset* getAsset(const std::string& id);
+  const std::unordered_map<std::string, Asset>& getAllAssets() { return assets_; }
 
 };
 

@@ -2,6 +2,7 @@
 #include "Layer/layer.hpp"
 #include "Tool/pixelbrush.hpp"
 #include "Tool/pixelshift.hpp"
+#include "Tool/spritebrush.hpp"
 #include "Tool/spriteshift.hpp"
 #include "Tool/spriteeraser.hpp"
 #include "Tool/nonetool.hpp"
@@ -11,7 +12,7 @@ ToolBar::ToolBar(std::shared_ptr<Map> map): selected_{NONETOOL} {
   tools_.push_back(std::make_shared<NoneTool>(map));
   tools_.push_back(std::make_shared<PixelBrush>(map));
   tools_.push_back(std::make_shared<PixelShift>(map));
-  tools_.push_back(std::make_shared<PixelBrush>(map));
+  tools_.push_back(std::make_shared<SpriteBrush>(map));
   tools_.push_back(std::make_shared<SpriteEraser>(map));
   tools_.push_back(std::make_shared<SpriteShift>(map));
 }

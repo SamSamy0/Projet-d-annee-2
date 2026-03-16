@@ -9,6 +9,7 @@ void Window::initGameWidget() {
   initChatWidget();
   initPenOptions();
   initEraserOptions();
+  initSpriteBrushOptions();
   refreshChat();
 }
 
@@ -71,7 +72,6 @@ void Window::handleGameEvents(const std::optional<sf::Event> &event) {
 
 
         brush->setSize(sizex, sizey);
-
       }
     } else {
       if (!gui.getWidgetBelowMouseCursor(wheelEvent->position, true))

@@ -9,7 +9,7 @@ protected:
 
 public:
   Brush(std::shared_ptr<Map>);
-  virtual void setSize(float x, float y);
+  virtual void setSize(float x, float y = 1);
   sf::Vector2f getSize();
   void onPress(sf::Vector2i pos);
   void onDrag(sf::Vector2i pos);
