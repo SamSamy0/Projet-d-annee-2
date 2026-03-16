@@ -70,10 +70,12 @@ DuplicateProjectMessage::DuplicateProjectMessage(sf::Packet& dataPacket, long lo
 }
 
 void DuplicateProjectMessage::process(Worker& worker){
-    bool success = worker.duplicateProject(projectId_, newName, userId_);
+    long long newId = worker.duplicateProject(projectId_, newName, userId_);
     std::unique_ptr<Reponse>rps;
-    rps = std::make_unique<ReponseDuplicateProject>(userId_, projectId_, newName, success);
-    worker.pushNetwork(std::move(rps));
+    if (newId != -1){
+        rps = std::make_unique<ReponseDuplicateProject>(userId_, newId, newName);
+        worker.pushNetwork(std::move(rps));
+    }
 }
 
 

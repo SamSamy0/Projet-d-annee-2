@@ -38,7 +38,7 @@ struct ReponseRenameProject: ReponseSolo{
 };
 
 struct ReponseDuplicateProject: ReponseSolo{
-    ReponseDuplicateProject(long long userId_, int projectId_, std::string newName, bool success);
+    ReponseDuplicateProject(long long userId_, int projectId_, std::string newName);
 };
 
 struct ReponseProjectData : ReponseSolo {
