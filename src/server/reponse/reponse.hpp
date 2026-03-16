@@ -39,7 +39,11 @@ struct ReponseRenameProject: ReponseSolo{
 };
 
 struct ReponseDuplicateProject: ReponseSolo{
+<<<<<<< HEAD
     ReponseDuplicateProject(uint userId_, uint projectId_, std::string newName, bool success);
+=======
+    ReponseDuplicateProject(long long userId_, int projectId_, std::string newName);
+>>>>>>> 357bc8c (Fixing renaming original when duplicating and renaming)
 };
 
 struct ReponseProjectData : ReponseSolo {
