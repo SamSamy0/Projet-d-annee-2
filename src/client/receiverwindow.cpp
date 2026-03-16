@@ -28,3 +28,8 @@ void ReceiverInWindow::updateCreatedProjectId(uint32_t projId) {
 void ReceiverInWindow::setState(){
     window_->setState(projectState::GAME);
 }
+
+void ReceiverInWindow::setProject(unsigned int scale, int height, int width , std::string name, unsigned int id){
+    window_->setCurrentProject(scale,height,width,name,id);
+    window_->setState(projectState::GAME);
+}

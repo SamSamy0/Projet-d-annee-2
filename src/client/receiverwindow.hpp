@@ -18,4 +18,5 @@ public:
     void updateProjectNameInList(long long id, const std::string& name);
     void updateCreatedProjectId(uint32_t ProjectId);
     void setState();
+    void setProject(unsigned int scale, int height, int width , std::string name, unsigned int id);
 };

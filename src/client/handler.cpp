@@ -75,6 +75,10 @@ void ClientHandler::process(ServerEvent& event){
                 QJsonDocument doc = QJsonDocument::fromJson(jsonBytes);
                 QJsonObject entete = doc.object();
 
+                handleWindow_.setProject(entete["scale"].toInt(),entete["height"].toInt(),entete["width"].toInt(),
+                                           entete["name"].toString().toStdString(),entete["id"].toInt() );
+                
+                
                 std::cout << entete["name"].toString().toStdString() << std::endl;
                 std::cout << entete["width"].toInt() << std::endl;
                 std::cout << entete["height"].toInt() << std::endl;
@@ -83,8 +87,6 @@ void ClientHandler::process(ServerEvent& event){
                 std::cout << "Lecture JSON réussie." << std::endl;
             }
 
-            
-            handleWindow_.setState();
 
             break;
         }
