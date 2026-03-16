@@ -4,7 +4,7 @@
 #include <memory>
 #include <atomic>
 #include <SFML/Network.hpp>
-#include "protocol.hpp"
+#include "../common/protocol.hpp"
 #include "reponse/reponse.hpp"
 #include "message/message.hpp"
 #include "mutexqueue.hpp"

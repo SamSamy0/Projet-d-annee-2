@@ -15,3 +15,16 @@ void ReceiverInWindow::switchConnectState(uint8_t connect){
 void ReceiverInWindow::addProjectToList(ProjectData projet){
     window_->addProjectList(projet);
 }
+
+void ReceiverInWindow::updateProjectNameInList(long long id, const std::string& newName){
+    window_->updateProjectNameInList(id, newName);
+    
+}
+
+void ReceiverInWindow::updateCreatedProjectId(uint32_t projId) {
+    window_->updateCreatedProjectId(projId);
+}
+
+void ReceiverInWindow::setState(){
+    window_->setState(projectState::GAME);
+}

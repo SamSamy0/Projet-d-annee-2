@@ -2,7 +2,7 @@
 #include <memory>
 #include <deque>
 #include <SFML/Network.hpp>
-#include "protocol.hpp"
+#include "../common/protocol.hpp"
 #include "serverevent.hpp"
 
 
@@ -22,9 +22,19 @@ public:
     void login(std::string pseudo,std::string password);
     void askRegister(std::string pseudo, std::string password);
     void createProject(std::string role, sf::Vector2u size, uint scale);
+    void renameProject(int projectId, std::string newName);
+    void dupProj(int projectId, std::string newName);
     void getProjectData(int project_id);
     void getUsersProjects(long long id);
-    void getProjectList();     
+    void getProjectList(); 
+    void delProject(long long project_id);
+    void getProjectData(long long project_id);
+    void createProjectCode(long long project_id);
+    void joinProject(int project_code);
+    
+    void syncPaint();
+    void sendMessageChat();
+
 };
 
 

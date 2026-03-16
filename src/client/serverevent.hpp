@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <SFML/Network.hpp>
-#include "protocol.hpp"
+#include "../common/protocol.hpp"
 
 
 struct ServerEvent{

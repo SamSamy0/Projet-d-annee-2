@@ -4,6 +4,7 @@
 #include <SFML/Network.hpp>
 #include "../datamanager/projectentry.hpp"
 #include "../client.hpp"
+#include <QFile>
 
 class ServerNetworkManager;
 
@@ -30,15 +31,27 @@ struct ReponseAuth : ReponseSolo {
     virtual void envoyer(ServerNetworkManager& servManager) override;
 };
 
+struct ReponseRenameProject: ReponseSolo{
+
+    ReponseRenameProject(long long userID_, int projectId_, std::string newName, bool success);
+    // virtual void envoyer(ServerNetworkManager& servManager) override;
+};
+
+struct ReponseDuplicateProject: ReponseSolo{
+    ReponseDuplicateProject(long long userId_, int projectId_, std::string newName, bool success);
+};
+
 struct ReponseProjectData : ReponseSolo {
-    ReponseProjectData(long long userId);
+    ReponseProjectData(long long userId, QByteArray& jsonData);
 };
 
 struct ReponseUsersProjects : ReponseSolo {
     ReponseUsersProjects(long long userId, std::vector<ProjectEntry>& projects);
 };
 
-
+struct ReponseCreateProject : ReponseSolo {
+    ReponseCreateProject(long long userId, int projectId_);
+};
 
 struct ReponseGroupe : Reponse {
     std::vector<long long> usersId_;

@@ -1,6 +1,6 @@
 #pragma once   // un seul acces a la fois
 #include <cstdint>
-
+#include <string>
 
 enum class MsgProtocole: uint8_t{
     AUTH_LOGIN_REQ,
@@ -8,16 +8,22 @@ enum class MsgProtocole: uint8_t{
     AUTH_RESULT,
     LOB_INFO_USER_REP,
     LOB_CREATE_PROJECT_REQ,
+    LOB_CREATE_PROJECT_REP,
     LOB_PROJECT_LIST_REQ,
     LOB_PROJECT_LIST_REP,
+    LOB_DEL_PROJECT_REQ,
     LOB_SHARE_PROJECT_REQ,
     LOB_SHARE_PROJECT_REP,
     LOB_JOIN_PROJECT_REQ,
     LOB_IMPORT_PROJECT_REQ,
     LOB_EXPORT_PNG_PROJECT_REQ,
     LOB_EXPORT_JSON_PROJECT_REP,
-    LOB_GET_MY_PROJECTS_DATA_REQ,
-    LOB_GET_MY_PROJECTS_DATA_REP,
+    LOB_GET_PROJECT_DATA_REQ,
+    LOB_GET_PROJECT_DATA_REP,
+    LOB_RENAME_PROJECT_REQ,
+    LOB_RENAME_PROJECT_REP,
+    LOB_DUPLICATE_PROJECT_REQ,
+    LOB_DUPLICATE_PROJECT_REP,
     MAP_CREATE_LAYER_REQ,
     MAP_CREATE_LAYER_REP,
     MAP_RENAME_LAYER_REQ,
@@ -53,3 +59,5 @@ enum class MsgProtocole: uint8_t{
     CHAT_LOCK_LAYER_REP,
 
 };
+
+std::string to_string(MsgProtocole msg);

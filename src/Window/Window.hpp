@@ -13,7 +13,7 @@
 #include <vector>
 
 enum class projectState { LOGIN, MENU, GAME };
-
+enum class focusPopup { CREATE, RENAME, DUPLICATE };
 
 class Window {
 private:
@@ -24,7 +24,6 @@ private:
   bool isToolSelected_ = false;
   User currentUser_;
 
-  // WARNING: Changer MENU à LOGIN pour la vrai version, là c'est par facilité
   projectState state = projectState::LOGIN;
   bool isLoggedIn = false;
   // Authentification Interface
@@ -53,7 +52,7 @@ private:
   void processEvents();
   void handleWindowEvents(const std::optional<sf::Event> &event);
   void handlePopupEvents(const std::optional<sf::Event> &event);
-  void setState(projectState newState);
+  
   void updateTextSize();
 
   // Login Window
@@ -64,11 +63,23 @@ private:
 
   // Menu Window
   void initMenuWidget();
+  void shareProj();
+  void joinProj(tgui::Panel::Ptr panel);
   void displayProjList(tgui::Panel::Ptr parent);
-  void showProjectMenu(long long id, tgui::Button::Ptr toHover);
+  void showProjectMenu(ProjectData, tgui::Button::Ptr toHover);
+  void initInputWidget(focusPopup focus, ProjectData project = ProjectData{});
+  void popupRename(tgui::Panel::Ptr back, ProjectData project, focusPopup view);
+  void popupCreate(tgui::Panel::Ptr background);
+  void popupDuplicate(tgui::Panel::Ptr background, ProjectData project,
+                      focusPopup view);
+  void exitAction(tgui::Panel::Ptr background);
   void closePopup();
-  void initDataWidget();
+  void createPopup();
+  bool checkInput(tgui::EditBox::Ptr scale, tgui::EditBox::Ptr sizeX,
+                  tgui::EditBox::Ptr sizeY);
+  bool boxError(tgui::EditBox::Ptr box);
   void createProj(tgui::String scale, tgui::String sizeX, tgui::String sizeY,
+
                   tgui::String name, unsigned int id, sf::RenderWindow &window,
                   tgui::Gui &gui);
   ProjectData getProjectData(std::unique_ptr<Project> &proj);
@@ -90,6 +101,7 @@ private:
   void checkTypeTool(LayerType previous_type);
 
 public:
+  void setState(projectState newState);
   // Constructor
   Window(ClientNetworkManager &manager);
   Window();
@@ -97,7 +109,9 @@ public:
   void setLogIn();
   // Setter for projectList
   void addProjectList(ProjectData projet);
+  void updateProjectNameInList(long long id, const std::string &name);
+  void updateList();
   bool isOpen() const;
   void run();
-  
+  void updateCreatedProjectId(uint32_t projId);
 };

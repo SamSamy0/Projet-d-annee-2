@@ -4,13 +4,17 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QJsonArray>
+#include <QImage>
+#include <QColor>
+#include <iostream>
+
 
 ProjectsManager::ProjectsManager(const std::string &rootPath)
-    : m_rootPath(QString::fromStdString(rootPath))
+    : rootPath_(QString::fromStdString(rootPath))
 {
     QDir dir;
-    if (!dir.exists(m_rootPath)) {
-        dir.mkpath(m_rootPath);
+    if (!dir.exists(rootPath_)) {
+        dir.mkpath(rootPath_);
     }
 }
 
@@ -59,6 +63,93 @@ bool ProjectsManager::saveImage(int id, const QString &fileName, const QByteArra
     return false;
 }
 
+bool ProjectsManager::updateProjectName(int id, const QString& newName){
+    QJsonObject root = loadProjectJson(id);
+    if (root.isEmpty())return false;
+    root["name"] = newName;
+    QString filePath = getProjectPath(id) + "/donnees.json";
+    QFile file(filePath);
+
+    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        QJsonDocument doc(root);
+        file.write(doc.toJson(QJsonDocument::Indented));
+        file.close();
+        return true;
+    }
+
+    qCritical() << "Impossible d'ouvrir le fichier en écriture :" << filePath;
+    return false;
+    
+}
+
+bool ProjectsManager::copyProjectFolder(int oldId, int newId){
+    QString srcPath = getProjectPath(oldId);
+    QString destinationPath = getProjectPath(newId);
+    return copyRecursively(srcPath, destinationPath);
+}
+
+// bool ProjectsManager::copyRecursively(const QString& srcPath, const QString& destinationPath){
+//     QDir dir(srcPath);
+//     if (! dir.exists())
+//         return false ;
+//     QDir dstDir;
+//     dstDir.mkpath(destinationPath);
+//     //Copy directory
+//     foreach (QString dirName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+//         QFile::copy(srcPath + "/" + dirName , destinationPath + "/" + dirName);
+//     }
+//     //Copy fils in directory and subdirectory
+//     foreach (QString fileName, dir.entryList(QDir::Files)) {
+//         QFile::copy(srcPath + "/" + fileName, destinationPath + "/" + fileName);
+//     }
+//     return true;
+// }
+bool ProjectsManager::copyRecursively(const QString &srcFilePath,
+                            const QString &tgtFilePath)
+{
+    QFileInfo srcFileInfo(srcFilePath);
+    if (srcFileInfo.isDir()) {
+        QDir targetDir(tgtFilePath);
+        targetDir.cdUp();
+        if (!targetDir.mkdir(QFileInfo(tgtFilePath).fileName()))
+            return false;
+        QDir sourceDir(srcFilePath);
+        QStringList fileNames = sourceDir.entryList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot | QDir::Hidden | QDir::System);
+        foreach (const QString &fileName, fileNames) {
+            const QString newSrcFilePath
+                    = srcFilePath + QLatin1Char('/') + fileName;
+            const QString newTgtFilePath
+                    = tgtFilePath + QLatin1Char('/') + fileName;
+            if (!copyRecursively(newSrcFilePath, newTgtFilePath))
+                return false;
+        }
+    } else {
+        if (!QFile::copy(srcFilePath, tgtFilePath))
+            return false;
+    }
+    return true;
+}
+bool ProjectsManager::updateJsonDup(int newId, const QString& newName){
+    QJsonObject root = loadProjectJson(newId);
+    if (root.isEmpty())return false;
+    root["name"] = newName;
+    root["id"] = newId;
+    QString filePath = getProjectPath(newId) + "/donnees.json";
+    QFile file(filePath);
+
+    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        QJsonDocument doc(root);
+        file.write(doc.toJson(QJsonDocument::Indented));
+        file.close();
+        return true;
+    }
+
+    qCritical() << "Impossible d'ouvrir le fichier en écriture :" << filePath;
+    return false;
+    
+}
+
+
 QJsonObject ProjectsManager::loadProjectJson(int id) {
     QString filePath = getProjectPath(id) + "/donnees.json";
     QFile file(filePath);
@@ -88,7 +179,7 @@ QJsonObject ProjectsManager::loadProjectJson(int id) {
 }
 
 QString ProjectsManager::getProjectPath(int id) const {
-    return m_rootPath + "/project_" + QString::number(id);
+    return rootPath_ + "/project_" + QString::number(id);
 }
 
 bool ProjectsManager::ensureDirectoryExists(int id) const {
@@ -100,4 +191,48 @@ bool ProjectsManager::ensureDirectoryExists(int id) const {
         return false;
     }
     return true;
+}
+
+bool ProjectsManager::deleteProject(int id) {
+    QString path = getProjectPath(id);
+    QDir dir(path);
+
+    if (dir.exists())
+
+    if (dir.removeRecursively()) {
+        return true;
+    }
+    qCritical() << "Erreur de suppression de projet pour l'ID:" << id;
+    return false;
+}
+
+void ProjectsManager::addCalque(int projetId, int largeur, int hauteur, int calqueId) {
+
+    QString destPath = getProjectPath(projetId) + "/images/calque_" + QString::number(calqueId) + ".png";
+    QImage image(largeur, hauteur, QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+    if (image.save(destPath, "PNG")) {
+        qDebug() << "Nouveau calque sauvegardé avec succès :" << destPath;
+
+    } else {
+        qWarning() << "Erreur : Impossible de créer le fichier PNG pour le calque :" << destPath;
+    }
+}
+
+QByteArray ProjectsManager::getByteJson(int projetId) {
+    QString filePath = getProjectPath(projetId) + "/donnees.json";
+
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Erreur : Impossible d'ouvrir le fichier JSON :" << filePath;
+        return QByteArray();
+    }
+
+    QByteArray donneesJson = file.readAll();
+
+    file.close();
+    
+
+
+    return donneesJson;
 }
