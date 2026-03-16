@@ -22,9 +22,5 @@ public:
   void loadFromJson();
   Asset* getAsset(const std::string& id);
 
-
-
-
-public:
 };
 

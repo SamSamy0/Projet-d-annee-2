@@ -1,5 +1,5 @@
 .vscode
-.cache
+.cache/
 bin
 build/*
 !build/CMakeLists.txt
