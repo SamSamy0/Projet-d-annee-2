@@ -13,9 +13,7 @@ using namespace std;
 
 Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
     id_{mapId}, size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
-    if (!render_texture_.resize(size)){
-        std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;
-    } //TODO: gérer l'erreur
+    if (!render_texture_.resize(size)){} //TODO: gérer l'erreur
     sprite_.setTexture(render_texture_.getTexture(),true);
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
 }
@@ -23,9 +21,7 @@ Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Lay
 Map::Map(int mapId, sf::Vector2u size , unsigned int scale) : 
     id_{mapId}, size_{size},
     scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
-    if (!render_texture_.resize(size)){
-        std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;
-    } //TODO: gérer l'erreur
+    if (!render_texture_.resize(size)){} //TODO: gérer l'erreur
     sprite_.setTexture(render_texture_.getTexture(),true);
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
     createPixelLayer();
@@ -33,8 +29,8 @@ Map::Map(int mapId, sf::Vector2u size , unsigned int scale) :
 
 Zoom& Map::getZoom() { return zoom_; }
 
+AssetManager& Map::getAssetManager() { return assetmanager_; }
 
-  AssetManager& Map::getAssetManager(){return assetmanager_;}
 
 sf::Vector2u Map::getSize()const {return size_;}
 
@@ -55,14 +51,14 @@ void Map::createPixelLayer(){
     std::string name = "Couche Pixel (" + std::to_string(n) + ")";
     shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(name, size_);
     layers_.push_back(pixellayer);
-    layers_.size() ==1? selected_ = 0: selected_+=1;
+    layers_.size() == 1 ? selected_ = 0 : selected_ += 1; // évite d'avoir des numéros de couche négative
 }
 
 
 void Map::createSpriteLayer(){
     int n = layers_.size() + 1;
-    std::string name = "Couche Pixel (" + std::to_string(n) + ")";
-    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(name,size_); 
+    std::string name = "Couche Sprite (" + std::to_string(n) + ")";
+    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(name,size_); // TODO: changer le nom de la couche en fonction de sa profondeur
     layers_.push_back(spritelayer);
     layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
 }

@@ -70,6 +70,7 @@ set(SOURCES
     ../src/Window/projectWidgets/chatWidgets.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/penOptions.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/eraserOptions.cpp
+    ../src/Window/projectWidgets/toolbarOptionsWidgets/spriteBrushOptions.cpp
     ../src/client/clientnetwork.cpp
     ../src/client/handler.cpp
     ../src/client/protocol.hpp
