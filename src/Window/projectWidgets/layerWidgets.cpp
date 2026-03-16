@@ -122,13 +122,17 @@ void Window::initLayerPanel() {
     gui.add(popup);
 
     pixelBtn->onClick([this, popup]() {
+      LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->createPixelLayer();
+      checkTypeTool(type);
       refreshLayerList();
       gui.remove(popup);
     });
 
     spriteBtn->onClick([this, popup]() {
+      LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->createSpriteLayer();
+      checkTypeTool(type);
       refreshLayerList();
       gui.remove(popup);
     });
@@ -194,7 +198,7 @@ void Window::refreshLayerList() {
     return;
 
 
-  ToolBar toolbar = project->getToolBar();
+  ToolBar& toolbar = project->getToolBar();
   ToolType tooltype = project->getToolBar().getSelected();
 
   switch (tooltype){
