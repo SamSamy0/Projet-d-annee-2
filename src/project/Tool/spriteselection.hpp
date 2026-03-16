@@ -6,13 +6,15 @@
 
 class SpriteSelection : public Tool {
 
-  enum SelectionStatut{
+  enum SelectionState{
     NONE,
     SELECTION,
     DRAGING
   };
 
   std::vector<uint64_t> selected_;
+  SelectionState statuts_ = NONE;
+  sf::Vector2i startSelectionPos_;
   bool isSelected(uint64_t id)const;
 public:
   SpriteSelection(std::shared_ptr<Map> map);

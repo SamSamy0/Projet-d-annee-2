@@ -1,3 +1,4 @@
+#include "../map.hpp"
 #include "spriteselection.hpp"
 #include <memory>
 
@@ -14,5 +15,9 @@ bool SpriteSelection::isSelected(uint64_t id)const{
 void SpriteSelection::clearSelection(){selected_.clear();}
 
 void SpriteSelection::onPress(sf::Vector2i pos){
+  pos -= map_->getCurrentLayer()->getOffset();
 
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)){
+
+  }
 }
