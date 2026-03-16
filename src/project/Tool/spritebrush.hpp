@@ -12,7 +12,7 @@ public:
   Asset* getAsset();
   void paint(sf::Vector2i pos) override;
   void setOffset(float offset);
-  void setSize(float x, float y)override;
+  void setSize(float x, float y =1)override;
   void addAsset(const std::string& id);
   void removeAsset(const std::string& id);
 

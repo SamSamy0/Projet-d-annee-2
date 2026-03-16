@@ -8,7 +8,7 @@ Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {
     spacing_ = 1.0f;
 }
 
-void Brush::setSize(float x, float y = 1) { //WARNING: la valeur par défaut je suis pas sur
+void Brush::setSize(float x, float y) { //WARNING: la valeur par défaut je suis pas sur
   
   /* change the size and change the spacing in function of it */
   sf::Vector2u mapSize = getMap()->getSize();
