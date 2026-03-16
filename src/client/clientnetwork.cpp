@@ -119,3 +119,26 @@ void ClientNetworkManager::delProject(long long project_id){
     socket_.send(packet);
 }
 
+
+void ClientNetworkManager::createProjectCode(long long project_id){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::LOB_SHARE_PROJECT_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << static_cast<int>(project_id);
+  socket_.send(packet);
+}
+
+
+void ClientNetworkManager::joinProject(int project_code){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::LOB_JOIN_PROJECT_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << project_code;
+  socket_.send(packet);
+}
+
+
+
+
