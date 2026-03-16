@@ -135,6 +135,7 @@ void Window::initToolbar() {
   spriteBrushButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   spriteBrushButton->getRenderer()->setOpacity(0.4);
   spriteBrushButton->onPress([this, penButton, brushButton, shiftButton, spriteBrushButton]() {
+    project->getToolBar().selectTool(SPRITEBRUSH);
     penButton->getRenderer()->setOpacity(0.4);
     brushButton->getRenderer()->setOpacity(0.4);
     shiftButton->getRenderer()->setOpacity(0.4);

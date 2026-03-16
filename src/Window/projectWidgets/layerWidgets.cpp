@@ -86,8 +86,52 @@ void Window::initLayerPanel() {
   addLayerButton->getRenderer()->setBorders({0});
   addLayerButton->getRenderer()->setRoundedBorderRadius(8);
   addLayerButton->onClick([this]() {
-    project->getMap()->createPixelLayer();
-    refreshLayerList();
+    float width  = mainWindow.getSize().x;
+    float height = mainWindow.getSize().y;
+
+    auto popup = tgui::Panel::create();
+    popup->setSize(width * 0.22f, height * 0.22f);
+    popup->setPosition(width * 0.39f, height * 0.39f);
+    popup->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
+    popup->getRenderer()->setBorders({1});
+    popup->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+    popup->getRenderer()->setRoundedBorderRadius(8);
+
+    auto pixelBtn = tgui::Button::create("Couche Pixel");
+    pixelBtn->setSize(width * 0.16f, height * 0.07f);
+    pixelBtn->setPosition(width * 0.03f, height * 0.03f);
+    pixelBtn->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+    pixelBtn->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+    pixelBtn->getRenderer()->setTextColor(tgui::Color::White);
+    pixelBtn->getRenderer()->setTextSize(13);
+    pixelBtn->getRenderer()->setBorders({0});
+    pixelBtn->getRenderer()->setRoundedBorderRadius(6);
+    popup->add(pixelBtn);
+
+    auto spriteBtn = tgui::Button::create("Couche Sprite");
+    spriteBtn->setSize(width * 0.16f, height * 0.07f);
+    spriteBtn->setPosition(width * 0.03f, height * 0.11f);
+    spriteBtn->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+    spriteBtn->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+    spriteBtn->getRenderer()->setTextColor(tgui::Color::White);
+    spriteBtn->getRenderer()->setTextSize(13);
+    spriteBtn->getRenderer()->setBorders({0});
+    spriteBtn->getRenderer()->setRoundedBorderRadius(6);
+    popup->add(spriteBtn);
+
+    gui.add(popup);
+
+    pixelBtn->onClick([this, popup]() {
+      project->getMap()->createPixelLayer();
+      refreshLayerList();
+      gui.remove(popup);
+    });
+
+    spriteBtn->onClick([this, popup]() {
+      project->getMap()->createSpriteLayer();
+      refreshLayerList();
+      gui.remove(popup);
+    });
   });
   layerPanel_->add(addLayerButton);
 
