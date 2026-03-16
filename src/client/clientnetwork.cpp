@@ -20,9 +20,6 @@ void ClientNetworkManager::getEvent() {
   auto packet = std::make_unique<sf::Packet>();
 
   if (socket_.receive(*packet) == sf::Socket::Status::Done) {
-    std::cout << "####################  messages recu du serveur  "
-                 "########################"
-              << std::endl;
     uint8_t type_mess;
     *packet >> type_mess;
 

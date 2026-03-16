@@ -27,10 +27,9 @@ public:
     void getProjectData(int project_id);
     void getUsersProjects(long long id);
     void getProjectList(); 
+    void delProject(long long project_id);
     
     void getProjectData(long long project_id);
-    void delProject(long long project_id);
-    void renameProject();
     void createProjectCode();
     void joinProject();
     void syncPaint();
