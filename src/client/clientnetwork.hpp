@@ -22,15 +22,15 @@ public:
     void login(std::string pseudo,std::string password);
     void askRegister(std::string pseudo, std::string password);
     void createProject(std::string role, sf::Vector2u size, uint scale);
-    void renameProject(int projectId, std::string newName);
-    void dupProj(int projectId, std::string newName);
-    void getProjectData(int project_id);
-    void getUsersProjects(long long id);
+    void renameProject(uint projectId, std::string newName);
+    void dupProj(uint projectId, std::string newName);
+    void getProjectData(uint project_id);
+    void getUsersProjects(uint id);
     void getProjectList(); 
-    void delProject(long long project_id);
-    void getProjectData(long long project_id);
-    void createProjectCode(long long project_id);
-    void joinProject(int project_code);
+    void delProject(uint project_id);
+    void getProjectData(uint project_id);
+    void createProjectCode(uint project_id);
+    void joinProject(uint project_code);
     
     void syncPaint();
     void sendMessageChat();

@@ -73,7 +73,7 @@ void ClientNetworkManager::createProject(std::string nomProjet,
 
   socket_.send(packet);
 }
-void ClientNetworkManager::renameProject(int projectId, std::string newName) {
+void ClientNetworkManager::renameProject(uint projectId, std::string newName) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_RENAME_PROJECT_REQ;
 
@@ -83,7 +83,7 @@ void ClientNetworkManager::renameProject(int projectId, std::string newName) {
   socket_.send(packet);
 }
 
-void ClientNetworkManager::dupProj(int projectId, std::string newName) {
+void ClientNetworkManager::dupProj(uint projectId, std::string newName) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_DUPLICATE_PROJECT_REQ;
 
@@ -100,37 +100,37 @@ void ClientNetworkManager::getProjectList() {
   socket_.send(packet);
 }
 
-void ClientNetworkManager::getProjectData(long long project_id){
+void ClientNetworkManager::getProjectData(uint project_id){
     sf::Packet packet;
     MsgProtocole msg = MsgProtocole::LOB_GET_PROJECT_DATA_REQ;
 
     packet << static_cast<uint8_t>(msg);
-    packet << static_cast<int>(project_id);
+    packet << static_cast<uint>(project_id);
     socket_.send(packet);
 }
 
 
-void ClientNetworkManager::delProject(long long project_id){
+void ClientNetworkManager::delProject(uint project_id){
     sf::Packet packet;
     MsgProtocole msg = MsgProtocole::LOB_DEL_PROJECT_REQ;
 
     packet << static_cast<uint8_t>(msg);
-    packet << static_cast<int>(project_id);
+    packet << static_cast<uint>(project_id);
     socket_.send(packet);
 }
 
 
-void ClientNetworkManager::createProjectCode(long long project_id){
+void ClientNetworkManager::createProjectCode(uint project_id){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_SHARE_PROJECT_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << static_cast<int>(project_id);
+  packet << static_cast<uint>(project_id);
   socket_.send(packet);
 }
 
 
-void ClientNetworkManager::joinProject(int project_code){
+void ClientNetworkManager::joinProject(uint project_code){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_JOIN_PROJECT_REQ;
 

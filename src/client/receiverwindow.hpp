@@ -15,8 +15,8 @@ public:
     ReceiverInWindow(Window& w);
     void switchConnectState(uint8_t connect);
     void addProjectToList(ProjectData projet);
-    void updateProjectNameInList(long long id, const std::string& name);
-    void updateCreatedProjectId(uint32_t ProjectId);
+    void updateProjectNameInList(uint id, const std::string& name);
+    void updateCreatedProjectId(uint ProjectId);
     void setState();
-    void setProject(unsigned int scale, int height, int width , std::string name, unsigned int id);
+    void setProject(uint scale, uint height, uint width , std::string name, uint id);
 };

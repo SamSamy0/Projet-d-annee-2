@@ -35,64 +35,64 @@ struct RegisterMessage : IMessage{
 
 
 struct CreateProjectMessage : IMessage{
-    long long userId_;
+    uint userId_;
     std::string nomProjet_;
     sf::Vector2u size_;
     uint scale_;
     
-    CreateProjectMessage(sf::Packet& dataPacket, long long userId);
+    CreateProjectMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
 struct RenameProjectMessage: IMessage{
-    long long userID_;
-    int projectId_;
+    uint userID_;
+    uint projectId_;
     std::string newName_;
 
-    RenameProjectMessage(sf::Packet& dataPacket, long long userId);
+    RenameProjectMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
     
 };
 
 struct DuplicateProjectMessage: IMessage{
-    long long userId_;
-    int projectId_;
+    uint userId_;
+    uint projectId_;
     std::string newName;
     
-    DuplicateProjectMessage(sf::Packet& dataPacket, long long userId);
+    DuplicateProjectMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
 
 struct GetProjectsListMessage : IMessage {
-    long long userId_;
+    uint userId_;
 
-    GetProjectsListMessage(sf::Packet& dataPacket, long long userId);
+    GetProjectsListMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
 
 struct DeleteProjectMessage : IMessage {
-    long long userId_;
-    int projectId_;
+    uint userId_;
+    uint projectId_;
 
-    DeleteProjectMessage(sf::Packet& dataPacket, long long userId);
+    DeleteProjectMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
 
 struct GetProjectDataMessage : IMessage{
-    long long userId_;
-    int projectId_;
+    uint userId_;
+    uint projectId_;
 
-    GetProjectDataMessage(sf::Packet& dataPacket, long long userId);
+    GetProjectDataMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
 struct PutPixelsMessage : IMessage {
-    long long userId_;
-    uint64_t projectId_;
-    uint64_t calqueId_;
+    uint userId_;
+    uint projectId_;
+    uint calqueId_;
     sf::Vector2u pos_;
     uint8_t red_;
     uint8_t green_;
@@ -104,7 +104,7 @@ struct PutPixelsCircleMessage : PutPixelsMessage {
 
     float taille_;
     
-    PutPixelsCircleMessage(sf::Packet& dataPacket, long long userId);
+    PutPixelsCircleMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
@@ -112,7 +112,7 @@ struct PutPixelsCarreMessage : PutPixelsMessage {
 
     float taille_;
 
-    PutPixelsCarreMessage(sf::Packet& dataPacket, long long userId);
+    PutPixelsCarreMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
@@ -121,14 +121,14 @@ struct PutPixelsDiamondMessage : PutPixelsMessage {
     float hauteur_;
     float largeur_;
 
-    PutPixelsDiamondMessage(sf::Packet& dataPacket, long long userId);
+    PutPixelsDiamondMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
 struct ErasePixelsMessage : IMessage {
-    long long userId_;
-    uint64_t projectId_;
-    uint64_t calqueId_;
+    uint userId_;
+    uint projectId_;
+    uint calqueId_;
     sf::Vector2u pos_;
 };
 
@@ -136,7 +136,7 @@ struct ErasePixelsCircleMessage : ErasePixelsMessage {
 
     float taille_;
     
-    ErasePixelsCircleMessage(sf::Packet& dataPacket, long long userId);
+    ErasePixelsCircleMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
@@ -144,7 +144,7 @@ struct ErasePixelsCarreMessage : ErasePixelsMessage {
 
     float taille_;
 
-    ErasePixelsCarreMessage(sf::Packet& dataPacket, long long userId);
+    ErasePixelsCarreMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
@@ -153,7 +153,7 @@ struct ErasePixelsDiamondMessage : ErasePixelsMessage {
     float hauteur_;
     float largeur_;
 
-    ErasePixelsDiamondMessage(sf::Packet& dataPacket, long long userId);
+    ErasePixelsDiamondMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 

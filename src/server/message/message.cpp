@@ -12,7 +12,7 @@ LoginMessage::LoginMessage(sf::Packet& dataPacket, std::shared_ptr<Client> clien
 
 
 void LoginMessage::process(Worker& worker){
-    long long id = worker.verifyLogin(this->pseudo_, this->password_);
+    uint id = worker.verifyLogin(this->pseudo_, this->password_);
 
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseAuth>(std::move(client_), id);
@@ -28,7 +28,7 @@ RegisterMessage::RegisterMessage(sf::Packet& dataPacket, std::shared_ptr<Client>
 
 
 void RegisterMessage::process(Worker& worker) {
-    long long id = worker.addUser(this->pseudo_, this->password_);
+    uint id = worker.addUser(this->pseudo_, this->password_);
 
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseAuth>(std::move(client_), id);
@@ -36,7 +36,7 @@ void RegisterMessage::process(Worker& worker) {
 }
 
 
-CreateProjectMessage::CreateProjectMessage(sf::Packet& data_packet, long long userId) {
+CreateProjectMessage::CreateProjectMessage(sf::Packet& data_packet, uint userId) {
     data_packet >> nomProjet_ >> size_.x >> size_.y >> scale_;
     userId_ = userId;
 }
@@ -44,7 +44,7 @@ CreateProjectMessage::CreateProjectMessage(sf::Packet& data_packet, long long us
 
 void CreateProjectMessage::process(Worker& worker) {
     if (userId_ > 0) {
-    long long idProj = worker.addProjectSQL(nomProjet_, userId_);
+    uint idProj = worker.addProjectSQL(nomProjet_, userId_);
     worker.createProjectJson(idProj, nomProjet_, size_.x, size_.y, scale_);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseCreateProject>(userId_, idProj);
@@ -52,7 +52,7 @@ void CreateProjectMessage::process(Worker& worker) {
     }
 }
 
-RenameProjectMessage::RenameProjectMessage(sf::Packet& dataPacket, long long userId){
+RenameProjectMessage::RenameProjectMessage(sf::Packet& dataPacket, uint userId){
     dataPacket >> projectId_ >> newName_;
     userID_ = userId;
 }
@@ -64,7 +64,7 @@ void RenameProjectMessage::process(Worker& worker){
     worker.pushNetwork(std::move(rps));
 }
 
-DuplicateProjectMessage::DuplicateProjectMessage(sf::Packet& dataPacket, long long userId){
+DuplicateProjectMessage::DuplicateProjectMessage(sf::Packet& dataPacket, uint userId){
     dataPacket >> projectId_ >> newName;
     userId_ = userId;
 }
@@ -77,7 +77,7 @@ void DuplicateProjectMessage::process(Worker& worker){
 }
 
 
-GetProjectsListMessage::GetProjectsListMessage(sf::Packet& data_packet, long long userId) {
+GetProjectsListMessage::GetProjectsListMessage(sf::Packet& data_packet, uint userId) {
     userId_ = userId;
 }
 
@@ -92,7 +92,7 @@ void GetProjectsListMessage::process(Worker& worker) {
     worker.pushNetwork(std::move(rps));
 }
 
-DeleteProjectMessage::DeleteProjectMessage(sf::Packet& data_packet, long long userId) {
+DeleteProjectMessage::DeleteProjectMessage(sf::Packet& data_packet, uint userId) {
     userId_ = userId;
     data_packet >> projectId_;
 }
@@ -104,7 +104,7 @@ void DeleteProjectMessage::process(Worker& worker) {
 }
 
 
-GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, long long userId) {
+GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, uint userId) {
     userId_ = userId;
     data_packet >> projectId_;
 }
@@ -133,84 +133,84 @@ void GetProjectDataMessage::process(Worker& worker) {
 }
 
 
-PutPixelsCarreMessage::PutPixelsCarreMessage(sf::Packet& data_packet, long long userId) {
+PutPixelsCarreMessage::PutPixelsCarreMessage(sf::Packet& data_packet, uint userId) {
     userId_ = userId;
     data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> red_ >> green_ >> blue_ >> opa_ >> taille_;
 }
 
 void PutPixelsCarreMessage::process(Worker& worker) {
 
-    std::vector<long long> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponsePutPixelsCarre>(usersId, *this);
     worker.pushNetwork(std::move(rps));
 }
 
-PutPixelsCircleMessage::PutPixelsCircleMessage(sf::Packet& data_packet, long long userId) {
+PutPixelsCircleMessage::PutPixelsCircleMessage(sf::Packet& data_packet, uint userId) {
     userId_ = userId;
     data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> red_ >> green_ >> blue_ >> opa_ >> taille_;
 }
 
 void PutPixelsCircleMessage::process(Worker& worker) {
 
-    std::vector<long long> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponsePutPixelsCircle>(usersId, *this);
     worker.pushNetwork(std::move(rps));
 }
 
-PutPixelsDiamondMessage::PutPixelsDiamondMessage(sf::Packet& data_packet, long long userId) {
+PutPixelsDiamondMessage::PutPixelsDiamondMessage(sf::Packet& data_packet, uint userId) {
     userId_ = userId;
     data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> red_ >> green_ >> blue_ >> opa_ >> hauteur_ >> largeur_;
 }
 
 void PutPixelsDiamondMessage::process(Worker& worker) {
 
-    std::vector<long long> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponsePutPixelsDiamond>(usersId, *this);
     worker.pushNetwork(std::move(rps));
 }
 
-ErasePixelsCarreMessage::ErasePixelsCarreMessage(sf::Packet& data_packet, long long userId) {
+ErasePixelsCarreMessage::ErasePixelsCarreMessage(sf::Packet& data_packet, uint userId) {
     userId_ = userId;
     data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> taille_;
 }
 
 void ErasePixelsCarreMessage::process(Worker& worker) {
 
-    std::vector<long long> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponseErasePixelsCarre>(usersId, *this);
     worker.pushNetwork(std::move(rps));
 }
 
-ErasePixelsCircleMessage::ErasePixelsCircleMessage(sf::Packet& data_packet, long long userId) {
+ErasePixelsCircleMessage::ErasePixelsCircleMessage(sf::Packet& data_packet, uint userId) {
     userId_ = userId;
     data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> taille_;
 }
 
 void ErasePixelsCircleMessage::process(Worker& worker) {
 
-    std::vector<long long> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponseErasePixelsCircle>(usersId, *this);
     worker.pushNetwork(std::move(rps));
 }
 
-ErasePixelsDiamondMessage::ErasePixelsDiamondMessage(sf::Packet& data_packet, long long userId) {
+ErasePixelsDiamondMessage::ErasePixelsDiamondMessage(sf::Packet& data_packet, uint userId) {
     userId_ = userId;
     data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> hauteur_ >> largeur_;
 }
 
 void ErasePixelsDiamondMessage::process(Worker& worker) {
 
-    std::vector<long long> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponseErasePixelsDiamond>(usersId, *this);

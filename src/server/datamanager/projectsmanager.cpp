@@ -18,18 +18,18 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
     }
 }
 
-bool ProjectsManager::createProjectJson(int id, const QString &projectName, int width, int height, uint scale) {
+bool ProjectsManager::createProjectJson(uint id, const QString &projectName, uint width, uint height, uint scale) {
     if (!ensureDirectoryExists(id)) {
         return false;
     }
     QJsonObject root;
     QJsonArray emptylayers;
     
-    root["id"] = id;
+    root["id"] = static_cast<int>(id);
     root["name"] = projectName;
-    root["width"] = width;
-    root["height"] = height;
-    root["scale"] = static_cast<double>(scale);
+    root["width"] =  static_cast<int>(width);
+    root["height"] =  static_cast<int>(height);
+    root["scale"] = static_cast<int>(scale);
 
     root["layers"] = emptylayers;
 
@@ -47,7 +47,7 @@ bool ProjectsManager::createProjectJson(int id, const QString &projectName, int 
     return false;
 }
 
-bool ProjectsManager::writeProjetJson(QJsonObject& jsonObject, int id) {
+bool ProjectsManager::writeProjetJson(QJsonObject& jsonObject, uint id) {
 
     QString filePath = getProjectPath(id) + "/donnees.json";
     QFile file(filePath);
@@ -63,7 +63,7 @@ bool ProjectsManager::writeProjetJson(QJsonObject& jsonObject, int id) {
     return false;
 }
 
-bool ProjectsManager::saveImage(int id, const QString &fileName, const QByteArray &data) {
+bool ProjectsManager::saveImage(uint id, const QString &fileName, const QByteArray &data) {
     if (!ensureDirectoryExists(id)) return false;
 
     QString destPath = getProjectPath(id) + "/images/" + fileName;
@@ -79,7 +79,7 @@ bool ProjectsManager::saveImage(int id, const QString &fileName, const QByteArra
     return false;
 }
 
-bool ProjectsManager::updateProjectName(int id, const QString& newName){
+bool ProjectsManager::updateProjectName(uint id, const QString& newName){
     QJsonObject root = loadProjectJson(id);
     if (root.isEmpty())return false;
     root["name"] = newName;
@@ -98,7 +98,7 @@ bool ProjectsManager::updateProjectName(int id, const QString& newName){
     
 }
 
-bool ProjectsManager::copyProjectFolder(int oldId, int newId){
+bool ProjectsManager::copyProjectFolder(uint oldId, uint newId){
     QString srcPath = getProjectPath(oldId);
     QString destinationPath = getProjectPath(newId);
     return copyRecursively(srcPath, destinationPath);
@@ -145,11 +145,11 @@ bool ProjectsManager::copyRecursively(const QString &srcFilePath,
     }
     return true;
 }
-bool ProjectsManager::updateJsonDup(int newId, const QString& newName){
+bool ProjectsManager::updateJsonDup(uint newId, const QString& newName){
     QJsonObject root = loadProjectJson(newId);
     if (root.isEmpty())return false;
     root["name"] = newName;
-    root["id"] = newId;
+    root["id"] = static_cast<int>(newId);
     QString filePath = getProjectPath(newId) + "/donnees.json";
     QFile file(filePath);
 
@@ -166,7 +166,7 @@ bool ProjectsManager::updateJsonDup(int newId, const QString& newName){
 }
 
 
-QJsonObject ProjectsManager::loadProjectJson(int id) {
+QJsonObject ProjectsManager::loadProjectJson(uint id) {
     QString filePath = getProjectPath(id) + "/donnees.json";
     QFile file(filePath);
 
@@ -194,11 +194,11 @@ QJsonObject ProjectsManager::loadProjectJson(int id) {
     return doc.object();
 }
 
-QString ProjectsManager::getProjectPath(int id) const {
+QString ProjectsManager::getProjectPath(uint id) const {
     return rootPath_ + "/project_" + QString::number(id);
 }
 
-bool ProjectsManager::ensureDirectoryExists(int id) const {
+bool ProjectsManager::ensureDirectoryExists(uint id) const {
     QString path = getProjectPath(id);
     QDir dir;
 
@@ -209,7 +209,7 @@ bool ProjectsManager::ensureDirectoryExists(int id) const {
     return true;
 }
 
-bool ProjectsManager::deleteProject(int id) {
+bool ProjectsManager::deleteProject(uint id) {
     QString path = getProjectPath(id);
     QDir dir(path);
 
@@ -222,7 +222,7 @@ bool ProjectsManager::deleteProject(int id) {
     return false;
 }
 
-void ProjectsManager::addCalque(int projetId, int largeur, int hauteur, int calqueId) {
+void ProjectsManager::addCalque(uint projetId, uint largeur, uint hauteur, uint calqueId) {
 
     QString destPath = getProjectPath(projetId) + "/images/calque_" + QString::number(calqueId) + ".png";
     QImage image(largeur, hauteur, QImage::Format_ARGB32);
@@ -235,7 +235,7 @@ void ProjectsManager::addCalque(int projetId, int largeur, int hauteur, int calq
     }
 }
 
-QByteArray ProjectsManager::getByteJson(int projetId) {
+QByteArray ProjectsManager::getByteJson(uint projetId) {
     QString filePath = getProjectPath(projetId) + "/donnees.json";
 
     QFile file(filePath);

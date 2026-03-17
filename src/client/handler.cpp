@@ -32,12 +32,12 @@ void ClientHandler::process(ServerEvent& event){
             uint32_t size;
             *(event.data_packet_) >> size;
 
-            for (int i = 0; i< static_cast<int>(size); ++i){
+            for (uint i = 0; i< static_cast<uint>(size); ++i){
 
                 ProjectData projet;
                 uint32_t id;
                 std::string name;
-                int8_t role;
+                uint8_t role;
 
                 *(event.data_packet_) >> id >> name >> role; 
                 projet.projectId = id;

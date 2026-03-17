@@ -16,7 +16,7 @@ void ReceiverInWindow::addProjectToList(ProjectData projet){
     window_->addProjectList(projet);
 }
 
-void ReceiverInWindow::updateProjectNameInList(long long id, const std::string& newName){
+void ReceiverInWindow::updateProjectNameInList(uint id, const std::string& newName){
     window_->updateProjectNameInList(id, newName);
     
 }
@@ -29,7 +29,7 @@ void ReceiverInWindow::setState(){
     window_->setState(projectState::GAME);
 }
 
-void ReceiverInWindow::setProject(unsigned int scale, int height, int width , std::string name, unsigned int id){
+void ReceiverInWindow::setProject(uint scale, uint height, uint width , std::string name, uint id){
     window_->setCurrentProject(scale,height,width,name,id);
     window_->setState(projectState::GAME);
 }

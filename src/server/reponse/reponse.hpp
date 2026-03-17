@@ -18,47 +18,47 @@ struct Reponse {
 
 
 struct ReponseSolo : Reponse {
-    long long userId_;
+    uint userId_;
 
     protected:
-    ReponseSolo(long long id);
+    ReponseSolo(uint id);
     virtual void envoyer(ServerNetworkManager& servManager) override;
 };
 
 struct ReponseAuth : ReponseSolo {
     std::shared_ptr<Client> client_;
 
-    ReponseAuth(std::shared_ptr<Client> client, long long userId);
+    ReponseAuth(std::shared_ptr<Client> client, uint userId);
     virtual void envoyer(ServerNetworkManager& servManager) override;
 };
 
 struct ReponseRenameProject: ReponseSolo{
 
-    ReponseRenameProject(long long userID_, int projectId_, std::string newName, bool success);
+    ReponseRenameProject(uint userID_, uint projectId_, std::string newName, bool success);
     // virtual void envoyer(ServerNetworkManager& servManager) override;
 };
 
 struct ReponseDuplicateProject: ReponseSolo{
-    ReponseDuplicateProject(long long userId_, int projectId_, std::string newName, bool success);
+    ReponseDuplicateProject(uint userId_, uint projectId_, std::string newName, bool success);
 };
 
 struct ReponseProjectData : ReponseSolo {
-    ReponseProjectData(long long userId, QByteArray& jsonData);
+    ReponseProjectData(uint userId, QByteArray& jsonData);
 };
 
 struct ReponseUsersProjects : ReponseSolo {
-    ReponseUsersProjects(long long userId, std::vector<ProjectEntry>& projects);
+    ReponseUsersProjects(uint userId, std::vector<ProjectEntry>& projects);
 };
 
 struct ReponseCreateProject : ReponseSolo {
-    ReponseCreateProject(long long userId, int projectId_);
+    ReponseCreateProject(uint userId, uint projectId_);
 };
 
 struct ReponseGroupe : Reponse {
-    std::vector<long long> usersId_;
+    std::vector<uint> usersId_;
 
     protected:
-    ReponseGroupe(std::vector<long long> usersId);
+    ReponseGroupe(std::vector<uint> usersId);
     virtual void envoyer(ServerNetworkManager& servManager) override;
 };
 
@@ -66,30 +66,30 @@ struct ReponseGroupe : Reponse {
 
 struct ReponsePutPixelsCircle : ReponseGroupe {
     
-   ReponsePutPixelsCircle(std::vector<long long> usersId, PutPixelsCircleMessage& mess);
+   ReponsePutPixelsCircle(std::vector<uint> usersId, PutPixelsCircleMessage& mess);
 };
 
 struct ReponsePutPixelsCarre : ReponseGroupe {
     
-   ReponsePutPixelsCarre(std::vector<long long> usersId, PutPixelsCarreMessage& mess);
+   ReponsePutPixelsCarre(std::vector<uint> usersId, PutPixelsCarreMessage& mess);
 };
 
 struct ReponsePutPixelsDiamond : ReponseGroupe {
     
-   ReponsePutPixelsDiamond(std::vector<long long> usersId, PutPixelsDiamondMessage& mess);
+   ReponsePutPixelsDiamond(std::vector<uint> usersId, PutPixelsDiamondMessage& mess);
 };
 
 struct ReponseErasePixelsCircle : ReponseGroupe {
     
-   ReponseErasePixelsCircle(std::vector<long long> usersId, ErasePixelsCircleMessage& mess);
+   ReponseErasePixelsCircle(std::vector<uint> usersId, ErasePixelsCircleMessage& mess);
 };
 
 struct ReponseErasePixelsCarre : ReponseGroupe {
     
-   ReponseErasePixelsCarre(std::vector<long long> usersId, ErasePixelsCarreMessage& mess);
+   ReponseErasePixelsCarre(std::vector<uint> usersId, ErasePixelsCarreMessage& mess);
 };
 
 struct ReponseErasePixelsDiamond : ReponseGroupe {
     
-   ReponseErasePixelsDiamond(std::vector<long long> usersId, ErasePixelsDiamondMessage& mess);
+   ReponseErasePixelsDiamond(std::vector<uint> usersId, ErasePixelsDiamondMessage& mess);
 };

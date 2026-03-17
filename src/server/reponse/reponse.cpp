@@ -3,7 +3,7 @@
 #include "../servernetwork.hpp"
 
 
-ReponseSolo::ReponseSolo(long long id) : userId_(id) {}
+ReponseSolo::ReponseSolo(uint id) : userId_(id) {}
 
 void ReponseSolo::envoyer(ServerNetworkManager& servManage) {
     auto client = servManage.map_.find(userId_);
@@ -12,7 +12,7 @@ void ReponseSolo::envoyer(ServerNetworkManager& servManage) {
     }
 }
 
-ReponseAuth::ReponseAuth(std::shared_ptr<Client> client, long long id)
+ReponseAuth::ReponseAuth(std::shared_ptr<Client> client, uint id)
 : ReponseSolo(id), client_(std::move(client)) {
     
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::AUTH_RESULT);
@@ -32,14 +32,14 @@ void ReponseAuth::envoyer(ServerNetworkManager& servManage) {
     }
 }
 
-ReponseRenameProject::ReponseRenameProject(long long userId, int projectId, std::string newName, bool success): ReponseSolo(userId){
+ReponseRenameProject::ReponseRenameProject(uint userId, uint projectId, std::string newName, bool success): ReponseSolo(userId){
     dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_RENAME_PROJECT_REP);
     dataPacket_ << static_cast<std::uint8_t>(success ?1:0);
     dataPacket_ <<static_cast<std::uint32_t>(projectId);
     dataPacket_<<newName;;
 }
 
-ReponseDuplicateProject::ReponseDuplicateProject(long long userId, int projectId, std::string newName, bool success): ReponseSolo(userId){
+ReponseDuplicateProject::ReponseDuplicateProject(uint userId, uint projectId, std::string newName, bool success): ReponseSolo(userId){
     dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_DUPLICATE_PROJECT_REP);
     dataPacket_ << static_cast<std::uint8_t>(success ?1:0);
     dataPacket_ <<static_cast<std::uint32_t>(projectId);
@@ -47,7 +47,7 @@ ReponseDuplicateProject::ReponseDuplicateProject(long long userId, int projectId
     
 }
 
-ReponseProjectData::ReponseProjectData(long long userId, QByteArray& jsonData) : ReponseSolo(userId) {
+ReponseProjectData::ReponseProjectData(uint userId, QByteArray& jsonData) : ReponseSolo(userId) {
     dataPacket_<<static_cast<std::uint8_t> (MsgProtocole::LOB_GET_PROJECT_DATA_REP);
 
     QByteArray jsonCompresse = qCompress(jsonData, 9);
@@ -55,7 +55,7 @@ ReponseProjectData::ReponseProjectData(long long userId, QByteArray& jsonData) :
     dataPacket_.append(jsonCompresse.constData(), jsonCompresse.size());
 }
 
-ReponseUsersProjects::ReponseUsersProjects(long long userId, std::vector<ProjectEntry>& projects) 
+ReponseUsersProjects::ReponseUsersProjects(uint userId, std::vector<ProjectEntry>& projects) 
 : ReponseSolo(userId) {
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_PROJECT_LIST_REP);
 
@@ -66,13 +66,13 @@ ReponseUsersProjects::ReponseUsersProjects(long long userId, std::vector<Project
     }
 }
 
-ReponseCreateProject::ReponseCreateProject(long long userId, int projectId) : ReponseSolo(userId) {
+ReponseCreateProject::ReponseCreateProject(uint userId, uint projectId) : ReponseSolo(userId) {
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_CREATE_PROJECT_REP);
 
     dataPacket_ << projectId;
 }
 
-ReponseGroupe::ReponseGroupe(std::vector<long long> usersId) : usersId_(std::move(usersId)) {}
+ReponseGroupe::ReponseGroupe(std::vector<uint> usersId) : usersId_(std::move(usersId)) {}
 
 
 void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
@@ -86,21 +86,21 @@ void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
 
 
 
-ReponsePutPixelsCircle::ReponsePutPixelsCircle(std::vector<long long> usersId, PutPixelsCircleMessage& mess) : ReponseGroupe(usersId) {
+ReponsePutPixelsCircle::ReponsePutPixelsCircle(std::vector<uint> usersId, PutPixelsCircleMessage& mess) : ReponseGroupe(usersId) {
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
     dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.taille_;
 }
 
-ReponsePutPixelsCarre::ReponsePutPixelsCarre(std::vector<long long> usersId, PutPixelsCarreMessage& mess) : ReponseGroupe(usersId){
+ReponsePutPixelsCarre::ReponsePutPixelsCarre(std::vector<uint> usersId, PutPixelsCarreMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_CARRE_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
     dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.taille_;
 }
 
-ReponsePutPixelsDiamond::ReponsePutPixelsDiamond(std::vector<long long> usersId, PutPixelsDiamondMessage& mess) : ReponseGroupe(usersId){
+ReponsePutPixelsDiamond::ReponsePutPixelsDiamond(std::vector<uint> usersId, PutPixelsDiamondMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_DIAM_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
@@ -108,21 +108,21 @@ ReponsePutPixelsDiamond::ReponsePutPixelsDiamond(std::vector<long long> usersId,
 }
 
 
-ReponseErasePixelsCircle::ReponseErasePixelsCircle(std::vector<long long> usersId, ErasePixelsCircleMessage& mess) : ReponseGroupe(usersId) {
+ReponseErasePixelsCircle::ReponseErasePixelsCircle(std::vector<uint> usersId, ErasePixelsCircleMessage& mess) : ReponseGroupe(usersId) {
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASER_CIRCLE_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
     dataPacket_ << mess.taille_;
 }
 
-ReponseErasePixelsCarre::ReponseErasePixelsCarre(std::vector<long long> usersId, ErasePixelsCarreMessage& mess) : ReponseGroupe(usersId){
+ReponseErasePixelsCarre::ReponseErasePixelsCarre(std::vector<uint> usersId, ErasePixelsCarreMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASER_CARRE_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
     dataPacket_ << mess.taille_;
 }
 
-ReponseErasePixelsDiamond::ReponseErasePixelsDiamond(std::vector<long long> usersId, ErasePixelsDiamondMessage& mess) : ReponseGroupe(usersId){
+ReponseErasePixelsDiamond::ReponseErasePixelsDiamond(std::vector<uint> usersId, ErasePixelsDiamondMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASER_DIAM_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
