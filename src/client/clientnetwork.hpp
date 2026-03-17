@@ -24,7 +24,6 @@ public:
     void createProject(std::string role, sf::Vector2u size, uint scale);
     void renameProject(uint projectId, std::string newName);
     void dupProj(uint projectId, std::string newName);
-    void getProjectData(uint project_id);
     void getUsersProjects(uint id);
     void getProjectList(); 
     void delProject(uint project_id);
