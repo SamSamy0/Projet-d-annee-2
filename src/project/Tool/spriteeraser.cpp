@@ -2,7 +2,6 @@
 #include "../Layer/layer.hpp"
 #include "../Layer/spritelayer.hpp"
 #include "../map.hpp"
-#include <iostream>
 #include <memory>
 
 SpriteEraser::SpriteEraser(std::shared_ptr<Map> map) : Brush(map) {
