@@ -1,15 +1,20 @@
-#include "../../Window.hpp"
 #include "../../../project/Tool/pixelbrush.hpp"
+// #include "../../Window.hpp"
+#include "../../Application.hpp"
+#include "../GameView.hpp"
 
-void Window::initEraserOptions() {
-  float width  = mainWindow.getSize().x;
+void GameView::initEraserOptions() {
+  auto& mainWindow = app_.getWindow();
+  auto& gui = app_.getGui();
+  float width = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
-  
+
   // Création de la barre avec toutes les infos pour la gomme
   eraserOptionsPanel_ = tgui::Panel::create();
   eraserOptionsPanel_->setSize(width * 0.35, height * 0.062);
   eraserOptionsPanel_->setPosition(width * 0.35, height * 0.05);
-  eraserOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
+  eraserOptionsPanel_->getRenderer()->setBackgroundColor(
+      tgui::Color(50, 56, 66));
   eraserOptionsPanel_->getRenderer()->setBorders({1});
   eraserOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
   eraserOptionsPanel_->getRenderer()->setRoundedBorderRadius(8);
@@ -28,22 +33,25 @@ void Window::initEraserOptions() {
   sizeInputBox->getRenderer()->setBorders({1});
   sizeInputBox->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
   sizeInputBox->onTextChange([this, sizeInputBox]() {
-    if (sizeInputBox->getText().empty()) return;
-    unsigned int size = static_cast<unsigned int>(std::stoi(sizeInputBox->getText().toStdString()));
+    if (sizeInputBox->getText().empty())
+      return;
+    unsigned int size = static_cast<unsigned int>(
+        std::stoi(sizeInputBox->getText().toStdString()));
     if (size < 1) {
-        size = 1;
+      size = 1;
     }
-    auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
+    auto brush = dynamic_pointer_cast<PixelBrush>(
+        project->getToolBar().getSelectedTool());
     if (brush) {
-        brush->setSize(size, size);
+      brush->setSize(size, size);
     }
   });
   eraserOptionsPanel_->add(sizeInputBox);
 
   // Création des différentes formes pour la gomme
-  auto squareButton  = tgui::Button::create("Carré");
+  auto squareButton = tgui::Button::create("Carré");
   auto diamondButton = tgui::Button::create("Diamant");
-  auto circleButton  = tgui::Button::create("Cercle");
+  auto circleButton = tgui::Button::create("Cercle");
 
   // Carré
   squareButton->setSize(width * 0.065, height * 0.04);
@@ -53,9 +61,10 @@ void Window::initEraserOptions() {
   squareButton->getRenderer()->setBorders({0});
   squareButton->getRenderer()->setRoundedBorderRadius(4);
   squareButton->onPress([this, squareButton, diamondButton, circleButton]() {
-    auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
+    auto brush = dynamic_pointer_cast<PixelBrush>(
+        project->getToolBar().getSelectedTool());
     if (brush) {
-        brush->setShape(SQUARE);
+      brush->setShape(SQUARE);
     }
     squareButton->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
     diamondButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
@@ -72,9 +81,10 @@ void Window::initEraserOptions() {
   diamondButton->getRenderer()->setBorders({0});
   diamondButton->getRenderer()->setRoundedBorderRadius(4);
   diamondButton->onPress([this, squareButton, diamondButton, circleButton]() {
-    auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
+    auto brush = dynamic_pointer_cast<PixelBrush>(
+        project->getToolBar().getSelectedTool());
     if (brush) {
-        brush->setShape(DIAMOND);
+      brush->setShape(DIAMOND);
     }
     squareButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     diamondButton->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
@@ -91,9 +101,10 @@ void Window::initEraserOptions() {
   circleButton->getRenderer()->setBorders({0});
   circleButton->getRenderer()->setRoundedBorderRadius(4);
   circleButton->onPress([this, squareButton, diamondButton, circleButton]() {
-    auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
+    auto brush = dynamic_pointer_cast<PixelBrush>(
+        project->getToolBar().getSelectedTool());
     if (brush) {
-        brush->setShape(CIRCLE);
+      brush->setShape(CIRCLE);
     }
     squareButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     diamondButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));

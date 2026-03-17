@@ -2,8 +2,9 @@
 
 #include <deque>
 #include "../common/protocol.hpp"
+#include "../Window/Application.hpp"
 #include "receiverwindow.hpp"
-#include "../Window/Window.hpp"
+// #include "../Window/Window.hpp"
 
 
 class Window;             // Forward declaration

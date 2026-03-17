@@ -71,16 +71,6 @@ void Window::handlePopupEvents(const std::optional<sf::Event> &event) {
         closePopup();
       }
     }
-    // if (background) {
-    //   // Cast to Panel to use (->get("dataPanel"))
-    //   auto backgroundPanel =
-    //   std::dynamic_pointer_cast<tgui::Panel>(background); auto dataPanel =
-    //   backgroundPanel->get("dataPanel"); sf::Vector2f
-    //   clickPos(mouseClick->position.x, mouseClick->position.y); if (dataPanel
-    //   && !dataPanel->isMouseOnWidget(clickPos)) {
-    //     gui.remove(background);
-    //   }
-    // }
   }
   if (event->getIf<sf::Event::MouseWheelScrolled>()) {
     auto popup = gui.get("popup");
@@ -118,7 +108,7 @@ void Window::updateProjectNameInList(long long id, const std::string &name) {
       break;
     }
   }
-  //Refreshing project list
+  // Refreshing project list
   initMenuWidget();
 }
 

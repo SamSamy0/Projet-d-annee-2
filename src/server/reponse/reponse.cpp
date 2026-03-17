@@ -39,12 +39,11 @@ ReponseRenameProject::ReponseRenameProject(uint userId, uint projectId, std::str
     dataPacket_<<newName;;
 }
 
-ReponseDuplicateProject::ReponseDuplicateProject(uint userId, uint projectId, std::string newName): ReponseSolo(userId){
+ReponseDuplicateProject::ReponseDuplicateProject(uint userId, uint projectId, std::string newName) : ReponseSolo(userId){
     dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_DUPLICATE_PROJECT_REP);
     // dataPacket_ << static_cast<std::uint8_t>(success ?1:0);
     dataPacket_ <<static_cast<std::uint32_t>(projectId);
     dataPacket_<<newName;
-    
 }
 
 ReponseProjectData::ReponseProjectData(uint userId, QByteArray& jsonData) : ReponseSolo(userId) {
