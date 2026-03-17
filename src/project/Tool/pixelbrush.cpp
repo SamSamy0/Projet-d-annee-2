@@ -21,6 +21,11 @@ void PixelBrush::setEraser(bool val) { is_eraser_ = val; }
   return is_eraser_;
 }
 
+void PixelBrush::paintSender(sf::Vector2i pos){
+  //manager.message
+  paint(pos);
+}
+
 void PixelBrush::paint(sf::Vector2i pos) {
   /* Draw a shape one the layer*/
   shared_ptr<Layer> layer = map_->getCurrentLayer();

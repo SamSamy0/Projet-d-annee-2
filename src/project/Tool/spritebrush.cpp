@@ -11,6 +11,10 @@ SpriteBrush::SpriteBrush(std::shared_ptr<Map> map) : Brush(map){
     spacing_ = 1.0f;
 }
 
+void SpriteBrush::paintSender(sf::Vector2i pos) {
+  // manager.sendPaint();
+  paint(pos);
+}
 void SpriteBrush::setOffset(float offset){offset_ = offset;}
 
 void SpriteBrush::setSize(float x, float y = 1) { //WARNING: la valeur par défaut je suis pas sur
