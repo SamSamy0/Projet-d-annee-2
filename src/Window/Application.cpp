@@ -79,3 +79,9 @@ User &Application::getUser() { return currentUser_; }
 
 std::unique_ptr<View> &Application::getCurrentView() { return currentView; }
 std::unique_ptr<Project> &Application::getProject() { return project; }
+
+
+void Application::loadProjectData(unsigned int scale, sf::Vector2u size, std::string name, uint id){
+  project = std::make_unique<Project>(scale,size,name,id,mainWindow,gui);
+  changeView(std::make_unique<GameView>(*this));
+};

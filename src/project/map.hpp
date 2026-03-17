@@ -1,7 +1,7 @@
 #pragma once
+#include "assetmanager.hpp"
 #include "move.hpp"
 #include "zoom.hpp"
-#include "assetmanager.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
@@ -27,12 +27,13 @@ class Map {
   AssetManager assetmanager_;
 
 public:
-  Map(sf::Vector2u size, unsigned int scale,vector<shared_ptr<Layer>> layers);
-  Map(sf::Vector2u size, unsigned int scale);
+  Map(uint mapId, sf::Vector2u size, unsigned int scale,
+      vector<shared_ptr<Layer>> layers);
+  Map(uint mapId, sf::Vector2u size, unsigned int scale);
   sf::Vector2u getSize() const;
   unsigned int getScale() const;
   Zoom &getZoom();
-  AssetManager& getAssetManager();
+  AssetManager &getAssetManager();
   vector<shared_ptr<Layer>> &getLayers();
   shared_ptr<Layer> getCurrentLayer();
   unsigned int getLayerSelected() const;
@@ -46,6 +47,8 @@ public:
   void closeWindowManager(sf::RenderWindow &window, const sf::Event &ev);
   void detectMovement();
   void zooming(sf::Event::MouseWheelScrolled const *event);
-  // bool isInside(sf::Vector2i pos)const; //WARNING: ne sert à rien pour l'instant
+  // bool isInside(sf::Vector2i pos)const; //WARNING: ne sert à rien pour
+  // l'instant
   void detectZooming(sf::Event event);
+  uint getId();
 };

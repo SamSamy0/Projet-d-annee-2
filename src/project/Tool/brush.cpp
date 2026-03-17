@@ -85,3 +85,8 @@ void Brush::onRelease() {
   isDrawing_ = false;
   distance_ = 0;
 }
+
+
+void Brush::paintSender(sf::Vector2i pos) {
+    // Comportement par défaut (peut être vide)
+}
