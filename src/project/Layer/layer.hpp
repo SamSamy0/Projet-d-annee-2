@@ -5,7 +5,6 @@ enum LayerType { PIXELLAYER, SPRITELAYER };
 
 class Layer {
 protected:
-  uint64_t id_;
   std::string name_;
   uint id_;
   sf::Vector2u size_;
@@ -13,7 +12,7 @@ protected:
   LayerType type_;
 
 public:
-  Layer(uint64_t id, std::string name, sf::Vector2u size);
+  Layer(uint id, std::string name, sf::Vector2u size);
   std::string getName() const;
   uint getId()const;
   LayerType getType();

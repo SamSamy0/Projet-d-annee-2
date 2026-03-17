@@ -15,7 +15,7 @@ using namespace std;
 class Layer;
 
 class Map {
-  uint64_t nextLayerId = 0;
+  uint nextLayerId = 0;
   sf::Vector2u size_;
   unsigned int scale_;
   vector<shared_ptr<Layer>> layers_;

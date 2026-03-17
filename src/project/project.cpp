@@ -9,14 +9,14 @@
 const string FONT_PATH {"../res/police/ARIAL.TTF"};
 
 // Constructors
-Project::Project(unsigned int scale, sf::Vector2u size, std::string name, uint64_t id, sf::RenderWindow &window, tgui::Gui &gui)
-    : map_{std::make_shared<Map>(1, size, scale)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
+Project::Project(unsigned int scale, sf::Vector2u size, std::string name, uint id, sf::RenderWindow &window, tgui::Gui &gui)
+    : map_{std::make_shared<Map>( size, scale)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
 
-Project::Project(unsigned int scale, sf::Vector2u size, std::string name, uint64_t id, sf::RenderWindow &window, tgui::Gui &gui, std::vector<std::shared_ptr<Layer>> layers)
-    : map_{std::make_shared<Map>(1, size, scale,layers)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
+Project::Project(unsigned int scale, sf::Vector2u size, std::string name, uint id, sf::RenderWindow &window, tgui::Gui &gui, std::vector<std::shared_ptr<Layer>> layers)
+    : map_{std::make_shared<Map>( size, scale,layers)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
 
 // ----- [Getters] -----
-uint64_t Project::getId() { return id_; }
+uint Project::getId() { return id_; }
 unsigned int Project::getScale() { return map_->getScale(); }
 
 std::string Project::getName() { return name_; }
