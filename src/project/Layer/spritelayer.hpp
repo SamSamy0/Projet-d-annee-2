@@ -6,7 +6,7 @@ class SpriteLayer : public Layer {
   sf::Vector2i offset_;
 
 public:
-  SpriteLayer(std::string name, sf::Vector2u size);
+  SpriteLayer(uint64_t id, std::string name, sf::Vector2u size);
   sf::Vector2i getOffset() const override;
   std::vector<sf::Sprite> &getSprites();
   void draw(sf::Sprite &s);

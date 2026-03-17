@@ -7,7 +7,7 @@ class PixelLayer : public Layer {
   sf::Sprite offset_;
 
 public:
-  PixelLayer(std::string name, sf::Vector2u size);
+  PixelLayer(uint64_t id, std::string name, sf::Vector2u size);
 
   sf::Vector2i getOffset() const override;
   sf::RenderTexture &getTexture();
