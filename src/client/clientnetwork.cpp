@@ -139,12 +139,65 @@ void ClientNetworkManager::joinProject(int project_code){
   socket_.send(packet);
 }
 
+
 void ClientNetworkManager::drawSquare(uint64_t proj_id, uint64_t layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_CARRE_REQ;
 
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << pos_x << pos_y << size << r << g << b << a;
+
+  socket_.send(packet);
+}
+
+
+void ClientNetworkManager::drawCircle(uint64_t proj_id, uint64_t layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << proj_id << layer_id << pos_x << pos_y << size << r << g << b << a;
+
+  socket_.send(packet);
+}
+
+
+void ClientNetworkManager::drawDiamond(uint64_t proj_id, uint64_t layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_DIAM_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << proj_id << layer_id << pos_x << pos_y << size << r << g << b << a;
+
+  socket_.send(packet);
+}
+
+
+void ClientNetworkManager::eraseSquare(uint64_t proj_id, uint64_t layer_id,int pos_x,int pos_y,float size){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_ERASER_CARRE_REQ;
+
+  packet << proj_id << layer_id << pos_x << pos_y << size;
+
+  socket_.send(packet);
+}
+
+
+void ClientNetworkManager::eraseCircle(uint64_t proj_id, uint64_t layer_id,int pos_x,int pos_y,float size){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_ERASER_CIRCLE_REQ;
+
+  packet << proj_id << layer_id << pos_x << pos_y << size;
+
+  socket_.send(packet);
+}
+
+
+void ClientNetworkManager::eraseDiamond(uint64_t proj_id, uint64_t layer_id,int pos_x,int pos_y,float size_x, float size_y){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_ERASER_DIAM_REQ;
+
+  packet << proj_id << layer_id << pos_x << pos_y << size_x << size_y;
 
   socket_.send(packet);
 }
