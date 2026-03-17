@@ -162,12 +162,12 @@ void ClientNetworkManager::drawCircle(uint proj_id, uint layer_id, int pos_x,int
 }
 
 
-void ClientNetworkManager::drawDiamond(uint proj_id, uint layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
+void ClientNetworkManager::drawDiamond(uint proj_id, uint layer_id, int pos_x,int pos_y, float size_x, float size_y, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_DIAM_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << pos_x << pos_y << size << r << g << b << a;
+  packet << proj_id << layer_id << pos_x << pos_y << size_x << size_y << r << g << b << a;
 
   socket_.send(packet);
 }

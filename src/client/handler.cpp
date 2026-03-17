@@ -125,37 +125,87 @@ void ClientHandler::process(ServerEvent& event){
 
 
         case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP : {
-             
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size;
+            uint8_t r; 
+            uint8_t g;
+            uint8_t b; 
+            uint8_t a;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size >> r >> g >> b >> a;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,r,g,b,a,Shape::CIRCLE,false,size,0);
             break;
         }
 
 
         case MsgProtocole::MAP_PUT_PIXELS_CARRE_REP : {
-            
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size;
+            uint8_t r; 
+            uint8_t g;
+            uint8_t b; 
+            uint8_t a;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size >> r >> g >> b >> a;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,r,g,b,a,Shape::SQUARE,false,size,0);
             break;
         }
 
 
         case MsgProtocole::MAP_PUT_PIXELS_DIAM_REP : {
-            
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size_x;
+            float size_y;
+            uint8_t r; 
+            uint8_t g;
+            uint8_t b; 
+            uint8_t a;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size_x >> size_y >> r >> g >> b >> a;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,r,g,b,a,Shape::DIAMOND,false,size_x,size_y);
             break;
         }
 
 
         case MsgProtocole::MAP_ERASER_CIRCLE_REP : {
-            
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,0,0,0,0,Shape::CIRCLE,true,size,0);
             break;
         }
 
 
         case MsgProtocole::MAP_ERASER_CARRE_REP : {
-            
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,0,0,0,0,Shape::SQUARE,true,size,0);
             break;
         }
 
 
         case MsgProtocole::MAP_ERASER_DIAM_REP : {
-            
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size_x;
+            float size_y;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size_x >> size_y;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,0,0,0,0,Shape::DIAMOND,true,size_x,size_y);
             break;
         }
     }        

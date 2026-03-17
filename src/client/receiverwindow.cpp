@@ -38,6 +38,7 @@ void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
                                       std::string name, uint id) {
   app_->loadProjectData(scale, size, name, id);
 }
+
 void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,
                                       uint8_t r, uint8_t g, uint8_t b,
                                       uint8_t a, Shape shape, bool eraser,
@@ -72,3 +73,4 @@ void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,
   pixelbrush->setColor(last_color);
   toolbar.selectTool(last_tool);
 }
+

@@ -5,6 +5,7 @@
 #include "../Window/Application.hpp"
 #include "receiverwindow.hpp"
 // #include "../Window/Window.hpp"
+#include "../project/Tool/tool.hpp"
 
 
 class Window;             // Forward declaration
