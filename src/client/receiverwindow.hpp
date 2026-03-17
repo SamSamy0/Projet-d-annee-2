@@ -20,4 +20,5 @@ public:
   void updateProjectNameInList(uint64_t id, const std::string &name);
   void updateCreatedProjectId(uint32_t ProjectId);
   void setState();
+  void addProjectData(unsigned int scale, sf::Vector2u size, std::string name, uint id);
 };

@@ -28,6 +28,8 @@ void ClientHandler::process(ServerEvent& event){
             handleWindow_.switchConnectState(accept);
             break;
         }
+
+
         case MsgProtocole::LOB_PROJECT_LIST_REP:{
             uint32_t size;
             *(event.data_packet_) >> size;
@@ -49,6 +51,8 @@ void ClientHandler::process(ServerEvent& event){
 
             break;
         }
+
+
         case MsgProtocole::LOB_GET_PROJECT_DATA_REP:{
             std::cout << "DONNEES DU PROJET RECU" << std::endl;
 
@@ -75,19 +79,14 @@ void ClientHandler::process(ServerEvent& event){
                 QJsonDocument doc = QJsonDocument::fromJson(jsonBytes);
                 QJsonObject entete = doc.object();
 
-                std::cout << entete["name"].toString().toStdString() << std::endl;
-                std::cout << entete["width"].toInt() << std::endl;
-                std::cout << entete["height"].toInt() << std::endl;
-                std::cout << entete["scale"].toInt() << std::endl;
-                
-                std::cout << "Lecture JSON réussie." << std::endl;
+                sf::Vector2u vec{entete["width"].toInt(),entete["height"].toInt()};
+                handleWindow_.addProjectData(entete["scale"].toInt(),vec,entete["name"].toString().toStdString(),entete["id"].toInt());
+
             }
-
-            
-            handleWindow_.setState();
-
             break;
         }
+
+
         case MsgProtocole::LOB_RENAME_PROJECT_REP:{
             uint8_t success;
             uint32_t projectId;
@@ -98,6 +97,8 @@ void ClientHandler::process(ServerEvent& event){
             }
             break;
         } 
+
+
         case MsgProtocole::LOB_DUPLICATE_PROJECT_REP:{
             uint32_t projectId;
             std::string newName;
@@ -113,32 +114,46 @@ void ClientHandler::process(ServerEvent& event){
                 
             break;
         }
+
+
         case MsgProtocole::LOB_CREATE_PROJECT_REP : {
             uint32_t newProjectId;
             *(event.data_packet_) >> newProjectId ;
             handleWindow_.updateCreatedProjectId(newProjectId);
             break;
         }
+
+
         case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP : {
              
             break;
         }
+
+
         case MsgProtocole::MAP_PUT_PIXELS_CARRE_REP : {
             
             break;
         }
+
+
         case MsgProtocole::MAP_PUT_PIXELS_DIAM_REP : {
             
             break;
         }
+
+
         case MsgProtocole::MAP_ERASER_CIRCLE_REP : {
             
             break;
         }
+
+
         case MsgProtocole::MAP_ERASER_CARRE_REP : {
             
             break;
         }
+
+
         case MsgProtocole::MAP_ERASER_DIAM_REP : {
             
             break;

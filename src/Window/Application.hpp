@@ -38,7 +38,7 @@ public:
   void run();
   bool isOpen() const;
   void updateTextSize();
-  
+  void loadProjectData(unsigned int scale, sf::Vector2u size, std::string name, uint id);
   //Getters
   sf::RenderWindow &getWindow();
   tgui::Gui &getGui();

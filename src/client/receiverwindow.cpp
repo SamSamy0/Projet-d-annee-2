@@ -20,8 +20,7 @@ void ReceiverInWindow::addProjectToList(ProjectData projet){
 }
 
 void ReceiverInWindow::updateProjectNameInList(uint64_t id, const std::string& newName){
-    app_->updateProjectNameInList(id, newName);
-    
+    app_->updateProjectNameInList(id, newName); 
 }
 
 void ReceiverInWindow::updateCreatedProjectId(uint32_t projId) {
@@ -31,3 +30,8 @@ void ReceiverInWindow::updateCreatedProjectId(uint32_t projId) {
 void ReceiverInWindow::setState(){
     app_->changeView(std::make_unique<GameView>(*app_));
 }
+
+void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size, std::string name, uint id){
+    app_->loadProjectData(scale, size, name,id);
+}
+
