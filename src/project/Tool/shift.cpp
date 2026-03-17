@@ -1,10 +1,11 @@
 #include "shift.hpp"
 #include "../Layer/layer.hpp"
 #include "../map.hpp"
+#include "../../client/clientnetwork.hpp"
 #include "tool.hpp"
 #include <memory>
 
-Shift::Shift(std::shared_ptr<Map> map) : Tool(map) {}
+Shift::Shift(std::shared_ptr<Map> map, ClientNetworkManager& manager) : Tool(map, manager) {}
 
 void Shift::onPress(sf::Vector2i pos) {
   isDrawing_ = true;

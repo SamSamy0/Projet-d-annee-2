@@ -2,6 +2,11 @@
 #include <SFML/Graphics.hpp>
 
 enum LayerType { PIXELLAYER, SPRITELAYER };
+/*
+struct Lock {
+  std::string author;
+  bool isLocked;
+};*/
 
 class Layer {
 protected:
@@ -9,6 +14,7 @@ protected:
   sf::Vector2u size_;
   bool masked_ = false;
   LayerType type_;
+  //std::unique_ptr<Lock> lock_ = nullptr;
 
 public:
   Layer(std::string name, sf::Vector2u size);

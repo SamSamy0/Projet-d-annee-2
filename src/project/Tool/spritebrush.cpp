@@ -5,7 +5,7 @@
 
 
 
-SpriteBrush::SpriteBrush(std::shared_ptr<Map> map) : Brush(map){
+SpriteBrush::SpriteBrush(std::shared_ptr<Map> map, ClientNetworkManager& manager) : Brush(map, manager){
   spacing_ = std::min(size_m_.x/1.0f * getScale(), size_m_.y/1.0f * getScale());
   if (spacing_ < 1)
     spacing_ = 1.0f;

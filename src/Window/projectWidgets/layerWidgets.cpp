@@ -2,6 +2,7 @@
 #include "../../project/Layer/layer.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
 #include <memory>
+#include <algorithm>
 
 void Window::initLayerPanel() {
   float width  = mainWindow.getSize().x;
@@ -21,20 +22,20 @@ void Window::initLayerPanel() {
   auto titleLabel = tgui::Label::create("Couches");
   titleLabel->setSize(width * 0.2, height * 0.05);
   titleLabel->setPosition(0, 0);
-  titleLabel->setHorizontalAlignment(tgui::Label::HorizontalAlignment::Center);
-  titleLabel->setVerticalAlignment(tgui::Label::VerticalAlignment::Center);
+  titleLabel->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+  titleLabel->setVerticalAlignment(tgui::VerticalAlignment::Center);
   titleLabel->getRenderer()->setTextColor(tgui::Color::White);
   layerPanel_->add(titleLabel);
 
   // Ici, je crée la box qui contient la liste des couches
   layersList_ = tgui::ScrollablePanel::create();
-  layersList_->setSize(width * 0.18, height * 0.38);
+  layersList_->setSize(width * 0.18, height * 0.33);
   layersList_->setPosition(width * 0.01, height * 0.05);
   layersList_->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   layersList_->getRenderer()->setBorders({1});
   layersList_->getRenderer()->setBorderColor(tgui::Color(70, 75, 85));
-  layersList_->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-  layersList_->setVerticalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+  layersList_->getHorizontalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  layersList_->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
   layerPanel_->add(layersList_);
 
   // J'itère sur chaque éléments du vecteur couches et je l'ajoute à la liste des couches en gérant son affichage
@@ -59,6 +60,45 @@ void Window::initLayerPanel() {
     });
     layersList_->add(layerButton);
   }
+
+  // Création du bouton qui décale une couche vers le haut
+  auto goUpLayer = tgui::Button::create("▼");
+  goUpLayer->setSize(width * 0.08, height * 0.04);
+  goUpLayer->setPosition(width * 0.01, height * 0.395);
+  goUpLayer->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+  goUpLayer->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+  goUpLayer->getRenderer()->setTextColor(tgui::Color::White);
+  goUpLayer->getRenderer()->setBorders({0});
+  goUpLayer->getRenderer()->setRoundedBorderRadius(8);
+  goUpLayer->onClick([this]() {
+    auto& layers = project->getMap()->getLayers();
+    unsigned int selectedLayer = project->getMap()->getLayerSelected();
+    if (selectedLayer == layers.size() - 1) return;
+    std::swap(layers[selectedLayer], layers[selectedLayer + 1]);
+    project->getMap()->setLayerSelected(selectedLayer + 1);
+    refreshLayerList();
+  });
+  layerPanel_->add(goUpLayer);
+
+  // Création du bouton qui décale une couche vers le bas
+  auto goDownLayer = tgui::Button::create("▲");
+  goDownLayer->setSize(width * 0.08, height * 0.04);
+  goDownLayer->setPosition(width * 0.11, height * 0.395);
+  goDownLayer->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+  goDownLayer->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+  goDownLayer->getRenderer()->setTextColor(tgui::Color::White);
+  goDownLayer->getRenderer()->setBorders({0});
+  goDownLayer->getRenderer()->setRoundedBorderRadius(8);
+  goDownLayer->onClick([this]() {
+    auto& layers = project->getMap()->getLayers();
+    unsigned int selectedLayer = project->getMap()->getLayerSelected();
+    if (selectedLayer == 0) return;
+    std::swap(layers[selectedLayer], layers[selectedLayer - 1]);
+    project->getMap()->setLayerSelected(selectedLayer - 1);
+    refreshLayerList();
+  });
+  layerPanel_->add(goDownLayer);
+  
   // Création du toggle bouton masqué/démasqué
   auto maskButton = tgui::Button::create("M/U");
   maskButton->setSize(width * 0.18, height * 0.04);
@@ -75,6 +115,24 @@ void Window::initLayerPanel() {
       layers[selectedLayer]->setMasked(!layers[selectedLayer]->getMasked());
   });
   layerPanel_->add(maskButton);
+
+  // Création du toggle bouton lock/unlock
+  //auto lockButton = tgui::Button::create("L/U");
+  //lockButton->setSize(width * 0.09, height * 0.04);
+  //lockButton->setPosition(width * 0.1, height * 0.44);
+  //lockButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+  //lockButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+  //lockButton->getRenderer()->setTextColor(tgui::Color::White);
+  //lockButton->getRenderer()->setBorders({0});
+  //lockButton->getRenderer()->setRoundedBorderRadius(8);
+  //lockButton->onClick([this]() {
+  // auto& layers = project->getMap()->getLayers();
+  //  unsigned int selectedLayer = project->getMap()->getLayerSelected();
+  //  if (selectedLayer < layers.size())
+  //    layers[selectedLayer]->setMasked(!layers[selectedLayer]->getMasked());
+  //});
+  //layerPanel_->add(lockButton);
+  
 
   // Création du bouton ajouter une couche (pour l'instant direct couche pixel)
   auto addLayerButton = tgui::Button::create("Ajouter couche");

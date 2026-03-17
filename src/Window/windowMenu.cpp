@@ -258,7 +258,7 @@ void Window::createProj(tgui::String scale, tgui::String sizeX,
   gui.removeAllWidgets();
 
   this->project =
-      std::make_unique<Project>(scaleInt, size, nameS, id, mainWindow, gui);
+      std::make_unique<Project>(scaleInt, size, nameS, id, mainWindow, gui, manager);
 
   projectList.push_back(getProjectData(project));
   setState(projectState::GAME);

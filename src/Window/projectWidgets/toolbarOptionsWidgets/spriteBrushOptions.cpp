@@ -20,8 +20,8 @@ void Window::initSpriteBrushOptions() {
   scrollPanel->setSize("100%", "100%");
   scrollPanel->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   scrollPanel->getRenderer()->setBorders({0});
-  scrollPanel->setVerticalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-  scrollPanel->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+  scrollPanel->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  scrollPanel->getHorizontalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
   spriteBrushOptionsPanel_->add(scrollPanel);
 
   const auto& allSprites = project->getMap()->getAssetManager().getAllAssets();
@@ -48,7 +48,7 @@ void Window::initSpriteBrushOptions() {
       auto assetId = id;
 
       image->onClick([this, image, assetId, selection]() {
-          auto tool = dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+          auto tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
           if (!tool) return;
           bool found = false;
           for (auto& s : *selection) {
@@ -57,21 +57,16 @@ void Window::initSpriteBrushOptions() {
                   break;
               }
           }
-
-        std::string assetId = id;
-        auto selected = std::make_shared<bool>(false);
-        btn->onClick([this, btn, assetId, selected]() {
-            auto tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
-            if (!tool) return;
-            *selected = !*selected;
-            if (*selected) {
-                btn->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
-                tool->addAsset(assetId);
-            } else {
-                btn->getRenderer()->setBorderColor(tgui::Color::Transparent);
-                tool->removeAsset(assetId);
-            }
-        });
+          if (found) {
+              selection->erase(std::remove(selection->begin(), selection->end(), assetId), selection->end());
+              image->getRenderer()->setBorderColor(tgui::Color::Transparent);
+              tool->removeAsset(assetId);
+          } else {
+              selection->push_back(assetId);
+              image->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
+              tool->addAsset(assetId);
+          }
+      });
 
       scrollPanel->add(image);
       column++;

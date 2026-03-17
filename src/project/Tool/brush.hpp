@@ -1,5 +1,6 @@
 #pragma once
 #include "tool.hpp"
+#include "../../client/clientnetwork.hpp"
 
 class Brush : public Tool {
 protected:
@@ -8,7 +9,7 @@ protected:
   float spacing_;
 
 public:
-  Brush(std::shared_ptr<Map>);
+  Brush(std::shared_ptr<Map>, ClientNetworkManager& manager);
   virtual void setSize(float x, float y = 1);
   sf::Vector2f getSize();
   void onPress(sf::Vector2i pos);
