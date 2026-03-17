@@ -7,10 +7,12 @@ protected:
   int distance_ = 0;
   float spacing_;
 
+  //TODO: faire ici la methode paintSender
 public:
   Brush(std::shared_ptr<Map>);
   virtual void setSize(float x, float y);
   sf::Vector2f getSize();
+  void paintSender();
   void onPress(sf::Vector2i pos);
   void onDrag(sf::Vector2i pos);
   void onRelease();
