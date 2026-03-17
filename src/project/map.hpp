@@ -27,8 +27,8 @@ class Map {
   AssetManager assetmanager_;
 
 public:
-  Map(int mapId, sf::Vector2u size, unsigned int scale,vector<shared_ptr<Layer>> layers);
-  Map(int mapId, sf::Vector2u size, unsigned int scale);
+  Map(uint mapId, sf::Vector2u size, unsigned int scale,vector<shared_ptr<Layer>> layers);
+  Map(uint mapId, sf::Vector2u size, unsigned int scale);
   sf::Vector2u getSize() const;
   unsigned int getScale() const;
   Zoom &getZoom();
@@ -47,4 +47,5 @@ public:
   void zooming(sf::Event::MouseWheelScrolled const *event);
   // bool isInside(sf::Vector2i pos)const; //WARNING: ne sert à rien pour l'instant
   void detectZooming(sf::Event event);
+  uint getId();
 };

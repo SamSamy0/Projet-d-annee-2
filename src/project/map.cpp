@@ -159,3 +159,7 @@ void Map::detectMovement()
         move_.goDown(zoom_.getZoom());
     }
 }
+
+uint Map::getId(){
+    return id_;
+}

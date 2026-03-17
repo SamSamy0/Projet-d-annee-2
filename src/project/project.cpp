@@ -10,10 +10,10 @@ const string FONT_PATH {"../res/police/ARIAL.TTF"};
 
 // Constructors
 Project::Project(unsigned int scale, sf::Vector2u size, std::string name, uint id, sf::RenderWindow &window, tgui::Gui &gui)
-    : map_{std::make_shared<Map>(1, size, scale)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
+    : map_{std::make_shared<Map>(id_, size, scale)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
 
 Project::Project(unsigned int scale, sf::Vector2u size, std::string name, uint id, sf::RenderWindow &window, tgui::Gui &gui, std::vector<std::shared_ptr<Layer>> layers)
-    : map_{std::make_shared<Map>(1, size, scale,layers)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
+    : map_{std::make_shared<Map>(id_, size, scale,layers)}, name_{name}, id_{id},window_{window}, toolbar_{map_}, gui_{gui} {}
 
 // ----- [Getters] -----
 uint Project::getId() { return id_; }
