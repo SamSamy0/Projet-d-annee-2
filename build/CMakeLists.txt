@@ -61,10 +61,15 @@ set(CMAKE_AUTOMOC ON)  # ← nécessaire pour Qt
 # ── CLIENT ───────────────────────────────────────────────────────
 set(SOURCES
     ../src/client/client.cpp
-    ../src/Window/Window.cpp
-    ../src/Window/windowLogin.cpp
-    ../src/Window/windowMenu.cpp
-    ../src/Window/projectWidgets/windowGame.cpp
+    ../src/Window/Application.cpp
+    ../src/Window/LoginView.cpp
+    ../src/Window/MenuView.cpp
+    ../src/Window/projectWidgets/GameView.cpp
+    ../src/Window/View.hpp
+    # ../src/Window/Window.cpp
+    # ../src/Window/windowLogin.cpp
+    # ../src/Window/windowMenu.cpp
+    # ../src/Window/projectWidgets/windowGame.cpp
     ../src/Window/projectWidgets/toolBarWidgets.cpp
     ../src/Window/projectWidgets/layerWidgets.cpp
     ../src/Window/projectWidgets/chatWidgets.cpp
