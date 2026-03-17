@@ -11,7 +11,7 @@ public:
 
   sf::Vector2i getOffset() const override;
   sf::RenderTexture &getTexture();
-  void draw(sf::Drawable &s);
+  void draw(sf::Drawable &d);
   void erase(sf::Drawable &s);
   void shift(sf::Vector2i v) override;
   void drawLayer(sf::RenderTarget &target) override;

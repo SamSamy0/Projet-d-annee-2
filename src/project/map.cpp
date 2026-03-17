@@ -34,6 +34,8 @@ Map::Map(int mapId, sf::Vector2u size , unsigned int scale) :
 Zoom& Map::getZoom() { return zoom_; }
 
 
+  AssetManager& Map::getAssetManager(){return assetmanager_;}
+
 sf::Vector2u Map::getSize()const {return size_;}
 
 bool Map::hasLayer()const {return !layers_.empty();}

@@ -10,21 +10,15 @@ struct Asset{
   std::string category;
   std::string name;
   float size_m_horizontal;
-
-
   std::unique_ptr<sf::Texture> texture;
+
 };
 
 class AssetManager{
-
   std::unordered_map<std::string, Asset > assets_;
 
-
-
-
-
 public:
-  AssetManager() = default;
+  AssetManager();
   void loadFromJson();
   Asset* getAsset(const std::string& id);
 
