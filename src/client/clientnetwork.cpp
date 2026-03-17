@@ -73,7 +73,7 @@ void ClientNetworkManager::createProject(std::string nomProjet,
 
   socket_.send(packet);
 }
-void ClientNetworkManager::renameProject(int projectId, std::string newName) {
+void ClientNetworkManager::renameProject(uint projectId, std::string newName) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_RENAME_PROJECT_REQ;
 
@@ -83,7 +83,7 @@ void ClientNetworkManager::renameProject(int projectId, std::string newName) {
   socket_.send(packet);
 }
 
-void ClientNetworkManager::dupProj(int projectId, std::string newName) {
+void ClientNetworkManager::dupProj(uint projectId, std::string newName) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_DUPLICATE_PROJECT_REQ;
 
@@ -100,7 +100,7 @@ void ClientNetworkManager::getProjectList() {
   socket_.send(packet);
 }
 
-void ClientNetworkManager::getProjectData(uint64_t project_id){
+void ClientNetworkManager::getProjectData(uint project_id){
     sf::Packet packet;
     MsgProtocole msg = MsgProtocole::LOB_GET_PROJECT_DATA_REQ;
 
@@ -110,7 +110,7 @@ void ClientNetworkManager::getProjectData(uint64_t project_id){
 }
 
 
-void ClientNetworkManager::delProject(uint64_t project_id){
+void ClientNetworkManager::delProject(uint project_id){
     sf::Packet packet;
     MsgProtocole msg = MsgProtocole::LOB_DEL_PROJECT_REQ;
 
@@ -120,7 +120,7 @@ void ClientNetworkManager::delProject(uint64_t project_id){
 }
 
 
-void ClientNetworkManager::createProjectCode(uint64_t project_id){
+void ClientNetworkManager::createProjectCode(uint project_id){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_SHARE_PROJECT_REQ;
 
@@ -140,7 +140,7 @@ void ClientNetworkManager::joinProject(int project_code){
 }
 
 
-void ClientNetworkManager::drawSquare(uint64_t proj_id, uint64_t layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
+void ClientNetworkManager::drawSquare(uint proj_id, uint layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_CARRE_REQ;
 
@@ -151,7 +151,7 @@ void ClientNetworkManager::drawSquare(uint64_t proj_id, uint64_t layer_id, int p
 }
 
 
-void ClientNetworkManager::drawCircle(uint64_t proj_id, uint64_t layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
+void ClientNetworkManager::drawCircle(uint proj_id, uint layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REQ;
 
@@ -162,7 +162,7 @@ void ClientNetworkManager::drawCircle(uint64_t proj_id, uint64_t layer_id, int p
 }
 
 
-void ClientNetworkManager::drawDiamond(uint64_t proj_id, uint64_t layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
+void ClientNetworkManager::drawDiamond(uint proj_id, uint layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_DIAM_REQ;
 
@@ -173,7 +173,7 @@ void ClientNetworkManager::drawDiamond(uint64_t proj_id, uint64_t layer_id, int 
 }
 
 
-void ClientNetworkManager::eraseSquare(uint64_t proj_id, uint64_t layer_id,int pos_x,int pos_y,float size){
+void ClientNetworkManager::eraseSquare(uint proj_id, uint layer_id,int pos_x,int pos_y,float size){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ERASER_CARRE_REQ;
 
@@ -183,7 +183,7 @@ void ClientNetworkManager::eraseSquare(uint64_t proj_id, uint64_t layer_id,int p
 }
 
 
-void ClientNetworkManager::eraseCircle(uint64_t proj_id, uint64_t layer_id,int pos_x,int pos_y,float size){
+void ClientNetworkManager::eraseCircle(uint proj_id, uint layer_id,int pos_x,int pos_y,float size){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ERASER_CIRCLE_REQ;
 
@@ -193,7 +193,7 @@ void ClientNetworkManager::eraseCircle(uint64_t proj_id, uint64_t layer_id,int p
 }
 
 
-void ClientNetworkManager::eraseDiamond(uint64_t proj_id, uint64_t layer_id,int pos_x,int pos_y,float size_x, float size_y){
+void ClientNetworkManager::eraseDiamond(uint proj_id, uint layer_id,int pos_x,int pos_y,float size_x, float size_y){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ERASER_DIAM_REQ;
 

@@ -48,8 +48,6 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::MAP_ROTATE_SPRITE_REP: return "MAP_ROTATE_SPRITE_REP";
         case MsgProtocole::MAP_RESIZE_SPRITE_REQ: return "MAP_RESIZE_SPRITE_REQ";
         case MsgProtocole::MAP_RESIZE_SPRITE_REP: return "MAP_RESIZE_SPRITE_REP";
-        case MsgProtocole::MAP_PUT_PIXEL_REQ: return "MAP_PUT_PIXEL_REQ";
-        case MsgProtocole::MAP_PUT_PIXEL_REP: return "MAP_PUT_PIXEL_REP";
         case MsgProtocole::CHAT_MESSAGE_REQ: return "CHAT_MESSAGE_REQ";
         case MsgProtocole::CHAT_MESSAGE_REP: return "CHAT_MESSAGE_REP";
         case MsgProtocole::CHAT_CONNECT_USER_REP: return "CHAT_CONNECT_USER_REP";

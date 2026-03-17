@@ -119,6 +119,30 @@ void ClientHandler::process(ServerEvent& event){
             handleWindow_.updateCreatedProjectId(newProjectId);
             break;
         }
+        case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP : {
+             
+            break;
+        }
+        case MsgProtocole::MAP_PUT_PIXELS_CARRE_REP : {
+            
+            break;
+        }
+        case MsgProtocole::MAP_PUT_PIXELS_DIAM_REP : {
+            
+            break;
+        }
+        case MsgProtocole::MAP_ERASER_CIRCLE_REP : {
+            
+            break;
+        }
+        case MsgProtocole::MAP_ERASER_CARRE_REP : {
+            
+            break;
+        }
+        case MsgProtocole::MAP_ERASER_DIAM_REP : {
+            
+            break;
+        }
     }        
 }
 

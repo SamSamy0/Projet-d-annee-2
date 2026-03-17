@@ -19,13 +19,8 @@ void ReceiverInWindow::addProjectToList(ProjectData projet){
     app_->addProjectList(projet);
 }
 
-<<<<<<< HEAD
 void ReceiverInWindow::updateProjectNameInList(uint64_t id, const std::string& newName){
-    window_->updateProjectNameInList(id, newName);
-=======
-void ReceiverInWindow::updateProjectNameInList(long long id, const std::string& newName){
     app_->updateProjectNameInList(id, newName);
->>>>>>> 07e7350eb8f9ad86fddd3e41807795ce92afb5b2
     
 }
 
