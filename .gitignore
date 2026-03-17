@@ -1,5 +1,5 @@
 .vscode
-.cache
+.cache/
 bin
 build/*
 !build/CMakeLists.txt
@@ -9,4 +9,3 @@ compile_commands.json
 .cache/
 src/server/test
 src/server/CMakeLists.txt
-# .cache

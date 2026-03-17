@@ -9,7 +9,6 @@ void Worker::run() {
     std::unique_ptr<IMessage> request;
     while (mRunning_) {
         request = demQueue_.pop();
-        std::cout << "[Worker] pop()..." << std::endl;
 
         if (request) {
             request->process(*this);

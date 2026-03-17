@@ -24,7 +24,7 @@ class Map {
   Zoom zoom_;
   Move move_;
   unsigned int selected_;
-  AssetManager spritemanager_;
+  AssetManager assetmanager_;
 
 public:
   Map(int mapId, sf::Vector2u size, unsigned int scale,vector<shared_ptr<Layer>> layers);
@@ -32,6 +32,7 @@ public:
   sf::Vector2u getSize() const;
   unsigned int getScale() const;
   Zoom &getZoom();
+  AssetManager& getAssetManager();
   vector<shared_ptr<Layer>> &getLayers();
   shared_ptr<Layer> getCurrentLayer();
   unsigned int getLayerSelected() const;

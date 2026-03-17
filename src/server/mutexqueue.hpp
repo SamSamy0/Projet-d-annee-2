@@ -20,7 +20,6 @@ public:
     ~MutexQueue() = default;
 
     void push(std::unique_ptr<T> msg) {
-        //std::cout<<"MessageQueue: push()"<<std::endl;
         {
             std::lock_guard<std::mutex> lock(m_mutex);
             m_queue.push_back(std::move(msg));
@@ -29,7 +28,6 @@ public:
     }
     
     std::unique_ptr<T> pop(){
-        //std::cout<<"MessageQueue: pop()"<<std::endl;
         std::unique_lock<std::mutex> lock(m_mutex);
         m_cv.wait(lock, [this] { 
             return !m_queue.empty() || m_stopping; 
@@ -43,7 +41,6 @@ public:
     }
     
     bool isEmpty() {
-        //std::cout<<"MessageQueue: isEmpty()"<<std::endl;
         std::lock_guard<std::mutex> lock(m_mutex);
         return m_queue.empty();
     }

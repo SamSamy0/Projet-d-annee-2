@@ -27,12 +27,11 @@ public:
     void getProjectData(int project_id);
     void getUsersProjects(long long id);
     void getProjectList(); 
-    
-    void getProjectData(long long project_id);
     void delProject(long long project_id);
-    void renameProject();
-    void createProjectCode();
-    void joinProject();
+    void getProjectData(long long project_id);
+    void createProjectCode(long long project_id);
+    void joinProject(int project_code);
+    
     void syncPaint();
     void sendMessageChat();
 

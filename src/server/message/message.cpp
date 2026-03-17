@@ -88,7 +88,6 @@ void GetProjectsListMessage::process(Worker& worker) {
     if (userId_ != 0) {
         projects = worker.getUserProjects(userId_);
     }
-    std::cout << static_cast<int>(projects.size())<<std::endl;
 
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseUsersProjects>(userId_, projects);
@@ -125,9 +124,8 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
     uint8_t typeRaw;
     if (!(data_packet >> typeRaw)) return nullptr;
 
-    std::cout << static_cast<int>(typeRaw) << "le type du mess" << std::endl;
-
     MsgProtocole type = static_cast<MsgProtocole>(typeRaw);
+    std::cout << "[From client " << c->id <<"]:"<< to_string(type) <<std::endl;
     switch (type) {
         case MsgProtocole::AUTH_LOGIN_REQ:
             return std::make_unique<LoginMessage>(data_packet, std::move(c));
@@ -136,7 +134,6 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
             return std::make_unique<RegisterMessage>(data_packet, std::move(c));
 
         case MsgProtocole::LOB_CREATE_PROJECT_REQ:
-            std::cout << "écrire un projet à priori" << std::endl;
             return std::make_unique<CreateProjectMessage>(data_packet, c->id);
 
         case MsgProtocole::LOB_PROJECT_LIST_REQ:

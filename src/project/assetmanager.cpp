@@ -9,6 +9,7 @@
 #include <QJsonArray>
 #include <QString>
 
+AssetManager::AssetManager(){loadFromJson();}
 
 
 
@@ -16,18 +17,18 @@
 void AssetManager::loadFromJson(){
   std::string spritesPath = "../res/sprites/sprites.json";
 
-  Qfile file(Qstring::fromStdString(spritesPath));
+  QFile file(QString::fromStdString(spritesPath));
 
 
-  if(!file.open(QIODevice::ReadoOnly || QIODevice::Text)){
+  if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
     std::cerr << "Erreur : Impossible to open the JSON file" << std::endl;
         return;
   }
   QByteArray fileData = file.readAll();
-  file.close;
+  file.close();
 
   QJsonParseError parseError;
-  QJsonDocumment jsonDoc  = QJsonDocument::fromjson(fileData,&parseError);
+  QJsonDocument jsonDoc  = QJsonDocument::fromJson(fileData,&parseError);
 
   if(parseError.error != QJsonParseError::NoError){
     std::cerr <<"Synthax Error JSON"<<std::endl;
@@ -36,8 +37,8 @@ void AssetManager::loadFromJson(){
 
   QJsonArray jsonArray = jsonDoc.array();
 
-  for(QjsonValue& value : jsonArray){
-      QJsonObjetc item = value.toObject();
+  for(QJsonValueRef value : jsonArray){
+      QJsonObject item = value.toObject();
     
     Asset newAsset;
 
@@ -45,7 +46,7 @@ void AssetManager::loadFromJson(){
     newAsset.filename = item["filename"].toString().toStdString();
     newAsset.category = item["category"].toString().toStdString();
     newAsset.name = item["name"].toString().toStdString();
-    newAsset.size_m_horizontal = static_cast<float>(item["size_meters_horizontal"].toDouble);
+    newAsset.size_m_horizontal = static_cast<float>(item["size_meters_horizontal"].toDouble());
 
     newAsset.texture = std::make_unique<sf::Texture>();
     std::string imagePath = spritesPath + "/" + newAsset.filename; 

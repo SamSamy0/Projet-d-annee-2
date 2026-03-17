@@ -8,9 +8,11 @@ PixelBrush::PixelBrush(std::shared_ptr<Map> map) : Brush(map) {
   type_ = PIXELBRUSH;
 }
 
-void PixelBrush::setColor(sf::Color c) {
-  color_ = c;
-} // NOTE: PEUT ETRE FAIRE UNE FONCTION PAR R G B A
+
+
+
+
+void PixelBrush::setColor(sf::Color c) {color_ = c;} 
 void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setEraser(bool val) { is_eraser_ = val; }
 
