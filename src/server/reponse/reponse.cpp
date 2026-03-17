@@ -100,8 +100,8 @@ ReponsePutPixelsCarre::ReponsePutPixelsCarre(std::vector<long long> usersId, Put
     dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.taille_;
 }
 
-ReponsePutPixelsLosange::ReponsePutPixelsLosange(std::vector<long long> usersId, PutPixelsLosangeMessage& mess) : ReponseGroupe(usersId){
-    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_LOSAN_REP);
+ReponsePutPixelsDiamond::ReponsePutPixelsDiamond(std::vector<long long> usersId, PutPixelsDiamondMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_DIAM_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
     dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.hauteur_ << mess.largeur_;
@@ -122,8 +122,8 @@ ReponseErasePixelsCarre::ReponseErasePixelsCarre(std::vector<long long> usersId,
     dataPacket_ << mess.taille_;
 }
 
-ReponseErasePixelsLosange::ReponseErasePixelsLosange(std::vector<long long> usersId, ErasePixelsLosangeMessage& mess) : ReponseGroupe(usersId){
-    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASER_LOSAN_REP);
+ReponseErasePixelsDiamond::ReponseErasePixelsDiamond(std::vector<long long> usersId, ErasePixelsDiamondMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASER_DIAM_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
     dataPacket_ << mess.hauteur_ << mess.largeur_;

@@ -91,8 +91,8 @@ struct GetProjectDataMessage : IMessage{
 
 struct PutPixelsMessage : IMessage {
     long long userId_;
-    int projectId_;
-    int calqueId_;
+    uint64_t projectId_;
+    uint64_t calqueId_;
     sf::Vector2u pos_;
     uint8_t red_;
     uint8_t green_;
@@ -116,19 +116,19 @@ struct PutPixelsCarreMessage : PutPixelsMessage {
     void process(Worker& worker) override;
 };
 
-struct PutPixelsLosangeMessage : PutPixelsMessage {
+struct PutPixelsDiamondMessage : PutPixelsMessage {
 
     float hauteur_;
     float largeur_;
 
-    PutPixelsLosangeMessage(sf::Packet& dataPacket, long long userId);
+    PutPixelsDiamondMessage(sf::Packet& dataPacket, long long userId);
     void process(Worker& worker) override;
 };
 
 struct ErasePixelsMessage : IMessage {
     long long userId_;
-    int projectId_;
-    int calqueId_;
+    uint64_t projectId_;
+    uint64_t calqueId_;
     sf::Vector2u pos_;
 };
 
@@ -148,12 +148,12 @@ struct ErasePixelsCarreMessage : ErasePixelsMessage {
     void process(Worker& worker) override;
 };
 
-struct ErasePixelsLosangeMessage : ErasePixelsMessage {
+struct ErasePixelsDiamondMessage : ErasePixelsMessage {
 
     float hauteur_;
     float largeur_;
 
-    ErasePixelsLosangeMessage(sf::Packet& dataPacket, long long userId);
+    ErasePixelsDiamondMessage(sf::Packet& dataPacket, long long userId);
     void process(Worker& worker) override;
 };
 

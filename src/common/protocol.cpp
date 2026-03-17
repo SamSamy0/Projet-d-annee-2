@@ -52,8 +52,8 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP: return "MAP_PUT_PIXELS_CIRCLE_REP";
         case MsgProtocole::MAP_PUT_PIXELS_CARRE_REQ: return "MAP_PUT_PIXELS_CARRE_REQ";
         case MsgProtocole::MAP_PUT_PIXELS_CARRE_REP: return "MAP_PUT_PIXELS_CARRE_REP";
-        case MsgProtocole::MAP_PUT_PIXELS_LOSAN_REQ: return "MAP_PUT_PIXELS_LOSAN_REQ";
-        case MsgProtocole::MAP_PUT_PIXELS_LOSAN_REP: return "MAP_PUT_PIXELS_LOSAN_REP";
+        case MsgProtocole::MAP_PUT_PIXELS_DIAM_REQ: return "MAP_PUT_PIXELS_LOSAN_REQ";
+        case MsgProtocole::MAP_PUT_PIXELS_DIAM_REP: return "MAP_PUT_PIXELS_LOSAN_REP";
         case MsgProtocole::CHAT_MESSAGE_REQ: return "CHAT_MESSAGE_REQ";
         case MsgProtocole::CHAT_MESSAGE_REP: return "CHAT_MESSAGE_REP";
         case MsgProtocole::CHAT_CONNECT_USER_REP: return "CHAT_CONNECT_USER_REP";

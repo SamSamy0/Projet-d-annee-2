@@ -74,9 +74,9 @@ struct ReponsePutPixelsCarre : ReponseGroupe {
    ReponsePutPixelsCarre(std::vector<long long> usersId, PutPixelsCarreMessage& mess);
 };
 
-struct ReponsePutPixelsLosange : ReponseGroupe {
+struct ReponsePutPixelsDiamond : ReponseGroupe {
     
-   ReponsePutPixelsLosange(std::vector<long long> usersId, PutPixelsLosangeMessage& mess);
+   ReponsePutPixelsDiamond(std::vector<long long> usersId, PutPixelsDiamondMessage& mess);
 };
 
 struct ReponseErasePixelsCircle : ReponseGroupe {
@@ -89,7 +89,7 @@ struct ReponseErasePixelsCarre : ReponseGroupe {
    ReponseErasePixelsCarre(std::vector<long long> usersId, ErasePixelsCarreMessage& mess);
 };
 
-struct ReponseErasePixelsLosange : ReponseGroupe {
+struct ReponseErasePixelsDiamond : ReponseGroupe {
     
-   ReponseErasePixelsLosange(std::vector<long long> usersId, ErasePixelsLosangeMessage& mess);
+   ReponseErasePixelsDiamond(std::vector<long long> usersId, ErasePixelsDiamondMessage& mess);
 };
