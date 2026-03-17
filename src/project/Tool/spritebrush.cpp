@@ -2,7 +2,7 @@
 #include "../map.hpp"
 #include "../Layer/spritelayer.hpp"
 #include <memory>
-
+#include <algorithm>
 
 
 SpriteBrush::SpriteBrush(std::shared_ptr<Map> map) : Brush(map){
