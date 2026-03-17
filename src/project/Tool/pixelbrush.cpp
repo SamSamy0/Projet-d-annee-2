@@ -20,6 +20,13 @@ void PixelBrush::setEraser(bool val) { is_eraser_ = val; }
   bool PixelBrush::getEraser() const{
   return is_eraser_;
 }
+Shape PixelBrush::getShape()const {
+  return shape_;
+}
+
+sf::Color PixelBrush::getColor()const{
+  return color_;
+}
 
 void PixelBrush::paintSender(sf::Vector2i pos){
   //manager.message
