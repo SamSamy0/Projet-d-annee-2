@@ -17,4 +17,5 @@ public:
   void addAsset(const std::string &id);
   void removeAsset(const std::string &id);
   void clearAsset();
+  float getOffset();
 };
