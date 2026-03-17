@@ -1,0 +1,41 @@
+#include "../Application.hpp"
+#include "../View.hpp"
+
+class GameView : public View {
+  bool isWatingRep = false;
+  bool isToolSelected_ = false;
+  tgui::Panel::Ptr layerPanel_ = nullptr;
+  tgui::ScrollablePanel::Ptr layersList_ = nullptr;
+  Project *project;
+  User currentUser;
+
+  // Chat widget
+  tgui::Panel::Ptr chatPanel_ = nullptr;
+  tgui::ScrollablePanel::Ptr chatMessages_ = nullptr;
+  tgui::EditBox::Ptr chatInput_ = nullptr;
+  tgui::Button::Ptr chatSendButton_ = nullptr;
+
+  // Pen options panel
+  tgui::Panel::Ptr penOptionsPanel_ = nullptr;
+  // Eraser options panel
+  tgui::Panel::Ptr eraserOptionsPanel_ = nullptr;
+
+  void initToolbar();
+  void initLayerPanel();
+  void initChatWidget();
+  void initPenOptions();
+  void initEraserOptions();
+  void refreshChat();
+  void refreshLayerList();
+
+  // Detection in map
+  void toolOnClick();
+  void toolOnRelease();
+  void checkTypeTool(LayerType previous_type);
+
+public:
+  GameView(Application &app);
+  ~GameView() override = default;
+  void init() override;
+  void handleEvents(const sf::Event &events) override;
+};

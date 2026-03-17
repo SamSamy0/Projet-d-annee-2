@@ -1,9 +1,15 @@
-#include "../Window.hpp"
+// #include "../Window.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
 #include "../../project/Tool/pixelshift.hpp"
+#include "../Application.hpp"
+#include "../MenuView.hpp"
+#include "GameView.hpp"
+#include <memory>
 
-void Window::initToolbar() {
-  float width  = mainWindow.getSize().x;
+void GameView::initToolbar() {
+  auto &mainWindow = app_.getWindow();
+  auto &gui = app_.getGui();
+  float width = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 
   // Création du panel (box) qui reprends tout les outils
@@ -21,7 +27,10 @@ void Window::initToolbar() {
   homeButton->getRenderer()->setTexture("../res/images/accueil.png");
   homeButton->getRenderer()->setBorders({0});
   homeButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-  homeButton->onPress(&Window::setState, this, projectState::MENU);
+  homeButton->onPress([this]() {
+    app_.getNetwork().getProjectList();
+    app_.changeView(std::make_unique<MenuView>(app_));
+  });
   toolbar->add(homeButton);
 
   // Création du bouton de zoom avant
@@ -45,7 +54,7 @@ void Window::initToolbar() {
   toolbar->add(zoomOutButton);
 
   // Création des boutons pour les outils pixels
-  auto penButton   = tgui::Button::create();
+  auto penButton = tgui::Button::create();
   auto brushButton = tgui::Button::create();
   auto shiftButton = tgui::Button::create();
 
@@ -58,15 +67,16 @@ void Window::initToolbar() {
   penButton->getRenderer()->setOpacity(0.4);
   penButton->onPress([this, penButton, brushButton, shiftButton]() {
     project->getToolBar().selectTool(PIXELBRUSH);
-    dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setEraser(false);
+    dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())
+        ->setEraser(false);
     penButton->getRenderer()->setOpacity(1.0);
     brushButton->getRenderer()->setOpacity(0.4);
     shiftButton->getRenderer()->setOpacity(0.4);
     if (penOptionsPanel_) {
-        penOptionsPanel_->setVisible(!penOptionsPanel_->isVisible());
+      penOptionsPanel_->setVisible(!penOptionsPanel_->isVisible());
     }
     if (eraserOptionsPanel_) {
-        eraserOptionsPanel_->setVisible(false);
+      eraserOptionsPanel_->setVisible(false);
     }
   });
   toolbar->add(penButton);
@@ -80,15 +90,16 @@ void Window::initToolbar() {
   brushButton->getRenderer()->setOpacity(0.4);
   brushButton->onPress([this, penButton, brushButton, shiftButton]() {
     project->getToolBar().selectTool(PIXELBRUSH);
-    dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->setEraser(true);
+    dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())
+        ->setEraser(true);
     penButton->getRenderer()->setOpacity(0.4);
     brushButton->getRenderer()->setOpacity(1.0);
     shiftButton->getRenderer()->setOpacity(0.4);
     if (penOptionsPanel_) {
-        penOptionsPanel_->setVisible(false);
+      penOptionsPanel_->setVisible(false);
     }
     if (eraserOptionsPanel_) {
-        eraserOptionsPanel_->setVisible(!eraserOptionsPanel_->isVisible());
+      eraserOptionsPanel_->setVisible(!eraserOptionsPanel_->isVisible());
     }
   });
   toolbar->add(brushButton);
@@ -106,10 +117,10 @@ void Window::initToolbar() {
     brushButton->getRenderer()->setOpacity(0.4);
     shiftButton->getRenderer()->setOpacity(1.0);
     if (penOptionsPanel_) {
-        penOptionsPanel_->setVisible(false);
+      penOptionsPanel_->setVisible(false);
     }
     if (eraserOptionsPanel_) {
-        eraserOptionsPanel_->setVisible(false);
+      eraserOptionsPanel_->setVisible(false);
     }
   });
   toolbar->add(shiftButton);

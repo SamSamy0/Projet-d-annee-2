@@ -1,30 +1,33 @@
 #include "receiverwindow.hpp"
 #include <iostream>
+#include "../Window/MenuView.hpp"
+#include "../Window/projectWidgets/GameView.hpp"
 
 
-ReceiverInWindow::ReceiverInWindow(Window& w): window_(&w){ 
+ReceiverInWindow::ReceiverInWindow(Application& app): app_(&app){ 
 }
 
 
 void ReceiverInWindow::switchConnectState(uint8_t connect){
     if (connect == 1){
-        window_->setLogIn();
+        app_->changeView(std::make_unique<MenuView>(*app_));
+        app_->getNetwork().getProjectList();
     }
 }
 
 void ReceiverInWindow::addProjectToList(ProjectData projet){
-    window_->addProjectList(projet);
+    app_->addProjectList(projet);
 }
 
 void ReceiverInWindow::updateProjectNameInList(long long id, const std::string& newName){
-    window_->updateProjectNameInList(id, newName);
+    app_->updateProjectNameInList(id, newName);
     
 }
 
 void ReceiverInWindow::updateCreatedProjectId(uint32_t projId) {
-    window_->updateCreatedProjectId(projId);
+    app_->updateCreatedProjectId(projId);
 }
 
 void ReceiverInWindow::setState(){
-    window_->setState(projectState::GAME);
+    app_->changeView(std::make_unique<GameView>(*app_));
 }
