@@ -11,4 +11,5 @@ string SystemNotification::getTexte() const {
         case typeNotification::UNLOCK:
             return author_.getUser() + "a déverrouillé une couche.";
     }
+    return 0;
 }
