@@ -12,7 +12,7 @@ protected:
   LayerType type_;
 
 public:
-  Layer(std::string name, sf::Vector2u size);
+  Layer(uint id, std::string name, sf::Vector2u size);
   std::string getName() const;
   uint getId()const;
   LayerType getType();

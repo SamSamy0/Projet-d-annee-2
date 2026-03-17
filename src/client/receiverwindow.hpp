@@ -19,8 +19,9 @@ public:
   void addProjectToList(ProjectData projet);
   void updateProjectNameInList(uint64_t id, const std::string &name);
   void updateCreatedProjectId(uint32_t ProjectId);
-  void drawPixelBrush(uint layer_id, int pos_x,int pos_y, uint8_t r, uint8_t g,uint8_t b, uint8_t a,Shape shape,bool eraser, float size_x, float size_y);
-    
+  void drawPixelBrush(uint layer_id, int pos_x, int pos_y, uint8_t r, uint8_t g,
+                      uint8_t b, uint8_t a, Shape shape, bool eraser,
+                      float size_x, float size_y);
 
   void setState();
   void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
