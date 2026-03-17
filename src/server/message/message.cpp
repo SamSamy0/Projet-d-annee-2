@@ -110,12 +110,60 @@ GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, long long 
 }
 
 void GetProjectDataMessage::process(Worker& worker) {
+
+    if (worker.mapProjet_.find(projectId_) == worker.mapProjet_.end()) {
+        auto liveProj = LiveProject(worker.loadProjectJson(projectId_));
+        liveProj.connectedID_.push_back(userId_);
+        liveProj.userRole_[userId_] = worker.getRole(userId_, projectId_);
+        worker.mapProjet_.emplace(projectId_, std::move(liveProj));
+
+    }
+    else {
+        auto item_id_Projet = (worker.mapProjet_).find(projectId_);
+        worker.writeProjetJson(item_id_Projet->second.json_, projectId_);
+        item_id_Projet->second.connectedID_.push_back(userId_);
+        item_id_Projet->second.userRole_[userId_] = worker.getRole(userId_, projectId_);
+
+    }
     QByteArray jsonData = worker.getByteJson(projectId_);
 
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseProjectData>(userId_, jsonData);
     worker.pushNetwork(std::move(rps));
 }
+
+
+PutPixelsCarreMessage::PutPixelsCarreMessage(sf::Packet& data_packet, long long userId) {
+    userId_ = userId;
+    data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> red_ >> green_ >> blue_ >> opa_ >> taille_;
+}
+
+PutPixelsCircleMessage::PutPixelsCircleMessage(sf::Packet& data_packet, long long userId) {
+    userId_ = userId;
+    data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> red_ >> green_ >> blue_ >> opa_ >> taille_;
+}
+
+PutPixelsLosangeMessage::PutPixelsLosangeMessage(sf::Packet& data_packet, long long userId) {
+    userId_ = userId;
+    data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> red_ >> green_ >> blue_ >> opa_ >> hauteur_ >> largeur_;
+}
+
+ErasePixelsCarreMessage::ErasePixelsCarreMessage(sf::Packet& data_packet, long long userId) {
+    userId_ = userId;
+    data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> taille_;
+}
+
+ErasePixelsCircleMessage::ErasePixelsCircleMessage(sf::Packet& data_packet, long long userId) {
+    userId_ = userId;
+    data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> taille_;
+}
+
+ErasePixelsLosangeMessage::ErasePixelsLosangeMessage(sf::Packet& data_packet, long long userId) {
+    userId_ = userId;
+    data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> hauteur_ >> largeur_;
+}
+
+
 
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client> c) {
@@ -148,7 +196,25 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
         
         case MsgProtocole::LOB_DUPLICATE_PROJECT_REQ:
             return std::make_unique<DuplicateProjectMessage>(data_packet, c->id);
-        
+
+        case MsgProtocole::MAP_PUT_PIXELS_CARRE_REQ:
+            return std::make_unique<PutPixelsCarreMessage>(data_packet, c->id);
+
+        case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REQ:
+            return std::make_unique<PutPixelsCircleMessage>(data_packet, c->id);
+
+        case MsgProtocole::MAP_PUT_PIXELS_LOSAN_REQ:
+            return std::make_unique<PutPixelsLosangeMessage>(data_packet, c->id);
+
+        case MsgProtocole::MAP_ERASER_CARRE_REQ:
+            return std::make_unique<PutPixelsCarreMessage>(data_packet, c->id);
+
+        case MsgProtocole::MAP_ERASER_CIRCLE_REQ:
+            return std::make_unique<PutPixelsCircleMessage>(data_packet, c->id);
+
+        case MsgProtocole::MAP_ERASER_LOSAN_REQ:
+            return std::make_unique<PutPixelsLosangeMessage>(data_packet, c->id);
+
         default:
             std::cout<< "pas de message" << std::endl;
             return nullptr;

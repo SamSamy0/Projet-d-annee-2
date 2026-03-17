@@ -12,6 +12,7 @@ void Worker::run() {
 
         if (request) {
             request->process(*this);
+            std::cout << "Taille map projet :" << static_cast<int>(mapProjet_.size()) << std::endl;
         } else {
             break;
         }
@@ -104,4 +105,8 @@ bool Worker::deleteProject(int projectId) {
 
 QByteArray Worker::getByteJson(int projectId) {
     return projManager_.getByteJson(projectId);
+}
+
+bool Worker::writeProjetJson(QJsonObject& jsonObject, int id) {
+    return projManager_.writeProjetJson(jsonObject, id);
 }

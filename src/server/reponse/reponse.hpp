@@ -5,6 +5,7 @@
 #include "../datamanager/projectentry.hpp"
 #include "../client.hpp"
 #include <QFile>
+#include "../message/message.hpp"
 
 class ServerNetworkManager;
 
@@ -59,4 +60,36 @@ struct ReponseGroupe : Reponse {
     protected:
     ReponseGroupe(std::vector<long long> usersId);
     virtual void envoyer(ServerNetworkManager& servManager) override;
+};
+
+
+
+struct ReponsePutPixelsCircle : ReponseGroupe {
+    
+   ReponsePutPixelsCircle(std::vector<long long> usersId, PutPixelsCircleMessage& mess);
+};
+
+struct ReponsePutPixelsCarre : ReponseGroupe {
+    
+   ReponsePutPixelsCarre(std::vector<long long> usersId, PutPixelsCarreMessage& mess);
+};
+
+struct ReponsePutPixelsLosange : ReponseGroupe {
+    
+   ReponsePutPixelsLosange(std::vector<long long> usersId, PutPixelsLosangeMessage& mess);
+};
+
+struct ReponseErasePixelsCircle : ReponseGroupe {
+    
+   ReponseErasePixelsCircle(std::vector<long long> usersId, ErasePixelsCircleMessage& mess);
+};
+
+struct ReponseErasePixelsCarre : ReponseGroupe {
+    
+   ReponseErasePixelsCarre(std::vector<long long> usersId, ErasePixelsCarreMessage& mess);
+};
+
+struct ReponseErasePixelsLosange : ReponseGroupe {
+    
+   ReponseErasePixelsLosange(std::vector<long long> usersId, ErasePixelsLosangeMessage& mess);
 };

@@ -20,6 +20,7 @@ public:
   void addCalque(int projetId, int largeur, int hauteur, int calqueId);
   QByteArray getByteJson(int projetId);
   QByteArray getByteImages(int projetId);
+  bool writeProjetJson(QJsonObject& jsonObject, int id);
 
 private:
   QString getProjectPath(int id) const;

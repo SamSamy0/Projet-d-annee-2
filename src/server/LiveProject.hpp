@@ -10,4 +10,6 @@ struct LiveProject {
     LiveProject(QJsonObject json);
     QJsonObject json_;
     std::unordered_map<uint, std::deque<ModifProject>> mapModif_;
+    std::vector<long long> connectedID_;
+    std::unordered_map<long long, int8_t> userRole_;
 };

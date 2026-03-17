@@ -85,3 +85,46 @@ void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
 }
 
 
+
+ReponsePutPixelsCircle::ReponsePutPixelsCircle(std::vector<long long> usersId, PutPixelsCircleMessage& mess) : ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.taille_;
+}
+
+ReponsePutPixelsCarre::ReponsePutPixelsCarre(std::vector<long long> usersId, PutPixelsCarreMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_CARRE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.taille_;
+}
+
+ReponsePutPixelsLosange::ReponsePutPixelsLosange(std::vector<long long> usersId, PutPixelsLosangeMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_LOSAN_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.hauteur_ << mess.largeur_;
+}
+
+
+ReponseErasePixelsCircle::ReponseErasePixelsCircle(std::vector<long long> usersId, ErasePixelsCircleMessage& mess) : ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASER_CIRCLE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.taille_;
+}
+
+ReponseErasePixelsCarre::ReponseErasePixelsCarre(std::vector<long long> usersId, ErasePixelsCarreMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASER_CARRE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.taille_;
+}
+
+ReponseErasePixelsLosange::ReponseErasePixelsLosange(std::vector<long long> usersId, ErasePixelsLosangeMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASER_LOSAN_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.hauteur_ << mess.largeur_;
+}

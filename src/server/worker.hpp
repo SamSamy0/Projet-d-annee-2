@@ -7,6 +7,7 @@
 #include "datamanager/databasemanager.hpp"
 #include "datamanager/projectsmanager.hpp"
 #include "reponse/reponse.hpp"
+#include "LiveProject.hpp"
 
 class Worker {
 public:
@@ -30,9 +31,12 @@ public:
     bool deleteProject(int projectId);
 
     bool createProjectJson(int id, const std::string &projectName, int width, int height, uint scale);
+    bool writeProjetJson(QJsonObject& jsonObject, int id);
     QJsonObject loadProjectJson(int id);
     bool saveImage(int id, const std::string &fileName, const QByteArray &data);
     QByteArray getByteJson(int projetId);
+
+    std::unordered_map<int, LiveProject> mapProjet_;
 
 
 private:
@@ -41,6 +45,7 @@ private:
     MutexQueue<Reponse>& repQueue_;
     DatabaseManager dbManager_;
     ProjectsManager projManager_;
+    
 };
 
 #endif

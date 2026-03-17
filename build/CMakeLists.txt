@@ -127,6 +127,7 @@ set(SERVER_SOURCES
     ../src/common/protocol.cpp
     ../src/server/servernetwork.cpp
     ../src/server/worker.cpp
+    ../src/server/LiveProject.cpp
 )
 
 add_executable(server ${SERVER_SOURCES})
