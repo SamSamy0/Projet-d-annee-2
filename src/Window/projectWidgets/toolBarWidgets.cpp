@@ -104,11 +104,27 @@ void Window::initToolbar() {
     if (penOptionsPanel_) {
         penOptionsPanel_->setVisible(false);
     }
-    if (eraserOptionsPanel_) {
-        eraserOptionsPanel_->setVisible(!eraserOptionsPanel_->isVisible());
-    }
     if (spriteBrushOptionsPanel_) {
         spriteBrushOptionsPanel_->setVisible(false);
+    }
+    if (layerType == SPRITELAYER) {
+        if (eraserOptionsPanel_)
+            eraserOptionsPanel_->setVisible(false);
+        if (eraserSpriteOptionsPanel_) {
+            if (eraserSpriteOptionsPanel_->isVisible())
+                eraserSpriteOptionsPanel_->setVisible(false);
+            else
+                eraserSpriteOptionsPanel_->setVisible(true);
+        }
+    } else {
+        if (eraserSpriteOptionsPanel_)
+            eraserSpriteOptionsPanel_->setVisible(false);
+        if (eraserOptionsPanel_) {
+            if (eraserOptionsPanel_->isVisible())
+                eraserOptionsPanel_->setVisible(false);
+            else
+                eraserOptionsPanel_->setVisible(true);
+        }
     }
   });
   toolbar->add(brushButton);
@@ -163,7 +179,10 @@ void Window::initToolbar() {
         eraserOptionsPanel_->setVisible(false);
     }
     if (spriteBrushOptionsPanel_) {
-        spriteBrushOptionsPanel_->setVisible(true);
+        if (spriteBrushOptionsPanel_->isVisible())
+            spriteBrushOptionsPanel_->setVisible(false);
+        else
+            spriteBrushOptionsPanel_->setVisible(true);
     }
   });
   toolbar->add(spriteBrushButton);

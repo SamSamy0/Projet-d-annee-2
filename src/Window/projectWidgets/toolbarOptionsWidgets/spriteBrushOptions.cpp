@@ -1,58 +1,62 @@
 #include "../../Window.hpp"
 #include "../../../project/Tool/spritebrush.hpp"
-#include <iostream>
 
 void Window::initSpriteBrushOptions() {
-    float width  = mainWindow.getSize().x;
-    float height = mainWindow.getSize().y;
+  float width  = mainWindow.getSize().x;
+  float height = mainWindow.getSize().y;
 
-    spriteBrushOptionsPanel_ = tgui::Panel::create();
-    spriteBrushOptionsPanel_->setSize(width * 0.50, height * 0.4);
-    spriteBrushOptionsPanel_->setPosition(width * 0.34, height * 0.05);
-    spriteBrushOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
-    spriteBrushOptionsPanel_->getRenderer()->setBorders({1});
-    spriteBrushOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
-    spriteBrushOptionsPanel_->getRenderer()->setRoundedBorderRadius(8);
-    spriteBrushOptionsPanel_->setVisible(false);
-    gui.add(spriteBrushOptionsPanel_);
+  // Panneau principal
+  spriteBrushOptionsPanel_ = tgui::Panel::create();
+  spriteBrushOptionsPanel_->setSize(width * 0.50, height * 0.4);
+  spriteBrushOptionsPanel_->setPosition(width * 0.34, height * 0.05);
+  spriteBrushOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
+  spriteBrushOptionsPanel_->getRenderer()->setBorders({1});
+  spriteBrushOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+  spriteBrushOptionsPanel_->getRenderer()->setRoundedBorderRadius(8);
+  spriteBrushOptionsPanel_->setVisible(false);
+  gui.add(spriteBrushOptionsPanel_);
 
-    auto scrollPanel = tgui::ScrollablePanel::create();
-    scrollPanel->setSize("100%", "100%");
-    scrollPanel->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-    scrollPanel->getRenderer()->setBorders({0});
-    scrollPanel->setVerticalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    scrollPanel->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-    spriteBrushOptionsPanel_->add(scrollPanel);
+  auto scrollPanel = tgui::ScrollablePanel::create();
+  scrollPanel->setSize("100%", "100%");
+  scrollPanel->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+  scrollPanel->getRenderer()->setBorders({0});
+  scrollPanel->setVerticalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+  scrollPanel->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+  spriteBrushOptionsPanel_->add(scrollPanel);
 
-    const auto& allSprites = project->getMap()->getAssetManager().getAllAssets();
+  const auto& allSprites = project->getMap()->getAssetManager().getAllAssets();
+  float imageSize = spriteBrushOptionsPanel_->getSize().x * 0.15;
+  auto selection = std::make_shared<std::vector<std::string>>();
+  int column = 0;
+  int row = 0;
 
-    const float cols = 5.f;
-    const float padding = 10.f;
-    float panelWidth = spriteBrushOptionsPanel_->getSize().x;
-    float cellSize = (panelWidth - (cols + 1.f) * padding) / cols;
-    int col = 0;
-    int row = 0;
+  for (const auto& [id, asset] : allSprites)
+  {
+      column %= 5;
+      float x = column * (imageSize + 10);
+      float y = row * (imageSize + 10);
 
-    for (auto& [id, asset] : allSprites) {
-        float x = padding + col * (cellSize + padding);
-        float y = padding + row * (cellSize + padding);
+      auto image = tgui::Button::create();
+      image->setSize(imageSize, imageSize);
+      image->setPosition(x, y);
+      image->getRenderer()->setTexture(tgui::Texture("../res/sprites/" + asset.filename));
+      image->getRenderer()->setBorders({3});
+      image->getRenderer()->setBorderColor(tgui::Color::Transparent);
+      image->getRenderer()->setBorderColorHover(tgui::Color(0, 120, 255));
+      image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
 
-        tgui::Texture tex("../res/sprites/" + asset.filename);
+      auto assetId = id;
 
-        auto btn = tgui::Button::create();
-        btn->setSize(cellSize, cellSize);
-        btn->setPosition(x, y);
-        btn->setText("");
-        btn->getRenderer()->setTexture(tex);
-        btn->getRenderer()->setTextureHover(tex);
-        btn->getRenderer()->setTextureDown(tex);
-        btn->getRenderer()->setBorders({3});
-        btn->getRenderer()->setBorderColor(tgui::Color::Transparent);
-        btn->getRenderer()->setBorderColorHover(tgui::Color(0, 120, 255));
-        btn->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
-        btn->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-        btn->getRenderer()->setBackgroundColorHover(tgui::Color::Transparent);
-        btn->getRenderer()->setBackgroundColorDown(tgui::Color::Transparent);
+      image->onClick([this, image, assetId, selection]() {
+          auto tool = dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+          if (!tool) return;
+          bool found = false;
+          for (auto& s : *selection) {
+              if (s == assetId) {
+                  found = true;
+                  break;
+              }
+          }
 
         std::string assetId = id;
         auto selected = std::make_shared<bool>(false);
@@ -69,9 +73,8 @@ void Window::initSpriteBrushOptions() {
             }
         });
 
-        scrollPanel->add(btn);
-
-        col++;
-        if (col >= static_cast<int>(cols)) { col = 0; row++; }
-    }
+      scrollPanel->add(image);
+      column++;
+      if (column % 5 == 0) row++;
+  }
 }

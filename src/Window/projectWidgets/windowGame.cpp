@@ -9,7 +9,9 @@ void Window::initGameWidget() {
   initChatWidget();
   initPenOptions();
   initEraserOptions();
+  initEraserSpriteOptions();
   initSpriteBrushOptions();
+  initMinimap();
   refreshChat();
 }
 

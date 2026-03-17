@@ -38,6 +38,7 @@ public:
   unsigned int getLayerSelected() const;
   void setLayerSelected(unsigned int i);
   bool hasLayer() const;
+  const sf::RenderTexture& getRenderTexture() const { return render_texture_; }
   void insertLayer(shared_ptr<Layer> layer);
   void createPixelLayer();
   void createSpriteLayer();

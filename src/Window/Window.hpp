@@ -47,6 +47,7 @@ private:
   tgui::Panel::Ptr penOptionsPanel_ = nullptr;
   // Eraser options panel
   tgui::Panel::Ptr eraserOptionsPanel_ = nullptr;
+  tgui::Panel::Ptr eraserSpriteOptionsPanel_ = nullptr;
   tgui::Panel::Ptr spriteBrushOptionsPanel_ = nullptr;
 
   // Window
@@ -82,7 +83,10 @@ private:
   void initChatWidget();
   void initPenOptions();
   void initEraserOptions();
+  void initEraserSpriteOptions();
   void initSpriteBrushOptions();
+  void initMinimap();
+  void drawMinimap();
   void refreshChat();
   void refreshLayerList();
   void handleGameEvents(const std::optional<sf::Event> &event);

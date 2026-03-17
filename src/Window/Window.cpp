@@ -137,6 +137,7 @@ void Window::run() {
     
     case projectState::GAME:
       project->display();
+      drawMinimap();
       gui.draw();
       mainWindow.display();
       break;
