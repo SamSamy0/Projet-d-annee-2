@@ -1,7 +1,7 @@
 #include "spritelayer.hpp"
 
-SpriteLayer::SpriteLayer(std::string name, sf::Vector2u size)
-    : Layer(name, size) {
+SpriteLayer::SpriteLayer(uint64_t id, std::string name, sf::Vector2u size)
+    : Layer(id,name, size) {
   type_ = SPRITELAYER;
 }
 

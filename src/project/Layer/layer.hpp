@@ -5,13 +5,14 @@ enum LayerType { PIXELLAYER, SPRITELAYER };
 
 class Layer {
 protected:
+  uint64_t id_;
   std::string name_;
   sf::Vector2u size_;
   bool masked_ = false;
   LayerType type_;
 
 public:
-  Layer(std::string name, sf::Vector2u size);
+  Layer(uint64_t id, std::string name, sf::Vector2u size);
   std::string getName() const;
   LayerType getType();
   bool isMasked() const;

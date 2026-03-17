@@ -15,7 +15,7 @@ using namespace std;
 class Layer;
 
 class Map {
-  int id_;
+  uint64_t nextLayerId = 0;
   sf::Vector2u size_;
   unsigned int scale_;
   vector<shared_ptr<Layer>> layers_;
@@ -27,8 +27,8 @@ class Map {
   AssetManager assetmanager_;
 
 public:
-  Map(int mapId, sf::Vector2u size, unsigned int scale,vector<shared_ptr<Layer>> layers);
-  Map(int mapId, sf::Vector2u size, unsigned int scale);
+  Map(sf::Vector2u size, unsigned int scale,vector<shared_ptr<Layer>> layers);
+  Map(sf::Vector2u size, unsigned int scale);
   sf::Vector2u getSize() const;
   unsigned int getScale() const;
   Zoom &getZoom();
