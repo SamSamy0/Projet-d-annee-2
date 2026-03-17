@@ -25,14 +25,14 @@ public:
     void renameProject(int projectId, std::string newName);
     void dupProj(int projectId, std::string newName);
     void getProjectData(int project_id);
-    void getUsersProjects(long long id);
+    void getUsersProjects(uint64_t id);
     void getProjectList(); 
-    void delProject(long long project_id);
-    void getProjectData(long long project_id);
-    void createProjectCode(long long project_id);
+    void delProject(uint64_t project_id);
+    void getProjectData(uint64_t project_id);
+    void createProjectCode(uint64_t project_id);
     void joinProject(int project_code);
     
-    void drawSquare(int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
+    void drawSquare(uint64_t proj_id, uint64_t layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
     void drawCircle(int pos_x,int pos_y,float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
     void drawDiamond(int pos_x,int pos_y,float size_x, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
     void eraseSquare(int pos_x,int pos_y,float size);

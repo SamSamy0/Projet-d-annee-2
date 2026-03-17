@@ -100,32 +100,32 @@ void ClientNetworkManager::getProjectList() {
   socket_.send(packet);
 }
 
-void ClientNetworkManager::getProjectData(long long project_id){
+void ClientNetworkManager::getProjectData(uint64_t project_id){
     sf::Packet packet;
     MsgProtocole msg = MsgProtocole::LOB_GET_PROJECT_DATA_REQ;
 
     packet << static_cast<uint8_t>(msg);
-    packet << static_cast<int>(project_id);
+    packet << project_id;
     socket_.send(packet);
 }
 
 
-void ClientNetworkManager::delProject(long long project_id){
+void ClientNetworkManager::delProject(uint64_t project_id){
     sf::Packet packet;
     MsgProtocole msg = MsgProtocole::LOB_DEL_PROJECT_REQ;
 
     packet << static_cast<uint8_t>(msg);
-    packet << static_cast<int>(project_id);
+    packet << project_id;
     socket_.send(packet);
 }
 
 
-void ClientNetworkManager::createProjectCode(long long project_id){
+void ClientNetworkManager::createProjectCode(uint64_t project_id){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_SHARE_PROJECT_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << static_cast<int>(project_id);
+  packet << project_id;
   socket_.send(packet);
 }
 
@@ -139,15 +139,14 @@ void ClientNetworkManager::joinProject(int project_code){
   socket_.send(packet);
 }
 
-void ClientNetworkManager::drawSquare(int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
+void ClientNetworkManager::drawSquare(uint64_t proj_id, uint64_t layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
   sf::Packet packet;
-  MsgProtocole msg = MsgProtocole::LOB_JOIN_PROJECT_REQ;
+  MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_CARRE_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << pos_x << pos_y << size << r << g << b << a;
-  
+  packet << proj_id << layer_id << pos_x << pos_y << size << r << g << b << a;
 
-  
+  socket_.send(packet);
 }
 
 

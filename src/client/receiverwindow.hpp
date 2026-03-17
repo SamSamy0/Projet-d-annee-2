@@ -16,7 +16,7 @@ public:
   //Method on Window
   void switchConnectState(uint8_t connect);
   void addProjectToList(ProjectData projet);
-  void updateProjectNameInList(long long id, const std::string &name);
+  void updateProjectNameInList(uint64_t id, const std::string &name);
   void updateCreatedProjectId(uint32_t ProjectId);
   void setState();
   
