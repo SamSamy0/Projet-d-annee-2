@@ -139,6 +139,17 @@ void ClientNetworkManager::joinProject(int project_code){
   socket_.send(packet);
 }
 
+void ClientNetworkManager::drawSquare(int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::LOB_JOIN_PROJECT_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << pos_x << pos_y << size << r << g << b << a;
+  
+
+  
+}
+
 
 
 
