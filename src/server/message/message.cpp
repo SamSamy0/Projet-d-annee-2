@@ -46,9 +46,17 @@ void CreateProjectMessage::process(Worker& worker) {
     if (userId_ > 0) {
     uint idProj = worker.addProjectSQL(nomProjet_, userId_);
     worker.createProjectJson(idProj, nomProjet_, size_.x, size_.y, scale_);
+
+    auto liveProj = LiveProject(worker.loadProjectJson(idProj));
+    liveProj.connectedID_.push_back(userId_);
+    liveProj.userRole_[userId_] = worker.getRole(userId_, idProj);
+    worker.mapProjet_.emplace(idProj, std::move(liveProj));
+
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseCreateProject>(userId_, idProj);
     worker.pushNetwork(std::move(rps));
+
+
     }
 }
 

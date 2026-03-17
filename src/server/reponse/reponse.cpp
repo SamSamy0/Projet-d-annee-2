@@ -46,6 +46,7 @@ ReponseDuplicateProject::ReponseDuplicateProject(uint userId, uint projectId, st
     dataPacket_<<newName;
 }
 
+
 ReponseProjectData::ReponseProjectData(uint userId, QByteArray& jsonData) : ReponseSolo(userId) {
     dataPacket_<<static_cast<std::uint8_t> (MsgProtocole::LOB_GET_PROJECT_DATA_REP);
 
