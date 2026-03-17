@@ -57,7 +57,7 @@ void GameView::initLayerPanel() {
     layerButton->setPosition(width * 0.01, i * height * 0.055);
     layerButton->onClick([this, i]() {
       LayerType type = project->getMap()->getCurrentLayer()->getType();
-      project->getMap()->setLayerSelected(static_cast<unsigned int>(i));
+      project->getMap()->selectLayer(static_cast<unsigned int>(i));
       checkTypeTool(type);
       refreshLayerList();
     });
@@ -111,7 +111,7 @@ void GameView::initLayerPanel() {
     unsigned int selected = project->getMap()->getLayerSelected();
     layers.erase(layers.begin() + selected);
     unsigned int newSelected = (selected > 0) ? selected - 1 : 0;
-    project->getMap()->setLayerSelected(newSelected);
+    project->getMap()->selectLayer(newSelected);
     checkTypeTool(type);
     refreshLayerList();
   });
@@ -140,7 +140,7 @@ void GameView::refreshLayerList() {
     layerButton->setPosition(width * 0.01, i * height * 0.055);
     layerButton->onClick([this, i]() {
       LayerType type = project->getMap()->getCurrentLayer()->getType();
-      project->getMap()->setLayerSelected(static_cast<unsigned int>(i));
+      project->getMap()->selectLayer(static_cast<unsigned int>(i));
       checkTypeTool(type);
       refreshLayerList();
     });

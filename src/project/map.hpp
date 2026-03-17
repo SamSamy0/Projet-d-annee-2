@@ -36,7 +36,8 @@ public:
   vector<shared_ptr<Layer>> &getLayers();
   shared_ptr<Layer> getCurrentLayer();
   unsigned int getLayerSelected() const;
-  void setLayerSelected(unsigned int i);
+  void selectLayer(unsigned int i);
+  void selectLayerId(uint id);
   bool hasLayer() const;
   void insertLayer(shared_ptr<Layer> layer);
   void createPixelLayer();

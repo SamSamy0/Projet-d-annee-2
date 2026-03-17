@@ -59,7 +59,9 @@ void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x,int pos_y, uint8_
   if(!eraser){
     pixelbrush->setColor(sf::Color(r,g,b,a));
   }
+  map->selectLayerId(layer_id);
   pixelbrush->paint(sf::Vector2i(pos_x,pos_y));
+  map->selectLayerId(last_layer_id);
 
   pixelbrush->setShape(last_shape);
   pixelbrush->setSize(last_size.x,last_size.y);

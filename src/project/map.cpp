@@ -40,7 +40,16 @@ sf::Vector2u Map::getSize()const {return size_;}
 
 bool Map::hasLayer()const {return !layers_.empty();}
 
-void Map::setLayerSelected(unsigned int i) { selected_ = i; }
+void Map::selectLayer(unsigned int i) { selected_ = i; }
+
+void Map::selectLayerId(uint id) {
+    for (size_t i = 0; i < layers_.size(); ++i) {
+        if (layers_[i]->getId() == id) {
+            selectLayer(i);
+            break;
+        }
+    }
+}
 
 unsigned int Map::getScale() const { return scale_; }
 
