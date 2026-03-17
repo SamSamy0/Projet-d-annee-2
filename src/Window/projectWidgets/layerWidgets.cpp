@@ -1,9 +1,13 @@
-#include "../Window.hpp"
+// #include "../Window.hpp"
 #include "../../project/Layer/layer.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
+#include "../Application.hpp"
+#include "GameView.hpp"
 #include <memory>
 
-void Window::initLayerPanel() {
+void GameView::initLayerPanel() {
+  auto& mainWindow = app_.getWindow();
+  auto& gui = app_.getGui();
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 
@@ -114,7 +118,9 @@ void Window::initLayerPanel() {
   layerPanel_->add(removeLayerButton);
 }
 
-void Window::refreshLayerList() {
+void GameView::refreshLayerList() {
+  auto& mainWindow = app_.getWindow();
+  auto& gui = app_.getGui();
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 
@@ -143,7 +149,7 @@ void Window::refreshLayerList() {
 }
 
 
-  void Window::checkTypeTool(LayerType previous_type){
+  void GameView::checkTypeTool(LayerType previous_type){
   LayerType current_type = project->getMap()->getCurrentLayer()->getType();
 
   if(previous_type == current_type)
