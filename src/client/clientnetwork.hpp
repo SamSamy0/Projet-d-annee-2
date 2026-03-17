@@ -31,7 +31,12 @@ public:
     void getProjectData(long long project_id);
     void createProjectCode(long long project_id);
     void joinProject(int project_code);
-    
+    void drawSquare(int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
+    void drawCircle(int pos_x,int pos_y,float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
+    void drawDiamond(int pos_x,int pos_y,float size_x, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
+    void eraseSquare(int pos_x,int pos_y,float size);
+    void eraseCircle(int pos_x,int pos_y,float size);
+    void eraseDiamaond(int pos_x,int pos_y,float size_x,float size_y);
     void syncPaint();
     void sendMessageChat();
 
