@@ -2,6 +2,7 @@
 #include "../map.hpp"
 #include "../Layer/spritelayer.hpp"
 #include <memory>
+#include <algorithm>
 
 
 
