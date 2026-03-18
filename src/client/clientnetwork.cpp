@@ -73,7 +73,7 @@ void ClientNetworkManager::createProject(std::string nomProjet,
 
   socket_.send(packet);
 }
-void ClientNetworkManager::renameProject(uint projectId, std::string newName) {
+
 void ClientNetworkManager::renameProject(uint projectId, std::string newName) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_RENAME_PROJECT_REQ;
@@ -84,7 +84,7 @@ void ClientNetworkManager::renameProject(uint projectId, std::string newName) {
   socket_.send(packet);
 }
 
-void ClientNetworkManager::dupProj(uint projectId, std::string newName) {
+
 void ClientNetworkManager::dupProj(uint projectId, std::string newName) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_DUPLICATE_PROJECT_REQ;
@@ -102,7 +102,6 @@ void ClientNetworkManager::getProjectList() {
   socket_.send(packet);
 }
 
-void ClientNetworkManager::getProjectData(uint project_id){
 void ClientNetworkManager::getProjectData(uint project_id){
     sf::Packet packet;
     MsgProtocole msg = MsgProtocole::LOB_GET_PROJECT_DATA_REQ;
