@@ -208,6 +208,16 @@ void ClientHandler::process(ServerEvent& event){
             handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,0,0,0,0,Shape::DIAMOND,true,size_x,size_y);
             break;
         }
+
+        case MsgProtocole::MAP_MOV_LAYER_REP : {
+            uint project_id;
+            uint layer_id; 
+            int delta_x;
+            int delta_y;
+            *(event.data_packet_) >> project_id >> layer_id >> delta_x >> delta_y;
+            handleWindow_.shiftLayer(layer_id, delta_x, delta_y);
+            break;
+        }
     }        
 }
 
