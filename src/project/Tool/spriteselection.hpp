@@ -25,6 +25,6 @@ public:
   void deleteSelectedSprite();
   void clearSelection();
   void onPress(sf::Vector2i pos) override;
-  void onDrag(sf::Vector2i pos)override;
-  void onRelease() override;
+  void onDrag(sf::Vector2i pos)override{}
+  void onRelease() override{}
 };

@@ -45,7 +45,7 @@ void SpriteSelection::onPress(sf::Vector2i pos){
     if(hit){
       if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)){
         if(isSelected(hitedId)){
-          selected_.erase(hitedId);
+          // selected_.erase(hitedId);
         }
         else{
           selected_.push_back(hitedId);
