@@ -9,8 +9,6 @@ public:
   void onPress(sf::Vector2i pos) override;
   void onDrag(sf::Vector2i pos) override;
   void onRelease() override;
-  void shift(sf::Vector2i pos);
-  void shiftSender(sf::Vector2i delta);
 
   virtual ~Shift() = 0;
 };
