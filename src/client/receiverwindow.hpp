@@ -1,8 +1,6 @@
 #pragma once
 
 #include "../Window/Application.hpp"
-#include "../project/Tool/brush.hpp"
-#include "../project/Tool/pixelbrush.cpp"
 #include <cstdint>
 #include <string>
 #include <vector>

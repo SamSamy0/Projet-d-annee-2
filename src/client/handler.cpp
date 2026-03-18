@@ -79,7 +79,7 @@ void ClientHandler::process(ServerEvent& event){
                 QJsonDocument doc = QJsonDocument::fromJson(jsonBytes);
                 QJsonObject entete = doc.object();
 
-                sf::Vector2u vec{entete["width"].toInt(),entete["height"].toInt()};
+                sf::Vector2u vec{static_cast<uint>(entete["width"].toInt()),static_cast<uint>(entete["height"].toInt())};
                 handleWindow_.addProjectData(entete["scale"].toInt(),vec,entete["name"].toString().toStdString(),entete["id"].toInt());
 
             }

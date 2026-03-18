@@ -16,6 +16,7 @@ class Layer;
 
 class Map {
   uint nextLayerId = 0;
+  uint id_;
   sf::Vector2u size_;
   unsigned int scale_;
   vector<shared_ptr<Layer>> layers_;

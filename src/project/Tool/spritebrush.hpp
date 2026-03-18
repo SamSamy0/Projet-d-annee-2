@@ -1,7 +1,7 @@
 #pragma once
 #include "../assetmanager.hpp"
 #include "brush.hpp"
-#include <memory>
+
 
 class SpriteBrush : public Brush {
   std::vector<Asset *> assets_;
@@ -15,8 +15,7 @@ public:
   void setSize(float x, float y) override;
   void addAsset(const std::string &id);
   void removeAsset(const std::string &id);
-  void paintSender(sf::Vector2i pos) override {
-  } // Pour l'instant elle fait rien
+  void paintSender(sf::Vector2i pos) override {} // Pour l'instant elle fait rien
   void clearAsset();
   float getOffset();
 };
