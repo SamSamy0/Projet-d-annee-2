@@ -8,17 +8,57 @@ PixelBrush::PixelBrush(std::shared_ptr<Map> map) : Brush(map) {
   type_ = PIXELBRUSH;
 }
 
-
-
-
-
-void PixelBrush::setColor(sf::Color c) {color_ = c;} 
+void PixelBrush::setColor(sf::Color c) { color_ = c; }
 void PixelBrush::setShape(Shape s) { shape_ = s; }
 void PixelBrush::setEraser(bool val) { is_eraser_ = val; }
 
+bool PixelBrush::getEraser() const { return is_eraser_; }
+Shape PixelBrush::getShape() const { return shape_; }
 
-  bool PixelBrush::getEraser() const{
-  return is_eraser_;
+sf::Color PixelBrush::getColor() const { return color_; }
+
+void PixelBrush::paintSender(sf::Vector2i pos) {
+  // manager.message
+
+  switch (shape_) {
+  case (SQUARE): {
+    if (!is_eraser_) {
+      manager_.drawSquare(map_->getId(), map_->getCurrentLayer()->getId(),
+                          pos.x, pos.y, getSize().x, getColor().r, getColor().g,
+                          getColor().b, getColor().a);
+    } else {
+      manager_.eraseSquare(map_->getId(), map_->getCurrentLayer()->getId(),
+                           pos.x, pos.y, getSize().x);
+    }
+
+    break;
+  }
+  case (CIRCLE): {
+    if (!is_eraser_) {
+      manager_.drawCircle(map_->getId(), map_->getCurrentLayer()->getId(),
+                          pos.x, pos.y, getSize().x, getColor().r, getColor().g,
+                          getColor().b, getColor().a);
+    } else {
+      manager_.eraseCircle(map_->getId(), map_->getCurrentLayer()->getId(),
+                           pos.x, pos.y, getSize().x);
+    }
+    break;
+  }
+  case (DIAMOND): {
+    if (!is_eraser_) {
+      manager_.drawDiamond(map_->getId(), map_->getCurrentLayer()->getId(),
+                           pos.x, pos.y, getSize().x, getColor().r,
+                           getColor().g, getColor().b, getColor().a,
+                           getSize().y);
+    } else {
+      manager_.eraseDiamond(map_->getId(), map_->getCurrentLayer()->getId(),
+                            pos.x, pos.y, getSize().x, getSize().y);
+    }
+    break;
+  }
+  }
+
+  paint(pos);
 }
 
 void PixelBrush::paint(sf::Vector2i pos) {

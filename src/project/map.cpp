@@ -11,8 +11,8 @@
 using namespace std;
 
 
-Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
-    id_{mapId}, size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
+Map::Map( sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
+     size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
     if (!render_texture_.resize(size)){
         std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;
     } //TODO: gérer l'erreur
@@ -20,8 +20,8 @@ Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Lay
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
 }
 
-Map::Map(int mapId, sf::Vector2u size , unsigned int scale) : 
-    id_{mapId}, size_{size},
+Map::Map(sf::Vector2u size , unsigned int scale) : 
+     size_{size},
     scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
     if (!render_texture_.resize(size)){
         std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;
@@ -40,7 +40,16 @@ sf::Vector2u Map::getSize()const {return size_;}
 
 bool Map::hasLayer()const {return !layers_.empty();}
 
-void Map::setLayerSelected(unsigned int i) { selected_ = i; }
+void Map::selectLayer(unsigned int i) { selected_ = i; }
+
+void Map::selectLayerId(uint id) {
+    for (size_t i = 0; i < layers_.size(); ++i) {
+        if (layers_[i]->getId() == id) {
+            selectLayer(i);
+            break;
+        }
+    }
+}
 
 unsigned int Map::getScale() const { return scale_; }
 
@@ -53,7 +62,8 @@ void Map::insertLayer(shared_ptr<Layer> layer) { layers_.insert(layers_.begin()+
 void Map::createPixelLayer(){
     int n = layers_.size() + 1;
     std::string name = "Couche Pixel (" + std::to_string(n) + ")";
-    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(name, size_);
+    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(nextLayerId,name, size_);
+    nextLayerId +=1;
     layers_.push_back(pixellayer);
     layers_.size() ==1? selected_ = 0: selected_+=1;
 }
@@ -62,7 +72,8 @@ void Map::createPixelLayer(){
 void Map::createSpriteLayer(){
     int n = layers_.size() + 1;
     std::string name = "Couche Pixel (" + std::to_string(n) + ")";
-    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(name,size_); 
+    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(nextLayerId,name,size_); 
+    nextLayerId +=1;
     layers_.push_back(spritelayer);
     layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
 }
@@ -158,4 +169,8 @@ void Map::detectMovement()
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))) { // regarde si l'utilisateur veut aller en bas
         move_.goDown(zoom_.getZoom());
     }
+}
+
+uint Map::getId(){
+    return id_;
 }

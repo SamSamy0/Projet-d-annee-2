@@ -31,7 +31,13 @@ public:
     void createProjectCode(uint project_id);
     void joinProject(uint project_code);
     
-    void syncPaint();
+    void drawSquare(uint proj_id, uint layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
+    void drawCircle(uint proj_id, uint layer_id,int pos_x,int pos_y,float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
+    void drawDiamond(uint proj_id, uint layer_id,int pos_x,int pos_y,float size_x,float size_y, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
+    void eraseSquare(uint proj_id, uint layer_id,int pos_x,int pos_y,float size);
+    void eraseCircle(uint proj_id, uint layer_id,int pos_x,int pos_y,float size);
+    void eraseDiamond(uint proj_id, uint layer_id,int pos_x,int pos_y,float size_x,float size_y);
+    
     void sendMessageChat();
 
 };

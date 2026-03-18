@@ -42,6 +42,7 @@ ReponseRenameProject::ReponseRenameProject(uint userId, uint projectId, std::str
 ReponseDuplicateProject::ReponseDuplicateProject(uint userId, uint projectId, std::string newName) : ReponseSolo(userId){
     dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_DUPLICATE_PROJECT_REP);
     // dataPacket_ << static_cast<std::uint8_t>(success ?1:0);
+    // dataPacket_ << static_cast<std::uint8_t>(success ?1:0);
     dataPacket_ <<static_cast<std::uint32_t>(projectId);
     dataPacket_<<newName;
 }

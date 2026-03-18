@@ -1,4 +1,5 @@
 #pragma once
+#include "../../client/clientnetwork.hpp"
 #include <SFML/Graphics.hpp>
 
 class ClientNetworkManager;
@@ -26,6 +27,7 @@ protected:
   ToolType type_;
   bool isDrawing_ = false;
   sf::Vector2i lastPos_;
+  ClientNetworkManager manager_;
 
 public:
   Tool(std::shared_ptr<Map> map);

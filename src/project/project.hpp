@@ -18,7 +18,7 @@ class Project{
     // std::vector<User> users;
     Chat chat_;
     std::string name_;
-    unsigned int id_;
+    uint id_;
     sf::RenderWindow& window_;
     tgui::Gui& gui_;
     sf::View viewMap_;
@@ -27,9 +27,9 @@ class Project{
     ToolBar toolbar_;
 
 public:
-    Project(unsigned int scale, sf::Vector2u size, std::string name, unsigned int id, sf::RenderWindow& window, tgui::Gui& gui);
-    Project(unsigned int scale, sf::Vector2u size, std::string name, unsigned int id, sf::RenderWindow& window, tgui::Gui& gui, std::vector<std::shared_ptr<Layer>> layers);
-    unsigned int getId();
+    Project(unsigned int scale, sf::Vector2u size, std::string name, uint id, sf::RenderWindow& window, tgui::Gui& gui);
+    Project(unsigned int scale, sf::Vector2u size, std::string name, uint id, sf::RenderWindow& window, tgui::Gui& gui, std::vector<std::shared_ptr<Layer>> layers);
+    uint getId();
     std::string getName();
     void setName(std::string name);
     unsigned int getScale();

@@ -3,7 +3,7 @@
 #include <string>
 
 enum class MsgProtocole: uint8_t{
-    AUTH_LOGIN_REQ,
+AUTH_LOGIN_REQ,
     AUTH_REGISTER_REQ,
     AUTH_RESULT,
     LOB_INFO_USER_REP,

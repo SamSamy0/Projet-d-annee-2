@@ -26,9 +26,9 @@ public:
     std::vector<ProjectEntry> getUserProjects(const uint userId);
     uint8_t getRole(const uint userId, const uint projectId);
     std::vector<ProjectEntry> getAllProjects();
-    bool renameProject(uint projectId, const std::string& newName);
-    bool duplicateProject(uint oldId, const std::string& newName, uint userId);
-    bool deleteProject(uint projectId);
+    bool renameProject(int projectId, const std::string& newName);
+    long long duplicateProject(int oldId, const std::string& newName, long long userId);
+    bool deleteProject(int projectId);
 
     bool createProjectJson(uint id, const std::string &projectName, uint width, uint height, uint scale);
     bool writeProjetJson(QJsonObject& jsonObject, uint id);

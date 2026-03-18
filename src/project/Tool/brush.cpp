@@ -1,27 +1,31 @@
 #include "brush.hpp"
+#include "../Layer/layer.hpp"
 #include "../map.hpp"
 #include "../Layer/layer.hpp"
 #include <cmath>
 
 Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {
-  spacing_ = std::min(size_m_.x/2.0f * getScale(), size_m_.y/2.0f * getScale());
+  spacing_ =
+      std::min(size_m_.x / 2.0f * getScale(), size_m_.y / 2.0f * getScale());
   if (spacing_ < 1)
     spacing_ = 1.0f;
 }
 
-void Brush::setSize(float x, float y = 1) { //WARNING: la valeur par défaut je suis pas sur
-  
+void Brush::setSize(
+    float x,
+    float y = 1) { // WARNING: la valeur par défaut je suis pas sur
+
   /* change the size and change the spacing in function of it */
   sf::Vector2u mapSize = getMap()->getSize();
   size_m_.x = x;
   size_m_.y = y;
   float scale = getMap()->getScale();
-  float minSize = 1.0f/scale; //minsize in metter
-  sf::Vector2f maxSize = sf::Vector2f(mapSize.x/scale,mapSize.y/scale);
+  float minSize = 1.0f / scale; // minsize in metter
+  sf::Vector2f maxSize = sf::Vector2f(mapSize.x / scale, mapSize.y / scale);
 
   if (x < minSize) {
     size_m_.x = minSize;
-  } else if ( x > maxSize.x) {
+  } else if (x > maxSize.x) {
     size_m_.x = maxSize.x;
   }
   if (y < minSize) {
@@ -30,7 +34,8 @@ void Brush::setSize(float x, float y = 1) { //WARNING: la valeur par défaut je 
     size_m_.y = maxSize.y;
   }
 
-  spacing_ = std::min(size_m_.x/2.0f * getScale(), size_m_.y/2.0f * getScale());
+  spacing_ =
+      std::min(size_m_.x / 2.0f * getScale(), size_m_.y / 2.0f * getScale());
   if (spacing_ < 1)
     spacing_ = 1.0f;
 }
@@ -38,10 +43,10 @@ void Brush::setSize(float x, float y = 1) { //WARNING: la valeur par défaut je 
 sf::Vector2f Brush::getSize() { return sf::Vector2f(size_m_.x, size_m_.y); }
 
 void Brush::onPress(sf::Vector2i pos) {
-  if(!map_->getCurrentLayer()->isMasked()){
+  if (!map_->getCurrentLayer()->isMasked()) {
     isDrawing_ = true;
     lastPos_ = pos;
-    paint(pos);
+    paintSender(pos);
     distance_ = 0;
   }
 }
@@ -67,7 +72,7 @@ void Brush::onDrag(sf::Vector2i pos) {
         sf::Vector2f paintPosF = start + (dirrection * travelDist);
 
         // We only convert to int when painting
-        paint(sf::Vector2i(static_cast<int>(std::round(paintPosF.x)),
+        paintSender(sf::Vector2i(static_cast<int>(std::round(paintPosF.x)),
                            static_cast<int>(std::round(paintPosF.y))));
 
         distance_ -= spacing_;
@@ -80,4 +85,9 @@ void Brush::onDrag(sf::Vector2i pos) {
 void Brush::onRelease() {
   isDrawing_ = false;
   distance_ = 0;
+}
+
+
+void Brush::paintSender(sf::Vector2i pos) {
+    // Comportement par défaut (peut être vide)
 }

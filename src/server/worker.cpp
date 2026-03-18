@@ -76,6 +76,8 @@ bool Worker::renameProject(uint projectId, const std::string& newName){
 
 bool Worker::duplicateProject(uint oldId, const std::string& newName, uint userId){
     uint newId = dbManager_.dupProj(newName, userId);
+long long Worker::duplicateProject(int oldId, const std::string& newName, long long userId){
+    long long newId = dbManager_.dupProj(newName, userId);
     // Duplication didn't work
     if (newId == -1) return -1;
     

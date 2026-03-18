@@ -10,7 +10,10 @@ public:
   PixelBrush(std::shared_ptr<Map> map);
   void setColor(sf::Color c);
   void setShape(Shape s);
-  void paint(sf::Vector2i pos);
+  void paint(sf::Vector2i pos) override;
+  void paintSender(sf::Vector2i pos) override;
   bool getEraser() const;
+  sf::Color getColor() const;
+  Shape getShape() const;
   void setEraser(bool val);
 };
