@@ -11,8 +11,8 @@
 using namespace std;
 
 
-Map::Map( sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
-     size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
+Map::Map(uint id, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
+     id_{id},size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
     if (!render_texture_.resize(size)){
         std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;
     } //TODO: gérer l'erreur
@@ -20,8 +20,8 @@ Map::Map( sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layer
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
 }
 
-Map::Map(sf::Vector2u size , unsigned int scale) : 
-     size_{size},
+Map::Map(uint id, sf::Vector2u size , unsigned int scale) : 
+     id_{id},size_{size},
     scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
     if (!render_texture_.resize(size)){
         std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;

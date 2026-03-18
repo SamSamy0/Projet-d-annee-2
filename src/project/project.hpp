@@ -1,13 +1,12 @@
 #pragma once
 #include "toolbar.hpp"
+#include "Chat/chat.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
-#include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
-#include "Chat/chat.hpp"
 
 
 class Tool;
