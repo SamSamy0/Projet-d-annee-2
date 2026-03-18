@@ -153,7 +153,7 @@ void Window::setLogIn() { isLoggedIn = true; }
 
 void Window::setCurrentProject(unsigned int scale, int height, int width , std::string name, unsigned int id){
   sf::Vector2u vec{(uint)width,(uint)height};
-  project = std::make_unique<Project>(scale,vec,name,id,mainWindow,gui);
+  project = std::make_unique<Project>(scale,vec,name,id,mainWindow,gui,manager);
 }
 
 

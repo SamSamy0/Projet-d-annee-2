@@ -9,7 +9,7 @@ protected:
 
   // TODO: faire ici la méthode paintSender
 public:
-  Brush(std::shared_ptr<Map>);
+  Brush(std::shared_ptr<Map>, ClientNetworkManager &);
   virtual void setSize(float x, float y);
   sf::Vector2f getSize();
   void onPress(sf::Vector2i pos);

@@ -4,7 +4,7 @@
 #include "../map.hpp"
 #include <memory>
 
-PixelBrush::PixelBrush(std::shared_ptr<Map> map) : Brush(map) {
+PixelBrush::PixelBrush(std::shared_ptr<Map> map, ClientNetworkManager &manager) : Brush(map, manager) {
   type_ = PIXELBRUSH;
 }
 

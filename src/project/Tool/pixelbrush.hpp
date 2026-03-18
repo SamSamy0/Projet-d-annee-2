@@ -7,7 +7,7 @@ class PixelBrush : public Brush {
   bool is_eraser_ = false;
 
 public:
-  PixelBrush(std::shared_ptr<Map> map);
+  PixelBrush(std::shared_ptr<Map> map, ClientNetworkManager &manager);
   void setColor(sf::Color c);
   void setShape(Shape s);
   void paint(sf::Vector2i pos) override;

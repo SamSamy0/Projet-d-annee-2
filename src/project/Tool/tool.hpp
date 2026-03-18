@@ -27,10 +27,10 @@ protected:
   ToolType type_;
   bool isDrawing_ = false;
   sf::Vector2i lastPos_;
-  ClientNetworkManager manager_;
+  ClientNetworkManager &manager_;
 
 public:
-  Tool(std::shared_ptr<Map> map);
+  Tool(std::shared_ptr<Map> map, ClientNetworkManager &manager);
   // virtual void getMessage(const ClientNetworkManager &netw
   // virtual void sendMessage(const ClientNetworkManager &network) const;
   // Getter

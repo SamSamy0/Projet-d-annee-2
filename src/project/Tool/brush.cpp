@@ -4,7 +4,7 @@
 #include "../Layer/layer.hpp"
 #include <cmath>
 
-Brush::Brush(std::shared_ptr<Map> map) : Tool(map) {
+Brush::Brush(std::shared_ptr<Map> map, ClientNetworkManager &manager) : Tool(map, manager) {
   spacing_ =
       std::min(size_m_.x / 2.0f * getScale(), size_m_.y / 2.0f * getScale());
   if (spacing_ < 1)

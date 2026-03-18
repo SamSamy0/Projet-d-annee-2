@@ -3,5 +3,5 @@
 class PixelShift : public Shift {
 
 public:
-  PixelShift(std::shared_ptr<Map> map);
+  PixelShift(std::shared_ptr<Map> map, ClientNetworkManager &manager);
 };

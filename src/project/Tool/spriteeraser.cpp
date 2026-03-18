@@ -5,7 +5,7 @@
 #include <iostream>
 #include <memory>
 
-SpriteEraser::SpriteEraser(std::shared_ptr<Map> map) : Brush(map) {
+SpriteEraser::SpriteEraser(std::shared_ptr<Map> map, ClientNetworkManager &manager) : Brush(map, manager) {
   type_ = SPRITEERASER;
 }
 

@@ -82,6 +82,6 @@ std::unique_ptr<Project> &Application::getProject() { return project; }
 
 
 void Application::loadProjectData(unsigned int scale, sf::Vector2u size, std::string name, uint id){
-  project = std::make_unique<Project>(scale,size,name,id,mainWindow,gui);
+  project = std::make_unique<Project>(scale,size,name,id,mainWindow,gui,manager);
   changeView(std::make_unique<GameView>(*this));
 };

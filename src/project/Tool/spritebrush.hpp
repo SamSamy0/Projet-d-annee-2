@@ -8,7 +8,7 @@ class SpriteBrush : public Brush {
   float offset_ = 0;
 
 public:
-  SpriteBrush(std::shared_ptr<Map> map);
+  SpriteBrush(std::shared_ptr<Map> map, ClientNetworkManager &manager);
   Asset *getAsset();
   void paint(sf::Vector2i pos) override;
   void setOffset(float offset);

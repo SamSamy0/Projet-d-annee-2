@@ -26,8 +26,8 @@ class Project{
     ToolBar toolbar_;
 
 public:
-    Project(unsigned int scale, sf::Vector2u size, std::string name, uint id, sf::RenderWindow& window, tgui::Gui& gui);
-    Project(unsigned int scale, sf::Vector2u size, std::string name, uint id, sf::RenderWindow& window, tgui::Gui& gui, std::vector<std::shared_ptr<Layer>> layers);
+    Project(unsigned int scale, sf::Vector2u size, std::string name, uint id, sf::RenderWindow& window, tgui::Gui& gui, ClientNetworkManager &manager);
+    Project(unsigned int scale, sf::Vector2u size, std::string name, uint id, sf::RenderWindow& window, tgui::Gui& gui, ClientNetworkManager &manager, std::vector<std::shared_ptr<Layer>> layers);
     uint getId();
     std::string getName();
     void setName(std::string name);
