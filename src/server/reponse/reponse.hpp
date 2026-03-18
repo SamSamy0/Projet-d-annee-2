@@ -93,3 +93,9 @@ struct ReponseErasePixelsDiamond : ReponseGroupe {
     
    ReponseErasePixelsDiamond(std::vector<uint> usersId, ErasePixelsDiamondMessage& mess);
 };
+
+
+struct ReponseMoveLayer : ReponseGroupe {
+    
+   ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage& mess);
+};

@@ -143,6 +143,18 @@ void GetProjectDataMessage::process(Worker& worker) {
 }
 
 
+std::vector<uint> ModifProjetMessage::getUserLists(Worker& worker) {
+    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+
+    auto it = std::find(usersId.begin(), usersId.end(), userId_);
+    if (it != usersId.end()) {
+        
+        *it = usersId.back(); 
+        usersId.pop_back();
+    }
+    return usersId;
+}
+
 PutPixelsCarreMessage::PutPixelsCarreMessage(sf::Packet& data_packet, uint userId) {
     userId_ = userId;
     data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> red_ >> green_ >> blue_ >> opa_ >> taille_;
@@ -150,7 +162,7 @@ PutPixelsCarreMessage::PutPixelsCarreMessage(sf::Packet& data_packet, uint userI
 
 void PutPixelsCarreMessage::process(Worker& worker) {
 
-    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponsePutPixelsCarre>(usersId, *this);
@@ -164,7 +176,7 @@ PutPixelsCircleMessage::PutPixelsCircleMessage(sf::Packet& data_packet, uint use
 
 void PutPixelsCircleMessage::process(Worker& worker) {
 
-    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponsePutPixelsCircle>(usersId, *this);
@@ -178,7 +190,7 @@ PutPixelsDiamondMessage::PutPixelsDiamondMessage(sf::Packet& data_packet, uint u
 
 void PutPixelsDiamondMessage::process(Worker& worker) {
 
-    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponsePutPixelsDiamond>(usersId, *this);
@@ -192,7 +204,7 @@ ErasePixelsCarreMessage::ErasePixelsCarreMessage(sf::Packet& data_packet, uint u
 
 void ErasePixelsCarreMessage::process(Worker& worker) {
 
-    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponseErasePixelsCarre>(usersId, *this);
@@ -206,7 +218,7 @@ ErasePixelsCircleMessage::ErasePixelsCircleMessage(sf::Packet& data_packet, uint
 
 void ErasePixelsCircleMessage::process(Worker& worker) {
 
-    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponseErasePixelsCircle>(usersId, *this);
@@ -220,10 +232,24 @@ ErasePixelsDiamondMessage::ErasePixelsDiamondMessage(sf::Packet& data_packet, ui
 
 void ErasePixelsDiamondMessage::process(Worker& worker) {
 
-    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
+    std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
 
     rps = std::make_unique<ReponseErasePixelsDiamond>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+}
+
+MoveLayerMessage::MoveLayerMessage(sf::Packet& data_packet, uint userId) {
+    userId_ = userId;
+    data_packet >> projectId_ >> calqueId_ >>  deltaX_ >> deltaY_;
+}
+
+void MoveLayerMessage::process(Worker& worker) {
+
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+
+    rps = std::make_unique<ReponseMoveLayer>(usersId, *this);
     worker.pushNetwork(std::move(rps));
 }
 
@@ -276,6 +302,9 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
 
         case MsgProtocole::MAP_ERASER_DIAM_REQ:
             return std::make_unique<ErasePixelsDiamondMessage>(data_packet, c->id);
+
+        case MsgProtocole::MAP_MOV_LAYER_REQ:
+            return std::make_unique<MoveLayerMessage>(data_packet, c->id);
 
         default:
             std::cout<< "pas de message" << std::endl;

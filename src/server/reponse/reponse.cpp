@@ -129,3 +129,9 @@ ReponseErasePixelsDiamond::ReponseErasePixelsDiamond(std::vector<uint> usersId, 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
     dataPacket_ << mess.hauteur_ << mess.largeur_;
 }
+
+ReponseMoveLayer::ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage& mess) : ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_MOV_LAYER_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.deltaX_ << mess.deltaY_;
+}

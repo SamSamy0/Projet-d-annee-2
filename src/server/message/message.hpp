@@ -89,10 +89,16 @@ struct GetProjectDataMessage : IMessage{
     void process(Worker& worker) override;
 };
 
-struct PutPixelsMessage : IMessage {
+
+struct ModifProjetMessage : IMessage {
     uint userId_;
     uint projectId_;
     uint calqueId_;
+    std::vector<uint> getUserLists(Worker& worker);
+};
+
+struct PutPixelsMessage : ModifProjetMessage {
+    
     sf::Vector2u pos_;
     uint8_t red_;
     uint8_t green_;
@@ -125,10 +131,8 @@ struct PutPixelsDiamondMessage : PutPixelsMessage {
     void process(Worker& worker) override;
 };
 
-struct ErasePixelsMessage : IMessage {
-    uint userId_;
-    uint projectId_;
-    uint calqueId_;
+struct ErasePixelsMessage : ModifProjetMessage {
+
     sf::Vector2u pos_;
 };
 
@@ -157,5 +161,13 @@ struct ErasePixelsDiamondMessage : ErasePixelsMessage {
     void process(Worker& worker) override;
 };
 
+struct MoveLayerMessage : ModifProjetMessage {
+
+    int deltaX_;
+    int deltaY_;
+
+    MoveLayerMessage(sf::Packet& dataPacket, uint userId);
+    void process(Worker& worker) override;
+};
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client> client);
