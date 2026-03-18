@@ -20,8 +20,10 @@ public:
   void drawPixelBrush(uint layer_id, int pos_x, int pos_y, uint8_t r, uint8_t g,
                       uint8_t b, uint8_t a, Shape shape, bool eraser,
                       float size_x, float size_y);
+  void shiftLayer(uint layer_id, int delta_x, int delta_y);
 
   void setState();
   void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                       uint id);
 };
+
