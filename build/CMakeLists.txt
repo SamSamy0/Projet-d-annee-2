@@ -55,27 +55,32 @@ else()
 endif()
 
 # ── Qt6 ──────────────────────────────────────────────────────────
-find_package(Qt6 REQUIRED COMPONENTS Core Sql)  # ← Core ajouté obligatoire
+find_package(Qt6 REQUIRED COMPONENTS Core Sql Gui)  # ← Core ajouté obligatoire
 set(CMAKE_AUTOMOC ON)  # ← nécessaire pour Qt
 
 # ── CLIENT ───────────────────────────────────────────────────────
 set(SOURCES
     ../src/client/client.cpp
-    ../src/Window/Window.cpp
-    ../src/Window/windowLogin.cpp
-    ../src/Window/windowMenu.cpp
-    ../src/Window/projectWidgets/windowGame.cpp
+    ../src/Window/Application.cpp
+    ../src/Window/LoginView.cpp
+    ../src/Window/MenuView.cpp
+    ../src/Window/projectWidgets/GameView.cpp
+    ../src/Window/View.hpp
+    # ../src/Window/Window.cpp
+    # ../src/Window/windowLogin.cpp
+    # ../src/Window/windowMenu.cpp
+    # ../src/Window/projectWidgets/windowGame.cpp
     ../src/Window/projectWidgets/toolBarWidgets.cpp
     ../src/Window/projectWidgets/layerWidgets.cpp
     ../src/Window/projectWidgets/chatWidgets.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/penOptions.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/eraserOptions.cpp
+    ../src/Window/projectWidgets/toolbarOptionsWidgets/penSpriteOptions.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/eraserSpriteOptions.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/spriteBrushOptions.cpp
     ../src/Window/projectWidgets/minimapWidgets.cpp
     ../src/client/clientnetwork.cpp
     ../src/client/handler.cpp
-    ../src/client/protocol.hpp
     ../src/client/receiverwindow.cpp
     ../src/project/map.cpp
     ../src/project/move.cpp
@@ -101,6 +106,7 @@ set(SOURCES
     ../src/project/Chat/userMessage.cpp
     ../src/project/Chat/systemNotification.cpp
     ../src/project/Chat/date.cpp
+    ../src/common/protocol.cpp
 )
 
 add_executable(client ${SOURCES})
@@ -112,6 +118,7 @@ target_link_libraries(client PRIVATE
     SFML::Network
     TGUI::TGUI
     Qt6::Core   # ← ajouté
+    Qt6::Sql
 )
 
 # Fix RPATH sur macOS pour trouver les .dylib
@@ -130,7 +137,7 @@ set(SERVER_SOURCES
     ../src/server/message/message.cpp
     ../src/server/datamanager/projectsmanager.cpp
     ../src/server/reponse/reponse.cpp
-    ../src/server/protocol.cpp
+    ../src/common/protocol.cpp
     ../src/server/servernetwork.cpp
     ../src/server/worker.cpp
 )
@@ -142,6 +149,7 @@ target_link_libraries(server PRIVATE
     SFML::Network
     Qt6::Core   # ← ajouté
     Qt6::Sql
+    Qt6::Gui
 )
 
 if(APPLE)

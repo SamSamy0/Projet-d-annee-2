@@ -44,19 +44,48 @@ struct CreateProjectMessage : IMessage{
     void process(Worker& worker) override;
 };
 
+struct RenameProjectMessage: IMessage{
+    long long userID_;
+    int projectId_;
+    std::string newName_;
+
+    RenameProjectMessage(sf::Packet& dataPacket, long long userId);
+    void process(Worker& worker) override;
+    
+};
+
+struct DuplicateProjectMessage: IMessage{
+    long long userId_;
+    int projectId_;
+    std::string newName;
+    
+    DuplicateProjectMessage(sf::Packet& dataPacket, long long userId);
+    void process(Worker& worker) override;
+};
+
+
+struct GetProjectsListMessage : IMessage {
+    long long userId_;
+
+    GetProjectsListMessage(sf::Packet& dataPacket, long long userId);
+    void process(Worker& worker) override;
+};
+
+
+struct DeleteProjectMessage : IMessage {
+    long long userId_;
+    int projectId_;
+
+    DeleteProjectMessage(sf::Packet& dataPacket, long long userId);
+    void process(Worker& worker) override;
+};
+
 
 struct GetProjectDataMessage : IMessage{
     long long userId_;
     int projectId_;
 
     GetProjectDataMessage(sf::Packet& dataPacket, long long userId);
-    void process(Worker& worker) override;
-};
-
-struct GetProjectsListMessage : IMessage {
-    long long userId_;
-
-    GetProjectsListMessage(sf::Packet& dataPacket, long long userId);
     void process(Worker& worker) override;
 };
 

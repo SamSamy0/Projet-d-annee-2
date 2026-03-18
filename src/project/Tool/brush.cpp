@@ -1,6 +1,7 @@
 #include "brush.hpp"
 #include "../map.hpp"
 #include "../../client/clientnetwork.hpp"
+#include "../Layer/layer.hpp"
 #include <cmath>
 
 Brush::Brush(std::shared_ptr<Map> map, ClientNetworkManager& manager) : Tool(map, manager){
@@ -38,10 +39,12 @@ void Brush::setSize(float x, float y) { //WARNING: la valeur par défaut je suis
 sf::Vector2f Brush::getSize() { return sf::Vector2f(size_m_.x, size_m_.y); }
 
 void Brush::onPress(sf::Vector2i pos) {
-  isDrawing_ = true;
-  lastPos_ = pos;
-  paint(pos);
-  distance_ = 0;
+  if(!map_->getCurrentLayer()->isMasked()){
+    isDrawing_ = true;
+    lastPos_ = pos;
+    paint(pos);
+    distance_ = 0;
+  }
 }
 void Brush::onDrag(sf::Vector2i pos) {
   /*Interpolation Function */

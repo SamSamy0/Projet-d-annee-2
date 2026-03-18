@@ -1,7 +1,10 @@
-#include "../../Window.hpp"
+#include "../../Application.hpp"
+#include "../GameView.hpp"
 #include "../../../project/Tool/spriteeraser.hpp"
 
-void Window::initEraserSpriteOptions() {
+void GameView::initEraserSpriteOptions() {
+  auto& mainWindow = app_.getWindow();
+  auto& gui = app_.getGui();
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 

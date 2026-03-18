@@ -1,7 +1,7 @@
 #include "Window.hpp"
-#include "../project/project.hpp"
-#include "../project/Tool/tool.hpp"
 #include "../client/clientnetwork.hpp"
+#include "../project/Tool/tool.hpp"
+#include "../project/project.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -71,15 +71,6 @@ void Window::handlePopupEvents(const std::optional<sf::Event> &event) {
         closePopup();
       }
     }
-    if (background) {
-      // Cast to Panel to use (->get("dataPanel"))
-      auto backgroundPanel = std::dynamic_pointer_cast<tgui::Panel>(background);
-      auto dataPanel = backgroundPanel->get("dataPanel");
-      sf::Vector2f clickPos(mouseClick->position.x, mouseClick->position.y);
-      if (dataPanel && !dataPanel->isMouseOnWidget(clickPos)) {
-        gui.remove(background);
-      }
-    }
   }
   if (event->getIf<sf::Event::MouseWheelScrolled>()) {
     auto popup = gui.get("popup");
@@ -110,41 +101,46 @@ void Window::addProjectList(ProjectData newproj) {
   projectList.push_back(newproj);
   initMenuWidget();
 }
+void Window::updateProjectNameInList(long long id, const std::string &name) {
+  for (auto &projData : projectList) {
+    if (projData.projectId == id) {
+      projData.projectName = name;
+      break;
+    }
+  }
+  // Refreshing project list
+  initMenuWidget();
+}
 
 bool Window::isOpen() const { return mainWindow.isOpen(); }
-
 
 void Window::run() {
   processEvents();
   mainWindow.clear(sf::Color(35, 35, 40));
 
-  switch (Window::state){
-    
-    case projectState::LOGIN:
-      if (isLoggedIn){
-        state = projectState::MENU;
-        manager.getProjectList();
-        initMenuWidget();
-      }
-      gui.draw();
-      mainWindow.display();
-      break;
-    
-    case projectState::MENU:
-      gui.draw();
-      mainWindow.display();
-      break;
-    
-    case projectState::GAME:
-      project->display();
-      drawMinimap();
-      gui.draw();
-      mainWindow.display();
-      break;
+  switch (Window::state) {
+  case projectState::LOGIN:
+    if (isLoggedIn) {
+      state = projectState::MENU;
+      manager.getProjectList();
+      initMenuWidget();
+    }
+    gui.draw();
+    mainWindow.display();
+    break;
+
+  case projectState::MENU:
+    gui.draw();
+    mainWindow.display();
+    break;
+
+  case projectState::GAME:
+    project->display();
+    gui.draw();
+    mainWindow.display();
+    break;
   };
 
- 
-  
   /*if (Window::state == projectState::GAME && project) {
     // Display Game
     project->display();
@@ -153,9 +149,7 @@ void Window::run() {
   mainWindow.display();*/
 }
 
-void Window::setLogIn(){
-  isLoggedIn = true;
-}
+void Window::setLogIn() { isLoggedIn = true; }
 
 // Pour une utilisation sans serveur
 // mais dans ce cas, il faut retirer la boucle dans client.cpp

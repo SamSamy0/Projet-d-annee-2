@@ -9,7 +9,6 @@ void Worker::run() {
     std::unique_ptr<IMessage> request;
     while (mRunning_) {
         request = demQueue_.pop();
-        std::cout << "[Worker] pop()..." << std::endl;
 
         if (request) {
             request->process(*this);
@@ -68,6 +67,23 @@ std::vector<ProjectEntry> Worker::getAllProjects() {
     return dbManager_.getAllProjects();
 }
 
+bool Worker::renameProject(int projectId, const std::string& newName){
+    bool dbRename = dbManager_.updateProjectName(projectId, newName);
+    bool jsonRename = projManager_.updateProjectName(projectId, QString::fromStdString(newName));
+    return dbRename && jsonRename;
+}
+
+long long Worker::duplicateProject(int oldId, const std::string& newName, long long userId){
+    long long newId = dbManager_.dupProj(newName, userId);
+    // Duplication didn't work
+    if (newId == -1) return -1;
+    
+    bool cpyFldr = projManager_.copyProjectFolder(oldId, newId);
+    bool updtJson = projManager_.updateJsonDup(newId, QString::fromStdString(newName));
+    // Copy of project folder didn't work
+    if (!cpyFldr && updtJson) return -2;
+    return newId;
+}
 
 
 bool Worker::createProjectJson(int projectId, const std::string &projectName, int width, int height, uint scale) {
@@ -80,4 +96,15 @@ QJsonObject Worker::loadProjectJson(int projectId) {
 
 bool Worker::saveImage(int projectId, const std::string &fileName, const QByteArray &data) {
     return projManager_.saveImage(projectId, QString::fromStdString(fileName), data);
+}
+
+bool Worker::deleteProject(int projectId) {
+    if (dbManager_.removeProject(projectId) and projManager_.deleteProject(projectId)) {
+        return true;
+    }
+    return false;
+}
+
+QByteArray Worker::getByteJson(int projectId) {
+    return projManager_.getByteJson(projectId);
 }

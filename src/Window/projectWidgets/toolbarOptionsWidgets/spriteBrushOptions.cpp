@@ -1,7 +1,10 @@
-#include "../../Window.hpp"
+#include "../../Application.hpp"
+#include "../GameView.hpp"
 #include "../../../project/Tool/spritebrush.hpp"
 
-void Window::initSpriteBrushOptions() {
+void GameView::initSpriteBrushOptions() {
+  auto& mainWindow = app_.getWindow();
+  auto& gui = app_.getGui();
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 

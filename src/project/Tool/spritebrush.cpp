@@ -2,7 +2,7 @@
 #include "../map.hpp"
 #include "../Layer/spritelayer.hpp"
 #include <memory>
-
+#include <algorithm>
 
 
 SpriteBrush::SpriteBrush(std::shared_ptr<Map> map, ClientNetworkManager& manager) : Brush(map, manager){
@@ -13,6 +13,7 @@ SpriteBrush::SpriteBrush(std::shared_ptr<Map> map, ClientNetworkManager& manager
 }
 
 void SpriteBrush::setOffset(float offset){offset_ = offset;}
+void SpriteBrush::setShape(Shape s){shape_ = s;}
 
 void SpriteBrush::setSize(float x, float y) {
   //
@@ -36,6 +37,9 @@ void SpriteBrush::removeAsset(const std::string& id){
   if(iterator != assets_.end())
     assets_.erase(iterator);
 }
+
+
+void SpriteBrush::clearAsset(){assets_.clear();}
 
 Asset* SpriteBrush::getAsset(){
   /*Return a randow selected Asset */

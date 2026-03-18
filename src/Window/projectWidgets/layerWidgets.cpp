@@ -1,10 +1,14 @@
-#include "../Window.hpp"
+// #include "../Window.hpp"
 #include "../../project/Layer/layer.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
+#include "../Application.hpp"
+#include "GameView.hpp"
 #include <memory>
 #include <algorithm>
 
-void Window::initLayerPanel() {
+void GameView::initLayerPanel() {
+  auto& mainWindow = app_.getWindow();
+  auto& gui = app_.getGui();
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 
@@ -112,7 +116,7 @@ void Window::initLayerPanel() {
     auto& layers = project->getMap()->getLayers();
     unsigned int selectedLayer = project->getMap()->getLayerSelected();
     if (selectedLayer < layers.size())
-      layers[selectedLayer]->setMasked(!layers[selectedLayer]->getMasked());
+      layers[selectedLayer]->setMasked(!layers[selectedLayer]->isMasked());
   });
   layerPanel_->add(maskButton);
 
@@ -144,6 +148,8 @@ void Window::initLayerPanel() {
   addLayerButton->getRenderer()->setBorders({0});
   addLayerButton->getRenderer()->setRoundedBorderRadius(8);
   addLayerButton->onClick([this]() {
+    auto& mainWindow = app_.getWindow();
+    auto& gui = app_.getGui();
     float width  = mainWindow.getSize().x;
     float height = mainWindow.getSize().y;
 
@@ -180,6 +186,7 @@ void Window::initLayerPanel() {
     gui.add(popup);
 
     pixelBtn->onClick([this, popup]() {
+      auto& gui = app_.getGui();
       LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->createPixelLayer();
       checkTypeTool(type);
@@ -188,6 +195,7 @@ void Window::initLayerPanel() {
     });
 
     spriteBtn->onClick([this, popup]() {
+      auto& gui = app_.getGui();
       LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->createSpriteLayer();
       checkTypeTool(type);
@@ -220,7 +228,9 @@ void Window::initLayerPanel() {
   layerPanel_->add(removeLayerButton);
 }
 
-void Window::refreshLayerList() {
+void GameView::refreshLayerList() {
+  auto& mainWindow = app_.getWindow();
+  auto& gui = app_.getGui();
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 
@@ -249,7 +259,7 @@ void Window::refreshLayerList() {
 }
 
 
-  void Window::checkTypeTool(LayerType previous_type){
+  void GameView::checkTypeTool(LayerType previous_type){
   LayerType current_type = project->getMap()->getCurrentLayer()->getType();
 
   if(previous_type == current_type)
@@ -264,9 +274,17 @@ void Window::refreshLayerList() {
       bool erraser = static_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->getEraser();
       if(erraser){
         toolbar.selectTool(SPRITEERASER);
+        if (eraserOptionsPanel_ && eraserOptionsPanel_->isVisible()) {
+          eraserOptionsPanel_->setVisible(false);
+          if (eraserSpriteOptionsPanel_) eraserSpriteOptionsPanel_->setVisible(true);
+        }
+      } else {
+        toolbar.selectTool(SPRITEBRUSH);
+        if (penOptionsPanel_ && penOptionsPanel_->isVisible()) {
+          penOptionsPanel_->setVisible(false);
+          if (penSpriteOptionsPanel_) penSpriteOptionsPanel_->setVisible(true);
+        }
       }
-      else{toolbar.selectTool(SPRITEBRUSH);}
-
       break;
     }
     case PIXELSHIFT:{
@@ -276,15 +294,27 @@ void Window::refreshLayerList() {
     case SPRITEBRUSH:{
       toolbar.selectTool(PIXELBRUSH);
       static_pointer_cast<PixelBrush>(toolbar.getSelectedTool())->setEraser(false);
+      if (penSpriteOptionsPanel_ && penSpriteOptionsPanel_->isVisible()) {
+        penSpriteOptionsPanel_->setVisible(false);
+        if (penOptionsPanel_) penOptionsPanel_->setVisible(true);
+      } else if (spriteBrushOptionsPanel_) {
+        spriteBrushOptionsPanel_->setVisible(false);
+      }
       break;
     }
     case SPRITESHIFT:{
       toolbar.selectTool(PIXELSHIFT);
       break;
     }
+    case NONETOOL:
+      break;
     case SPRITEERASER :{
       toolbar.selectTool(PIXELBRUSH);
       static_pointer_cast<PixelBrush>(toolbar.getSelectedTool())->setEraser(true);
+      if (eraserSpriteOptionsPanel_ && eraserSpriteOptionsPanel_->isVisible()) {
+        eraserSpriteOptionsPanel_->setVisible(false);
+        if (eraserOptionsPanel_) eraserOptionsPanel_->setVisible(true);
+      }
       break;
     }
   }

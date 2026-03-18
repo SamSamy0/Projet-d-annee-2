@@ -1,10 +1,10 @@
 #pragma once
 
+#include "../client/clientnetwork.hpp"
+#include "../project/Layer/layer.hpp"
+#include "../project/map.hpp"
 #include "../project/project.hpp"
 #include "../project/user.hpp"
-#include "../client/clientnetwork.hpp"
-#include "../project/map.hpp"
-#include "../project/Layer/layer.hpp"
 #include "ProjectData.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -13,7 +13,7 @@
 #include <vector>
 
 enum class projectState { LOGIN, MENU, GAME };
-
+enum class focusPopup { CREATE, RENAME, DUPLICATE };
 
 class Window {
 private:
@@ -24,13 +24,12 @@ private:
   bool isToolSelected_ = false;
   User currentUser_;
 
-  // WARNING: Changer MENU à LOGIN pour la vrai version, là c'est par facilité
   projectState state = projectState::LOGIN;
   bool isLoggedIn = false;
   // Authentification Interface
   tgui::Gui gui;
   std::unique_ptr<Project> project;
-  // Temporary (until server is OK)
+
   std::vector<ProjectData> projectList = {};
 
   tgui::Panel::Ptr layerPanel_ = nullptr;
@@ -50,15 +49,14 @@ private:
   tgui::Panel::Ptr eraserSpriteOptionsPanel_ = nullptr;
   tgui::Panel::Ptr spriteBrushOptionsPanel_ = nullptr;
 
-  // Window
+  // Window -> Application
   void initWidget();
   void processEvents();
   void handleWindowEvents(const std::optional<sf::Event> &event);
   void handlePopupEvents(const std::optional<sf::Event> &event);
-  void setState(projectState newState);
   void updateTextSize();
 
-  // Login Window
+  // Login Window -> LoginView
   void login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd);
   void signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd);
   void loginWidget();
@@ -66,11 +64,23 @@ private:
 
   // Menu Window
   void initMenuWidget();
+  void shareProj();
+  void joinProj(tgui::Panel::Ptr panel);
   void displayProjList(tgui::Panel::Ptr parent);
-  void showProjectMenu(long long id, tgui::Button::Ptr toHover);
+  void showProjectMenu(ProjectData, tgui::Button::Ptr toHover);
+  void initInputWidget(focusPopup focus, ProjectData project = ProjectData{});
+  void popupRename(tgui::Panel::Ptr back, ProjectData project, focusPopup view);
+  void popupCreate(tgui::Panel::Ptr background);
+  void popupDuplicate(tgui::Panel::Ptr background, ProjectData project,
+                      focusPopup view);
+  void exitAction(tgui::Panel::Ptr background);
   void closePopup();
-  void initDataWidget();
+  void createPopup();
+  bool checkInput(tgui::EditBox::Ptr scale, tgui::EditBox::Ptr sizeX,
+                  tgui::EditBox::Ptr sizeY);
+  bool boxError(tgui::EditBox::Ptr box);
   void createProj(tgui::String scale, tgui::String sizeX, tgui::String sizeY,
+
                   tgui::String name, unsigned int id, sf::RenderWindow &window,
                   tgui::Gui &gui);
   ProjectData getProjectData(std::unique_ptr<Project> &proj);
@@ -90,12 +100,14 @@ private:
   void refreshChat();
   void refreshLayerList();
   void handleGameEvents(const std::optional<sf::Event> &event);
+
   // Detection in map
   void toolOnClick();
   void toolOnRelease();
   void checkTypeTool(LayerType previous_type);
 
 public:
+  void setState(projectState newState);
   // Constructor
   Window(ClientNetworkManager &manager);
   Window();
@@ -103,7 +115,9 @@ public:
   void setLogIn();
   // Setter for projectList
   void addProjectList(ProjectData projet);
+  void updateProjectNameInList(long long id, const std::string &name);
+  void updateList();
   bool isOpen() const;
   void run();
-  
+  void updateCreatedProjectId(uint32_t projId);
 };

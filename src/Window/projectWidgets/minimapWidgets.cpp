@@ -1,9 +1,11 @@
-#include "../Window.hpp"
+#include "../Application.hpp"
+#include "GameView.hpp"
 
-void Window::initMinimap() {
+void GameView::initMinimap() {
 }
 
-void Window::drawMinimap() {
+void GameView::drawMinimap() {
+    auto& mainWindow = app_.getWindow();
     auto map = project->getMap();
     auto& texture = map->getRenderTexture().getTexture();
     sf::Vector2u mapSize = map->getSize();

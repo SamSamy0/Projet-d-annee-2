@@ -8,8 +8,10 @@
 Shift::Shift(std::shared_ptr<Map> map, ClientNetworkManager& manager) : Tool(map, manager) {}
 
 void Shift::onPress(sf::Vector2i pos) {
-  isDrawing_ = true;
-  lastPos_ = pos;
+  if(!map_->getCurrentLayer()->isMasked()){
+    isDrawing_ = true;
+    lastPos_ = pos;
+  }
 }
 
 void Shift::onDrag(sf::Vector2i pos) {

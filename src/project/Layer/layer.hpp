@@ -20,7 +20,7 @@ public:
   Layer(std::string name, sf::Vector2u size);
   std::string getName() const;
   LayerType getType();
-  bool getMasked() const;
+  bool isMasked() const;
   void setMasked(bool masked);
   virtual sf::Vector2i getOffset() const = 0;
   virtual void shift(sf::Vector2i v) = 0;

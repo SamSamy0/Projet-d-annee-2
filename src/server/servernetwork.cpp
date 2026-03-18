@@ -16,7 +16,7 @@ bool ServerNetworkManager::start() {
     }
     selector_.add(listener_);
 
-    std::cout << "Serveur lance avec succes sur le port " << std::endl;
+    std::cout << "Serveur lance avec succes sur le port 5001" << std::endl;
     std::cout << "En attente de connexions..." << std::endl;
 
     mRunning_ = true;
@@ -33,7 +33,6 @@ void ServerNetworkManager::listen() {
             
             handleClientMessages();
         }
-        std::cout << "finito" << std::endl;
     }
 }
 
@@ -49,7 +48,6 @@ void ServerNetworkManager::handleNewConnection() {
 
         client_list.push_back(std::move(new_client));
         std::cout << "nouvelle machine connécté: "<< std::endl ;
-        std::cout << client_list.size() << std::endl;
     }
 }
 
@@ -66,7 +64,6 @@ void ServerNetworkManager::handleClientMessages() {
         
         if (status == sf::Socket::Status::Disconnected || status == sf::Socket::Status::Error) {
             selector_.remove(*client->sock);
-            std::cout << "bye mec o7" << std::endl;
             return true;
         }
         return false;
