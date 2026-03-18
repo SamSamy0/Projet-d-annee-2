@@ -47,9 +47,8 @@ void PixelBrush::paintSender(sf::Vector2i pos) {
   case (DIAMOND): {
     if (!is_eraser_) {
       manager_.drawDiamond(map_->getId(), map_->getCurrentLayer()->getId(),
-                           pos.x, pos.y, getSize().x, getColor().r,
-                           getColor().g, getColor().b, getColor().a,
-                           getSize().y);
+                           pos.x, pos.y, getSize().x,getSize().y, getColor().r,
+                           getColor().g, getColor().b, getColor().a);
     } else {
       manager_.eraseDiamond(map_->getId(), map_->getCurrentLayer()->getId(),
                             pos.x, pos.y, getSize().x, getSize().y);

@@ -188,6 +188,7 @@ void ClientNetworkManager::eraseSquare(uint proj_id, uint layer_id,int pos_x,int
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ERASER_CARRE_REQ;
 
+  packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << pos_x << pos_y << size;
 
   socket_.send(packet);
@@ -198,6 +199,7 @@ void ClientNetworkManager::eraseCircle(uint proj_id, uint layer_id,int pos_x,int
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ERASER_CIRCLE_REQ;
 
+  packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << pos_x << pos_y << size;
 
   socket_.send(packet);
@@ -208,6 +210,7 @@ void ClientNetworkManager::eraseDiamond(uint proj_id, uint layer_id,int pos_x,in
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ERASER_DIAM_REQ;
 
+  packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << pos_x << pos_y << size_x << size_y;
 
   socket_.send(packet);
