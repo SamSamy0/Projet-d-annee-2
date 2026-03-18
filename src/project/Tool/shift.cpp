@@ -19,9 +19,19 @@ void Shift::onDrag(sf::Vector2i pos) {
 
   sf::Vector2i delta = pos - lastPos_;
   if (delta.x != 0 || delta.y != 0) {
-    map_->getCurrentLayer()->shift(delta);
+    shiftSender(delta);
   }
   lastPos_ = pos;
+}
+
+void Shift::shift(sf::Vector2i delta){
+  map_->getCurrentLayer()->shift(delta);
+}
+
+void Shift::shiftSender(sf::Vector2i delta){
+  shift(delta);
+  manager_->shift();
+
 }
 
 void Shift::onRelease() { isDrawing_ = false; }

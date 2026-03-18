@@ -2,6 +2,8 @@
 #include "../Window/MenuView.hpp"
 #include "../Window/projectWidgets/GameView.hpp"
 #include "../project/Tool/pixelbrush.hpp"
+#include "../project/Tool/pixelshift.hpp"
+#include "../project/Tool/spriteshift.hpp"
 #include "../project/Tool/tool.hpp"
 #include "../project/project.hpp"
 #include "../project/toolbar.hpp"
@@ -44,7 +46,6 @@ void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,
                                       uint8_t a, Shape shape, bool eraser,
                                       float size_x, float size_y) {
 
-  std::cout<<"Reception du message debut de drawPixelBrush"<<std::endl;
   ToolBar &toolbar = app_->getProject()->getToolBar();
   std::shared_ptr<Map> map = app_->getProject()->getMap();
   ToolType last_tool = toolbar.getSelected();
@@ -76,4 +77,29 @@ void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,
   pixelbrush->setEraser(last_is_eraser);
   pixelbrush->setColor(last_color);
   toolbar.selectTool(last_tool);
+}
+
+
+
+void ReceiverInWindow::shiftLayer(uint layer_id, int delta_x, int delta_y){
+  ToolBar &toolbar = app_->getProject()->getToolBar();
+  std::shared_ptr<Map> map = app_->getProject()->getMap();
+  ToolType last_tool = toolbar.getSelected();
+  uint last_layer_id = map->getCurrentLayer()->getId();
+  map->selectLayerId(layer_id);
+  if(map->getCurrentLayer()->getType() == SPRITELAYER){
+    toolbar.selectTool(SPRITESHIFT);
+    std::shared_ptr<SpriteShift> shift =
+        static_pointer_cast<SpriteShift>(toolbar.getSelectedTool());
+    shift->shift(sf::Vector2i(delta_x,delta_y));
+  }
+  else{toolbar.selectTool(PIXELSHIFT);
+    std::shared_ptr<PixelShift> shift =
+        static_pointer_cast<PixelShift>(toolbar.getSelectedTool());
+    shift->shift(sf::Vector2i(delta_x,delta_y));
+  }
+
+  map->selectLayerId(last_layer_id);
+  toolbar.selectTool(last_tool);
+
 }
