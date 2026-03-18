@@ -144,13 +144,21 @@ void ClientNetworkManager::joinProject(uint project_code){
 
 
 void ClientNetworkManager::drawSquare(uint proj_id, uint layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a){
+
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_CARRE_REQ;
 
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << pos_x << pos_y << size << r << g << b << a;
 
-  socket_.send(packet);
+  if(socket_.send(packet) == sf::Socket::Status::Done){
+    std::cout<<"envoi réussi !"<<std::endl;
+  }
+  else{
+
+    std::cout<<"envoi raté !"<<std::endl;
+  }
+
 }
 
 

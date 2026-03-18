@@ -18,7 +18,6 @@ Shape PixelBrush::getShape() const { return shape_; }
 sf::Color PixelBrush::getColor() const { return color_; }
 
 void PixelBrush::paintSender(sf::Vector2i pos) {
-  // manager.message
 
   switch (shape_) {
   case (SQUARE): {
@@ -26,6 +25,7 @@ void PixelBrush::paintSender(sf::Vector2i pos) {
       manager_.drawSquare(map_->getId(), map_->getCurrentLayer()->getId(),
                           pos.x, pos.y, getSize().x, getColor().r, getColor().g,
                           getColor().b, getColor().a);
+
     } else {
       manager_.eraseSquare(map_->getId(), map_->getCurrentLayer()->getId(),
                            pos.x, pos.y, getSize().x);
