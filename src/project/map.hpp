@@ -28,9 +28,8 @@ class Map {
   AssetManager assetmanager_;
 
 public:
-  Map(sf::Vector2u size, unsigned int scale,
-      vector<shared_ptr<Layer>> layers);
-  Map(sf::Vector2u size, unsigned int scale);
+  Map(uint id,sf::Vector2u size, unsigned int scale,vector<shared_ptr<Layer>> layers);
+  Map(uint id,sf::Vector2u size, unsigned int scale);
   sf::Vector2u getSize() const;
   unsigned int getScale() const;
   Zoom &getZoom();
