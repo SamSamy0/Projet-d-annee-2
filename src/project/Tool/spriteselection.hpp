@@ -14,13 +14,13 @@ enum SelectionState{
 class SpriteSelection : public Tool {
 
 
-  std::vector<uint64_t> selected_;
+  std::vector<uint> selected_;
   SelectionState state_ = NONE;
   sf::Vector2i startSelectionPos_;
-  bool isSelected(uint64_t id)const;
+  bool isSelected(uint)const;
 public:
   SpriteSelection(std::shared_ptr<Map> map);
-  std::vector<uint64_t>& getSelection();
+  std::vector<uint>& getSelection();
   const SelectionState getState() const;
   void deleteSelectedSprite();
   void clearSelection();

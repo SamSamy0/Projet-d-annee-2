@@ -10,13 +10,13 @@ SpriteSelection::SpriteSelection(std::shared_ptr<Map> map) : Tool(map){
 }
 
 
-std::vector<uint64_t>& SpriteSelection::getSelection(){
+std::vector<uint>& SpriteSelection::getSelection(){
   return selected_;
 }
 
 const SelectionState SpriteSelection::getState() const{return state_;}
 
-bool SpriteSelection::isSelected(uint64_t id)const{
+bool SpriteSelection::isSelected(uint id)const{
   if(std::find(selected_.begin(),selected_.end(),id) != selected_.end()){return true;}
   else{return false;}
 }
@@ -31,7 +31,7 @@ void SpriteSelection::onPress(sf::Vector2i pos){
 
 
     bool hit = false;
-    uint64_t hitedId;
+    uint hitedId;
     const std::vector<SpriteObject>& sprites = spritelayer->getSprites();
     for(int i = sprites.size() - 1; i >= 0; i--){
       if(sprites[i].sprite.getGlobalBounds().contains(sf::Vector2f(pos.x,pos.y))){
