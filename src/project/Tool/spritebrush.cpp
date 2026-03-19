@@ -20,8 +20,8 @@ void SpriteBrush::setSize(float x, float y) {
   //
   /* change the size and change the spacing in function of it */
   Brush::setSize(x, y);
-  spacing_ = std::min((size_m_.x * 2.0 + offset_) * getScale(),
-                      (size_m_.y * 2.0 + offset_) * getScale());
+  spacing_ = std::min((size_m_.x + offset_) * getScale(),
+                      (size_m_.y + offset_) * getScale());
   if (spacing_ < 1)
     spacing_ = 1.0f;
 }
