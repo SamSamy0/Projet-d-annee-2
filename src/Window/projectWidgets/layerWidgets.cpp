@@ -33,7 +33,7 @@ void GameView::initLayerPanel() {
 
   // Ici, je crée la box qui contient la liste des couches
   layersList_ = tgui::ScrollablePanel::create();
-  layersList_->setSize(width * 0.18, height * 0.33);
+  layersList_->setSize(width * 0.18, height * 0.28);
   layersList_->setPosition(width * 0.01, height * 0.05);
   layersList_->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   layersList_->getRenderer()->setBorders({1});
@@ -63,11 +63,80 @@ void GameView::initLayerPanel() {
       refreshLayerList();
     });
     layersList_->add(layerButton);
+    layerButton->setTextSize(15);
   }
+
+  // Création du bouton renommer une couche
+  auto renameLayerButton = tgui::Button::create("Renommer");
+  renameLayerButton->setSize(width * 0.18, height * 0.04);
+  renameLayerButton->setPosition(width * 0.01, height * 0.345);
+  renameLayerButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+  renameLayerButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+  renameLayerButton->getRenderer()->setTextColor(tgui::Color::White);
+  renameLayerButton->getRenderer()->setBorders({0});
+  renameLayerButton->getRenderer()->setRoundedBorderRadius(8);
+  renameLayerButton->onClick([this]() {
+    auto& mainWindow = app_.getWindow();
+    auto& gui = app_.getGui();
+    float width  = mainWindow.getSize().x;
+    float height = mainWindow.getSize().y;
+
+    auto popup = tgui::Panel::create();
+    popup->setSize(width * 0.22, height * 0.18);
+    popup->setPosition(width * 0.39, height * 0.41);
+    popup->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
+    popup->getRenderer()->setBorders({1});
+    popup->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+    popup->getRenderer()->setRoundedBorderRadius(8);
+
+    auto newLayerNameInput = tgui::EditBox::create();
+    newLayerNameInput->setSize(width * 0.18, height * 0.06);
+    newLayerNameInput->setPosition(width * 0.02, height * 0.02);
+    auto& layers = project->getMap()->getLayers();
+    unsigned int selectedLayer = project->getMap()->getLayerSelected();
+    newLayerNameInput->setText(layers[selectedLayer]->getName());
+    popup->add(newLayerNameInput);
+
+    auto confirmNameButton = tgui::Button::create("OK");
+    confirmNameButton->setSize(width * 0.08, height * 0.06);
+    confirmNameButton->setPosition(width * 0.02, height * 0.1);
+    confirmNameButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+    confirmNameButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+    confirmNameButton->getRenderer()->setTextColor(tgui::Color::White);
+    confirmNameButton->getRenderer()->setBorders({0});
+    confirmNameButton->getRenderer()->setRoundedBorderRadius(6);
+    popup->add(confirmNameButton);
+
+    auto cancelNameButton = tgui::Button::create("Annuler");
+    cancelNameButton->setSize(width * 0.08, height * 0.06);
+    cancelNameButton->setPosition(width * 0.12, height * 0.1);
+    cancelNameButton->getRenderer()->setBackgroundColor(tgui::Color(90, 50, 50));
+    cancelNameButton->getRenderer()->setBackgroundColorHover(tgui::Color(110, 65, 65));
+    cancelNameButton->getRenderer()->setTextColor(tgui::Color::White);
+    cancelNameButton->getRenderer()->setBorders({0});
+    cancelNameButton->getRenderer()->setRoundedBorderRadius(6);
+    popup->add(cancelNameButton);
+
+    gui.add(popup);
+
+    confirmNameButton->onClick([this, popup, editBox]() {
+      auto& gui = app_.getGui();
+      auto& layers = project->getMap()->getLayers();
+      unsigned int selectedLayer = project->getMap()->getLayerSelected();
+      std::string newName = editBox->getText().toStdString();
+      if (!newName.empty()) layers[selectedLayer]->setName(newName);
+      refreshLayerList();
+      gui.remove(popup);
+    });
+
+    cancelNameButton->onClick([this, popup]() { app_.getGui().remove(popup); });
+  });
+  renameLayerButton->setTextSize(15);
+  layerPanel_->add(renameLayerButton);
 
   // Création du bouton qui décale une couche vers le haut
   auto goUpLayer = tgui::Button::create("▼");
-  goUpLayer->setSize(width * 0.08, height * 0.04);
+  goUpLayer->setSize(width * 0.0875, height * 0.04);
   goUpLayer->setPosition(width * 0.01, height * 0.395);
   goUpLayer->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
   goUpLayer->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
@@ -86,8 +155,8 @@ void GameView::initLayerPanel() {
 
   // Création du bouton qui décale une couche vers le bas
   auto goDownLayer = tgui::Button::create("▲");
-  goDownLayer->setSize(width * 0.08, height * 0.04);
-  goDownLayer->setPosition(width * 0.11, height * 0.395);
+  goDownLayer->setSize(width * 0.0875, height * 0.04);
+  goDownLayer->setPosition(width * 0.1025, height * 0.395);
   goDownLayer->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
   goDownLayer->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
   goDownLayer->getRenderer()->setTextColor(tgui::Color::White);
@@ -119,24 +188,7 @@ void GameView::initLayerPanel() {
       layers[selectedLayer]->setMasked(!layers[selectedLayer]->isMasked());
   });
   layerPanel_->add(maskButton);
-
-  // Création du toggle bouton lock/unlock
-  //auto lockButton = tgui::Button::create("L/U");
-  //lockButton->setSize(width * 0.09, height * 0.04);
-  //lockButton->setPosition(width * 0.1, height * 0.44);
-  //lockButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
-  //lockButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
-  //lockButton->getRenderer()->setTextColor(tgui::Color::White);
-  //lockButton->getRenderer()->setBorders({0});
-  //lockButton->getRenderer()->setRoundedBorderRadius(8);
-  //lockButton->onClick([this]() {
-  // auto& layers = project->getMap()->getLayers();
-  //  unsigned int selectedLayer = project->getMap()->getLayerSelected();
-  //  if (selectedLayer < layers.size())
-  //    layers[selectedLayer]->setMasked(!layers[selectedLayer]->getMasked());
-  //});
-  //layerPanel_->add(lockButton);
-  
+  maskButton->setTextSize(15);
 
   // Création du bouton ajouter une couche (pour l'instant direct couche pixel)
   auto addLayerButton = tgui::Button::create("Ajouter couche");
@@ -161,31 +213,31 @@ void GameView::initLayerPanel() {
     popup->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
     popup->getRenderer()->setRoundedBorderRadius(8);
 
-    auto pixelBtn = tgui::Button::create("Couche Pixel");
-    pixelBtn->setSize(width * 0.16f, height * 0.07f);
-    pixelBtn->setPosition(width * 0.03f, height * 0.03f);
-    pixelBtn->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
-    pixelBtn->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
-    pixelBtn->getRenderer()->setTextColor(tgui::Color::White);
-    pixelBtn->getRenderer()->setTextSize(13);
-    pixelBtn->getRenderer()->setBorders({0});
-    pixelBtn->getRenderer()->setRoundedBorderRadius(6);
-    popup->add(pixelBtn);
+    auto createPixelLayerButton = tgui::Button::create("Couche Pixel");
+    createPixelLayerButton->setSize(width * 0.16f, height * 0.07f);
+    createPixelLayerButton->setPosition(width * 0.03f, height * 0.03f);
+    createPixelLayerButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+    createPixelLayerButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+    createPixelLayerButton->getRenderer()->setTextColor(tgui::Color::White);
+    createPixelLayerButton->getRenderer()->setTextSize(13);
+    createPixelLayerButton->getRenderer()->setBorders({0});
+    createPixelLayerButton->getRenderer()->setRoundedBorderRadius(6);
+    popup->add(createPixelLayerButton);
 
-    auto spriteBtn = tgui::Button::create("Couche Sprite");
-    spriteBtn->setSize(width * 0.16f, height * 0.07f);
-    spriteBtn->setPosition(width * 0.03f, height * 0.11f);
-    spriteBtn->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
-    spriteBtn->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
-    spriteBtn->getRenderer()->setTextColor(tgui::Color::White);
-    spriteBtn->getRenderer()->setTextSize(13);
-    spriteBtn->getRenderer()->setBorders({0});
-    spriteBtn->getRenderer()->setRoundedBorderRadius(6);
-    popup->add(spriteBtn);
+    auto createSpriteLayerButton = tgui::Button::create("Couche Sprite");
+    createSpriteLayerButton->setSize(width * 0.16f, height * 0.07f);
+    createSpriteLayerButton->setPosition(width * 0.03f, height * 0.11f);
+    createSpriteLayerButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+    createSpriteLayerButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+    createSpriteLayerButton->getRenderer()->setTextColor(tgui::Color::White);
+    createSpriteLayerButton->getRenderer()->setTextSize(13);
+    createSpriteLayerButton->getRenderer()->setBorders({0});
+    createSpriteLayerButton->getRenderer()->setRoundedBorderRadius(6);
+    popup->add(createSpriteLayerButton);
 
     gui.add(popup);
 
-    pixelBtn->onClick([this, popup]() {
+    createPixelLayerButton->onClick([this, popup]() {
       auto& gui = app_.getGui();
       LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->createPixelLayer();
@@ -194,7 +246,7 @@ void GameView::initLayerPanel() {
       gui.remove(popup);
     });
 
-    spriteBtn->onClick([this, popup]() {
+    createSpriteLayerButton->onClick([this, popup]() {
       auto& gui = app_.getGui();
       LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->createSpriteLayer();
@@ -204,6 +256,7 @@ void GameView::initLayerPanel() {
     });
   });
   layerPanel_->add(addLayerButton);
+  addLayerButton->setTextSize(15);
 
   // Création du bouton supprimer une couche
   auto removeLayerButton = tgui::Button::create("Supprimer couche");
@@ -226,6 +279,7 @@ void GameView::initLayerPanel() {
     refreshLayerList();
   });
   layerPanel_->add(removeLayerButton);
+  removeLayerButton->setTextSize(15);
 }
 
 void GameView::refreshLayerList() {
@@ -255,6 +309,7 @@ void GameView::refreshLayerList() {
       refreshLayerList();
     });
     layersList_->add(layerButton);
+    layerButton->setTextSize(15);
   }
 }
 

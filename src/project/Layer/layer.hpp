@@ -19,6 +19,7 @@ protected:
 public:
   Layer(std::string name, sf::Vector2u size);
   std::string getName() const;
+  void setName(const std::string& name);
   LayerType getType();
   bool isMasked() const;
   void setMasked(bool masked);

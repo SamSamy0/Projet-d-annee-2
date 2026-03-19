@@ -4,8 +4,8 @@
 #include "projectWidgets/GameView.hpp"
 
 Application::Application(ClientNetworkManager &manager)
-    : mainWindow(sf::VideoMode::getDesktopMode(), "Game name",
-                 sf::State::Fullscreen),
+    : mainWindow(sf::VideoMode({1200,800}), "Game name",
+                 sf::Style::Close | sf::Style::Titlebar),
       gui{mainWindow}, manager{manager} {
   updateTextSize();
   gui.onViewChange([this] { updateTextSize(); });
@@ -48,6 +48,8 @@ void Application::run() {
     project->display();
   currentView->render();
   gui.draw();
+  if (project)
+    project->displayScale();
   mainWindow.display();
 }
 

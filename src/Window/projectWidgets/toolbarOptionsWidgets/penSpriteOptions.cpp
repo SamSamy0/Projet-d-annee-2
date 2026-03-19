@@ -9,8 +9,8 @@ void GameView::initPenSpriteOptions() {
   float height = mainWindow.getSize().y;
 
   penSpriteOptionsPanel_ = tgui::Panel::create();
-  penSpriteOptionsPanel_->setSize(width * 0.35, height * 0.062);
-  penSpriteOptionsPanel_->setPosition(width * 0.35, height * 0.05);
+  penSpriteOptionsPanel_->setSize(width * 0.76, height * 0.062);
+  penSpriteOptionsPanel_->setPosition(width * 0.22, height * 0.05);
   penSpriteOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
   penSpriteOptionsPanel_->getRenderer()->setBorders({1});
   penSpriteOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
@@ -18,24 +18,58 @@ void GameView::initPenSpriteOptions() {
   penSpriteOptionsPanel_->setVisible(false);
   gui.add(penSpriteOptionsPanel_);
 
-  auto sizeInputBox = tgui::EditBox::create();
-  sizeInputBox->setSize(width * 0.06, height * 0.04);
-  sizeInputBox->setPosition(width * 0.008, height * 0.011);
-  sizeInputBox->setDefaultText("1");
-  sizeInputBox->setInputValidator("[0-9]*");
-  sizeInputBox->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
-  sizeInputBox->getRenderer()->setTextColor(tgui::Color::White);
-  sizeInputBox->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
-  sizeInputBox->getRenderer()->setBorders({1});
-  sizeInputBox->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
-  sizeInputBox->onTextChange([this, sizeInputBox]() {
-    if (sizeInputBox->getText().empty()) return;
-    unsigned int size = static_cast<unsigned int>(std::stoi(sizeInputBox->getText().toStdString()));
-    if (size < 1) size = 1;
+  auto widthInput = tgui::EditBox::create();
+  widthInput->setSize(width * 0.04, height * 0.04);
+  widthInput->setPosition(width * 0.008, height * 0.011);
+  widthInput->setDefaultText("L");
+  widthInput->setInputValidator("[0-9]*");
+  widthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+  widthInput->getRenderer()->setTextColor(tgui::Color::White);
+  widthInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
+  widthInput->getRenderer()->setBorders({1});
+  widthInput->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+  penSpriteOptionsPanel_->add(widthInput);
+
+  auto heightInput = tgui::EditBox::create();
+  heightInput->setSize(width * 0.04, height * 0.04);
+  heightInput->setPosition(width * 0.052, height * 0.011);
+  heightInput->setDefaultText("l");
+  heightInput->setInputValidator("[0-9]*");
+  heightInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+  heightInput->getRenderer()->setTextColor(tgui::Color::White);
+  heightInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
+  heightInput->getRenderer()->setBorders({1});
+  heightInput->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+  heightInput->setVisible(false);
+  penSpriteOptionsPanel_->add(heightInput);
+
+  widthInput->onTextChange([this, widthInput, heightInput]() {
+    // regarde s'il y a aucune valeur
+    if (widthInput->getText().empty()) return;
+    
+    // Ici il regarde que la taille de la longueur (x) et largeur (y) du pinceau soit au moins égale à 1, et si y pas de valeur on prend la valeur de x
+    unsigned int sizeX = static_cast<unsigned int>(std::stoi(widthInput->getText().toStdString()));
+    if (sizeX < 1) sizeX = 1;
+    unsigned int sizeY = heightInput->getText().empty() ? sizeX : static_cast<unsigned int>(std::stoi(heightInput->getText().toStdString()));
+    if (sizeY < 1) sizeY = 1;
+
+    // On applique la nouvelle taille
     auto brush = dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
-    if (brush) brush->setSize(size, size);
+    if (brush) brush->setSize(sizeX, sizeY);
   });
-  penSpriteOptionsPanel_->add(sizeInputBox);
+  heightInput->onTextChange([this, widthInput, heightInput]() {
+    if (heightInput->getText().empty()) return;
+
+    // Ici il regarde que la taille de la longueur (x) et largeur (y) du pinceau soit au moins égale à 1, et si y pas de valeur on prend la valeur de x
+    unsigned int sizeX = widthInput->getText().empty() ? 1 : static_cast<unsigned int>(std::stoi(widthInput->getText().toStdString()));
+    if (sizeX < 1) sizeX = 1;
+    unsigned int sizeY = static_cast<unsigned int>(std::stoi(heightInput->getText().toStdString()));
+    if (sizeY < 1) sizeY = 1;
+
+    // On applique la nouvelle taille
+    auto brush = dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+    if (brush) brush->setSize(sizeX, sizeY);
+  });
 
   auto squareButton  = tgui::Button::create("Carré");
   auto diamondButton = tgui::Button::create("Diamant");
@@ -47,12 +81,13 @@ void GameView::initPenSpriteOptions() {
   squareButton->getRenderer()->setTextColor(tgui::Color::White);
   squareButton->getRenderer()->setBorders({0});
   squareButton->getRenderer()->setRoundedBorderRadius(4);
-  squareButton->onPress([this, squareButton, diamondButton, circleButton]() {
+  squareButton->onPress([this, squareButton, diamondButton, circleButton, heightInput]() {
     auto brush = dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
     if (brush) brush->setShape(SQUARE);
     squareButton->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
     diamondButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     circleButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+    heightInput->setVisible(false);
   });
   penSpriteOptionsPanel_->add(squareButton);
   squareButton->setTextSize(12);
@@ -63,12 +98,13 @@ void GameView::initPenSpriteOptions() {
   diamondButton->getRenderer()->setTextColor(tgui::Color::White);
   diamondButton->getRenderer()->setBorders({0});
   diamondButton->getRenderer()->setRoundedBorderRadius(4);
-  diamondButton->onPress([this, squareButton, diamondButton, circleButton]() {
+  diamondButton->onPress([this, squareButton, diamondButton, circleButton, heightInput]() {
     auto brush = dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
     if (brush) brush->setShape(DIAMOND);
     squareButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     diamondButton->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
     circleButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+    heightInput->setVisible(true);
   });
   penSpriteOptionsPanel_->add(diamondButton);
   diamondButton->setTextSize(12);
@@ -79,12 +115,13 @@ void GameView::initPenSpriteOptions() {
   circleButton->getRenderer()->setTextColor(tgui::Color::White);
   circleButton->getRenderer()->setBorders({0});
   circleButton->getRenderer()->setRoundedBorderRadius(4);
-  circleButton->onPress([this, squareButton, diamondButton, circleButton]() {
+  circleButton->onPress([this, squareButton, diamondButton, circleButton, heightInput]() {
     auto brush = dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
     if (brush) brush->setShape(CIRCLE);
     squareButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     diamondButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     circleButton->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
+    heightInput->setVisible(false);
   });
   penSpriteOptionsPanel_->add(circleButton);
   circleButton->setTextSize(12);

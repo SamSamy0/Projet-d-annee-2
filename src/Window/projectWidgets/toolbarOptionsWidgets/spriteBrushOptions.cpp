@@ -8,7 +8,7 @@ void GameView::initSpriteBrushOptions() {
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 
-  // Panneau principal
+  // Menu principale pour la sélection des images
   spriteBrushOptionsPanel_ = tgui::Panel::create();
   spriteBrushOptionsPanel_->setSize(width * 0.50, height * 0.4);
   spriteBrushOptionsPanel_->setPosition(width * 0.34, height * 0.05);
@@ -19,8 +19,9 @@ void GameView::initSpriteBrushOptions() {
   spriteBrushOptionsPanel_->setVisible(false);
   gui.add(spriteBrushOptionsPanel_);
 
+  // Liste scrollable comprenant l'ensemble des images du projet
   auto scrollPanel = tgui::ScrollablePanel::create();
-  scrollPanel->setSize("100%", "100%");
+  scrollPanel->setSize(width * 0.50, height * 0.4);
   scrollPanel->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   scrollPanel->getRenderer()->setBorders({0});
   scrollPanel->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
@@ -28,20 +29,17 @@ void GameView::initSpriteBrushOptions() {
   spriteBrushOptionsPanel_->add(scrollPanel);
 
   const auto& allSprites = project->getMap()->getAssetManager().getAllAssets();
-  float imageSize = spriteBrushOptionsPanel_->getSize().x * 0.15;
-  auto selection = std::make_shared<std::vector<std::string>>();
+  float imageSize = spriteBrushOptionsPanel_->getSize().x / 6;
+  auto imagesSelected = std::make_shared<std::vector<std::string>>();
   int column = 0;
   int row = 0;
 
-  for (const auto& [id, asset] : allSprites)
-  {
-      column %= 5;
-      float x = column * (imageSize + 10);
-      float y = row * (imageSize + 10);
+  for (const auto& [id, asset] : allSprites) {
+      column %= 6;
 
       auto image = tgui::Button::create();
       image->setSize(imageSize, imageSize);
-      image->setPosition(x, y);
+      image->setPosition(column * imageSize, row * imageSize);
       image->getRenderer()->setTexture(tgui::Texture("../res/sprites/" + asset.filename));
       image->getRenderer()->setBorders({3});
       image->getRenderer()->setBorderColor(tgui::Color::Transparent);
@@ -49,23 +47,28 @@ void GameView::initSpriteBrushOptions() {
       image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
 
       auto assetId = id;
-
-      image->onClick([this, image, assetId, selection]() {
+      image->onClick([this, image, assetId, imagesSelected]() {
           auto tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+          if (!tool) {
+              project->getToolBar().selectTool(SPRITEBRUSH);
+              tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+          }
           if (!tool) return;
+
+          // Je regarde si l'image a déjà été sélectionner
           bool found = false;
-          for (auto& s : *selection) {
-              if (s == assetId) {
+          for (auto& img : *imagesSelected) {
+              if (img == assetId) {
                   found = true;
                   break;
               }
           }
           if (found) {
-              selection->erase(std::remove(selection->begin(), selection->end(), assetId), selection->end());
+              imagesSelected->erase(std::remove(imagesSelected->begin(), imagesSelected->end(), assetId), imagesSelected->end());
               image->getRenderer()->setBorderColor(tgui::Color::Transparent);
               tool->removeAsset(assetId);
           } else {
-              selection->push_back(assetId);
+              imagesSelected->push_back(assetId);
               image->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
               tool->addAsset(assetId);
           }
@@ -73,6 +76,6 @@ void GameView::initSpriteBrushOptions() {
 
       scrollPanel->add(image);
       column++;
-      if (column % 5 == 0) row++;
+      if (column % 6 == 0) row++;
   }
 }
