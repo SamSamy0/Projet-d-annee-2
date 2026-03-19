@@ -30,8 +30,6 @@ protected:
 
 public:
   Tool(std::shared_ptr<Map> map);
-  // virtual void getMessage(const ClientNetworkManager &netw
-  // virtual void sendMessage(const ClientNetworkManager &network) const;
   // Getter
   std::shared_ptr<Map> getMap();
   unsigned int getScale() const;
