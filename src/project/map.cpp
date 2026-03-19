@@ -62,8 +62,8 @@ void Map::insertLayer(shared_ptr<Layer> layer) { layers_.insert(layers_.begin()+
 void Map::createPixelLayer(){
     int n = layers_.size() + 1;
     std::string name = "Couche Pixel (" + std::to_string(n) + ")";
-    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(nextLayerId,name, size_);
-    nextLayerId +=1;
+    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(nextLayerId_,name, size_);
+    nextLayerId_ +=1;
     layers_.push_back(pixellayer);
     layers_.size() ==1? selected_ = 0: selected_+=1;
 }
@@ -72,8 +72,8 @@ void Map::createPixelLayer(){
 void Map::createSpriteLayer(){
     int n = layers_.size() + 1;
     std::string name = "Couche Pixel (" + std::to_string(n) + ")";
-    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(nextLayerId,name,size_); 
-    nextLayerId +=1;
+    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(nextLayerId_,name,size_); 
+    nextLayerId_ +=1;
     layers_.push_back(spritelayer);
     layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
 }
