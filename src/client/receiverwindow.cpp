@@ -31,3 +31,7 @@ void ReceiverInWindow::updateCreatedProjectId(uint32_t projId) {
 void ReceiverInWindow::setState(){
     app_->changeView(std::make_unique<GameView>(*app_));
 }
+
+void ReceiverInWindow::updateShareToken(std::string token){
+    app_->updateShareToken(token);
+}

@@ -29,7 +29,7 @@ public:
     void getProjectList(); 
     void delProject(long long project_id);
     void getProjectData(long long project_id);
-    void createProjectCode(long long project_id);
+    void createProjectCode(int role, uint project_id);
     void joinProject(int project_code);
     
     void syncPaint();
