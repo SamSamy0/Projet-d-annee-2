@@ -2,6 +2,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "Tool/tool.hpp"
+#include "../client/clientnetwork.hpp"
 
 
 

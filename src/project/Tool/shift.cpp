@@ -1,6 +1,7 @@
 #include "shift.hpp"
 #include "../Layer/layer.hpp"
 #include "../map.hpp"
+#include "../../client/clientnetwork.hpp"
 #include "tool.hpp"
 #include <memory>
 

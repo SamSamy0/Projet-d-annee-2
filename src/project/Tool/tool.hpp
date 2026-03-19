@@ -1,6 +1,7 @@
 #pragma once
 #include "../../client/clientnetwork.hpp"
 #include <SFML/Graphics.hpp>
+#include "../../client/clientnetwork.hpp"
 
 class ClientNetworkManager;
 class Map;

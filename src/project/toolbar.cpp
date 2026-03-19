@@ -2,6 +2,7 @@
 #include "Layer/layer.hpp"
 #include "Tool/pixelbrush.hpp"
 #include "Tool/pixelshift.hpp"
+#include "Tool/spritebrush.hpp"
 #include "Tool/spriteshift.hpp"
 #include "Tool/spriteeraser.hpp"
 #include "Tool/nonetool.hpp"

@@ -42,14 +42,15 @@ void Project::setName(std::string name) { name_ = name; }
 // Display
 void Project::displayScale() {
   sf::Font police(FONT_PATH);
+  police.setSmooth(true);
   sf::Text scaleText(police);
 
-  scaleText.setString("1m = " + to_string(getScale()) + " px");
+  scaleText.setString("1 m = " + to_string(getScale()) + " px");
   scaleText.setCharacterSize(17);
-  scaleText.setFillColor(sf::Color::Black);
-  scaleText.setPosition(
-      sf::Vector2f(window_.getSize().x * 0.16f, window_.getSize().y * 0.97f));
+  scaleText.setFillColor(sf::Color::White);
+  scaleText.setPosition(sf::Vector2f(window_.getSize().x - scaleText.getLocalBounds().size.x - 10.f, 10.f));
 
+  window_.setView(window_.getDefaultView());
   window_.draw(scaleText);
 }
 
@@ -62,7 +63,7 @@ void Project::displayBackground() {
   sf::RectangleShape left;
 
   left.setPosition(sf::Vector2f(0, window_.getSize().y * 0.05));
-  left.setSize(sf::Vector2f(window_.getSize().x * 0.15, window_.getSize().y));
+  left.setSize(sf::Vector2f(window_.getSize().x * 0.18, window_.getSize().y * 1.5));
   left.setFillColor(sf::Color(36, 40, 47));
 
   window_.draw(top);

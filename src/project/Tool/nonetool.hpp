@@ -1,6 +1,7 @@
 #pragma once
 #include "tool.hpp"
 #include <memory>
+#include "../../client/clientnetwork.hpp"
 
 class NoneTool : public Tool {
 public:

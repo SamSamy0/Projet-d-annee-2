@@ -1,5 +1,6 @@
 #pragma once
 #include "brush.hpp"
+#include "../../client/clientnetwork.hpp"
 
 class SpriteEraser : public Brush {
   Shape shape_ = SQUARE;

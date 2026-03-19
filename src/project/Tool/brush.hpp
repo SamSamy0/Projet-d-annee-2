@@ -1,5 +1,6 @@
 #pragma once
 #include "tool.hpp"
+#include "../../client/clientnetwork.hpp"
 
 class Brush : public Tool {
 protected:

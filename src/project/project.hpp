@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "Chat/chat.hpp"
+#include "../client/clientnetwork.hpp"
 
 
 class Tool;

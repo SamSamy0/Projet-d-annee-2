@@ -1,3 +1,4 @@
+#pragma once
 #include "../Application.hpp"
 #include "../View.hpp"
 
@@ -17,14 +18,22 @@ class GameView : public View {
 
   // Pen options panel
   tgui::Panel::Ptr penOptionsPanel_ = nullptr;
+  tgui::Panel::Ptr penSpriteOptionsPanel_ = nullptr;
   // Eraser options panel
   tgui::Panel::Ptr eraserOptionsPanel_ = nullptr;
+  tgui::Panel::Ptr eraserSpriteOptionsPanel_ = nullptr;
+  tgui::Panel::Ptr spriteBrushOptionsPanel_ = nullptr;
 
   void initToolbar();
   void initLayerPanel();
   void initChatWidget();
   void initPenOptions();
+  void initPenSpriteOptions();
   void initEraserOptions();
+  void initEraserSpriteOptions();
+  void initSpriteBrushOptions();
+  void initMinimap();
+  void drawMinimap();
   void refreshChat();
   void refreshLayerList();
 
@@ -37,5 +46,6 @@ public:
   GameView(Application &app);
   ~GameView() override = default;
   void init() override;
+  void render() override;
   void handleEvents(const sf::Event &events) override;
 };

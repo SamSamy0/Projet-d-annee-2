@@ -1,6 +1,7 @@
 #include "brush.hpp"
 #include "../Layer/layer.hpp"
 #include "../map.hpp"
+#include "../../client/clientnetwork.hpp"
 #include "../Layer/layer.hpp"
 #include <cmath>
 

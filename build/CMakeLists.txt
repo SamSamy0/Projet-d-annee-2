@@ -75,6 +75,10 @@ set(SOURCES
     ../src/Window/projectWidgets/chatWidgets.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/penOptions.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/eraserOptions.cpp
+    ../src/Window/projectWidgets/toolbarOptionsWidgets/penSpriteOptions.cpp
+    ../src/Window/projectWidgets/toolbarOptionsWidgets/eraserSpriteOptions.cpp
+    ../src/Window/projectWidgets/toolbarOptionsWidgets/spriteBrushOptions.cpp
+    ../src/Window/projectWidgets/minimapWidgets.cpp
     ../src/client/clientnetwork.cpp
     ../src/client/handler.cpp
     ../src/client/receiverwindow.cpp

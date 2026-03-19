@@ -1,5 +1,6 @@
 #pragma once
 #include "tool.hpp"
+#include "../../client/clientnetwork.hpp"
 #include <memory>
 
 class Shift : public Tool {

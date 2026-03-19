@@ -9,11 +9,13 @@ SpriteBrush::SpriteBrush(std::shared_ptr<Map> map, ClientNetworkManager &manager
   spacing_ = std::min(size_m_.x/1.0f * getScale(), size_m_.y/1.0f * getScale());
   if (spacing_ < 1)
     spacing_ = 1.0f;
+  type_ = SPRITEBRUSH;
 }
 
 void SpriteBrush::setOffset(float offset){offset_ = offset;}
+void SpriteBrush::setShape(Shape s){shape_ = s;}
 
-void SpriteBrush::setSize(float x, float y = 1) { //WARNING: la valeur par défaut je suis pas sur
+void SpriteBrush::setSize(float x, float y) {
   //
   /* change the size and change the spacing in function of it */
   Brush::setSize(x,y);

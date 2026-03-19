@@ -1,4 +1,5 @@
 #include "nonetool.hpp"
+#include "../../client/clientnetwork.hpp"
 
 NoneTool::NoneTool(std::shared_ptr<Map> map, ClientNetworkManager &manager) : Tool(map, manager){}
 void NoneTool::onPress(sf::Vector2i pos) {}
