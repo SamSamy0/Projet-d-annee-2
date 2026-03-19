@@ -1,7 +1,7 @@
 #pragma once
+#include "assetmanager.hpp"
 #include "move.hpp"
 #include "zoom.hpp"
-#include "assetmanager.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
@@ -15,7 +15,8 @@ using namespace std;
 class Layer;
 
 class Map {
-  int id_;
+  uint nextLayerId_ = 0;
+  uint id_;
   sf::Vector2u size_;
   unsigned int scale_;
   vector<shared_ptr<Layer>> layers_;
@@ -27,17 +28,20 @@ class Map {
   AssetManager assetmanager_;
 
 public:
-  Map(int mapId, sf::Vector2u size, unsigned int scale,vector<shared_ptr<Layer>> layers);
-  Map(int mapId, sf::Vector2u size, unsigned int scale);
+  Map(uint id,sf::Vector2u size, unsigned int scale);
+  Map(uint id,sf::Vector2u size, unsigned int scale,vector<shared_ptr<Layer>> layers);
   sf::Vector2u getSize() const;
   unsigned int getScale() const;
   Zoom &getZoom();
-  AssetManager& getAssetManager();
+  AssetManager &getAssetManager();
   vector<shared_ptr<Layer>> &getLayers();
   shared_ptr<Layer> getCurrentLayer();
   unsigned int getLayerSelected() const;
-  void setLayerSelected(unsigned int i);
+  uint getId();
+  void selectLayer(unsigned int i);
+  void selectLayerId(uint id);
   bool hasLayer() const;
+  const sf::RenderTexture& getRenderTexture() const { return render_texture_; }
   void insertLayer(shared_ptr<Layer> layer);
   void createPixelLayer();
   void createSpriteLayer();
@@ -45,6 +49,7 @@ public:
   void closeWindowManager(sf::RenderWindow &window, const sf::Event &ev);
   void detectMovement();
   void zooming(sf::Event::MouseWheelScrolled const *event);
-  // bool isInside(sf::Vector2i pos)const; //WARNING: ne sert à rien pour l'instant
+  // bool isInside(sf::Vector2i pos)const; //WARNING: ne sert à rien pour
+  // l'instant
   void detectZooming(sf::Event event);
 };

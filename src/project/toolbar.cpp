@@ -10,14 +10,14 @@
 #include "map.hpp"
 #include <memory>
 
-ToolBar::ToolBar(std::shared_ptr<Map> map): selected_{NONETOOL} {
-  tools_.push_back(std::make_shared<NoneTool>(map));
-  tools_.push_back(std::make_shared<PixelBrush>(map));
-  tools_.push_back(std::make_shared<PixelShift>(map));
-  tools_.push_back(std::make_shared<SpriteBrush>(map));
-  tools_.push_back(std::make_shared<SpriteEraser>(map));
-  tools_.push_back(std::make_shared<SpriteShift>(map));
-  tools_.push_back(std::make_shared<SpriteSelection>(map));
+ToolBar::ToolBar(std::shared_ptr<Map> map, ClientNetworkManager &manager): selected_{NONETOOL} {
+  tools_.push_back(std::make_shared<NoneTool>(map, manager));
+  tools_.push_back(std::make_shared<PixelBrush>(map, manager));
+  tools_.push_back(std::make_shared<PixelShift>(map, manager));
+  tools_.push_back(std::make_shared<PixelBrush>(map, manager));
+  tools_.push_back(std::make_shared<SpriteEraser>(map, manager));
+  tools_.push_back(std::make_shared<SpriteShift>(map, manager));
+  tools_.push_back(std::make_shared<SpriteSelection>(map,manager));
 }
 
 void ToolBar::selectTool(ToolType outil) {

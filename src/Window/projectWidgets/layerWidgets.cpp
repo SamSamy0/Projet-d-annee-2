@@ -1,9 +1,14 @@
-#include "../Window.hpp"
+// #include "../Window.hpp"
 #include "../../project/Layer/layer.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
+#include "../Application.hpp"
+#include "GameView.hpp"
 #include <memory>
+#include <algorithm>
 
-void Window::initLayerPanel() {
+void GameView::initLayerPanel() {
+  auto& mainWindow = app_.getWindow();
+  auto& gui = app_.getGui();
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 
@@ -21,20 +26,20 @@ void Window::initLayerPanel() {
   auto titleLabel = tgui::Label::create("Couches");
   titleLabel->setSize(width * 0.2, height * 0.05);
   titleLabel->setPosition(0, 0);
-  titleLabel->setHorizontalAlignment(tgui::Label::HorizontalAlignment::Center);
-  titleLabel->setVerticalAlignment(tgui::Label::VerticalAlignment::Center);
+  titleLabel->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+  titleLabel->setVerticalAlignment(tgui::VerticalAlignment::Center);
   titleLabel->getRenderer()->setTextColor(tgui::Color::White);
   layerPanel_->add(titleLabel);
 
   // Ici, je crée la box qui contient la liste des couches
   layersList_ = tgui::ScrollablePanel::create();
-  layersList_->setSize(width * 0.18, height * 0.38);
+  layersList_->setSize(width * 0.18, height * 0.28);
   layersList_->setPosition(width * 0.01, height * 0.05);
   layersList_->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   layersList_->getRenderer()->setBorders({1});
   layersList_->getRenderer()->setBorderColor(tgui::Color(70, 75, 85));
-  layersList_->setHorizontalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
-  layersList_->setVerticalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
+  layersList_->getHorizontalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  layersList_->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
   layerPanel_->add(layersList_);
 
   // J'itère sur chaque éléments du vecteur couches et je l'ajoute à la liste des couches en gérant son affichage
@@ -53,12 +58,120 @@ void Window::initLayerPanel() {
     layerButton->setPosition(width * 0.01, i * height * 0.055);
     layerButton->onClick([this, i]() {
       LayerType type = project->getMap()->getCurrentLayer()->getType();
-      project->getMap()->setLayerSelected(static_cast<unsigned int>(i));
+      project->getMap()->selectLayer(static_cast<unsigned int>(i));
       checkTypeTool(type);
       refreshLayerList();
     });
     layersList_->add(layerButton);
+    layerButton->setTextSize(15);
   }
+
+  // Création du bouton renommer une couche
+  auto renameLayerButton = tgui::Button::create("Renommer");
+  renameLayerButton->setSize(width * 0.18, height * 0.04);
+  renameLayerButton->setPosition(width * 0.01, height * 0.345);
+  renameLayerButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+  renameLayerButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+  renameLayerButton->getRenderer()->setTextColor(tgui::Color::White);
+  renameLayerButton->getRenderer()->setBorders({0});
+  renameLayerButton->getRenderer()->setRoundedBorderRadius(8);
+  renameLayerButton->onClick([this]() {
+    auto& mainWindow = app_.getWindow();
+    auto& gui = app_.getGui();
+    float width  = mainWindow.getSize().x;
+    float height = mainWindow.getSize().y;
+
+    auto popup = tgui::Panel::create();
+    popup->setSize(width * 0.22, height * 0.18);
+    popup->setPosition(width * 0.39, height * 0.41);
+    popup->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
+    popup->getRenderer()->setBorders({1});
+    popup->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+    popup->getRenderer()->setRoundedBorderRadius(8);
+
+    auto newLayerNameInput = tgui::EditBox::create();
+    newLayerNameInput->setSize(width * 0.18, height * 0.06);
+    newLayerNameInput->setPosition(width * 0.02, height * 0.02);
+    auto& layers = project->getMap()->getLayers();
+    unsigned int selectedLayer = project->getMap()->getLayerSelected();
+    newLayerNameInput->setText(layers[selectedLayer]->getName());
+    popup->add(newLayerNameInput);
+
+    auto confirmNameButton = tgui::Button::create("OK");
+    confirmNameButton->setSize(width * 0.08, height * 0.06);
+    confirmNameButton->setPosition(width * 0.02, height * 0.1);
+    confirmNameButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+    confirmNameButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+    confirmNameButton->getRenderer()->setTextColor(tgui::Color::White);
+    confirmNameButton->getRenderer()->setBorders({0});
+    confirmNameButton->getRenderer()->setRoundedBorderRadius(6);
+    popup->add(confirmNameButton);
+
+    auto cancelNameButton = tgui::Button::create("Annuler");
+    cancelNameButton->setSize(width * 0.08, height * 0.06);
+    cancelNameButton->setPosition(width * 0.12, height * 0.1);
+    cancelNameButton->getRenderer()->setBackgroundColor(tgui::Color(90, 50, 50));
+    cancelNameButton->getRenderer()->setBackgroundColorHover(tgui::Color(110, 65, 65));
+    cancelNameButton->getRenderer()->setTextColor(tgui::Color::White);
+    cancelNameButton->getRenderer()->setBorders({0});
+    cancelNameButton->getRenderer()->setRoundedBorderRadius(6);
+    popup->add(cancelNameButton);
+
+    gui.add(popup);
+
+    confirmNameButton->onClick([this, popup, newLayerNameInput]() {
+      auto& gui = app_.getGui();
+      auto& layers = project->getMap()->getLayers();
+      unsigned int selectedLayer = project->getMap()->getLayerSelected();
+      std::string newName = newLayerNameInput->getText().toStdString();
+      if (!newName.empty()) layers[selectedLayer]->setName(newName);
+      refreshLayerList();
+      gui.remove(popup);
+    });
+
+    cancelNameButton->onClick([this, popup]() { app_.getGui().remove(popup); });
+  });
+  layerPanel_->add(renameLayerButton);
+  renameLayerButton->setTextSize(15);
+
+  // Création du bouton qui décale une couche vers le haut
+  auto goUpLayer = tgui::Button::create("▼");
+  goUpLayer->setSize(width * 0.0875, height * 0.04);
+  goUpLayer->setPosition(width * 0.01, height * 0.395);
+  goUpLayer->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+  goUpLayer->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+  goUpLayer->getRenderer()->setTextColor(tgui::Color::White);
+  goUpLayer->getRenderer()->setBorders({0});
+  goUpLayer->getRenderer()->setRoundedBorderRadius(8);
+  goUpLayer->onClick([this]() {
+    auto& layers = project->getMap()->getLayers();
+    unsigned int selectedLayer = project->getMap()->getLayerSelected();
+    if (selectedLayer == layers.size() - 1) return;
+    std::swap(layers[selectedLayer], layers[selectedLayer + 1]);
+    project->getMap()->selectLayer(selectedLayer + 1);
+    refreshLayerList();
+  });
+  layerPanel_->add(goUpLayer);
+
+  // Création du bouton qui décale une couche vers le bas
+  auto goDownLayer = tgui::Button::create("▲");
+  goDownLayer->setSize(width * 0.0875, height * 0.04);
+  goDownLayer->setPosition(width * 0.1025, height * 0.395);
+  goDownLayer->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+  goDownLayer->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+  goDownLayer->getRenderer()->setTextColor(tgui::Color::White);
+  goDownLayer->getRenderer()->setBorders({0});
+  goDownLayer->getRenderer()->setRoundedBorderRadius(8);
+  goDownLayer->onClick([this]() {
+    auto& layers = project->getMap()->getLayers();
+    unsigned int selectedLayer = project->getMap()->getLayerSelected();
+    if (selectedLayer == 0) return;
+    std::swap(layers[selectedLayer], layers[selectedLayer - 1]);
+    project->getMap()->selectLayer(selectedLayer - 1);
+    refreshLayerList();
+  });
+  layerPanel_->add(goDownLayer);
+  
   // Création du toggle bouton masqué/démasqué
   auto maskButton = tgui::Button::create("M/U");
   maskButton->setSize(width * 0.18, height * 0.04);
@@ -75,6 +188,7 @@ void Window::initLayerPanel() {
       layers[selectedLayer]->setMasked(!layers[selectedLayer]->isMasked());
   });
   layerPanel_->add(maskButton);
+  maskButton->setTextSize(15);
 
   // Création du bouton ajouter une couche (pour l'instant direct couche pixel)
   auto addLayerButton = tgui::Button::create("Ajouter couche");
@@ -86,6 +200,8 @@ void Window::initLayerPanel() {
   addLayerButton->getRenderer()->setBorders({0});
   addLayerButton->getRenderer()->setRoundedBorderRadius(8);
   addLayerButton->onClick([this]() {
+    auto& mainWindow = app_.getWindow();
+    auto& gui = app_.getGui();
     float width  = mainWindow.getSize().x;
     float height = mainWindow.getSize().y;
 
@@ -97,31 +213,32 @@ void Window::initLayerPanel() {
     popup->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
     popup->getRenderer()->setRoundedBorderRadius(8);
 
-    auto pixelBtn = tgui::Button::create("Couche Pixel");
-    pixelBtn->setSize(width * 0.16f, height * 0.07f);
-    pixelBtn->setPosition(width * 0.03f, height * 0.03f);
-    pixelBtn->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
-    pixelBtn->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
-    pixelBtn->getRenderer()->setTextColor(tgui::Color::White);
-    pixelBtn->getRenderer()->setTextSize(13);
-    pixelBtn->getRenderer()->setBorders({0});
-    pixelBtn->getRenderer()->setRoundedBorderRadius(6);
-    popup->add(pixelBtn);
+    auto createPixelLayerButton = tgui::Button::create("Couche Pixel");
+    createPixelLayerButton->setSize(width * 0.16f, height * 0.07f);
+    createPixelLayerButton->setPosition(width * 0.03f, height * 0.03f);
+    createPixelLayerButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+    createPixelLayerButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+    createPixelLayerButton->getRenderer()->setTextColor(tgui::Color::White);
+    createPixelLayerButton->getRenderer()->setTextSize(13);
+    createPixelLayerButton->getRenderer()->setBorders({0});
+    createPixelLayerButton->getRenderer()->setRoundedBorderRadius(6);
+    popup->add(createPixelLayerButton);
 
-    auto spriteBtn = tgui::Button::create("Couche Sprite");
-    spriteBtn->setSize(width * 0.16f, height * 0.07f);
-    spriteBtn->setPosition(width * 0.03f, height * 0.11f);
-    spriteBtn->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
-    spriteBtn->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
-    spriteBtn->getRenderer()->setTextColor(tgui::Color::White);
-    spriteBtn->getRenderer()->setTextSize(13);
-    spriteBtn->getRenderer()->setBorders({0});
-    spriteBtn->getRenderer()->setRoundedBorderRadius(6);
-    popup->add(spriteBtn);
+    auto createSpriteLayerButton = tgui::Button::create("Couche Sprite");
+    createSpriteLayerButton->setSize(width * 0.16f, height * 0.07f);
+    createSpriteLayerButton->setPosition(width * 0.03f, height * 0.11f);
+    createSpriteLayerButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
+    createSpriteLayerButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+    createSpriteLayerButton->getRenderer()->setTextColor(tgui::Color::White);
+    createSpriteLayerButton->getRenderer()->setTextSize(13);
+    createSpriteLayerButton->getRenderer()->setBorders({0});
+    createSpriteLayerButton->getRenderer()->setRoundedBorderRadius(6);
+    popup->add(createSpriteLayerButton);
 
     gui.add(popup);
 
-    pixelBtn->onClick([this, popup]() {
+    createPixelLayerButton->onClick([this, popup]() {
+      auto& gui = app_.getGui();
       LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->createPixelLayer();
       checkTypeTool(type);
@@ -129,7 +246,8 @@ void Window::initLayerPanel() {
       gui.remove(popup);
     });
 
-    spriteBtn->onClick([this, popup]() {
+    createSpriteLayerButton->onClick([this, popup]() {
+      auto& gui = app_.getGui();
       LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->createSpriteLayer();
       checkTypeTool(type);
@@ -138,6 +256,7 @@ void Window::initLayerPanel() {
     });
   });
   layerPanel_->add(addLayerButton);
+  addLayerButton->setTextSize(15);
 
   // Création du bouton supprimer une couche
   auto removeLayerButton = tgui::Button::create("Supprimer couche");
@@ -155,14 +274,17 @@ void Window::initLayerPanel() {
     unsigned int selected = project->getMap()->getLayerSelected();
     layers.erase(layers.begin() + selected);
     unsigned int newSelected = (selected > 0) ? selected - 1 : 0;
-    project->getMap()->setLayerSelected(newSelected);
+    project->getMap()->selectLayer(newSelected);
     checkTypeTool(type);
     refreshLayerList();
   });
   layerPanel_->add(removeLayerButton);
+  removeLayerButton->setTextSize(15);
 }
 
-void Window::refreshLayerList() {
+void GameView::refreshLayerList() {
+  auto& mainWindow = app_.getWindow();
+  auto& gui = app_.getGui();
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 
@@ -182,16 +304,17 @@ void Window::refreshLayerList() {
     layerButton->setPosition(width * 0.01, i * height * 0.055);
     layerButton->onClick([this, i]() {
       LayerType type = project->getMap()->getCurrentLayer()->getType();
-      project->getMap()->setLayerSelected(static_cast<unsigned int>(i));
+      project->getMap()->selectLayer(static_cast<unsigned int>(i));
       checkTypeTool(type);
       refreshLayerList();
     });
     layersList_->add(layerButton);
+    layerButton->setTextSize(15);
   }
 }
 
 
-  void Window::checkTypeTool(LayerType previous_type){
+  void GameView::checkTypeTool(LayerType previous_type){
   LayerType current_type = project->getMap()->getCurrentLayer()->getType();
 
   if(previous_type == current_type)
@@ -206,9 +329,17 @@ void Window::refreshLayerList() {
       bool erraser = static_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool())->getEraser();
       if(erraser){
         toolbar.selectTool(SPRITEERASER);
+        if (eraserOptionsPanel_ && eraserOptionsPanel_->isVisible()) {
+          eraserOptionsPanel_->setVisible(false);
+          if (eraserSpriteOptionsPanel_) eraserSpriteOptionsPanel_->setVisible(true);
+        }
+      } else {
+        toolbar.selectTool(SPRITEBRUSH);
+        if (penOptionsPanel_ && penOptionsPanel_->isVisible()) {
+          penOptionsPanel_->setVisible(false);
+          if (penSpriteOptionsPanel_) penSpriteOptionsPanel_->setVisible(true);
+        }
       }
-      else{toolbar.selectTool(SPRITEBRUSH);}
-
       break;
     }
     case PIXELSHIFT:{
@@ -218,15 +349,27 @@ void Window::refreshLayerList() {
     case SPRITEBRUSH:{
       toolbar.selectTool(PIXELBRUSH);
       static_pointer_cast<PixelBrush>(toolbar.getSelectedTool())->setEraser(false);
+      if (penSpriteOptionsPanel_ && penSpriteOptionsPanel_->isVisible()) {
+        penSpriteOptionsPanel_->setVisible(false);
+        if (penOptionsPanel_) penOptionsPanel_->setVisible(true);
+      } else if (spriteBrushOptionsPanel_) {
+        spriteBrushOptionsPanel_->setVisible(false);
+      }
       break;
     }
     case SPRITESHIFT:{
       toolbar.selectTool(PIXELSHIFT);
       break;
     }
+    case NONETOOL:
+      break;
     case SPRITEERASER :{
       toolbar.selectTool(PIXELBRUSH);
       static_pointer_cast<PixelBrush>(toolbar.getSelectedTool())->setEraser(true);
+      if (eraserSpriteOptionsPanel_ && eraserSpriteOptionsPanel_->isVisible()) {
+        eraserSpriteOptionsPanel_->setVisible(false);
+        if (eraserOptionsPanel_) eraserOptionsPanel_->setVisible(true);
+      }
       break;
     }
   }

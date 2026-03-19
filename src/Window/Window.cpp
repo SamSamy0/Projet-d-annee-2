@@ -71,16 +71,6 @@ void Window::handlePopupEvents(const std::optional<sf::Event> &event) {
         closePopup();
       }
     }
-    // if (background) {
-    //   // Cast to Panel to use (->get("dataPanel"))
-    //   auto backgroundPanel =
-    //   std::dynamic_pointer_cast<tgui::Panel>(background); auto dataPanel =
-    //   backgroundPanel->get("dataPanel"); sf::Vector2f
-    //   clickPos(mouseClick->position.x, mouseClick->position.y); if (dataPanel
-    //   && !dataPanel->isMouseOnWidget(clickPos)) {
-    //     gui.remove(background);
-    //   }
-    // }
   }
   if (event->getIf<sf::Event::MouseWheelScrolled>()) {
     auto popup = gui.get("popup");
@@ -118,7 +108,7 @@ void Window::updateProjectNameInList(long long id, const std::string &name) {
       break;
     }
   }
-  //Refreshing project list
+  // Refreshing project list
   initMenuWidget();
 }
 
@@ -161,6 +151,12 @@ void Window::run() {
 
 void Window::setLogIn() { isLoggedIn = true; }
 
+void Window::setCurrentProject(unsigned int scale, int height, int width , std::string name, unsigned int id){
+  sf::Vector2u vec{(uint)width,(uint)height};
+  project = std::make_unique<Project>(scale,vec,name,id,mainWindow,gui,manager);
+}
+
+
 // Pour une utilisation sans serveur
 // mais dans ce cas, il faut retirer la boucle dans client.cpp
 //  void Window::run() {
@@ -176,3 +172,4 @@ void Window::setLogIn() { isLoggedIn = true; }
 //      mainWindow.display();
 //    }
 //  }
+

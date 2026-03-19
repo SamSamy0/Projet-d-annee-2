@@ -61,16 +61,24 @@ set(CMAKE_AUTOMOC ON)  # ← nécessaire pour Qt
 # ── CLIENT ───────────────────────────────────────────────────────
 set(SOURCES
     ../src/client/client.cpp
-    ../src/Window/Window.cpp
-    ../src/Window/windowLogin.cpp
-    ../src/Window/windowMenu.cpp
-    ../src/Window/projectWidgets/windowGame.cpp
+    ../src/Window/Application.cpp
+    ../src/Window/LoginView.cpp
+    ../src/Window/MenuView.cpp
+    ../src/Window/projectWidgets/GameView.cpp
+    ../src/Window/View.hpp
+    # ../src/Window/Window.cpp
+    # ../src/Window/windowLogin.cpp
+    # ../src/Window/windowMenu.cpp
+    # ../src/Window/projectWidgets/windowGame.cpp
     ../src/Window/projectWidgets/toolBarWidgets.cpp
     ../src/Window/projectWidgets/layerWidgets.cpp
     ../src/Window/projectWidgets/chatWidgets.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/penOptions.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/eraserOptions.cpp
+    ../src/Window/projectWidgets/toolbarOptionsWidgets/penSpriteOptions.cpp
+    ../src/Window/projectWidgets/toolbarOptionsWidgets/eraserSpriteOptions.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/spriteBrushOptions.cpp
+    ../src/Window/projectWidgets/minimapWidgets.cpp
     ../src/client/clientnetwork.cpp
     ../src/client/handler.cpp
     ../src/client/receiverwindow.cpp
@@ -131,6 +139,7 @@ set(SERVER_SOURCES
     ../src/common/protocol.cpp
     ../src/server/servernetwork.cpp
     ../src/server/worker.cpp
+    ../src/server/LiveProject.cpp
 )
 
 add_executable(server ${SERVER_SOURCES})

@@ -12,6 +12,7 @@ void Worker::run() {
 
         if (request) {
             request->process(*this);
+            std::cout << "Taille map projet :" << static_cast<uint>(mapProjet_.size()) << std::endl;
         } else {
             break;
         }
@@ -31,35 +32,35 @@ void Worker::pushNetwork(std::unique_ptr<Reponse> rps) {
 }
 
 
-long long Worker::verifyLogin(const std::string& pseudo, const std::string& password) {
+uint Worker::verifyLogin(const std::string& pseudo, const std::string& password) {
     return dbManager_.verifyLogin(pseudo, password);
 }
 
-long long Worker::addUser(const std::string& pseudo, const std::string& password) {
+uint Worker::addUser(const std::string& pseudo, const std::string& password) {
     return dbManager_.addUser(pseudo, password);
 }
 
-bool Worker::addLink(const long long userId, const long long projectId, const int8_t role) {
+bool Worker::addLink(const uint userId, const uint projectId, const uint8_t role) {
     return dbManager_.addLink(userId, projectId, role);
 }
 
-bool Worker::changeRole(const long long userId, const long long projectId, const int8_t role) {
+bool Worker::changeRole(const uint userId, const uint projectId, const uint8_t role) {
     return dbManager_.changeRole(userId, projectId, role);
 }
 
-long long Worker::addProjectSQL(const std::string& name, const long long userId) {
+uint Worker::addProjectSQL(const std::string& name, const uint userId) {
     return dbManager_.addProject(name, userId);
 }
 
-std::vector<MemberEntry> Worker::getProjectMembers(const long long projectId) {
+std::vector<MemberEntry> Worker::getProjectMembers(const uint projectId) {
     return dbManager_.getProjectMembers(projectId);
 }
 
-std::vector<ProjectEntry> Worker::getUserProjects(const long long userId) {
+std::vector<ProjectEntry> Worker::getUserProjects(const uint userId) {
     return dbManager_.getUserProjects(userId);
 }
     
-int8_t Worker::getRole(const long long userId, const long long projectId) {
+uint8_t Worker::getRole(const uint userId, const uint projectId) {
     return dbManager_.getRole(userId, projectId);
 }
 
@@ -67,41 +68,48 @@ std::vector<ProjectEntry> Worker::getAllProjects() {
     return dbManager_.getAllProjects();
 }
 
-bool Worker::renameProject(int projectId, const std::string& newName){
+bool Worker::renameProject(uint projectId, const std::string& newName){
     bool dbRename = dbManager_.updateProjectName(projectId, newName);
     bool jsonRename = projManager_.updateProjectName(projectId, QString::fromStdString(newName));
     return dbRename && jsonRename;
 }
 
-bool Worker::duplicateProject(int oldId, const std::string& newName, long long userId){
-    long long newId = dbManager_.dupProj(newName, userId);
+uint Worker::duplicateProject(uint oldId, const std::string& newName, uint userId){
+    uint newId = dbManager_.dupProj(newName, userId);
     // Duplication didn't work
-    if (newId == -1) return false;
+    if (newId == -1) return -1;
+    
     bool cpyFldr = projManager_.copyProjectFolder(oldId, newId);
     bool updtJson = projManager_.updateJsonDup(newId, QString::fromStdString(newName));
-    return cpyFldr && updtJson;
+    // Copy of project folder didn't work
+    if (!cpyFldr && updtJson) return -2;
+    return newId;
 }
 
 
-bool Worker::createProjectJson(int projectId, const std::string &projectName, int width, int height, uint scale) {
+bool Worker::createProjectJson(uint projectId, const std::string &projectName, uint width, uint height, uint scale) {
     return projManager_.createProjectJson(projectId, QString::fromStdString(projectName), width, height, scale);
 }
     
-QJsonObject Worker::loadProjectJson(int projectId) {
+QJsonObject Worker::loadProjectJson(uint projectId) {
     return projManager_.loadProjectJson(projectId);
 }
 
-bool Worker::saveImage(int projectId, const std::string &fileName, const QByteArray &data) {
+bool Worker::saveImage(uint projectId, const std::string &fileName, const QByteArray &data) {
     return projManager_.saveImage(projectId, QString::fromStdString(fileName), data);
 }
 
-bool Worker::deleteProject(int projectId) {
+bool Worker::deleteProject(uint projectId) {
     if (dbManager_.removeProject(projectId) and projManager_.deleteProject(projectId)) {
         return true;
     }
     return false;
 }
 
-QByteArray Worker::getByteJson(int projectId) {
+QByteArray Worker::getByteJson(uint projectId) {
     return projManager_.getByteJson(projectId);
+}
+
+bool Worker::writeProjetJson(QJsonObject& jsonObject, uint id) {
+    return projManager_.writeProjetJson(jsonObject, id);
 }

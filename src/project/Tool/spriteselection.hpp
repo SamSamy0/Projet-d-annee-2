@@ -19,7 +19,7 @@ class SpriteSelection : public Tool {
   sf::Vector2i startSelectionPos_;
   bool isSelected(uint)const;
 public:
-  SpriteSelection(std::shared_ptr<Map> map);
+  SpriteSelection(std::shared_ptr<Map> map, ClientNetworkManager& manager);
   std::vector<uint>& getSelection();
   const SelectionState getState() const;
   void deleteSelectedSprite();

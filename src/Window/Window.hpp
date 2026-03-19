@@ -1,10 +1,10 @@
 #pragma once
 
+#include "../client/clientnetwork.hpp"
+#include "../project/Layer/layer.hpp"
+#include "../project/map.hpp"
 #include "../project/project.hpp"
 #include "../project/user.hpp"
-#include "../client/clientnetwork.hpp"
-#include "../project/map.hpp"
-#include "../project/Layer/layer.hpp"
 #include "ProjectData.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -29,7 +29,7 @@ private:
   // Authentification Interface
   tgui::Gui gui;
   std::unique_ptr<Project> project;
-  // Temporary (until server is OK)
+
   std::vector<ProjectData> projectList = {};
 
   tgui::Panel::Ptr layerPanel_ = nullptr;
@@ -46,17 +46,17 @@ private:
   tgui::Panel::Ptr penOptionsPanel_ = nullptr;
   // Eraser options panel
   tgui::Panel::Ptr eraserOptionsPanel_ = nullptr;
+  tgui::Panel::Ptr eraserSpriteOptionsPanel_ = nullptr;
   tgui::Panel::Ptr spriteBrushOptionsPanel_ = nullptr;
 
-  // Window
+  // Window -> Application
   void initWidget();
   void processEvents();
   void handleWindowEvents(const std::optional<sf::Event> &event);
   void handlePopupEvents(const std::optional<sf::Event> &event);
-  
   void updateTextSize();
 
-  // Login Window
+  // Login Window -> LoginView
   void login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd);
   void signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd);
   void loginWidget();
@@ -93,10 +93,14 @@ private:
   void initChatWidget();
   void initPenOptions();
   void initEraserOptions();
+  void initEraserSpriteOptions();
   void initSpriteBrushOptions();
+  void initMinimap();
+  void drawMinimap();
   void refreshChat();
   void refreshLayerList();
   void handleGameEvents(const std::optional<sf::Event> &event);
+
   // Detection in map
   void toolOnClick();
   void toolOnRelease();
@@ -116,4 +120,5 @@ public:
   bool isOpen() const;
   void run();
   void updateCreatedProjectId(uint32_t projId);
+  void setCurrentProject(unsigned int scale, int height, int width , std::string name, unsigned int id);
 };

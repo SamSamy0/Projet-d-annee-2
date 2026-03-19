@@ -5,7 +5,7 @@
 #include <memory>
 
 
-SpriteSelection::SpriteSelection(std::shared_ptr<Map> map) : Tool(map){
+SpriteSelection::SpriteSelection(std::shared_ptr<Map> map,ClientNetworkManager& manager ) : Tool(map,manager){
   type_ = SPRITESELECTION;
 }
 

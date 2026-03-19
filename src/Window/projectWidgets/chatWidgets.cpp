@@ -1,7 +1,11 @@
-#include "../Window.hpp"
+// #include "../Window.hpp"
 #include "../../project/Chat/userMessage.hpp"
+#include "../Application.hpp"
+#include "GameView.hpp"
 
-void Window::initChatWidget() {
+void GameView::initChatWidget() {
+  auto& mainWindow = app_.getWindow();
+  auto& gui = app_.getGui();
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 
@@ -61,7 +65,7 @@ void Window::initChatWidget() {
   chatSendButton_->onPress([this]() {
     tgui::String text = chatInput_->getText();
     if (text.empty()) return;
-    auto msg = std::make_shared<UserMessage>(currentUser_.getUser(), text.toStdString());
+    auto msg = std::make_shared<UserMessage>(currentUser.getUser(), text.toStdString());
     project->getChat().addMessage(msg);
     chatInput_->setText("");
     refreshChat();
@@ -69,7 +73,9 @@ void Window::initChatWidget() {
   chatPanel_->add(chatSendButton_);
 }
 
-void Window::refreshChat() {
+void GameView::refreshChat() {
+  auto& mainWindow = app_.getWindow();
+  
   chatMessages_->removeAllWidgets();
 
   float width  = mainWindow.getSize().x;

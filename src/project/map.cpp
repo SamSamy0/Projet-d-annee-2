@@ -11,15 +11,17 @@
 using namespace std;
 
 
-Map::Map(int mapId, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) : 
-    id_{mapId}, size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
-    if (!render_texture_.resize(size)){} //TODO: gérer l'erreur
+Map::Map(uint id, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) :
+     id_{id},size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
+    if (!render_texture_.resize(size)){
+        std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;
+    } //TODO: gérer l'erreur
     sprite_.setTexture(render_texture_.getTexture(),true);
     hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
 }
 
-Map::Map(int mapId, sf::Vector2u size , unsigned int scale) : 
-    id_{mapId}, size_{size},
+Map::Map(uint id, sf::Vector2u size , unsigned int scale) :
+     id_{id},size_{size},
     scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
     if (!render_texture_.resize(size)){} //TODO: gérer l'erreur
     sprite_.setTexture(render_texture_.getTexture(),true);
@@ -35,11 +37,18 @@ sf::Vector2u Map::getSize()const {return size_;}
 
 bool Map::hasLayer()const {return !layers_.empty();}
 
-void Map::setLayerSelected(unsigned int i) { selected_ = i; }
+void Map::selectLayer(unsigned int i) { selected_ = i; }
+
+void Map::selectLayerId(uint id) {
+    for (size_t i = 0; i < layers_.size(); ++i) {
+        if (layers_[i]->getId() == id) {
+            selectLayer(i);
+            break;
+        }
+    }
+}
 
 unsigned int Map::getScale() const { return scale_; }
-
-
 
 vector<shared_ptr<Layer>>& Map::getLayers() { return layers_; }
 
@@ -48,7 +57,8 @@ void Map::insertLayer(shared_ptr<Layer> layer) { layers_.insert(layers_.begin()+
 void Map::createPixelLayer(){
     int n = layers_.size() + 1;
     std::string name = "Couche Pixel (" + std::to_string(n) + ")";
-    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(name, size_);
+    shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(nextLayerId_,name, size_);
+    nextLayerId_ +=1;
     layers_.push_back(pixellayer);
     layers_.size() == 1 ? selected_ = 0 : selected_ += 1; // évite d'avoir des numéros de couche négative
 }
@@ -56,8 +66,9 @@ void Map::createPixelLayer(){
 
 void Map::createSpriteLayer(){
     int n = layers_.size() + 1;
-    std::string name = "Couche Sprite (" + std::to_string(n) + ")";
-    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(name,size_); // TODO: changer le nom de la couche en fonction de sa profondeur
+    std::string name = "Couche Pixel (" + std::to_string(n) + ")";
+    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(nextLayerId_,name,size_); 
+    nextLayerId_ +=1;
     layers_.push_back(spritelayer);
     layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
 }
@@ -70,24 +81,15 @@ shared_ptr<Layer> Map::getCurrentLayer(){
     return layers_[selected_];
 }
 
+void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap) {
 
-
-// bool Map::isInside(sf::Vector2i pos)const{
-//     return (pos.x >= 0 && pos.x < static_cast<int>(size_.x) &&
-//     pos.y >= 0 && pos.y < static_cast<int>(size_.y));
-// }
-
-void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
-
-{
-   
     // On crée la map => zone dessinable
     sf::RectangleShape map;
     map.setSize(sf::Vector2f(size_.x, size_.y));
     map.setOrigin(sf::Vector2f((float)(size_.x) / 2, (float)(size_.y) / 2));
     map.setPosition(sf::Vector2f((float)(size_.x) / 2, (float)(size_.y) / 2));
     map.setFillColor(sf::Color::White);
-    
+
     // Pour éviter que SFML n'étire la carte si celle-ci n'a pas la meme taille que la fenêtre, on utilise un système de ratio
     // Note : idée proposée par ChatGPT !!
     float windowRatio = static_cast<float>(window.getSize().x) / window.getSize().y;
@@ -102,21 +104,20 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap)
         viewMap.setSize(sf::Vector2f(size_.x * zoomFactor, newHeight * zoomFactor));
     }
     // Fin de l'idée de ChatGPT
-    
+
     viewMap.setCenter(sf::Vector2f(move_.positionX_ + (float)(size_.x) / 2, move_.positionY_ + (float)(size_.y) / 2));
 
-   
-    render_texture_.clear(sf::Color::White); 
+
+    render_texture_.clear(sf::Color::White);
 
     for (auto& layer: layers_) {
         // We are drawing all the layers on the texture of the map
-        layer->drawLayer(render_texture_); 
+        layer->drawLayer(render_texture_);
     }
-    // And then we display the texture of the map 
+    // And then we display the texture of the map
     render_texture_.display();
     window.draw(sprite_);
 }
-
 
 unsigned int Map::getLayerSelected() const {
     return selected_;
@@ -125,21 +126,21 @@ unsigned int Map::getLayerSelected() const {
 void Map::detectZooming(sf::Event event) {
     if (const auto* mouse = event.getIf<sf::Event::MouseWheelScrolled>()) {
         if (mouse->delta > 0) { // regarde si l'utilisateur veut faire un zoom avant
-            zoom_.zoomIn(); 
+            zoom_.zoomIn();
         }
         else if (mouse->delta < 0) {  // regarde si l'utilisateur veut faire un zoom arrière
             zoom_.zoomOut();
         }
-    }  
+    }
 }
 
 void Map::zooming(sf::Event::MouseWheelScrolled const* event) {
     if (event->delta > 0) { // regarde si l'utilisateur veut faire un zoom avant
-        zoom_.zoomIn(); 
+        zoom_.zoomIn();
     }
     else if (event->delta < 0) {  // regarde si l'utilisateur veut faire un zoom arrière
         zoom_.zoomOut();
-    }  
+    }
 }
 
 void Map::detectMovement()
@@ -153,4 +154,8 @@ void Map::detectMovement()
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))) { // regarde si l'utilisateur veut aller en bas
         move_.goDown(zoom_.getZoom());
     }
+}
+
+uint Map::getId(){
+    return id_;
 }

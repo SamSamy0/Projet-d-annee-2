@@ -1,7 +1,11 @@
-#include "../../Window.hpp"
+// #include "../../Window.hpp"
 #include "../../../project/Tool/pixelbrush.hpp"
+#include "../../Application.hpp"
+#include "../GameView.hpp"
 
-void Window::initPenOptions() {
+void GameView::initPenOptions() {
+  auto& mainWindow = app_.getWindow();
+  auto& gui = app_.getGui();
   float width  = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 

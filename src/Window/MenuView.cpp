@@ -1,10 +1,13 @@
-#include "Window.hpp"
-#include <SFML/Graphics/Color.hpp>
-#include <TGUI/Widgets/Panel.hpp>
-#include <string>
+#include "MenuView.hpp"
+#include "Application.hpp"
+#include "projectWidgets/GameView.hpp"
 
-void Window::initMenuWidget() {
+MenuView::MenuView(Application &app) : View(app) {};
+
+void MenuView::init() {
+  auto &gui = app_.getGui();
   gui.removeAllWidgets();
+  // app_.getNetwork().getProjectList();
 
   // Left Background
   auto leftPanel = tgui::Panel::create();
@@ -50,7 +53,7 @@ void Window::initMenuWidget() {
   createProjB->getRenderer()->setBorders(0);
   createProjB->getRenderer()->setRoundedBorderRadius(8);
   rightPanel->add(createProjB);
-  createProjB->onPress(&Window::askProjectData, this);
+  createProjB->onPress(&MenuView::askProjectData, this);
 
   auto joinProjB = tgui::Button::create("Rejoindre un projet");
   joinProjB->setPosition("10%", "20%");
@@ -61,7 +64,7 @@ void Window::initMenuWidget() {
   joinProjB->getRenderer()->setBorders(1);
   joinProjB->getRenderer()->setBorderColor(sf::Color(60, 60, 80));
   joinProjB->getRenderer()->setRoundedBorderRadius(8);
-  joinProjB->onPress(&Window::joinProj, this, rightPanel);
+  joinProjB->onPress(&MenuView::joinProj, this, rightPanel);
   rightPanel->add(joinProjB);
 
   // auto shareProjB = tgui::Button::create("Partager un projet");
@@ -73,10 +76,33 @@ void Window::initMenuWidget() {
   // shareProjB->getRenderer()->setBorders(1);
   // shareProjB->getRenderer()->setBorderColor(sf::Color(60, 60, 80));
   // shareProjB->getRenderer()->setRoundedBorderRadius(8);
-  // shareProjB->onPress(&Window::shareProj, this);
+  // shareProjB->onPress(&MenuView::shareProj, this);
   // rightPanel->add(shareProjB);
 }
-void Window::joinProj(tgui::Panel::Ptr panel) {
+void MenuView::handleEvents(const sf::Event &event) {
+  auto &gui = app_.getGui();
+  if (const auto *mouseClick = event.getIf<sf::Event::MouseButtonPressed>()) {
+    auto popup = gui.get("popup");
+    auto background = gui.get("background");
+    auto btnMore = gui.get("BtnMore");
+    // If popup exists
+    if (popup) {
+      // Gets position of where menu pops
+      sf::Vector2f clickPos(mouseClick->position.x, mouseClick->position.y);
+      // If click outside the menu, then remove it
+      if (!popup->isMouseOnWidget(clickPos)) {
+        closePopup();
+      }
+    }
+  }
+  if (event.getIf<sf::Event::MouseWheelScrolled>()) {
+    auto popup = gui.get("popup");
+    if (popup) {
+      gui.remove(popup);
+    }
+  }
+}
+void MenuView::joinProj(tgui::Panel::Ptr panel) {
   auto joinPanel = tgui::Panel::create();
   joinPanel->setSize("80%", "30%");
   joinPanel->setPosition("10%", "40%");
@@ -125,8 +151,8 @@ void Window::joinProj(tgui::Panel::Ptr panel) {
       boxError(token);
   });
 }
-void Window::shareProj() {}
-void Window::displayProjList(tgui::Panel::Ptr parent) {
+void MenuView::shareProj() {}
+void MenuView::displayProjList(tgui::Panel::Ptr parent) {
   auto panel = tgui::ScrollablePanel::create();
   panel->setPosition("5%", "18%");
   panel->setSize("90%", "60%");
@@ -159,12 +185,14 @@ void Window::displayProjList(tgui::Panel::Ptr parent) {
     btn->getRenderer()->setBorders(0);
     btn->getRenderer()->setRoundedBorderRadius(6);
     row->add(btn, "BtnMore");
-    btn->onPress(&Window::showProjectMenu, this, projectList[i], btn);
+    btn->onPress(&MenuView::showProjectMenu, this, projectList[i], btn);
     btn->setTextSize(20);
   }
 }
 
-void Window::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
+void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
+  auto &gui = app_.getGui();
+  auto &manager = app_.getNetwork();
   long long id = project.projectId;
   activeMoreButton = toHover;
   sf::Vector2f btnPos = toHover->getAbsolutePosition();
@@ -193,45 +221,45 @@ void Window::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   gui.add(menu, "popup");
   menu->setTextSize(20);
   // menu->onUnfocus([this, menu]() { gui.remove(menu); });
-  menu->onItemSelect(
-      [this, menu, id, toHover, project](const tgui::String &item) {
-        // Delete Action
-        if (item == "Supprimer") {
-          auto it = std::find_if(
-              projectList.begin(), projectList.end(),
-              [id](const ProjectData &p) { return p.projectId == id; });
+  menu->onItemSelect([this, menu, id, toHover, project, &manager,
+                      &gui](const tgui::String &item) {
+    // Delete Action
+    if (item == "Supprimer") {
+      auto it = std::find_if(
+          projectList.begin(), projectList.end(),
+          [id](const ProjectData &p) { return p.projectId == id; });
 
-          if (it != projectList.end()) {
-            projectList.erase(it);
-            std::cout << "Suppression du projet " << id << std::endl;
-            initMenuWidget();
-          }
-          manager.delProject(id);
-          // Open Action
-        } else if (item == "Ouvrir") {
-          std::cout << "Ouverture du projet " << std::endl;
-          manager.getProjectData(id);
+      if (it != projectList.end()) {
+        projectList.erase(it);
+        std::cout << "Suppression du projet " << id << std::endl;
+        init();
+      }
+      manager.delProject(id);
+      // Open Action
+    } else if (item == "Ouvrir") {
+      std::cout << "Ouverture du projet " << std::endl;
+      manager.getProjectData(id);
 
-          // Rename Action
-        } else if (item == "Renommer") {
-          std::cout << "appuyé" << std::endl;
-          // NOTE: Sending project reference to server with "project"
-          initInputWidget(focusPopup::RENAME, project);
-        } else if (item == "Dupliquer") {
-          initInputWidget(focusPopup::DUPLICATE, project);
-        } else if (item == "Partager") {
+      // Rename Action
+    } else if (item == "Renommer") {
+      std::cout << "appuyé" << std::endl;
+      // NOTE: Sending project reference to server with "project"
+      initInputWidget(focusPopup::RENAME, project);
+    } else if (item == "Dupliquer") {
+      initInputWidget(focusPopup::DUPLICATE, project);
+    } else if (item == "Partager") {
+    } else if (item == "Quitter") {
+    }
+    activeMoreButton->getRenderer()->setBackgroundColor(
+        tgui::Color::Transparent);
 
-        } else if (item == "Quitter") {
-        }
-        activeMoreButton->getRenderer()->setBackgroundColor(
-            tgui::Color::Transparent);
-
-        this->gui.remove(menu);
-        // toHover->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-      });
+    gui.remove(menu);
+    // toHover->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+  });
 }
 
-void Window::closePopup() {
+void MenuView::closePopup() {
+  auto &gui = app_.getGui();
   auto popup = gui.get("popup");
   gui.remove(popup);
   if (activeMoreButton) {
@@ -241,15 +269,18 @@ void Window::closePopup() {
   }
 }
 
-void Window::exitAction(tgui::Panel::Ptr background) {
+void MenuView::exitAction(tgui::Panel::Ptr background) {
+  auto &gui = app_.getGui();
   auto back = std::dynamic_pointer_cast<tgui::Panel>(background);
   auto pan = back->get("Panel");
   gui.remove(pan);
   gui.remove(back);
 }
 
-void Window::popupRename(tgui::Panel::Ptr renameBackground, ProjectData project,
-                         focusPopup view) {
+void MenuView::popupRename(tgui::Panel::Ptr renameBackground,
+                           ProjectData project, focusPopup view) {
+  auto &gui = app_.getGui();
+  auto &manager = app_.getNetwork();
   gui.add(renameBackground, "rbackground");
 
   // Box for project's renamePanel
@@ -300,7 +331,8 @@ void Window::popupRename(tgui::Panel::Ptr renameBackground, ProjectData project,
   renamePanel->add(exitB);
   exitB->onPress([this, renameBackground]() { exitAction(renameBackground); });
 
-  rvalid->onPress([this, rname, project, renameBackground, view]() {
+  rvalid->onPress([this, rname, project, renameBackground, view, &gui,
+                   &manager]() {
     if (view == focusPopup::RENAME) {
       std::cout << "Renaming project id: " << project.projectId << std::endl;
       std::string newName = static_cast<std::string>(rname->getText());
@@ -323,9 +355,9 @@ void Window::popupRename(tgui::Panel::Ptr renameBackground, ProjectData project,
     }
   });
 }
-void Window::updateList() { initMenuWidget(); }
+void MenuView::updateList() { init(); }
 
-void Window::initInputWidget(focusPopup focus, ProjectData project) {
+void MenuView::initInputWidget(focusPopup focus, ProjectData project) {
   // Grey Backgroung
   auto background = tgui::Panel::create();
   background->setSize("100%", "100%");
@@ -352,67 +384,9 @@ void Window::initInputWidget(focusPopup focus, ProjectData project) {
   }
   }
 }
-// void Window::popupDuplicate(tgui::Panel::Ptr dbackground, ProjectData
-// project) {
-//   gui.add(dbackground, "dbackground");
-//
-//   // Box for project's duplicatePanel
-//   auto duplicatePanel = tgui::Panel::create();
-//   duplicatePanel->setSize("35%", "30%");
-//   duplicatePanel->setPosition("50% - 17.5%", "50% - 10%");
-//   duplicatePanel->getRenderer()->setBackgroundColor(tgui::Color(40, 40, 40));
-//   dbackground->add(duplicatePanel, "Panel");
-//   // Title
-//   std::string oldName = project.projectName;
-//   auto dtitle = tgui::Label::create("Renommer le projet: \n " + oldName);
-//   dtitle->getRenderer()->setTextColor(tgui::Color::White);
-//   dtitle->setPosition("25%", "5%");
-//   dtitle->setTextSize(24);
-//   duplicatePanel->add(dtitle);
-//   // Rename Box
-//   auto dname = tgui::EditBox::create();
-//   dname->setSize("80%", "12%");
-//   dname->setPosition("10%", "35%");
-//   dname->setDefaultText("Choisissez un nouveau nom ");
-//   dname->getRenderer()->setRoundedBorderRadius(8);
-//   dname->getRenderer()->setBackgroundColor(tgui::Color(28, 28, 36));
-//   dname->getRenderer()->setBorderColor(sf::Color(55, 55, 70));
-//   dname->getRenderer()->setBackgroundColorFocused(tgui::Color::White);
-//   duplicatePanel->add(dname);
-//   // Valid Button
-//   auto dvalid = tgui::Button::create("Valider");
-//   dvalid->setSize("40%", "12%");
-//   dvalid->setPosition("30%", "75%");
-//   dvalid->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
-//   dvalid->getRenderer()->setBackgroundColorHover(sf::Color(118, 120, 255));
-//   dvalid->getRenderer()->setTextColor(sf::Color::White);
-//   dvalid->getRenderer()->setBorders(0);
-//   dvalid->getRenderer()->setRoundedBorderRadius(8);
-//   duplicatePanel->add(dvalid);
-//   // Exit Button
-//   auto exitB = tgui::Button::create("x");
-//   exitB->setSize("10%", "10%");
-//   exitB->setPosition("0%", "0%");
-//   exitB->getRenderer()->setBackgroundColor(sf::Color::Red);
-//   exitB->getRenderer()->setBackgroundColorHover(sf::Color::White);
-//   exitB->getRenderer()->setTextColor(sf::Color::Black);
-//   exitB->getRenderer()->setBorders(0);
-//   duplicatePanel->add(exitB);
-//   exitB->onPress([this, dbackground]() { exitAction(dbackground); });
-//
-//   dvalid->onPress([this, dname, project, dbackground]() {
-//     std::cout << "Renaming project id: " << project.projectId << std::endl;
-//     std::string newName = static_cast<std::string>(dname->getText());
-//     if (!newName.empty()) {
-//       manager.renameProject(project.projectId, newName);
-//       exitAction(dbackground);
-//
-//     } else
-//       (boxError(dname));
-//   });
-// }
 
-void Window::popupCreate(tgui::Panel::Ptr background) {
+void MenuView::popupCreate(tgui::Panel::Ptr background) {
+  auto &gui = app_.getGui();
   gui.add(background);
   auto data = tgui::Panel::create();
   data->setSize("35%", "40%");
@@ -497,19 +471,19 @@ void Window::popupCreate(tgui::Panel::Ptr background) {
     // Les getText() sont appelés au moment du clic !
     if (checkInput(scale, sizePx, sizePy))
       this->createProj(scale->getText(), sizePx->getText(), sizePy->getText(),
-                       name->getText(), 0, this->mainWindow, this->gui);
+                       name->getText(), 0, app_.getWindow(), app_.getGui());
   });
 }
 
-bool Window::boxError(tgui::EditBox::Ptr box) {
+bool MenuView::boxError(tgui::EditBox::Ptr box) {
   box->getRenderer()->setBorderColor(sf::Color::Red);
   box->getRenderer()->setDefaultTextColor(sf::Color::Red);
   box->setText("");
   box->setDefaultText("Changer la donnée");
   return false;
 }
-bool Window::checkInput(tgui::EditBox::Ptr scale, tgui::EditBox::Ptr sizePx,
-                        tgui::EditBox::Ptr sizePy) {
+bool MenuView::checkInput(tgui::EditBox::Ptr scale, tgui::EditBox::Ptr sizePx,
+                          tgui::EditBox::Ptr sizePy) {
   bool res = true;
   if (scale->getText().empty() || scale->getText().toUInt() == 0) {
     res = boxError(scale);
@@ -523,9 +497,11 @@ bool Window::checkInput(tgui::EditBox::Ptr scale, tgui::EditBox::Ptr sizePx,
   return res;
 }
 
-void Window::createProj(tgui::String scale, tgui::String sizeX,
-                        tgui::String sizeY, tgui::String name, unsigned int id,
-                        sf::RenderWindow &window, tgui::Gui &gui) {
+void MenuView::createProj(tgui::String scale, tgui::String sizeX,
+                          tgui::String sizeY, tgui::String name,
+                          unsigned int id, sf::RenderWindow &window,
+                          tgui::Gui &gui) {
+  auto &manager = app_.getNetwork();
   // NOTE: Need verification if data isn't empty
   // NOTE: Check with server (chinsou tomas)
   unsigned int scaleInt = scale.toUInt();
@@ -536,22 +512,39 @@ void Window::createProj(tgui::String scale, tgui::String sizeX,
   manager.createProject(nameS, size, scaleInt);
   gui.removeAllWidgets();
 
-  this->project =
-      std::make_unique<Project>(scaleInt, size, nameS, id, mainWindow, gui, manager);
+  app_.getProject() = std::make_unique<Project>(scaleInt, size, nameS, id,
+                                                app_.getWindow(), gui, app_.getNetwork());
 
-  projectList.push_back(getProjectData(project));
-  setState(projectState::GAME);
+  projectList.push_back(getProjectData(app_.getProject()));
+
+  app_.changeView(std::make_unique<GameView>(app_));
 }
 
-ProjectData Window::askProjectData() {
+ProjectData MenuView::askProjectData() {
   initInputWidget(focusPopup::CREATE);
   return ProjectData{};
 }
 
-ProjectData Window::getProjectData(std::unique_ptr<Project> &newProj) {
+ProjectData MenuView::getProjectData(std::unique_ptr<Project> &newProj) {
   return ProjectData{newProj->getId(), 0, newProj->getName()};
 }
 
-void Window::updateCreatedProjectId(uint32_t projId) {
+void MenuView::updateCreatedProjectId(uint32_t projId) {
   projectList.back().projectId = projId;
+}
+
+void MenuView::addProjectList(ProjectData project) {
+  projectList.push_back(project);
+  init();
+}
+
+void MenuView::updateProjectNameInList(long long id, const std::string &name) {
+  for (auto &projData : projectList) {
+    if (projData.projectId == id) {
+      projData.projectName = name;
+      break;
+    }
+  }
+  // Refreshing project list
+  init();
 }
