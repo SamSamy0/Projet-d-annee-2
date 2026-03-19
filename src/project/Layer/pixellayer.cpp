@@ -1,8 +1,8 @@
 #include "pixellayer.hpp"
 #include <iostream>
 
-PixelLayer::PixelLayer(std::string name, sf::Vector2u size)
-    : Layer(name, size), offset_(texture_.getTexture()) {
+PixelLayer::PixelLayer(uint id, std::string name, sf::Vector2u size)
+    : Layer(id,name, size), offset_(texture_.getTexture()) {
   // TODO: FAIRE DES RENDERTEXTURES PLUS GRANDE ET BLOQUER LE SHIFT QUAND ON A
   // TROP SHIFT
   if (!texture_.resize(size)) {

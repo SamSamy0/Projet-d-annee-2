@@ -120,4 +120,5 @@ public:
   bool isOpen() const;
   void run();
   void updateCreatedProjectId(uint32_t projId);
+  void setCurrentProject(unsigned int scale, int height, int width , std::string name, unsigned int id);
 };

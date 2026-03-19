@@ -7,6 +7,7 @@
 #include "datamanager/databasemanager.hpp"
 #include "datamanager/projectsmanager.hpp"
 #include "reponse/reponse.hpp"
+#include "LiveProject.hpp"
 
 class Worker {
 public:
@@ -16,23 +17,26 @@ public:
     void stop();
     void pushNetwork(std::unique_ptr<Reponse> rps);
 
-    long long verifyLogin(const std::string& pseudo, const std::string& password);
-    long long addUser(const std::string& pseudo, const std::string& password);
-    bool addLink(const long long userId, const long long projectId, const int8_t role);
-    bool changeRole(const long long userId, const long long projectId, const int8_t role);
-    long long addProjectSQL(const std::string& name, const long long userId);
-    std::vector<MemberEntry> getProjectMembers(const long long projectId);
-    std::vector<ProjectEntry> getUserProjects(const long long userId);
-    int8_t getRole(const long long userId, const long long projectId);
+    uint verifyLogin(const std::string& pseudo, const std::string& password);
+    uint addUser(const std::string& pseudo, const std::string& password);
+    bool addLink(const uint userId, const uint projectId, const uint8_t role);
+    bool changeRole(const uint userId, const uint projectId, const uint8_t role);
+    uint addProjectSQL(const std::string& name, const uint userId);
+    std::vector<MemberEntry> getProjectMembers(const uint projectId);
+    std::vector<ProjectEntry> getUserProjects(const uint userId);
+    uint8_t getRole(const uint userId, const uint projectId);
     std::vector<ProjectEntry> getAllProjects();
-    bool renameProject(int projectId, const std::string& newName);
-    long long duplicateProject(int oldId, const std::string& newName, long long userId);
-    bool deleteProject(int projectId);
+    bool renameProject(uint projectId, const std::string& newName);
+    uint duplicateProject(uint oldId, const std::string& newName, uint userId);
+    bool deleteProject(uint projectId);
 
-    bool createProjectJson(int id, const std::string &projectName, int width, int height, uint scale);
-    QJsonObject loadProjectJson(int id);
-    bool saveImage(int id, const std::string &fileName, const QByteArray &data);
-    QByteArray getByteJson(int projetId);
+    bool createProjectJson(uint id, const std::string &projectName, uint width, uint height, uint scale);
+    bool writeProjetJson(QJsonObject& jsonObject, uint id);
+    QJsonObject loadProjectJson(uint id);
+    bool saveImage(uint id, const std::string &fileName, const QByteArray &data);
+    QByteArray getByteJson(uint projetId);
+
+    std::unordered_map<uint, LiveProject> mapProjet_;
 
 
 private:
@@ -41,6 +45,7 @@ private:
     MutexQueue<Reponse>& repQueue_;
     DatabaseManager dbManager_;
     ProjectsManager projManager_;
+    
 };
 
 #endif

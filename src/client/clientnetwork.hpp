@@ -22,20 +22,27 @@ public:
     void login(std::string pseudo,std::string password);
     void askRegister(std::string pseudo, std::string password);
     void createProject(std::string role, sf::Vector2u size, uint scale);
-    void renameProject(int projectId, std::string newName);
-    void dupProj(int projectId, std::string newName);
-    void getProjectData(int project_id);
-    void getUsersProjects(long long id);
+    void renameProject(uint projectId, std::string newName);
+    void dupProj(uint projectId, std::string newName);
+    void getUsersProjects(uint id);
     void getProjectList(); 
-    void delProject(long long project_id);
-    void getProjectData(long long project_id);
-    void createProjectCode(long long project_id);
-    void joinProject(int project_code);
+    void delProject(uint project_id);
+    void getProjectData(uint project_id);
+    void createProjectCode(uint project_id);
+    void joinProject(uint project_code);
     
-    void syncPaint();
+    void drawSquare(uint proj_id, uint layer_id, int pos_x,int pos_y, float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
+    void drawCircle(uint proj_id, uint layer_id,int pos_x,int pos_y,float size, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
+    void drawDiamond(uint proj_id, uint layer_id,int pos_x,int pos_y,float size_x,float size_y, uint8_t r, uint8_t g,uint8_t b, uint8_t a);
+    void eraseSquare(uint proj_id, uint layer_id,int pos_x,int pos_y,float size);
+    void eraseCircle(uint proj_id, uint layer_id,int pos_x,int pos_y,float size);
+    void eraseDiamond(uint proj_id, uint layer_id,int pos_x,int pos_y,float size_x,float size_y);
+    void shiftLayer(uint proj_id, uint layer_id,int delta_x,int delta_y);
+    
     void sendMessageChat();
 
 };
+
 
 
 

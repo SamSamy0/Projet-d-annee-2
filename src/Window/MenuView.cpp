@@ -513,8 +513,7 @@ void MenuView::createProj(tgui::String scale, tgui::String sizeX,
   gui.removeAllWidgets();
 
   app_.getProject() = std::make_unique<Project>(scaleInt, size, nameS, id,
-                                                app_.getWindow(), gui,
-                                                app_.getNetwork());
+                                                app_.getWindow(), gui, app_.getNetwork());
 
   projectList.push_back(getProjectData(app_.getProject()));
 

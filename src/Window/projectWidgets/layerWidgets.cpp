@@ -58,7 +58,7 @@ void GameView::initLayerPanel() {
     layerButton->setPosition(width * 0.01, i * height * 0.055);
     layerButton->onClick([this, i]() {
       LayerType type = project->getMap()->getCurrentLayer()->getType();
-      project->getMap()->setLayerSelected(static_cast<unsigned int>(i));
+      project->getMap()->selectLayer(static_cast<unsigned int>(i));
       checkTypeTool(type);
       refreshLayerList();
     });
@@ -119,11 +119,11 @@ void GameView::initLayerPanel() {
 
     gui.add(popup);
 
-    confirmNameButton->onClick([this, popup, editBox]() {
+    confirmNameButton->onClick([this, popup, newLayerNameInput]() {
       auto& gui = app_.getGui();
       auto& layers = project->getMap()->getLayers();
       unsigned int selectedLayer = project->getMap()->getLayerSelected();
-      std::string newName = editBox->getText().toStdString();
+      std::string newName = newLayerNameInput->getText().toStdString();
       if (!newName.empty()) layers[selectedLayer]->setName(newName);
       refreshLayerList();
       gui.remove(popup);
@@ -131,8 +131,8 @@ void GameView::initLayerPanel() {
 
     cancelNameButton->onClick([this, popup]() { app_.getGui().remove(popup); });
   });
-  renameLayerButton->setTextSize(15);
   layerPanel_->add(renameLayerButton);
+  renameLayerButton->setTextSize(15);
 
   // Création du bouton qui décale une couche vers le haut
   auto goUpLayer = tgui::Button::create("▼");
@@ -148,7 +148,7 @@ void GameView::initLayerPanel() {
     unsigned int selectedLayer = project->getMap()->getLayerSelected();
     if (selectedLayer == layers.size() - 1) return;
     std::swap(layers[selectedLayer], layers[selectedLayer + 1]);
-    project->getMap()->setLayerSelected(selectedLayer + 1);
+    project->getMap()->selectLayer(selectedLayer + 1);
     refreshLayerList();
   });
   layerPanel_->add(goUpLayer);
@@ -167,7 +167,7 @@ void GameView::initLayerPanel() {
     unsigned int selectedLayer = project->getMap()->getLayerSelected();
     if (selectedLayer == 0) return;
     std::swap(layers[selectedLayer], layers[selectedLayer - 1]);
-    project->getMap()->setLayerSelected(selectedLayer - 1);
+    project->getMap()->selectLayer(selectedLayer - 1);
     refreshLayerList();
   });
   layerPanel_->add(goDownLayer);
@@ -274,7 +274,7 @@ void GameView::initLayerPanel() {
     unsigned int selected = project->getMap()->getLayerSelected();
     layers.erase(layers.begin() + selected);
     unsigned int newSelected = (selected > 0) ? selected - 1 : 0;
-    project->getMap()->setLayerSelected(newSelected);
+    project->getMap()->selectLayer(newSelected);
     checkTypeTool(type);
     refreshLayerList();
   });
@@ -304,7 +304,7 @@ void GameView::refreshLayerList() {
     layerButton->setPosition(width * 0.01, i * height * 0.055);
     layerButton->onClick([this, i]() {
       LayerType type = project->getMap()->getCurrentLayer()->getType();
-      project->getMap()->setLayerSelected(static_cast<unsigned int>(i));
+      project->getMap()->selectLayer(static_cast<unsigned int>(i));
       checkTypeTool(type);
       refreshLayerList();
     });

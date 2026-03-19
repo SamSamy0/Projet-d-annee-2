@@ -30,7 +30,7 @@ DatabaseManager::DatabaseManager() {
 }
 
 // renvoie l'id de l'utilisateur sinon -1
-long long DatabaseManager::verifyLogin(const std::string &pseudo,
+uint DatabaseManager::verifyLogin(const std::string &pseudo,
                                        const std::string &password) {
   QString qPseudo = QString::fromStdString(pseudo);
   QString qPassword = QString::fromStdString(password);
@@ -41,13 +41,13 @@ long long DatabaseManager::verifyLogin(const std::string &pseudo,
   query.bindValue(":pw", qPassword);
 
   if (query.exec() && query.next()) {
-    return query.value(0).toLongLong();
+    return query.value(0).toUInt();
   }
   return -1;
 }
 
 // utiliser un hachage plus tard
-long long DatabaseManager::addUser(const std::string &pseudo,
+uint DatabaseManager::addUser(const std::string &pseudo,
                                    const std::string &password) {
   QString qPseudo = QString::fromStdString(pseudo);
   QString qPassword = QString::fromStdString(password);
@@ -58,13 +58,13 @@ long long DatabaseManager::addUser(const std::string &pseudo,
   query.bindValue(":pw", qPassword);
 
   if (query.exec()) {
-    return query.lastInsertId().toLongLong();
+    return query.lastInsertId().toUInt();
   }
   qDebug() << "Erreur d'inscription :" << query.lastError().text();
   return -1;
 }
 
-bool DatabaseManager::addLink(const long long userId, const long long projectId,
+bool DatabaseManager::addLink(const uint userId, const uint projectId,
                               const int8_t role) {
   QSqlQuery query;
   query.prepare(
@@ -82,8 +82,8 @@ bool DatabaseManager::addLink(const long long userId, const long long projectId,
   return false;
 }
 
-long long DatabaseManager::addProject(const std::string &name,
-                                      const long long userId) {
+uint DatabaseManager::addProject(const std::string &name,
+                                      const uint userId) {
   QString qName = QString::fromStdString(name);
 
   QSqlQuery query;
@@ -91,7 +91,7 @@ long long DatabaseManager::addProject(const std::string &name,
   query.bindValue(":n", qName);
 
   if (query.exec()) {
-    long long projId = query.lastInsertId().toLongLong();
+    uint projId = query.lastInsertId().toUInt();
     this->addLink(userId, projId, 2);
     return projId;
   }
@@ -99,7 +99,7 @@ long long DatabaseManager::addProject(const std::string &name,
   return -1;
 }
 
-bool DatabaseManager::updateProjectName(const long long projectId,
+bool DatabaseManager::updateProjectName(const uint projectId,
                                         const std::string &newName) {
   QSqlQuery query;
   query.prepare("Update projects SET name = :n WHERE id = :i");
@@ -113,13 +113,13 @@ bool DatabaseManager::updateProjectName(const long long projectId,
   return false;
 };
 // Returns the Id of the new duplicate Project
-long long DatabaseManager::dupProj(const std::string &newName,
-                                   const long long userId) {
+uint DatabaseManager::dupProj(const std::string &newName,
+                                   const uint userId) {
   QSqlQuery query;
   query.prepare("INSERT INTO projects (name) VALUES (:n)");
   query.bindValue(":n", QString::fromStdString(newName));
   if (query.exec()) {
-    long long newId = query.lastInsertId().toLongLong();
+    uint newId = query.lastInsertId().toUInt();
     this->addLink(userId, newId, 2);
     return newId;
   }
@@ -127,8 +127,8 @@ long long DatabaseManager::dupProj(const std::string &newName,
   return -1;
 }
 
-bool DatabaseManager::changeRole(const long long userId,
-                                 const long long projectId, const int8_t role) {
+bool DatabaseManager::changeRole(const uint userId,
+                                 const uint projectId, const int8_t role) {
   QSqlQuery query;
 
   query.prepare(
@@ -145,7 +145,7 @@ bool DatabaseManager::changeRole(const long long userId,
 }
 
 std::vector<MemberEntry>
-DatabaseManager::getProjectMembers(long long projectId) {
+DatabaseManager::getProjectMembers(uint projectId) {
   std::vector<MemberEntry> members;
   QSqlQuery query;
 
@@ -155,7 +155,7 @@ DatabaseManager::getProjectMembers(long long projectId) {
   if (query.exec()) {
     while (query.next()) {
       MemberEntry m;
-      m.userId = query.value(0).toLongLong();
+      m.userId = query.value(0).toUInt();
       m.role = static_cast<int8_t>(query.value(1).toInt());
       m.pseudo = getPseudo(m.userId);
       members.push_back(m);
@@ -164,7 +164,7 @@ DatabaseManager::getProjectMembers(long long projectId) {
   return members;
 }
 
-std::vector<ProjectEntry> DatabaseManager::getUserProjects(long long userId) {
+std::vector<ProjectEntry> DatabaseManager::getUserProjects(uint userId) {
   std::vector<ProjectEntry> projects;
   QSqlQuery query;
 
@@ -174,7 +174,7 @@ std::vector<ProjectEntry> DatabaseManager::getUserProjects(long long userId) {
   if (query.exec()) {
     while (query.next()) {
       ProjectEntry p;
-      p.projectId = query.value(0).toLongLong();
+      p.projectId = query.value(0).toUInt();
       p.role = static_cast<int8_t>(query.value(1).toInt());
       p.name = getName(p.projectId);
       projects.push_back(p);
@@ -183,7 +183,7 @@ std::vector<ProjectEntry> DatabaseManager::getUserProjects(long long userId) {
   return projects;
 }
 
-std::string DatabaseManager::getPseudo(const long long userId) {
+std::string DatabaseManager::getPseudo(const uint userId) {
   QSqlQuery query;
 
   query.prepare("SELECT pseudo FROM users WHERE id = :u");
@@ -201,7 +201,7 @@ std::string DatabaseManager::getPseudo(const long long userId) {
   }
 }
 
-std::string DatabaseManager::getName(const long long projectId) {
+std::string DatabaseManager::getName(const uint projectId) {
   QSqlQuery query;
 
   query.prepare("SELECT name FROM projects WHERE id = :p");
@@ -219,8 +219,8 @@ std::string DatabaseManager::getName(const long long projectId) {
   }
 }
 
-int8_t DatabaseManager::getRole(const long long userId,
-                                const long long projectId) {
+int8_t DatabaseManager::getRole(const uint userId,
+                                const uint projectId) {
   QSqlQuery query;
 
   query.prepare(
@@ -249,7 +249,7 @@ std::vector<ProjectEntry> DatabaseManager::getAllProjects() {
   if (query.exec()) {
     while (query.next()) {
       ProjectEntry p;
-      p.projectId = query.value(0).toLongLong();
+      p.projectId = query.value(0).toUInt();
       p.role = static_cast<int8_t>(2);
       p.name = query.value(1).toString().toStdString();
       projects.push_back(p);
@@ -258,7 +258,7 @@ std::vector<ProjectEntry> DatabaseManager::getAllProjects() {
   return projects;
 }
 
-bool DatabaseManager::removeLink(const long long userId, const long long projectId) {
+bool DatabaseManager::removeLink(const uint userId, const uint projectId) {
     QSqlQuery query;
     query.prepare("DELETE FROM links WHERE user_id = :uId AND project_id = :pId");
     query.bindValue(":uId", userId);
@@ -271,7 +271,7 @@ bool DatabaseManager::removeLink(const long long userId, const long long project
     return true;
 }
 
-bool DatabaseManager::removeProject(const long long projectId) {
+bool DatabaseManager::removeProject(const uint projectId) {
     QSqlQuery query;
     query.prepare("DELETE FROM projects WHERE id = :pId");
     query.bindValue(":pId", projectId);

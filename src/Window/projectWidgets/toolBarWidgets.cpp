@@ -119,22 +119,16 @@ void GameView::initToolbar() {
     if (penSpriteOptionsPanel_) penSpriteOptionsPanel_->setVisible(false);
     if (spriteBrushOptionsPanel_) spriteBrushOptionsPanel_->setVisible(false);
     if (layerType == SPRITELAYER) {
-        if (eraserOptionsPanel_)
-            eraserOptionsPanel_->setVisible(false);
+        if (eraserOptionsPanel_) eraserOptionsPanel_->setVisible(false);
         if (eraserSpriteOptionsPanel_) {
-            if (eraserSpriteOptionsPanel_->isVisible())
-                eraserSpriteOptionsPanel_->setVisible(false);
-            else
-                eraserSpriteOptionsPanel_->setVisible(true);
+            if (eraserSpriteOptionsPanel_->isVisible()) eraserSpriteOptionsPanel_->setVisible(false);
+            else eraserSpriteOptionsPanel_->setVisible(true);
         }
     } else {
-        if (eraserSpriteOptionsPanel_)
-            eraserSpriteOptionsPanel_->setVisible(false);
-        if (eraserOptionsPanel_) {
-            if (eraserOptionsPanel_->isVisible())
-                eraserOptionsPanel_->setVisible(false);
-            else
-                eraserOptionsPanel_->setVisible(true);
+        if (eraserSpriteOptionsPanel_) eraserSpriteOptionsPanel_->setVisible(false);
+        if (eraserOptionsPanel_) { 
+            if (eraserOptionsPanel_->isVisible()) eraserOptionsPanel_->setVisible(false);
+            else eraserOptionsPanel_->setVisible(true);
         }
     }
   });

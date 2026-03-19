@@ -8,11 +8,11 @@
 #include "Tool/nonetool.hpp"
 #include "map.hpp"
 
-ToolBar::ToolBar(std::shared_ptr<Map> map, ClientNetworkManager& manager): selected_{NONETOOL} {
+ToolBar::ToolBar(std::shared_ptr<Map> map, ClientNetworkManager &manager): selected_{NONETOOL} {
   tools_.push_back(std::make_shared<NoneTool>(map, manager));
   tools_.push_back(std::make_shared<PixelBrush>(map, manager));
   tools_.push_back(std::make_shared<PixelShift>(map, manager));
-  tools_.push_back(std::make_shared<SpriteBrush>(map, manager));
+  tools_.push_back(std::make_shared<PixelBrush>(map, manager));
   tools_.push_back(std::make_shared<SpriteEraser>(map, manager));
   tools_.push_back(std::make_shared<SpriteShift>(map, manager));
 }
