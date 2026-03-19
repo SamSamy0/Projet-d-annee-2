@@ -49,7 +49,8 @@ void ClientNetworkManager::login(std::string pseudo, std::string password) {
   packet << static_cast<uint8_t>(msg);
   packet << pseudo << password;
 
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 void ClientNetworkManager::askRegister(std::string pseudo,
@@ -60,7 +61,8 @@ void ClientNetworkManager::askRegister(std::string pseudo,
   packet << static_cast<uint8_t>(msg);
   packet << pseudo << password;
 
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 void ClientNetworkManager::createProject(std::string nomProjet,
@@ -71,7 +73,8 @@ void ClientNetworkManager::createProject(std::string nomProjet,
   packet << static_cast<uint8_t>(msg);
   packet << nomProjet << size.x << size.y << scale;
 
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 void ClientNetworkManager::renameProject(uint projectId, std::string newName) {
@@ -81,7 +84,8 @@ void ClientNetworkManager::renameProject(uint projectId, std::string newName) {
   packet << static_cast<uint8_t>(msg);
   packet << projectId << newName;
 
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 
@@ -91,7 +95,8 @@ void ClientNetworkManager::dupProj(uint projectId, std::string newName) {
 
   packet << static_cast<uint8_t>(msg);
   packet << projectId << newName;
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 void ClientNetworkManager::getProjectList() {
@@ -99,7 +104,8 @@ void ClientNetworkManager::getProjectList() {
   MsgProtocole msg = MsgProtocole::LOB_PROJECT_LIST_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 void ClientNetworkManager::getProjectData(uint project_id){
@@ -109,7 +115,8 @@ void ClientNetworkManager::getProjectData(uint project_id){
     packet << static_cast<uint8_t>(msg);
     packet << static_cast<uint>(project_id);
     packet << project_id;
-    socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 
@@ -119,7 +126,8 @@ void ClientNetworkManager::delProject(uint project_id){
 
     packet << static_cast<uint8_t>(msg);
     packet << project_id;
-    socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 
@@ -129,7 +137,8 @@ void ClientNetworkManager::createProjectCode(uint project_id){
 
   packet << static_cast<uint8_t>(msg);
   packet << project_id;
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 
@@ -139,7 +148,8 @@ void ClientNetworkManager::joinProject(uint project_code){
 
   packet << static_cast<uint8_t>(msg);
   packet << project_code;
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 
@@ -151,13 +161,8 @@ void ClientNetworkManager::drawSquare(uint proj_id, uint layer_id, int pos_x,int
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << pos_x << pos_y << size << r << g << b << a;
 
-  if(socket_.send(packet) == sf::Socket::Status::Done){
-    std::cout<<"envoi réussi !"<<std::endl;
-  }
-  else{
-
-    std::cout<<"envoi raté !"<<std::endl;
-  }
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 
 }
 
@@ -169,7 +174,8 @@ void ClientNetworkManager::drawCircle(uint proj_id, uint layer_id, int pos_x,int
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << pos_x << pos_y << size << r << g << b << a;
 
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 
@@ -180,40 +186,44 @@ void ClientNetworkManager::drawDiamond(uint proj_id, uint layer_id, int pos_x,in
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << pos_x << pos_y << size_x << size_y << r << g << b << a;
 
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 
 void ClientNetworkManager::eraseSquare(uint proj_id, uint layer_id,int pos_x,int pos_y,float size){
   sf::Packet packet;
-  MsgProtocole msg = MsgProtocole::MAP_ERASER_CARRE_REQ;
+  MsgProtocole msg = MsgProtocole::MAP_ERASE_PIXELS_CARRE_REQ;
 
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << pos_x << pos_y << size;
 
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 
 void ClientNetworkManager::eraseCircle(uint proj_id, uint layer_id,int pos_x,int pos_y,float size){
   sf::Packet packet;
-  MsgProtocole msg = MsgProtocole::MAP_ERASER_CIRCLE_REQ;
+  MsgProtocole msg = MsgProtocole::MAP_ERASE_PIXELS_CIRCLE_REQ;
 
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << pos_x << pos_y << size;
 
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 
 void ClientNetworkManager::eraseDiamond(uint proj_id, uint layer_id,int pos_x,int pos_y,float size_x, float size_y){
   sf::Packet packet;
-  MsgProtocole msg = MsgProtocole::MAP_ERASER_DIAM_REQ;
+  MsgProtocole msg = MsgProtocole::MAP_ERASE_PIXELS_DIAM_REQ;
 
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << pos_x << pos_y << size_x << size_y;
 
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 
@@ -224,7 +234,8 @@ void ClientNetworkManager::shiftLayer(uint proj_id, uint layer_id,int delta_x,in
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << delta_x << delta_y;
 
-  socket_.send(packet);
+  if(socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr<<"ERROR : ClientNetWorkManager => "<<to_string(msg)<<std::endl;
 }
 
 
