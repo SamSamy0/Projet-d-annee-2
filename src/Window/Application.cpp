@@ -71,10 +71,19 @@ void Application::updateProjectNameInList(long long id,
   menuView->updateProjectNameInList(id, newName);
 };
 void Application::updateCreatedProjectId(uint32_t projId) {
+  project->setId(projId);
+  
   if (auto menuView = dynamic_cast<MenuView *>(currentView.get())) {
+    //If we still are on menu
     menuView->updateCreatedProjectId(projId);
+    
   };
 };
+
+void Application::updateShareToken(std::string newTok){
+  auto menuView = dynamic_cast<MenuView*>(currentView.get());
+  menuView->updateShareToken(newTok);
+}
 
 ClientNetworkManager &Application::getNetwork() { return manager; }
 

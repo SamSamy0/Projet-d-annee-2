@@ -88,17 +88,16 @@ set(SOURCES
     ../src/project/toolbar.cpp
     ../src/project/zoom.cpp
     ../src/project/assetmanager.cpp
-
     ../src/project/Tool/brush.cpp
     ../src/project/Tool/tool.cpp
     ../src/project/Tool/shift.cpp
     ../src/project/Tool/nonetool.cpp
-
     ../src/project/Tool/pixelbrush.cpp
     ../src/project/Tool/pixelshift.cpp
     ../src/project/Tool/spritebrush.cpp
     ../src/project/Tool/spriteshift.cpp
     ../src/project/Tool/spriteeraser.cpp
+    ../src/project/Tool/spriteselection.cpp
     ../src/project/Layer/layer.cpp
     ../src/project/Layer/pixellayer.cpp
     ../src/project/Layer/spritelayer.cpp

@@ -17,7 +17,7 @@
 #include <memory>
 #include <vector>
 enum class projectState { LOGIN, MENU, GAME };
-enum class focusPopup { CREATE, RENAME, DUPLICATE };
+enum class focusPopup { CREATE, RENAME, DUPLICATE, TOKEN };
 class Application;
 class View {
 protected:

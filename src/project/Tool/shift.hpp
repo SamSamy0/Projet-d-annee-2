@@ -4,7 +4,6 @@
 #include <memory>
 
 class Shift : public Tool {
-
 public:
   Shift(std::shared_ptr<Map> map, ClientNetworkManager &manager);
   void onPress(sf::Vector2i pos) override;

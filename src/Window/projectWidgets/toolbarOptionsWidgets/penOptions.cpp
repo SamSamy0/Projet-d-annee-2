@@ -25,7 +25,7 @@ void GameView::initPenOptions() {
   lengthInput->setSize(width * 0.04, height * 0.04);
   lengthInput->setPosition(width * 0.008, height * 0.011);
   lengthInput->setDefaultText("L");
-  lengthInput->setInputValidator("[0-9]*");
+  lengthInput->setInputValidator("[0-9]+\\.?[0-9]*");
   lengthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   lengthInput->getRenderer()->setTextColor(tgui::Color::White);
   lengthInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -37,8 +37,8 @@ void GameView::initPenOptions() {
   auto widthInput = tgui::EditBox::create();
   widthInput->setSize(width * 0.04, height * 0.04);
   widthInput->setPosition(width * 0.052, height * 0.011);
-  widthInput->setDefaultText("l");
-  widthInput->setInputValidator("[0-9]*");
+  widthInput->setDefaultText("W");
+  widthInput->setInputValidator("[0-9]+\\.?[0-9]*");
   widthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   widthInput->getRenderer()->setTextColor(tgui::Color::White);
   widthInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -49,14 +49,11 @@ void GameView::initPenOptions() {
 
   lengthInput->onTextChange([this, lengthInput, widthInput]() {
     if (lengthInput->getText().empty()) return;
-    unsigned int sizeX = static_cast<unsigned int>(std::stoi(lengthInput->getText().toStdString()));
-    if (sizeX < 1) {
-      sizeX = 1;
-    }
-    unsigned int sizeY = widthInput->getText().empty() ? 1 : static_cast<unsigned int>(std::stoi(widthInput->getText().toStdString()));
-    if (sizeY < 1) {
-      sizeY = 1;
-    }
+
+    float sizeX = lengthInput->getText().empty() ? 1 :std::stof(lengthInput->getText().toStdString());
+
+    float sizeY = widthInput->getText().empty() ? 1 : std::stof(widthInput->getText().toStdString());
+
     auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
     if (brush) {
       brush->setSize(sizeX, sizeY);
@@ -64,14 +61,8 @@ void GameView::initPenOptions() {
   });
   widthInput->onTextChange([this, lengthInput, widthInput]() {
     if (widthInput->getText().empty()) return;
-    unsigned int sizeX = lengthInput->getText().empty() ? 1 : static_cast<unsigned int>(std::stoi(lengthInput->getText().toStdString()));
-    if (sizeX < 1) {
-      sizeX = 1;
-    }
-    unsigned int sizeY = static_cast<unsigned int>(std::stoi(widthInput->getText().toStdString()));
-    if (sizeY < 1) {
-      sizeY = 1;
-    }
+    float sizeX = lengthInput->getText().empty() ? 1 : std::stof(lengthInput->getText().toStdString());
+    float sizeY =widthInput->getText().empty() ? 1 : std::stoi(widthInput->getText().toStdString());
     auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
     if (brush) {
       brush->setSize(sizeX, sizeY);

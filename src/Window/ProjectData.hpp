@@ -4,7 +4,7 @@
 #include <cstdint>
 
 struct ProjectData {
-  long long projectId;
+  uint projectId;
   int8_t role;
   std::string projectName;
   void setName(std::string newName);
