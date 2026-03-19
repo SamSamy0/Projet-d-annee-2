@@ -66,7 +66,7 @@ void Map::createPixelLayer(){
 
 void Map::createSpriteLayer(){
     int n = layers_.size() + 1;
-    std::string name = "Couche Pixel (" + std::to_string(n) + ")";
+    std::string name = "Couche Sprite (" + std::to_string(n) + ")";
     shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(nextLayerId_,name,size_); 
     nextLayerId_ +=1;
     layers_.push_back(spritelayer);

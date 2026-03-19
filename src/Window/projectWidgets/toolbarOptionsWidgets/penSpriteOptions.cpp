@@ -22,7 +22,7 @@ void GameView::initPenSpriteOptions() {
   widthInput->setSize(width * 0.04, height * 0.04);
   widthInput->setPosition(width * 0.008, height * 0.011);
   widthInput->setDefaultText("L");
-  widthInput->setInputValidator("[0-9]*");
+  widthInput->setInputValidator("[0-9]+\\.?[0-9]*");
   widthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   widthInput->getRenderer()->setTextColor(tgui::Color::White);
   widthInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -34,7 +34,7 @@ void GameView::initPenSpriteOptions() {
   heightInput->setSize(width * 0.04, height * 0.04);
   heightInput->setPosition(width * 0.052, height * 0.011);
   heightInput->setDefaultText("l");
-  heightInput->setInputValidator("[0-9]*");
+  heightInput->setInputValidator("[0-9]+\\.?[0-9]*");
   heightInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   heightInput->getRenderer()->setTextColor(tgui::Color::White);
   heightInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
