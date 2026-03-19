@@ -10,4 +10,5 @@ class LoginView : public View {
   void loginWidget();
 public:
     LoginView(Application &app_);
+    void showError(const std::string& message);
 };

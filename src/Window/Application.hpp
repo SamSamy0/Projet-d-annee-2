@@ -34,6 +34,7 @@ public:
   void updateShareToken(std::string newToken);
   
   void changeView(std::unique_ptr<View> newView);
+  void showLoginError(const std::string& message);
   void setState(projectState newState);
   void processEvents();
   void run();

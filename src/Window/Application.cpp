@@ -17,6 +17,12 @@ void Application::updateTextSize() {
   gui.setTextSize(static_cast<unsigned int>(0.03 * windowHeight));
 }
 
+void Application::showLoginError(const std::string& message) {
+  if (auto loginView = dynamic_cast<LoginView*>(currentView.get())) {
+    loginView->showError(message);
+  }
+}
+
 void Application::changeView(std::unique_ptr<View> newView) {
   gui.removeAllWidgets();
   currentView = std::move(newView);
