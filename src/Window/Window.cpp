@@ -151,6 +151,12 @@ void Window::run() {
 
 void Window::setLogIn() { isLoggedIn = true; }
 
+void Window::setCurrentProject(unsigned int scale, int height, int width , std::string name, unsigned int id){
+  sf::Vector2u vec{(uint)width,(uint)height};
+  project = std::make_unique<Project>(scale,vec,name,id,mainWindow,gui,manager);
+}
+
+
 // Pour une utilisation sans serveur
 // mais dans ce cas, il faut retirer la boucle dans client.cpp
 //  void Window::run() {
@@ -166,3 +172,4 @@ void Window::setLogIn() { isLoggedIn = true; }
 //      mainWindow.display();
 //    }
 //  }
+

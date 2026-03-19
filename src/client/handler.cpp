@@ -28,16 +28,18 @@ void ClientHandler::process(ServerEvent& event){
             handleWindow_.switchConnectState(accept);
             break;
         }
+
+
         case MsgProtocole::LOB_PROJECT_LIST_REP:{
             uint32_t size;
             *(event.data_packet_) >> size;
 
-            for (int i = 0; i< static_cast<int>(size); ++i){
+            for (uint i = 0; i< static_cast<uint>(size); ++i){
 
                 ProjectData projet;
                 uint32_t id;
                 std::string name;
-                int8_t role;
+                uint8_t role;
 
                 *(event.data_packet_) >> id >> name >> role; 
                 projet.projectId = id;
@@ -49,6 +51,8 @@ void ClientHandler::process(ServerEvent& event){
 
             break;
         }
+
+
         case MsgProtocole::LOB_GET_PROJECT_DATA_REP:{
             std::cout << "DONNEES DU PROJET RECU" << std::endl;
 
@@ -75,19 +79,14 @@ void ClientHandler::process(ServerEvent& event){
                 QJsonDocument doc = QJsonDocument::fromJson(jsonBytes);
                 QJsonObject entete = doc.object();
 
-                std::cout << entete["name"].toString().toStdString() << std::endl;
-                std::cout << entete["width"].toInt() << std::endl;
-                std::cout << entete["height"].toInt() << std::endl;
-                std::cout << entete["scale"].toInt() << std::endl;
-                
-                std::cout << "Lecture JSON réussie." << std::endl;
+                sf::Vector2u vec{static_cast<uint>(entete["width"].toInt()),static_cast<uint>(entete["height"].toInt())};
+                handleWindow_.addProjectData(entete["scale"].toInt(),vec,entete["name"].toString().toStdString(),entete["id"].toInt());
+
             }
-
-            
-            handleWindow_.setState();
-
             break;
         }
+
+
         case MsgProtocole::LOB_RENAME_PROJECT_REP:{
             uint8_t success;
             uint32_t projectId;
@@ -98,6 +97,8 @@ void ClientHandler::process(ServerEvent& event){
             }
             break;
         } 
+
+
         case MsgProtocole::LOB_DUPLICATE_PROJECT_REP:{
             uint32_t projectId;
             std::string newName;
@@ -113,10 +114,108 @@ void ClientHandler::process(ServerEvent& event){
                 
             break;
         }
+
+
         case MsgProtocole::LOB_CREATE_PROJECT_REP : {
             uint32_t newProjectId;
             *(event.data_packet_) >> newProjectId ;
             handleWindow_.updateCreatedProjectId(newProjectId);
+            break;
+        }
+
+
+        case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP : {
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size;
+            uint8_t r; 
+            uint8_t g;
+            uint8_t b; 
+            uint8_t a;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size >> r >> g >> b >> a;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,r,g,b,a,Shape::CIRCLE,false,size,0);
+            break;
+        }
+
+
+        case MsgProtocole::MAP_PUT_PIXELS_CARRE_REP : {
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size;
+            uint8_t r; 
+            uint8_t g;
+            uint8_t b; 
+            uint8_t a;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size >> r >> g >> b >> a;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,r,g,b,a,Shape::SQUARE,false,size,0);
+            break;
+        }
+
+
+        case MsgProtocole::MAP_PUT_PIXELS_DIAM_REP : {
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size_x;
+            float size_y;
+            uint8_t r; 
+            uint8_t g;
+            uint8_t b; 
+            uint8_t a;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size_x >> size_y >> r >> g >> b >> a;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,r,g,b,a,Shape::DIAMOND,false,size_x,size_y);
+            break;
+        }
+
+
+        case MsgProtocole::MAP_ERASER_CIRCLE_REP : {
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,0,0,0,0,Shape::CIRCLE,true,size,0);
+            break;
+        }
+
+
+        case MsgProtocole::MAP_ERASER_CARRE_REP : {
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,0,0,0,0,Shape::SQUARE,true,size,0);
+            break;
+        }
+
+
+        case MsgProtocole::MAP_ERASER_DIAM_REP : {
+            uint project_id;
+            uint layer_id; 
+            int pos_x;
+            int pos_y;
+            float size_x;
+            float size_y;
+            *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size_x >> size_y;
+            handleWindow_.drawPixelBrush(layer_id,pos_x,pos_y,0,0,0,0,Shape::DIAMOND,true,size_x,size_y);
+            break;
+        }
+
+        case MsgProtocole::MAP_MOV_LAYER_REP : {
+            uint project_id;
+            uint layer_id; 
+            int delta_x;
+            int delta_y;
+            *(event.data_packet_) >> project_id >> layer_id >> delta_x >> delta_y;
+            handleWindow_.shiftLayer(layer_id, delta_x, delta_y);
             break;
         }
     }        

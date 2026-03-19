@@ -35,59 +35,139 @@ struct RegisterMessage : IMessage{
 
 
 struct CreateProjectMessage : IMessage{
-    long long userId_;
+    uint userId_;
     std::string nomProjet_;
     sf::Vector2u size_;
     uint scale_;
     
-    CreateProjectMessage(sf::Packet& dataPacket, long long userId);
+    CreateProjectMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
 struct RenameProjectMessage: IMessage{
-    long long userID_;
-    int projectId_;
+    uint userID_;
+    uint projectId_;
     std::string newName_;
 
-    RenameProjectMessage(sf::Packet& dataPacket, long long userId);
+    RenameProjectMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
     
 };
 
 struct DuplicateProjectMessage: IMessage{
-    long long userId_;
-    int projectId_;
+    uint userId_;
+    uint projectId_;
     std::string newName;
     
-    DuplicateProjectMessage(sf::Packet& dataPacket, long long userId);
+    DuplicateProjectMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
 
 struct GetProjectsListMessage : IMessage {
-    long long userId_;
+    uint userId_;
 
-    GetProjectsListMessage(sf::Packet& dataPacket, long long userId);
+    GetProjectsListMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
 
 struct DeleteProjectMessage : IMessage {
-    long long userId_;
-    int projectId_;
+    uint userId_;
+    uint projectId_;
 
-    DeleteProjectMessage(sf::Packet& dataPacket, long long userId);
+    DeleteProjectMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
 
 struct GetProjectDataMessage : IMessage{
-    long long userId_;
-    int projectId_;
+    uint userId_;
+    uint projectId_;
 
-    GetProjectDataMessage(sf::Packet& dataPacket, long long userId);
+    GetProjectDataMessage(sf::Packet& dataPacket, uint userId);
     void process(Worker& worker) override;
 };
 
+
+struct ModifProjetMessage : IMessage {
+    uint userId_;
+    uint projectId_;
+    uint calqueId_;
+    std::vector<uint> getUserLists(Worker& worker);
+};
+
+struct PutPixelsMessage : ModifProjetMessage {
+    
+    sf::Vector2u pos_;
+    uint8_t red_;
+    uint8_t green_;
+    uint8_t blue_;
+    uint8_t opa_;
+};
+
+struct PutPixelsCircleMessage : PutPixelsMessage {
+
+    float taille_;
+    
+    PutPixelsCircleMessage(sf::Packet& dataPacket, uint userId);
+    void process(Worker& worker) override;
+};
+
+struct PutPixelsCarreMessage : PutPixelsMessage {
+
+    float taille_;
+
+    PutPixelsCarreMessage(sf::Packet& dataPacket, uint userId);
+    void process(Worker& worker) override;
+};
+
+struct PutPixelsDiamondMessage : PutPixelsMessage {
+
+    float hauteur_;
+    float largeur_;
+
+    PutPixelsDiamondMessage(sf::Packet& dataPacket, uint userId);
+    void process(Worker& worker) override;
+};
+
+struct ErasePixelsMessage : ModifProjetMessage {
+
+    sf::Vector2u pos_;
+};
+
+struct ErasePixelsCircleMessage : ErasePixelsMessage {
+
+    float taille_;
+    
+    ErasePixelsCircleMessage(sf::Packet& dataPacket, uint userId);
+    void process(Worker& worker) override;
+};
+
+struct ErasePixelsCarreMessage : ErasePixelsMessage {
+
+    float taille_;
+
+    ErasePixelsCarreMessage(sf::Packet& dataPacket, uint userId);
+    void process(Worker& worker) override;
+};
+
+struct ErasePixelsDiamondMessage : ErasePixelsMessage {
+
+    float hauteur_;
+    float largeur_;
+
+    ErasePixelsDiamondMessage(sf::Packet& dataPacket, uint userId);
+    void process(Worker& worker) override;
+};
+
+struct MoveLayerMessage : ModifProjetMessage {
+
+    int deltaX_;
+    int deltaY_;
+
+    MoveLayerMessage(sf::Packet& dataPacket, uint userId);
+    void process(Worker& worker) override;
+};
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client> client);

@@ -4,8 +4,8 @@
 #include "projectWidgets/GameView.hpp"
 
 Application::Application(ClientNetworkManager &manager)
-    : mainWindow(sf::VideoMode::getDesktopMode(), "Game name",
-                 sf::State::Fullscreen),
+    : mainWindow(sf::VideoMode({1200,800}), "Game name",
+                 sf::Style::Close | sf::Style::Titlebar),
       gui{mainWindow}, manager{manager} {
   updateTextSize();
   gui.onViewChange([this] { updateTextSize(); });
@@ -46,7 +46,10 @@ void Application::run() {
   mainWindow.clear(sf::Color(35, 35, 40));
   if (project)
     project->display();
+  currentView->render();
   gui.draw();
+  if (project)
+    project->displayScale();
   mainWindow.display();
 }
 
@@ -88,3 +91,9 @@ User &Application::getUser() { return currentUser_; }
 
 std::unique_ptr<View> &Application::getCurrentView() { return currentView; }
 std::unique_ptr<Project> &Application::getProject() { return project; }
+
+
+void Application::loadProjectData(unsigned int scale, sf::Vector2u size, std::string name, uint id){
+  project = std::make_unique<Project>(scale,size,name,id,mainWindow,gui,manager);
+  changeView(std::make_unique<GameView>(*this));
+};

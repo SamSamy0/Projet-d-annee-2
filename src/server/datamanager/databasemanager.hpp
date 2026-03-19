@@ -10,21 +10,21 @@
 class DatabaseManager {
 public:
     DatabaseManager();
-    long long verifyLogin(const std::string& pseudo, const std::string& password);
-    long long addUser(const std::string& pseudo, const std::string& password);
-    bool addLink(const long long userId, const long long projectId, const int8_t role);
-    bool changeRole(const long long userId, const long long projectId, const int8_t role);
-    long long addProject(const std::string& name, const long long userId);
-    bool updateProjectName(const long long projectId, const std::string & newName);
-    long long dupProj(const std::string &newName, const long long userId);
-    std::vector<MemberEntry> getProjectMembers(const long long projectId);
-    std::vector<ProjectEntry> getUserProjects(const long long userId);
-    std::string getPseudo(const long long userId);
-    std::string getName(const long long projectId);
-    int8_t getRole(const long long userId, const long long projectId);
+    uint verifyLogin(const std::string& pseudo, const std::string& password);
+    uint addUser(const std::string& pseudo, const std::string& password);
+    bool addLink(const uint userId, const uint projectId, const int8_t role);
+    bool changeRole(const uint userId, const uint projectId, const int8_t role);
+    uint addProject(const std::string& name, const uint userId);
+    bool updateProjectName(const uint projectId, const std::string & newName);
+    uint dupProj(const std::string &newName, const uint userId);
+    std::vector<MemberEntry> getProjectMembers(const uint projectId);
+    std::vector<ProjectEntry> getUserProjects(const uint userId);
+    std::string getPseudo(const uint userId);
+    std::string getName(const uint projectId);
+    int8_t getRole(const uint userId, const uint projectId);
     std::vector<ProjectEntry> getAllProjects();
-    bool removeLink(const long long userId, const long long projectId);
-    bool removeProject(const long long projectId);
+    bool removeLink(const uint userId, const uint projectId);
+    bool removeProject(const uint projectId);
 private:
     QSqlDatabase m_db;
 };

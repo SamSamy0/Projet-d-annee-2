@@ -16,8 +16,17 @@ void GameView::init() {
   initLayerPanel();
   initChatWidget();
   initPenOptions();
+  initPenSpriteOptions();
   initEraserOptions();
+  initEraserSpriteOptions();
+  initSpriteBrushOptions();
+  initMinimap();
   refreshChat();
+}
+
+void GameView::render() {
+  if (project)
+    drawMinimap();
 }
 
 void GameView::handleEvents(const sf::Event &event) {
@@ -37,7 +46,7 @@ void GameView::handleEvents(const sf::Event &event) {
       }
     }
   }
-
+  
   // ON RELEASE
   if (auto mouseEvent = event.getIf<sf::Event::MouseButtonReleased>()) {
     if (mouseEvent->button == sf::Mouse::Button::Left) {

@@ -4,7 +4,7 @@
 
 
 struct MemberEntry {
-    long long userId;
+    uint userId;
     int8_t role;
     std::string pseudo;
 };

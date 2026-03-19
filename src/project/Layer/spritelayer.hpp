@@ -1,16 +1,24 @@
 #pragma once
 #include "layer.hpp"
+#include <cstdint>
+
+struct SpriteObject{
+  sf::Sprite sprite;
+  uint id;
+  SpriteObject(const sf::Sprite& sprite, uint id);
+};
 
 class SpriteLayer : public Layer {
-  std::vector<sf::Sprite> sprites_;
+  std::vector<SpriteObject> sprites_;
   sf::Vector2i offset_;
+  uint nextId_;
 
 public:
-  SpriteLayer(std::string name, sf::Vector2u size);
+  SpriteLayer(uint id, std::string name, sf::Vector2u size);
+  const std::vector<SpriteObject> &getSprites()const;
   sf::Vector2i getOffset() const override;
-  std::vector<sf::Sprite> &getSprites();
-  void draw(sf::Sprite &s);
-  void erase(int i);
+  void draw(const sf::Sprite &s);
+  void erase(uint id);
   void shift(sf::Vector2i v) override;
   void drawLayer(sf::RenderTarget &target) override;
 };
