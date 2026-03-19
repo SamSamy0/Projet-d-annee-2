@@ -80,3 +80,8 @@ void Project::display() {
   displayBackground();
   displayScale();
 }
+
+void Project::setId(uint newId){
+  id_ = newId;
+}
+

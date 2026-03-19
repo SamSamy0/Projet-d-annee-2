@@ -41,5 +41,6 @@ public:
     void displayScale();
     void displayToolBar();
     void displayBackground();
+    void setId(uint newId);
     sf::View& getView();
 };

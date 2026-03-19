@@ -1,3 +1,4 @@
+
 #include "MenuView.hpp"
 #include "Application.hpp"
 #include "projectWidgets/GameView.hpp"
@@ -78,9 +79,6 @@ void MenuView::init() {
   // shareProjB->getRenderer()->setRoundedBorderRadius(8);
   // shareProjB->onPress(&MenuView::shareProj, this);
   // rightPanel->add(shareProjB);
-  if (shareToken != "FFFFF"){
-    rightPanel->add(displayToken());
-  }
 }
 void MenuView::handleEvents(const sf::Event &event) {
   auto &gui = app_.getGui();
@@ -231,7 +229,6 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
       auto it = std::find_if(
           projectList.begin(), projectList.end(),
           [id](const ProjectData &p) { return p.projectId == id; });
-                     
 
       if (it != projectList.end()) {
         projectList.erase(it);
@@ -253,7 +250,7 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
       initInputWidget(focusPopup::DUPLICATE, project);
 
     } else if (item == "Partager") {
-      initInputWidget(focusPopup::TOKEN, project);
+      generateToken();
 
     } else if (item == "Quitter") {
     }
@@ -301,7 +298,7 @@ void MenuView::popupRename(tgui::Panel::Ptr renameBackground,
   tgui::Label::Ptr rtitle;
   if (view == focusPopup::RENAME)
     rtitle = tgui::Label::create("Renommer le projet: \n " + oldName);
-  else if (view == focusPopup::DUPLICATE)
+  else
     rtitle = tgui::Label::create("Dupliquer le projet: \n " + oldName);
   rtitle->getRenderer()->setTextColor(tgui::Color::White);
   rtitle->setPosition("25%", "5%");
@@ -328,7 +325,7 @@ void MenuView::popupRename(tgui::Panel::Ptr renameBackground,
   rvalid->getRenderer()->setRoundedBorderRadius(8);
   renamePanel->add(rvalid);
   // Exit Button
-  auto exitB = tgui::Button::create("✕");
+  auto exitB = tgui::Button::create("x");
   exitB->setSize("10%", "10%");
   exitB->setPosition("0%", "0%");
   exitB->getRenderer()->setBackgroundColor(sf::Color(102, 178, 255));
@@ -337,17 +334,17 @@ void MenuView::popupRename(tgui::Panel::Ptr renameBackground,
   exitB->getRenderer()->setBorders(0);
   renamePanel->add(exitB);
   exitB->onPress([this, renameBackground]() { exitAction(renameBackground); });
-
-  rvalid->onPress([this, rname, project, renameBackground, view, &gui,
-                   &manager]() {
-    if (view == focusPopup::RENAME) {
+  rvalid->onPress([this, rname, project, renameBackground, view, &gui, &manager ](){
+   if(view == focusPopup::RENAME){
       std::cout << "Renaming project id: " << project.projectId << std::endl;
       std::string newName = static_cast<std::string>(rname->getText());
-      if (!newName.empty()) {
-        manager.renameProject(project.projectId, newName);
+      if(!newName.empty()){
+                manager.renameProject(project.projectId, newName);
         exitAction(renameBackground);
-      } else
-        (boxError(rname));
+
+      }else (boxError(rname));
+      
+      
     } else if (view == focusPopup::DUPLICATE) {
       std::string newName = static_cast<std::string>(rname->getText());
       if (!newName.empty()) {
@@ -355,11 +352,16 @@ void MenuView::popupRename(tgui::Panel::Ptr renameBackground,
                   << std::endl;
         manager.dupProj(project.projectId, newName);
         exitAction(renameBackground);
-      } else
-        (boxError(rname));
-    }
+        
+    
+        
+      }else if (view== focusPopup::TOKEN){
+        
+      }
+    
   });
 }
+
 void MenuView::updateList() { init(); }
 
 void MenuView::initInputWidget(focusPopup focus, ProjectData project) {
@@ -389,13 +391,13 @@ void MenuView::initInputWidget(focusPopup focus, ProjectData project) {
     break;
   }
   case (focusPopup::TOKEN): {
-    popupCreateToken(background, project);
-    break;
+    popupToken(background, project, focusPopup::TOKEN);
   }
   }
 }
 
 void MenuView::popupCreate(tgui::Panel::Ptr background) {
+  generateToken();
   auto &gui = app_.getGui();
   gui.add(background);
   auto data = tgui::Panel::create();
@@ -457,7 +459,7 @@ void MenuView::popupCreate(tgui::Panel::Ptr background) {
   data->add(sizePy);
 
   // Exit Button
-  auto exitB = tgui::Button::create("✕");
+  auto exitB = tgui::Button::create("x");
   exitB->setSize("10%", "10%");
   exitB->setPosition("0%", "0%");
   exitB->getRenderer()->setBackgroundColor(sf::Color::Red);
@@ -523,11 +525,10 @@ void MenuView::createProj(tgui::String scale, tgui::String sizeX,
   gui.removeAllWidgets();
 
   app_.getProject() = std::make_unique<Project>(scaleInt, size, nameS, id,
-                                                app_.getWindow(), gui, app_.getNetwork());
+                                                app_.getWindow(), gui);
 
   projectList.push_back(getProjectData(app_.getProject()));
 
-  resetShareToken();
   app_.changeView(std::make_unique<GameView>(app_));
 }
 
@@ -559,169 +560,8 @@ void MenuView::updateProjectNameInList(long long id, const std::string &name) {
   // Refreshing project list
   init();
 }
-void MenuView::updateShareToken(std::string newToken){
-  shareToken = newToken;
-  
-}
-void MenuView::resetShareToken(){
-  shareToken = "FFFFF";
-}
 
-void MenuView::generateToken(int role, uint id) {
+void MenuView::generateToken() {
   auto &manager = app_.getNetwork();
   // manager_.generateToken()
-}
-
-tgui::Panel::Ptr MenuView::displayToken() {
-  auto tokenPanel = tgui::Panel::create();
-  tokenPanel->setSize("80%", "15%");
-  tokenPanel->setPosition("10%", "32%");
-  tokenPanel->getRenderer()->setBackgroundColor(tgui::Color(35, 35, 48));
-  tokenPanel->getRenderer()->setBorders(1);
-  tokenPanel->getRenderer()->setBorderColor(tgui::Color(99, 102, 241));
-  tokenPanel->getRenderer()->setRoundedBorderRadius(10);
-
-  auto tokenTitle = tgui::Label::create("Token à partager :");
-  tokenTitle->setPosition("5%", "10%");
-  tokenTitle->setTextSize(13);
-  tokenTitle->getRenderer()->setTextColor(tgui::Color(160, 160, 180));
-  tokenPanel->add(tokenTitle);
-
-  auto tokenValue = tgui::Label::create(shareToken);
-  tokenValue->setPosition("5%", "55%");
-  tokenValue->setSize("90%", "35%");
-  tokenValue->setTextSize(14);
-  tokenValue->getRenderer()->setTextColor(tgui::Color(99, 102, 241));
-  tokenPanel->add(tokenValue);
-
-  auto tokenCopy = tgui::Button::create();
-  tokenCopy->setSize("10%","40%");
-  tokenCopy->setPosition("83%", " 25%");
-  tokenCopy->getRenderer()->setTexture("../res/images/draft.png");
-  tokenCopy->getRenderer()->setTextSize(16);
-  tokenCopy->getRenderer()->setTextColor(tgui::Color::White);
-  tokenCopy->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-  tokenCopy->getRenderer()->setBackgroundColorHover(tgui::Color(55,55,70));
-  tokenCopy->getRenderer()->setBorders(0);
-  tokenCopy->getRenderer()->setRoundedBorderRadius(6);
-  
-  //Supreposition
-  tokenCopy->getRenderer()->setTextureHover("../res/images/draft_hover.png");
-  // 
-  tokenPanel->add(tokenCopy);
-  tokenCopy->onPress([this](){
-                     sf::Clipboard::setString(shareToken);
-  });
-  
-  
-
-  return tokenPanel;
-}
-
-void MenuView::popupCreateToken(tgui::Panel::Ptr background, ProjectData project) {
-  auto &gui = app_.getGui();
-  auto& manager = app_.getNetwork();
-  gui.add(background);
-
-  // Panel principal
-  auto data = tgui::Panel::create();
-  data->setSize("30%", "35%");
-  data->setPosition("50%-15%", "50%-17.5%");
-  data->getRenderer()->setBackgroundColor(tgui::Color(28, 28, 36));
-  data->getRenderer()->setRoundedBorderRadius(12);
-  data->getRenderer()->setBorders(1);
-  data->getRenderer()->setBorderColor(tgui::Color(55, 55, 70));
-  background->add(data, "TokenPanel");
-
-  // Exit button
-  auto exitB = tgui::Button::create("✕");
-  exitB->setSize("10%", "10%");
-  exitB->setPosition("88%", "3%");
-  exitB->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-  exitB->getRenderer()->setBackgroundColorHover(tgui::Color(60, 60, 75));
-  exitB->getRenderer()->setTextColor(tgui::Color(160, 160, 180));
-  exitB->getRenderer()->setTextColorHover(tgui::Color::White);
-  exitB->getRenderer()->setBorders(0);
-  exitB->getRenderer()->setRoundedBorderRadius(6);
-  data->add(exitB);
-  exitB->onPress([this, background]() { exitAction(background); });
-
-  // Title
-  auto title = tgui::Label::create("Partager le projet");
-  title->setPosition("0%", "16%");
-  title->setSize("100%", "10%");
-  title->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
-  title->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
-  title->getRenderer()->setTextColor(sf::Color(255, 255, 255));
-  title->setTextSize(22);
-  data->add(title);
-
-  // Fancy separator
-  auto separator = tgui::Panel::create();
-  separator->setSize("80%", "1");
-  separator->setPosition("10%", "25%");
-  separator->getRenderer()->setBackgroundColor(tgui::Color(55, 55, 70));
-  data->add(separator);
-
-  // Role
-  auto roleLabel = tgui::Label::create("Rôle à partager");
-  roleLabel->setPosition("10%", "32%");
-  roleLabel->getRenderer()->setTextColor(tgui::Color(160, 160, 180));
-  roleLabel->setTextSize(14);
-  data->add(roleLabel);
-
-  // ListBox
-  auto comboBox = tgui::ComboBox::create();
-  comboBox->setSize("80%", "13%");
-  comboBox->setPosition("10%", "44%");
-  comboBox->addItem("Spectateur");
-  comboBox->addItem("Editeur");
-  comboBox->setSelectedItem("Spectateur");
-  comboBox->getRenderer()->setBackgroundColor(tgui::Color(40, 40, 52));
-  // comboBox->getRenderer()->setBackgroundColorHover(tgui::Color(50, 50, 65));
-  comboBox->getRenderer()->setTextColor(tgui::Color::White);
-  comboBox->getRenderer()->setBorderColor(tgui::Color(55, 55, 70));
-  comboBox->getRenderer()->setArrowBackgroundColor(tgui::Color(99, 102, 241));
-  comboBox->getRenderer()->setArrowColor(tgui::Color::White);
-  comboBox->getRenderer()->setBorders(1);
-  comboBox->getRenderer()->setRoundedBorderRadius(8);
-  data->add(comboBox);
-
-  // comboBox->onItemSelect([this, comboBox](const tgui::String& item){
-  //   if (item == "Spectateur"){
-  //     comboBox->setSelectedItem("Spectateur");
-  //   }
-  //   else if (item == "Editeur"){
-  //     comboBox->setSelectedItem("Editeur");
-  //     
-  //   }
-  // });
-
-  // Bouton valider
-  auto valid = tgui::Button::create("Générer le token");
-  valid->setSize("80%", "13%");
-  valid->setPosition("10%", "78%");
-  valid->getRenderer()->setBackgroundColor(tgui::Color(99, 102, 241));
-  valid->getRenderer()->setBackgroundColorHover(tgui::Color(118, 120, 255));
-  valid->getRenderer()->setTextColor(tgui::Color::White);
-  valid->getRenderer()->setBorders(0);
-  valid->getRenderer()->setRoundedBorderRadius(8);
-  data->add(valid);
-
-  
-  valid->onPress([this, comboBox, project,background, &gui] (){
-  tgui::String selected = comboBox->getSelectedItem();
-  std::cout <<"Element selectionné : " << selected <<std::endl;
-    
-    if (selected == "Editeur"){
-      std::cout <<"Editeur" <<std::endl;
-      generateToken(0, project.projectId);
-      
-    } else if (selected == "Spectateur"){
-      std::cout <<"Spectateur" <<std::endl;
-      generateToken(1,project.projectId);
-    }
-    exitAction(background);
-  });
-  
 }

@@ -1,4 +1,5 @@
 #include "GameView.hpp"
+#include "../MenuView.hpp"
 #include "../../project/Chat/userMessage.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
 #include "../../project/Tool/pixelshift.hpp"
@@ -8,7 +9,9 @@ GameView::GameView(Application &app)
       currentUser(app_.getUser()) {};
 
 void GameView::init() {
+  
   app_.getGui().removeAllWidgets();
+  
   initToolbar();
   initLayerPanel();
   initChatWidget();
