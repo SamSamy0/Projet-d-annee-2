@@ -4,21 +4,21 @@
 
 struct SpriteObject{
   sf::Sprite sprite;
-  uint64_t id;
-  SpriteObject(const sf::Sprite& sprite, uint64_t id);
+  uint id;
+  SpriteObject(const sf::Sprite& sprite, uint id);
 };
 
 class SpriteLayer : public Layer {
   std::vector<SpriteObject> sprites_;
   sf::Vector2i offset_;
-  uint64_t nextId;
+  uint nextId_;
 
 public:
   SpriteLayer(std::string name, sf::Vector2u size);
-  sf::Vector2i getOffset() const override;
   const std::vector<SpriteObject> &getSprites()const;
+  sf::Vector2i getOffset() const override;
   void draw(const sf::Sprite &s);
-  void erase(uint64_t id);
+  void erase(uint id);
   void shift(sf::Vector2i v) override;
   void drawLayer(sf::RenderTarget &target) override;
 };
