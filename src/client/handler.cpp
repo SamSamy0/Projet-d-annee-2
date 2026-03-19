@@ -218,6 +218,12 @@ void ClientHandler::process(ServerEvent& event){
             handleWindow_.shiftLayer(layer_id, delta_x, delta_y);
             break;
         }
+        case MsgProtocole::LOB_SHARE_PROJECT_REP : {
+            std::string token;
+            *(event.data_packet_) >> token;
+            handleWindow_.updateShareToken(token);
+            break;
+        }
     }        
 }
 

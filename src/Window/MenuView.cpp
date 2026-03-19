@@ -570,6 +570,7 @@ void MenuView::resetShareToken(){
 void MenuView::generateToken(int role, uint id) {
   auto &manager = app_.getNetwork();
   // manager_.generateToken()
+  manager.createProjectCode(role,id);
 }
 
 tgui::Panel::Ptr MenuView::displayToken() {
