@@ -11,24 +11,21 @@ class IMessage {
     virtual ~IMessage() = default;
 };
 
-
-
-struct LoginMessage : public IMessage{
+struct ConnectUserMessage : IMessage {
     std::shared_ptr<Client> client_;
     std::string pseudo_;
     std::string password_;
-    
+    ConnectUserMessage(sf::Packet& dataPacket, std::shared_ptr<Client> client);
+};
+
+struct LoginMessage : ConnectUserMessage{ 
     LoginMessage(sf::Packet& dataPacket, std::shared_ptr<Client> client);
     void process(Worker& worker) override;
 
 };
 
 
-struct RegisterMessage : IMessage{
-    std::shared_ptr<Client> client_;
-    std::string pseudo_;
-    std::string password_;
-    
+struct RegisterMessage : ConnectUserMessage{
     RegisterMessage(sf::Packet& dataPacket, std::shared_ptr<Client> client);
     void process(Worker& worker) override;
 };
@@ -40,7 +37,7 @@ struct CreateProjectMessage : IMessage{
     sf::Vector2u size_;
     uint scale_;
     
-    CreateProjectMessage(sf::Packet& dataPacket, uint userId);
+    CreateProjectMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
@@ -49,7 +46,7 @@ struct RenameProjectMessage: IMessage{
     uint projectId_;
     std::string newName_;
 
-    RenameProjectMessage(sf::Packet& dataPacket, uint userId);
+    RenameProjectMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
     
 };
@@ -59,7 +56,7 @@ struct DuplicateProjectMessage: IMessage{
     uint projectId_;
     std::string newName;
     
-    DuplicateProjectMessage(sf::Packet& dataPacket, uint userId);
+    DuplicateProjectMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
@@ -67,7 +64,7 @@ struct DuplicateProjectMessage: IMessage{
 struct GetProjectsListMessage : IMessage {
     uint userId_;
 
-    GetProjectsListMessage(sf::Packet& dataPacket, uint userId);
+    GetProjectsListMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
@@ -76,7 +73,7 @@ struct DeleteProjectMessage : IMessage {
     uint userId_;
     uint projectId_;
 
-    DeleteProjectMessage(sf::Packet& dataPacket, uint userId);
+    DeleteProjectMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
@@ -85,7 +82,7 @@ struct GetProjectDataMessage : IMessage{
     uint userId_;
     uint projectId_;
 
-    GetProjectDataMessage(sf::Packet& dataPacket, uint userId);
+    GetProjectDataMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
@@ -110,7 +107,7 @@ struct PutPixelsCircleMessage : PutPixelsMessage {
 
     float taille_;
     
-    PutPixelsCircleMessage(sf::Packet& dataPacket, uint userId);
+    PutPixelsCircleMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
@@ -118,7 +115,7 @@ struct PutPixelsCarreMessage : PutPixelsMessage {
 
     float taille_;
 
-    PutPixelsCarreMessage(sf::Packet& dataPacket, uint userId);
+    PutPixelsCarreMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
@@ -127,7 +124,7 @@ struct PutPixelsDiamondMessage : PutPixelsMessage {
     float hauteur_;
     float largeur_;
 
-    PutPixelsDiamondMessage(sf::Packet& dataPacket, uint userId);
+    PutPixelsDiamondMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
@@ -140,7 +137,7 @@ struct ErasePixelsCircleMessage : ErasePixelsMessage {
 
     float taille_;
     
-    ErasePixelsCircleMessage(sf::Packet& dataPacket, uint userId);
+    ErasePixelsCircleMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
@@ -148,7 +145,7 @@ struct ErasePixelsCarreMessage : ErasePixelsMessage {
 
     float taille_;
 
-    ErasePixelsCarreMessage(sf::Packet& dataPacket, uint userId);
+    ErasePixelsCarreMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
@@ -157,7 +154,7 @@ struct ErasePixelsDiamondMessage : ErasePixelsMessage {
     float hauteur_;
     float largeur_;
 
-    ErasePixelsDiamondMessage(sf::Packet& dataPacket, uint userId);
+    ErasePixelsDiamondMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
@@ -166,8 +163,8 @@ struct MoveLayerMessage : ModifProjetMessage {
     int deltaX_;
     int deltaY_;
 
-    MoveLayerMessage(sf::Packet& dataPacket, uint userId);
+    MoveLayerMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
-std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client> client);
+std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client>& client);
