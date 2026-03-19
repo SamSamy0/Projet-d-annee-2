@@ -4,7 +4,7 @@
 #include "projectWidgets/GameView.hpp"
 
 Application::Application(ClientNetworkManager &manager)
-    : mainWindow(sf::VideoMode({1200,800}), "Game name",
+    : mainWindow(sf::VideoMode({1200, 800}), "Game name",
                  sf::Style::Close | sf::Style::Titlebar),
       gui{mainWindow}, manager{manager} {
   updateTextSize();
@@ -72,16 +72,15 @@ void Application::updateProjectNameInList(long long id,
 };
 void Application::updateCreatedProjectId(uint32_t projId) {
   project->setId(projId);
-  
+
   if (auto menuView = dynamic_cast<MenuView *>(currentView.get())) {
-    //If we still are on menu
+    // If we still are on menu
     menuView->updateCreatedProjectId(projId);
-    
   };
 };
 
-void Application::updateShareToken(std::string newTok){
-  auto menuView = dynamic_cast<MenuView*>(currentView.get());
+void Application::updateShareToken(std::string newTok) {
+  auto menuView = dynamic_cast<MenuView *>(currentView.get());
   menuView->updateShareToken(newTok);
 }
 
@@ -92,8 +91,9 @@ User &Application::getUser() { return currentUser_; }
 std::unique_ptr<View> &Application::getCurrentView() { return currentView; }
 std::unique_ptr<Project> &Application::getProject() { return project; }
 
-
-void Application::loadProjectData(unsigned int scale, sf::Vector2u size, std::string name, uint id){
-  project = std::make_unique<Project>(scale,size,name,id,mainWindow,gui,manager);
+void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
+                                  std::string name, uint id) {
+  project = std::make_unique<Project>(scale, size, name, id, mainWindow, gui,
+                                      manager);
   changeView(std::make_unique<GameView>(*this));
 };
