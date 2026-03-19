@@ -159,3 +159,7 @@ void Map::detectMovement()
 uint Map::getId(){
     return id_;
 }
+
+void Map::setId(uint newId) {
+    id_ = newId;
+}
