@@ -66,3 +66,7 @@ void SpriteEraser::paint(sf::Vector2i pos) {
     }
   }
 }
+
+
+
+  void SpriteEraser::paintSender(sf::Vector2i pos){paint(pos);} //Elle n'envoie pas encore de message 
