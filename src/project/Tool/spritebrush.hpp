@@ -18,7 +18,7 @@ public:
   void setSize(float x, float y) override;
   void addAsset(const std::string &id);
   void removeAsset(const std::string &id);
-  void paintSender(sf::Vector2i pos) override {} // Pour l'instant elle fait rien
+  void paintSender(sf::Vector2i pos) override { paint(pos); }
   void clearAsset();
   float getOffset();
 };
