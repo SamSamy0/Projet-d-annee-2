@@ -196,7 +196,7 @@ void ClientHandler::process(ServerEvent &event) {
     break;
   }
 
-  case MsgProtocole::MAP_ERASER_CIRCLE_REP: {
+  case MsgProtocole::MAP_ERASE_PIXELS_CIRCLE_REP: {
     uint project_id;
     uint layer_id;
     int pos_x;
@@ -208,7 +208,7 @@ void ClientHandler::process(ServerEvent &event) {
     break;
   }
 
-  case MsgProtocole::MAP_ERASER_CARRE_REP: {
+  case MsgProtocole::MAP_ERASE_PIXELS_CARRE_REP: {
     uint project_id;
     uint layer_id;
     int pos_x;
@@ -220,7 +220,7 @@ void ClientHandler::process(ServerEvent &event) {
     break;
   }
 
-  case MsgProtocole::MAP_ERASER_DIAM_REP: {
+  case MsgProtocole::MAP_ERASE_PIXELS_DIAM_REP: {
     uint project_id;
     uint layer_id;
     int pos_x;
