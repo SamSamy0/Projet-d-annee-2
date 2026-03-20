@@ -11,7 +11,7 @@ protected:
   // TODO: faire ici la méthode paintSender
 public:
   Brush(std::shared_ptr<Map>, ClientNetworkManager &);
-  virtual void setSize(float x, float y);
+  virtual void setSize(float x, float y = 1);// WARNING: la valeur par défaut je suis pas sur
   sf::Vector2f getSize();
   void onPress(sf::Vector2i pos);
   void onDrag(sf::Vector2i pos);

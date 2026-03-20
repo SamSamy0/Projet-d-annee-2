@@ -14,7 +14,7 @@ Brush::Brush(std::shared_ptr<Map> map, ClientNetworkManager &manager) : Tool(map
 
 void Brush::setSize(
     float x,
-    float y = 1) { // WARNING: la valeur par défaut je suis pas sur
+    float y ) { 
 
   /* change the size and change the spacing in function of it */
   sf::Vector2u mapSize = getMap()->getSize();
