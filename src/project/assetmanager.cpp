@@ -35,7 +35,7 @@ void AssetManager::loadFromJson(){
     return;
   }
 
-  QJsonArray jsonArray = jsonDoc.array();
+  QJsonArray jsonArray = jsonDoc.object()["sprites"].toArray();
 
   for(QJsonValueRef value : jsonArray){
       QJsonObject item = value.toObject();
@@ -49,7 +49,7 @@ void AssetManager::loadFromJson(){
     newAsset.size_m_horizontal = static_cast<float>(item["size_meters_horizontal"].toDouble());
 
     newAsset.texture = std::make_unique<sf::Texture>();
-    std::string imagePath = spritesPath + "/" + newAsset.filename; 
+    std::string imagePath = "../res/sprites/" + newAsset.filename;
 
     if(newAsset.texture->loadFromFile(imagePath)){
       assets_[newAsset.id] = std::move(newAsset);

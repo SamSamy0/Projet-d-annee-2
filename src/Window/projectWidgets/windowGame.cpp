@@ -9,6 +9,9 @@ void Window::initGameWidget() {
   initChatWidget();
   initPenOptions();
   initEraserOptions();
+  initEraserSpriteOptions();
+  initSpriteBrushOptions();
+  initMinimap();
   refreshChat();
 }
 
@@ -59,7 +62,7 @@ void Window::handleGameEvents(const std::optional<sf::Event> &event) {
         float sizex = size.x;
         float sizey = size.y;
         sf::Vector2u mapSize = project->getMap()->getSize();
-        float step = std::min(mapSize.x, mapSize.y) / 200.0f;
+        float step = std::min(mapSize.x, mapSize.y) / 4000.0f; //WARNING: AVANT CA FONCTIONNAIT AVEC 200, mtn faut 4000 à tester sur un autre pc
 
         if (wheelEvent->delta > 0) {
           sizex += step;
@@ -71,7 +74,6 @@ void Window::handleGameEvents(const std::optional<sf::Event> &event) {
 
 
         brush->setSize(sizex, sizey);
-
       }
     } else {
       if (!gui.getWidgetBelowMouseCursor(wheelEvent->position, true))

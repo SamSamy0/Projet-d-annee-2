@@ -1,4 +1,5 @@
 #include "GameView.hpp"
+#include "../MenuView.hpp"
 #include "../../project/Chat/userMessage.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
 #include "../../project/Tool/pixelshift.hpp"
@@ -8,13 +9,24 @@ GameView::GameView(Application &app)
       currentUser(app_.getUser()) {};
 
 void GameView::init() {
+  
   app_.getGui().removeAllWidgets();
+  
   initToolbar();
   initLayerPanel();
   initChatWidget();
   initPenOptions();
+  initPenSpriteOptions();
   initEraserOptions();
+  initEraserSpriteOptions();
+  initSpriteBrushOptions();
+  initMinimap();
   refreshChat();
+}
+
+void GameView::render() {
+  if (project)
+    drawMinimap();
 }
 
 void GameView::handleEvents(const sf::Event &event) {
@@ -34,7 +46,7 @@ void GameView::handleEvents(const sf::Event &event) {
       }
     }
   }
-
+  
   // ON RELEASE
   if (auto mouseEvent = event.getIf<sf::Event::MouseButtonReleased>()) {
     if (mouseEvent->button == sf::Mouse::Button::Left) {

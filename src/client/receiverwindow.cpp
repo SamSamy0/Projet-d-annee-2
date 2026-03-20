@@ -36,6 +36,9 @@ void ReceiverInWindow::setState() {
   app_->changeView(std::make_unique<GameView>(*app_));
 }
 
+void ReceiverInWindow::updateShareToken(std::string token){
+    app_->updateShareToken(token);
+}
 void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
                                       std::string name, uint id) {
   app_->loadProjectData(scale, size, name, id);

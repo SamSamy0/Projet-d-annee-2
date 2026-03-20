@@ -1,5 +1,6 @@
 #pragma once
 #include "brush.hpp"
+#include "../../client/clientnetwork.hpp"
 
 class SpriteEraser : public Brush {
   Shape shape_ = SQUARE;
@@ -9,6 +10,5 @@ public:
   void setShape(Shape s);
   bool checkColision(sf::Vector2i pos, sf::FloatRect r);
   void paint(sf::Vector2i pos) override;
-  void paintSender(sf::Vector2i pos) override {
-  } // Pour l'instant elle fait rien
+  void paintSender(sf::Vector2i pos) override;
 };

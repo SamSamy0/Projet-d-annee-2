@@ -1,10 +1,12 @@
 #pragma once
+
 #include "Application.hpp"
 #include "View.hpp"
 
 class MenuView : public View {
   std::vector<ProjectData> projectList = {};
   tgui::Button::Ptr activeMoreButton = nullptr;
+  std::string shareToken = "FFFFF";
 
   void shareProj();
   void joinProj(tgui::Panel::Ptr panel);
@@ -15,6 +17,9 @@ class MenuView : public View {
   void popupCreate(tgui::Panel::Ptr background);
   void popupDuplicate(tgui::Panel::Ptr background, ProjectData project,
                       focusPopup view);
+  void popupCreateToken(tgui::Panel::Ptr background, ProjectData project);
+  tgui::Panel::Ptr displayToken();
+
   void exitAction(tgui::Panel::Ptr background);
   void closePopup();
   void createPopup();
@@ -27,6 +32,7 @@ class MenuView : public View {
                   tgui::Gui &gui);
   ProjectData getProjectData(std::unique_ptr<Project> &proj);
   ProjectData askProjectData();
+  void generateToken(int role, uint id );
 
 public:
   MenuView(Application &app);
@@ -38,4 +44,6 @@ public:
   void updateProjectNameInList(long long id, const std::string &name);
   void updateList();
   void updateCreatedProjectId(uint32_t projId);
+  void updateShareToken(std::string token);
+  void resetShareToken();
 };

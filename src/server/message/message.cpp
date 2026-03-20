@@ -301,6 +301,7 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
         case MsgProtocole::MAP_PUT_PIXELS_DIAM_REQ:
             return std::make_unique<PutPixelsDiamondMessage>(data_packet, c);
 
+<<<<<<< HEAD
         case MsgProtocole::MAP_ERASER_CARRE_REQ:
             return std::make_unique<ErasePixelsCarreMessage>(data_packet, c);
 
@@ -309,6 +310,16 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
 
         case MsgProtocole::MAP_ERASER_DIAM_REQ:
             return std::make_unique<ErasePixelsDiamondMessage>(data_packet, c);
+=======
+        case MsgProtocole::MAP_ERASE_PIXELS_CARRE_REQ:
+            return std::make_unique<ErasePixelsCarreMessage>(data_packet, c->id);
+
+        case MsgProtocole::MAP_ERASE_PIXELS_CIRCLE_REQ:
+            return std::make_unique<ErasePixelsCircleMessage>(data_packet, c->id);
+
+        case MsgProtocole::MAP_ERASE_PIXELS_DIAM_REQ:
+            return std::make_unique<ErasePixelsDiamondMessage>(data_packet, c->id);
+>>>>>>> main
 
         case MsgProtocole::MAP_MOV_LAYER_REQ:
             return std::make_unique<MoveLayerMessage>(data_packet, c);

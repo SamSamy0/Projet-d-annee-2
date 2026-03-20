@@ -4,6 +4,7 @@ Layer::Layer(uint id,std::string name, sf::Vector2u size) : id_{id}, name_{name}
 
 
 std::string Layer::getName() const { return name_; }
+void Layer::setName(const std::string& name) { name_ = name; }
 
 uint Layer::getId()const{return id_;}
 

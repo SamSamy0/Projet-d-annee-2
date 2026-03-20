@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "Chat/chat.hpp"
+#include "../client/clientnetwork.hpp"
 
 
 class Tool;
@@ -39,5 +41,6 @@ public:
     void displayScale();
     void displayToolBar();
     void displayBackground();
+    void setId(uint newId);
     sf::View& getView();
 };

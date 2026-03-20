@@ -31,6 +31,7 @@ public:
   void addProjectList(ProjectData project);
   void updateProjectNameInList(long long id, const std::string& newName);
   void updateCreatedProjectId(uint32_t projId);
+  void updateShareToken(std::string newToken);
   
   void changeView(std::unique_ptr<View> newView);
   void setState(projectState newState);

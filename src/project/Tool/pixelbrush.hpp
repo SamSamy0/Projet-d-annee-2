@@ -1,5 +1,6 @@
 #pragma once
 #include "brush.hpp"
+#include "../../client/clientnetwork.hpp"
 
 class PixelBrush : public Brush {
   sf::Color color_ = sf::Color::Black;

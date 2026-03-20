@@ -1,6 +1,7 @@
 #pragma once
 #include "../../client/clientnetwork.hpp"
 #include <SFML/Graphics.hpp>
+#include "../../client/clientnetwork.hpp"
 
 class ClientNetworkManager;
 class Map;
@@ -13,6 +14,7 @@ enum ToolType {
   SPRITEBRUSH,
   SPRITEERASER,
   SPRITESHIFT,
+  SPRITESELECTION,
 };
 
 enum Shape { // WARNING: PEUT ETRE PAS AU BON ENDROIT DANS LE CODE
@@ -31,8 +33,6 @@ protected:
 
 public:
   Tool(std::shared_ptr<Map> map, ClientNetworkManager &manager);
-  // virtual void getMessage(const ClientNetworkManager &netw
-  // virtual void sendMessage(const ClientNetworkManager &network) const;
   // Getter
   std::shared_ptr<Map> getMap();
   unsigned int getScale() const;

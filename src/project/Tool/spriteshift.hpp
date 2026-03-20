@@ -1,5 +1,6 @@
 #pragma once
 #include "shift.hpp"
+#include "../../client/clientnetwork.hpp"
 
 #pragma once
 #include "brush.hpp"

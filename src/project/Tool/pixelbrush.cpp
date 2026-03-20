@@ -1,4 +1,5 @@
 #include "pixelbrush.hpp"
+#include "../../client/clientnetwork.hpp"
 #include "../Layer/layer.hpp"
 #include "../Layer/pixellayer.hpp"
 #include "../map.hpp"
