@@ -7,7 +7,7 @@
 
 
 SpriteBrush::SpriteBrush(std::shared_ptr<Map> map, ClientNetworkManager &manager) : Brush(map, manager){
-  spacing_ = std::min(size_m_.x/1.0f * getScale(), size_m_.y/1.0f * getScale());
+  spacing_ = size_m_.x * getScale();
   if (spacing_ < 1)
     spacing_ = 1.0f;
   type_ = SPRITEBRUSH;
@@ -15,8 +15,8 @@ SpriteBrush::SpriteBrush(std::shared_ptr<Map> map, ClientNetworkManager &manager
 
 void SpriteBrush::setOffset(float offset){
   offset_ = offset;
-  spacing_ = std::min((size_m_.x + offset_) * getScale(),
-                      (size_m_.y + offset_) * getScale());
+  spacing_ = (size_m_.x + offset_) * getScale();
+                      
   if (spacing_ < 1)
     spacing_ = 1.0f;
 }
@@ -26,8 +26,8 @@ void SpriteBrush::setSize(float x, float y) {
   //
   /* change the size and change the spacing in function of it */
   Brush::setSize(x, y);
-  spacing_ = std::min((size_m_.x + offset_) * getScale(),
-                      (size_m_.y + offset_) * getScale());
+  spacing_ =(size_m_.x + offset_) * getScale();
+                      
   if (spacing_ < 1)
     spacing_ = 1.0f;
 }
