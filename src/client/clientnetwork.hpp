@@ -24,10 +24,10 @@ public:
   void dupProj(uint projectId, std::string newName);
   void getUsersProjects(uint id);
   void getProjectList();
-  void createProjectCode(int role, uint project_id);
+  void createProjectCode(uint8_t role, uint project_id);
   void delProject(uint project_id);
   void getProjectData(uint project_id);
-  void joinProject(uint project_code);
+  void joinProject(std::string project_code);
 
   void drawSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size,
                   uint8_t r, uint8_t g, uint8_t b, uint8_t a);

@@ -25,6 +25,10 @@ public:
     std::vector<ProjectEntry> getAllProjects();
     bool removeLink(const uint userId, const uint projectId);
     bool removeProject(const uint projectId);
+    bool saveToken(std::string token, uint8_t role, int projectId);
+    bool checkToken(uint userId, std::string token);
+    
+    
 private:
     QSqlDatabase m_db;
 };

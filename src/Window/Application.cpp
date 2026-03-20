@@ -4,9 +4,22 @@
 #include "projectWidgets/GameView.hpp"
 
 Application::Application(ClientNetworkManager &manager)
-    : mainWindow(sf::VideoMode({1200, 800}), "Game name",
-                 sf::Style::Close | sf::Style::Titlebar),
+    : mainWindow(
+          sf::VideoMode({static_cast<unsigned int>(
+                             sf::VideoMode::getDesktopMode().size.x * 0.90),
+                         static_cast<unsigned int>(
+                             sf::VideoMode::getDesktopMode().size.y * 0.90)}),
+          "Game name", sf::Style::Default),
       gui{mainWindow}, manager{manager} {
+  // Centering the Window
+  sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+  unsigned int windowWidth = desktop.size.x * 0.90;
+  unsigned int windowHeight = desktop.size.y * 0.90;
+
+  mainWindow.setPosition(sf::Vector2i((desktop.size.x - windowWidth) / 2,
+                                      (desktop.size.y - windowHeight) / 2));
+  // ------------------------------
+
   updateTextSize();
   gui.onViewChange([this] { updateTextSize(); });
   changeView(std::make_unique<LoginView>(*this));
@@ -86,8 +99,9 @@ void Application::updateCreatedProjectId(uint32_t projId) {
 };
 
 void Application::updateShareToken(std::string newTok) {
+  std::cout <<"token in app" <<newTok <<std::endl;
   auto menuView = dynamic_cast<MenuView *>(currentView.get());
-  menuView->updateShareToken(newTok);
+  menuView->setShareToken(newTok);
 }
 
 ClientNetworkManager &Application::getNetwork() { return manager; }

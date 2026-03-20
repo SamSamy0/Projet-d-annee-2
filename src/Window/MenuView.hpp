@@ -32,7 +32,7 @@ class MenuView : public View {
                   tgui::Gui &gui);
   ProjectData getProjectData(std::unique_ptr<Project> &proj);
   ProjectData askProjectData();
-  void generateToken(int role, uint id );
+  void generateToken(uint8_t role, uint id );
 
 public:
   MenuView(Application &app);
@@ -44,6 +44,6 @@ public:
   void updateProjectNameInList(long long id, const std::string &name);
   void updateList();
   void updateCreatedProjectId(uint32_t projId);
-  void updateShareToken(std::string token);
+  void setShareToken(std::string token);
   void resetShareToken();
 };

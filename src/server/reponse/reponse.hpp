@@ -41,6 +41,13 @@ struct ReponseRenameProject: ReponseSolo{
 struct ReponseDuplicateProject: ReponseSolo{
     ReponseDuplicateProject(uint userId_, uint projectId_, std::string newName);
 };
+struct ReponseGenerateToken: ReponseSolo{
+    ReponseGenerateToken(uint userId_, std::string token);
+};
+
+struct ReponseJoinProject: ReponseSolo{
+    ReponseJoinProject(uint userId_, bool success);
+};
 
 struct ReponseProjectData : ReponseSolo {
     ReponseProjectData(uint userId, QByteArray& jsonData);

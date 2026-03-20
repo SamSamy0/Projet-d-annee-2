@@ -12,26 +12,33 @@ DatabaseManager::DatabaseManager() {
     QSqlQuery query;
     query.exec("PRAGMA foreign_keys = ON;");
 
-        query.exec("CREATE TABLE IF NOT EXISTS users ("
-                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                   "pseudo TEXT UNIQUE COLLATE NOCASE CHECK(LENGTH(pseudo) BETWEEN 3 AND 15), "
-                   "password TEXT)");
-        query.exec("CREATE TABLE IF NOT EXISTS projects ("
-                   "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                   "name TEXT)");
-        query.exec("CREATE TABLE IF NOT EXISTS links ("
-                    "user_id INTEGER, "
-                    "project_id INTEGER, "
-                    "role INTEGER, "
-                    "PRIMARY KEY (user_id, project_id), "
-                    "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,"
-                    "FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE)");
-    }
+    query.exec(
+        "CREATE TABLE IF NOT EXISTS users ("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "pseudo TEXT UNIQUE COLLATE NOCASE CHECK(LENGTH(pseudo) BETWEEN 3 AND "
+        "15), "
+        "password TEXT)");
+    query.exec("CREATE TABLE IF NOT EXISTS projects ("
+               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "name TEXT)");
+    query.exec(
+        "CREATE TABLE IF NOT EXISTS links ("
+        "user_id INTEGER, "
+        "project_id INTEGER, "
+        "role INTEGER, "
+        "PRIMARY KEY (user_id, project_id), "
+        "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,"
+        "FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE)");
+    query.exec("CREATE TABLE IF NOT EXISTS token ("
+               "tok TEXT, "
+               "role INTEGER, "
+               "projet_id INTEGER)");
+  }
 }
 
 // renvoie l'id de l'utilisateur sinon -1
 uint DatabaseManager::verifyLogin(const std::string &pseudo,
-                                       const std::string &password) {
+                                  const std::string &password) {
   QString qPseudo = QString::fromStdString(pseudo);
   QString qPassword = QString::fromStdString(password);
 
@@ -48,7 +55,7 @@ uint DatabaseManager::verifyLogin(const std::string &pseudo,
 
 // utiliser un hachage plus tard
 uint DatabaseManager::addUser(const std::string &pseudo,
-                                   const std::string &password) {
+                              const std::string &password) {
   QString qPseudo = QString::fromStdString(pseudo);
   QString qPassword = QString::fromStdString(password);
 
@@ -82,8 +89,7 @@ bool DatabaseManager::addLink(const uint userId, const uint projectId,
   return false;
 }
 
-uint DatabaseManager::addProject(const std::string &name,
-                                      const uint userId) {
+uint DatabaseManager::addProject(const std::string &name, const uint userId) {
   QString qName = QString::fromStdString(name);
 
   QSqlQuery query;
@@ -113,8 +119,7 @@ bool DatabaseManager::updateProjectName(const uint projectId,
   return false;
 };
 // Returns the Id of the new duplicate Project
-uint DatabaseManager::dupProj(const std::string &newName,
-                                   const uint userId) {
+uint DatabaseManager::dupProj(const std::string &newName, const uint userId) {
   QSqlQuery query;
   query.prepare("INSERT INTO projects (name) VALUES (:n)");
   query.bindValue(":n", QString::fromStdString(newName));
@@ -127,8 +132,8 @@ uint DatabaseManager::dupProj(const std::string &newName,
   return -1;
 }
 
-bool DatabaseManager::changeRole(const uint userId,
-                                 const uint projectId, const int8_t role) {
+bool DatabaseManager::changeRole(const uint userId, const uint projectId,
+                                 const int8_t role) {
   QSqlQuery query;
 
   query.prepare(
@@ -144,8 +149,7 @@ bool DatabaseManager::changeRole(const uint userId,
   return false;
 }
 
-std::vector<MemberEntry>
-DatabaseManager::getProjectMembers(uint projectId) {
+std::vector<MemberEntry> DatabaseManager::getProjectMembers(uint projectId) {
   std::vector<MemberEntry> members;
   QSqlQuery query;
 
@@ -219,8 +223,7 @@ std::string DatabaseManager::getName(const uint projectId) {
   }
 }
 
-int8_t DatabaseManager::getRole(const uint userId,
-                                const uint projectId) {
+int8_t DatabaseManager::getRole(const uint userId, const uint projectId) {
   QSqlQuery query;
 
   query.prepare(
@@ -259,27 +262,67 @@ std::vector<ProjectEntry> DatabaseManager::getAllProjects() {
 }
 
 bool DatabaseManager::removeLink(const uint userId, const uint projectId) {
-    QSqlQuery query;
-    query.prepare("DELETE FROM links WHERE user_id = :uId AND project_id = :pId");
-    query.bindValue(":uId", userId);
-    query.bindValue(":pId", projectId);
+  QSqlQuery query;
+  query.prepare("DELETE FROM links WHERE user_id = :uId AND project_id = :pId");
+  query.bindValue(":uId", userId);
+  query.bindValue(":pId", projectId);
 
-    if (!query.exec()) {
-        qDebug() << "Erreur suppression lien:" << query.lastError().text();
-        return false;
-    }
-    return true;
+  if (!query.exec()) {
+    qDebug() << "Erreur suppression lien:" << query.lastError().text();
+    return false;
+  }
+  return true;
 }
 
 bool DatabaseManager::removeProject(const uint projectId) {
-    QSqlQuery query;
-    query.prepare("DELETE FROM projects WHERE id = :pId");
-    query.bindValue(":pId", projectId);
+  QSqlQuery query;
+  query.prepare("DELETE FROM projects WHERE id = :pId");
+  query.bindValue(":pId", projectId);
 
-    if (!query.exec()) {
-        qDebug() << "Erreur suppression projet:" << query.lastError().text();
-        return false;
-    }
-    return true;
+  if (!query.exec()) {
+    qDebug() << "Erreur suppression projet:" << query.lastError().text();
+    return false;
+  }
+  return true;
 }
 
+bool DatabaseManager::saveToken(std::string token, uint8_t role,
+                                int projectId) {
+  QSqlQuery query;
+  // query.prepare("INSERT INTO users (pseudo, password) VALUES (:p, :pw)");
+  query.prepare(
+      "INSERT INTO token (tok, role, projet_id) VALUES (:t, :r, :pId)");
+  query.bindValue(":t", QString::fromStdString(token));
+  query.bindValue(":r", static_cast<qlonglong>(role));
+  query.bindValue(":pId", static_cast<qlonglong>(projectId));
+
+  if (!query.exec()) {
+    qDebug() << "Erreur creation token:" << query.lastError().text();
+    return false;
+  }
+  std::cout << "token : " << token << std::endl;
+  return true;
+};
+
+bool DatabaseManager::checkToken(uint userId, std::string token) {
+  std::vector<ProjectEntry> projects;
+  QSqlQuery query;
+
+  query.prepare("SELECT projet_id, role FROM token WHERE tok = :t");
+  query.bindValue(":t", QString::fromStdString(token));
+
+  if (query.exec() && query.next()) {
+    // std::string original = query.value(0).toString().toStdString();
+    // std::cout <<"passed and comparing 1 " <<original <<" with " << token <<std::endl;
+    // Token is valid
+    // if (original == token) {
+      uint projId = query.value(0).toUInt();
+      int role = query.value(1).toInt();
+      addLink(userId, projId, role);
+    // } else {
+    //   return false;
+    // }
+    return true;
+  }
+  return false;
+}

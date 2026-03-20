@@ -78,9 +78,11 @@ void MenuView::init() {
   // shareProjB->getRenderer()->setRoundedBorderRadius(8);
   // shareProjB->onPress(&MenuView::shareProj, this);
   // rightPanel->add(shareProjB);
-  if (shareToken != "FFFFF"){
-    rightPanel->add(displayToken());
-  }
+  // std::cout <<"now token " <<shareToken <<std::endl;
+  // if (shareToken != "FFFFF") {
+  std::cout << "yes siiiir" << shareToken << std::endl;
+  rightPanel->add(displayToken());
+  // }
 }
 void MenuView::handleEvents(const sf::Event &event) {
   auto &gui = app_.getGui();
@@ -106,6 +108,7 @@ void MenuView::handleEvents(const sf::Event &event) {
   }
 }
 void MenuView::joinProj(tgui::Panel::Ptr panel) {
+  auto &manager = app_.getNetwork();
   auto joinPanel = tgui::Panel::create();
   joinPanel->setSize("80%", "30%");
   joinPanel->setPosition("10%", "40%");
@@ -146,11 +149,12 @@ void MenuView::joinProj(tgui::Panel::Ptr panel) {
   valid->getRenderer()->setBorders(0);
   valid->getRenderer()->setRoundedBorderRadius(8);
   joinPanel->add(valid);
-  valid->onPress([this, panel, joinPanel, token]() {
+  valid->onPress([this, panel, joinPanel, token, &manager]() {
     // NOTE: need to add verification from server
-    if (!token->getText().empty())
+    if (!token->getText().empty()) {
+      manager.joinProject(token->getText().toStdString());
       panel->remove(joinPanel);
-    else
+    } else
       boxError(token);
   });
 }
@@ -231,7 +235,6 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
       auto it = std::find_if(
           projectList.begin(), projectList.end(),
           [id](const ProjectData &p) { return p.projectId == id; });
-                     
 
       if (it != projectList.end()) {
         projectList.erase(it);
@@ -522,8 +525,8 @@ void MenuView::createProj(tgui::String scale, tgui::String sizeX,
   manager.createProject(nameS, size, scaleInt);
   gui.removeAllWidgets();
 
-  app_.getProject() = std::make_unique<Project>(scaleInt, size, nameS, id,
-                                                app_.getWindow(), gui, app_.getNetwork());
+  app_.getProject() = std::make_unique<Project>(
+      scaleInt, size, nameS, id, app_.getWindow(), gui, app_.getNetwork());
 
   projectList.push_back(getProjectData(app_.getProject()));
 
@@ -559,18 +562,19 @@ void MenuView::updateProjectNameInList(long long id, const std::string &name) {
   // Refreshing project list
   init();
 }
-void MenuView::updateShareToken(std::string newToken){
+void MenuView::setShareToken(std::string newToken) {
+  std::cout << "token in app" << newToken << std::endl;
   shareToken = newToken;
-  
-}
-void MenuView::resetShareToken(){
-  shareToken = "FFFFF";
+  std::cout << "token changed " << shareToken << std::endl;
+  init();
 }
 
-void MenuView::generateToken(int role, uint id) {
+void MenuView::resetShareToken() { shareToken = "FFFFF"; }
+
+void MenuView::generateToken(uint8_t role, uint id) {
   auto &manager = app_.getNetwork();
-  // manager_.generateToken()
-  manager.createProjectCode(role,id);
+  // Sending message to create Code
+  manager.createProjectCode(role, id);
 }
 
 tgui::Panel::Ptr MenuView::displayToken() {
@@ -596,32 +600,29 @@ tgui::Panel::Ptr MenuView::displayToken() {
   tokenPanel->add(tokenValue);
 
   auto tokenCopy = tgui::Button::create();
-  tokenCopy->setSize("10%","40%");
+  tokenCopy->setSize("10%", "40%");
   tokenCopy->setPosition("83%", " 25%");
   tokenCopy->getRenderer()->setTexture("../res/images/draft.png");
   tokenCopy->getRenderer()->setTextSize(16);
   tokenCopy->getRenderer()->setTextColor(tgui::Color::White);
   tokenCopy->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-  tokenCopy->getRenderer()->setBackgroundColorHover(tgui::Color(55,55,70));
+  tokenCopy->getRenderer()->setBackgroundColorHover(tgui::Color(55, 55, 70));
   tokenCopy->getRenderer()->setBorders(0);
   tokenCopy->getRenderer()->setRoundedBorderRadius(6);
-  
-  //Supreposition
+
+  // Supreposition
   tokenCopy->getRenderer()->setTextureHover("../res/images/draft_hover.png");
-  // 
+  //
   tokenPanel->add(tokenCopy);
-  tokenCopy->onPress([this](){
-                     sf::Clipboard::setString(shareToken);
-  });
-  
-  
+  tokenCopy->onPress([this]() { sf::Clipboard::setString(shareToken); });
 
   return tokenPanel;
 }
 
-void MenuView::popupCreateToken(tgui::Panel::Ptr background, ProjectData project) {
+void MenuView::popupCreateToken(tgui::Panel::Ptr background,
+                                ProjectData project) {
   auto &gui = app_.getGui();
-  auto& manager = app_.getNetwork();
+  auto &manager = app_.getNetwork();
   gui.add(background);
 
   // Panel principal
@@ -694,7 +695,7 @@ void MenuView::popupCreateToken(tgui::Panel::Ptr background, ProjectData project
   //   }
   //   else if (item == "Editeur"){
   //     comboBox->setSelectedItem("Editeur");
-  //     
+  //
   //   }
   // });
 
@@ -709,20 +710,18 @@ void MenuView::popupCreateToken(tgui::Panel::Ptr background, ProjectData project
   valid->getRenderer()->setRoundedBorderRadius(8);
   data->add(valid);
 
-  
-  valid->onPress([this, comboBox, project,background, &gui] (){
-  tgui::String selected = comboBox->getSelectedItem();
-  std::cout <<"Element selectionné : " << selected <<std::endl;
-    
-    if (selected == "Editeur"){
-      std::cout <<"Editeur" <<std::endl;
+  valid->onPress([this, comboBox, project, background, &gui]() {
+    tgui::String selected = comboBox->getSelectedItem();
+    std::cout << "Element selectionné : " << selected << std::endl;
+
+    if (selected == "Editeur") {
+      std::cout << "Editeur" << std::endl;
       generateToken(0, project.projectId);
-      
-    } else if (selected == "Spectateur"){
-      std::cout <<"Spectateur" <<std::endl;
-      generateToken(1,project.projectId);
+
+    } else if (selected == "Spectateur") {
+      std::cout << "Spectateur" << std::endl;
+      generateToken(1, project.projectId);
     }
     exitAction(background);
   });
-  
 }

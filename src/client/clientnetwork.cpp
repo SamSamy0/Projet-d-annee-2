@@ -116,7 +116,7 @@ void ClientNetworkManager::delProject(uint project_id) {
   socket_.send(packet);
 }
 
-void ClientNetworkManager::createProjectCode(int role, uint project_id) {
+void ClientNetworkManager::createProjectCode(uint8_t role, uint project_id) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_SHARE_PROJECT_REQ;
 
@@ -126,7 +126,7 @@ void ClientNetworkManager::createProjectCode(int role, uint project_id) {
   socket_.send(packet);
 }
 
-void ClientNetworkManager::joinProject(uint project_code) {
+void ClientNetworkManager::joinProject(std::string project_code) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_JOIN_PROJECT_REQ;
 

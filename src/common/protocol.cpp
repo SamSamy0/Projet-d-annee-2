@@ -15,6 +15,7 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::LOB_SHARE_PROJECT_REQ: return "LOB_SHARE_PROJECT_REQ";
         case MsgProtocole::LOB_SHARE_PROJECT_REP: return "LOB_SHARE_PROJECT_REP";
         case MsgProtocole::LOB_JOIN_PROJECT_REQ: return "LOB_JOIN_PROJECT_REQ";
+        case MsgProtocole::LOB_JOIN_PROJECT_REP: return "LOB_JOIN_PROJECT_REP";
         case MsgProtocole::LOB_IMPORT_PROJECT_REQ: return "LOB_IMPORT_PROJECT_REQ";
         case MsgProtocole::LOB_EXPORT_PNG_PROJECT_REQ: return "LOB_EXPORT_PNG_PROJECT_REQ";
         case MsgProtocole::LOB_EXPORT_JSON_PROJECT_REP: return "LOB_EXPORT_JSON_PROJECT_REP";

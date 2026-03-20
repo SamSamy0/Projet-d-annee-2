@@ -1,5 +1,6 @@
 #include "worker.hpp"
 #include <iostream>
+#include <random>
 
 Worker::Worker(MutexQueue<IMessage>& demQueue, MutexQueue<Reponse>& repQueue) 
     : demQueue_(demQueue), repQueue_(repQueue), mRunning_(true) {}
@@ -72,6 +73,26 @@ bool Worker::renameProject(uint projectId, const std::string& newName){
     bool dbRename = dbManager_.updateProjectName(projectId, newName);
     bool jsonRename = projManager_.updateProjectName(projectId, QString::fromStdString(newName));
     return dbRename && jsonRename;
+}
+
+std::string Worker::generateShareToken(uint8_t role, uint projectId){
+    std::string alphnum = "abcdefghijklmnopqrstuvwxyzABCDEFJHIJKLMNOPQRSTUVWXYZ123456789";
+    std::string token = "";
+    int length = 8;
+    for (int i = 0; i <= length ; i ++){
+        token += alphnum[rand()%alphnum.length()];
+    }
+    
+    if (dbManager_.saveToken(token, role, projectId)){
+        return token;
+        
+    };
+    return "FFFFF";
+}
+
+bool Worker::checkShareToken(uint userId, std::string token){
+    bool isCorrect = dbManager_.checkToken(userId, token);
+    return isCorrect;
 }
 
 uint Worker::duplicateProject(uint oldId, const std::string& newName, uint userId){

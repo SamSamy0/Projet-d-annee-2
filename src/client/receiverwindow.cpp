@@ -39,6 +39,7 @@ void ReceiverInWindow::setState() {
 }
 
 void ReceiverInWindow::updateShareToken(std::string token){
+  std::cout <<"token in receiverwindow" << token <<std::endl;
     app_->updateShareToken(token);
 }
 void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
