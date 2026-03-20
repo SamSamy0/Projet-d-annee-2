@@ -30,6 +30,26 @@ void GameView::initPenSpriteOptions() {
   widthInput->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
   penSpriteOptionsPanel_->add(widthInput);
 
+  auto spaceInput = tgui::EditBox::create();
+  spaceInput->setSize(width * 0.04, height * 0.04);
+  spaceInput->setPosition(width * 0.052, height * 0.011);
+  spaceInput->setDefaultText("Space");
+  spaceInput->setInputValidator("[0-9]+\\.?[0-9]*");
+  spaceInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+  spaceInput->getRenderer()->setTextColor(tgui::Color::White);
+  spaceInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
+  spaceInput->getRenderer()->setBorders({1});
+  spaceInput->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+  penSpriteOptionsPanel_->add(spaceInput);
+
+  spaceInput->onTextChange([this, spaceInput]() {
+    // regarde s'il y a aucune valeur
+    if (spaceInput->getText().empty()) return;
+    
+    float offset = std::stof(spaceInput->getText().toStdString());
+    auto brush = dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+    if (brush) brush->setOffset(offset);
+  });
 
   widthInput->onTextChange([this, widthInput]() {
     // regarde s'il y a aucune valeur
