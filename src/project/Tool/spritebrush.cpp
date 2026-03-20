@@ -7,21 +7,27 @@
 
 
 SpriteBrush::SpriteBrush(std::shared_ptr<Map> map, ClientNetworkManager &manager) : Brush(map, manager){
-  spacing_ = std::min(size_m_.x/1.0f * getScale(), size_m_.y/1.0f * getScale());
+  spacing_ = size_m_.x * getScale();
   if (spacing_ < 1)
     spacing_ = 1.0f;
   type_ = SPRITEBRUSH;
 }
 
-void SpriteBrush::setOffset(float offset){offset_ = offset;}
+void SpriteBrush::setOffset(float offset){
+  offset_ = offset;
+  spacing_ = (size_m_.x + offset_) * getScale();
+                      
+  if (spacing_ < 1)
+    spacing_ = 1.0f;
+}
 void SpriteBrush::setShape(Shape s){shape_ = s;}
 
 void SpriteBrush::setSize(float x, float y) {
   //
   /* change the size and change the spacing in function of it */
   Brush::setSize(x, y);
-  spacing_ = std::min((size_m_.x * 2.0 + offset_) * getScale(),
-                      (size_m_.y * 2.0 + offset_) * getScale());
+  spacing_ =(size_m_.x + offset_) * getScale();
+                      
   if (spacing_ < 1)
     spacing_ = 1.0f;
 }
@@ -70,3 +76,7 @@ void SpriteBrush::paint(sf::Vector2i pos) {
     spritelayer->draw(sprite);
   }
 }
+
+
+
+  void SpriteBrush::paintSender(sf::Vector2i pos){ paint(pos); }//Elle n'envoie pas encore de message 

@@ -340,5 +340,4 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
   default:
     std::cout << "pas de message" << std::endl;
     return nullptr;
-  }
-}
+  }  }

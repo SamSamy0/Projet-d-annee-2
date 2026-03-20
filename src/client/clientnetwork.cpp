@@ -121,8 +121,8 @@ void ClientNetworkManager::createProjectCode(uint8_t role, uint project_id) {
   MsgProtocole msg = MsgProtocole::LOB_SHARE_PROJECT_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << role;
-  packet << static_cast<int>(project_id);
+  packet << static_cast<uint8_t>(role);
+  packet << static_cast<uint32_t>(project_id);
   socket_.send(packet);
 }
 

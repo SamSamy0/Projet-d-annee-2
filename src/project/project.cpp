@@ -83,5 +83,6 @@ void Project::display() {
 
 void Project::setId(uint newId){
   id_ = newId;
+  map_->setId(newId);
 }
 

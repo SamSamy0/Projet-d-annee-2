@@ -52,4 +52,5 @@ public:
   // bool isInside(sf::Vector2i pos)const; //WARNING: ne sert à rien pour
   // l'instant
   void detectZooming(sf::Event event);
+  void setId(uint newId);
 };
