@@ -13,7 +13,13 @@ SpriteBrush::SpriteBrush(std::shared_ptr<Map> map, ClientNetworkManager &manager
   type_ = SPRITEBRUSH;
 }
 
-void SpriteBrush::setOffset(float offset){offset_ = offset;}
+void SpriteBrush::setOffset(float offset){
+  offset_ = offset;
+  spacing_ = std::min((size_m_.x + offset_) * getScale(),
+                      (size_m_.y + offset_) * getScale());
+  if (spacing_ < 1)
+    spacing_ = 1.0f;
+}
 void SpriteBrush::setShape(Shape s){shape_ = s;}
 
 void SpriteBrush::setSize(float x, float y) {

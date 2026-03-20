@@ -9,7 +9,7 @@ void GameView::initPenSpriteOptions() {
   float height = mainWindow.getSize().y;
 
   penSpriteOptionsPanel_ = tgui::Panel::create();
-  penSpriteOptionsPanel_->setSize(width * 0.10, height * 0.062);
+  penSpriteOptionsPanel_->setSize(width * 0.15, height * 0.062);
   penSpriteOptionsPanel_->setPosition(width * 0.22, height * 0.05);
   penSpriteOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
   penSpriteOptionsPanel_->getRenderer()->setBorders({1});
@@ -31,10 +31,10 @@ void GameView::initPenSpriteOptions() {
   penSpriteOptionsPanel_->add(widthInput);
 
   auto spaceInput = tgui::EditBox::create();
-  spaceInput->setSize(width * 0.04, height * 0.04);
+  spaceInput->setSize(width * 0.07, height * 0.04);
   spaceInput->setPosition(width * 0.052, height * 0.011);
-  spaceInput->setDefaultText("Space");
-  spaceInput->setInputValidator("[0-9]+\\.?[0-9]*");
+  spaceInput->setDefaultText("Offset");
+  spaceInput->setInputValidator("-?[0-9]*\\.?[0-9]*");
   spaceInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   spaceInput->getRenderer()->setTextColor(tgui::Color::White);
   spaceInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -45,7 +45,8 @@ void GameView::initPenSpriteOptions() {
   spaceInput->onTextChange([this, spaceInput]() {
     // regarde s'il y a aucune valeur
     if (spaceInput->getText().empty()) return;
-    
+    if (spaceInput->getText().empty() || spaceInput->getText() == "-" || spaceInput->getText() == "." || spaceInput->getText() == "-.")
+        return;
     float offset = std::stof(spaceInput->getText().toStdString());
     auto brush = dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
     if (brush) brush->setOffset(offset);
