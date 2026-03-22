@@ -34,7 +34,7 @@ public:
 
     void run();
 
-    std::unordered_map<uint, std::shared_ptr<Client>> map_;
+    std::unordered_map<uint, std::shared_ptr<Client>> mapUser_Socket_;
 };
 
 

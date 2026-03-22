@@ -63,6 +63,7 @@ void ServerNetworkManager::handleClientMessages() {
         }
         
         if (status == sf::Socket::Status::Disconnected || status == sf::Socket::Status::Error) {
+            messageQueu_.push(std::make_unique<DisconnectMessage>(client));
             selector_.remove(*client->sock);
             return true;
         }

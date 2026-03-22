@@ -6,8 +6,8 @@
 ReponseSolo::ReponseSolo(uint id) : userId_(id) {}
 
 void ReponseSolo::envoyer(ServerNetworkManager& servManage) {
-    auto client = servManage.map_.find(userId_);
-    if (client != servManage.map_.end()) {
+    auto client = servManage.mapUser_Socket_.find(userId_);
+    if (client != servManage.mapUser_Socket_.end()) {
         client->second->sock->send(dataPacket_);
     }
 }
@@ -28,7 +28,7 @@ void ReponseAuth::envoyer(ServerNetworkManager& servManage) {
     client_->sock->send(dataPacket_);
     
     if (userId_ != 0) {
-        servManage.map_[userId_] = std::move(client_);
+        servManage.mapUser_Socket_[userId_] = std::move(client_);
     }
 }
 
@@ -78,8 +78,8 @@ ReponseGroupe::ReponseGroupe(std::vector<uint> usersId) : usersId_(std::move(use
 
 void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
     for (auto Id : usersId_) {
-        auto client = servManager.map_.find(Id);
-        if (client != servManager.map_.end()) {
+        auto client = servManager.mapUser_Socket_.find(Id);
+        if (client != servManager.mapUser_Socket_.end()) {
             client->second->sock->send(dataPacket_);
         }
     } 

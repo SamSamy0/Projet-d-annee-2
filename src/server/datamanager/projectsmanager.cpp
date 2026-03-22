@@ -23,6 +23,7 @@ bool ProjectsManager::createProjectJson(uint id, const QString &projectName, uin
         return false;
     }
     QJsonObject root;
+    QJsonObject firstLayer;
     QJsonArray emptylayers;
     
     root["id"] = static_cast<int>(id);
@@ -30,6 +31,14 @@ bool ProjectsManager::createProjectJson(uint id, const QString &projectName, uin
     root["width"] =  static_cast<int>(width);
     root["height"] =  static_cast<int>(height);
     root["scale"] = static_cast<int>(scale);
+    root["layerId"] = (int)1;
+
+    firstLayer["type"] = "pixel";
+    firstLayer["id"] = 0;
+    firstLayer["x"] = 0;
+    firstLayer["y"] = 0;
+
+    emptylayers.append(firstLayer);
 
     root["layers"] = emptylayers;
 
@@ -222,7 +231,7 @@ bool ProjectsManager::deleteProject(uint id) {
     return false;
 }
 
-void ProjectsManager::addCalque(uint projetId, uint largeur, uint hauteur, uint calqueId) {
+void ProjectsManager::addCalquePixel(uint projetId, uint largeur, uint hauteur, uint calqueId) {
 
     QString destPath = getProjectPath(projetId) + "/images/calque_" + QString::number(calqueId) + ".png";
     QImage image(largeur, hauteur, QImage::Format_ARGB32);

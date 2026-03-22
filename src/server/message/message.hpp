@@ -87,6 +87,8 @@ struct GetProjectDataMessage : IMessage{
 };
 
 
+
+
 struct ModifProjetMessage : IMessage {
     uint userId_;
     uint projectId_;
@@ -164,6 +166,14 @@ struct MoveLayerMessage : ModifProjetMessage {
     int deltaY_;
 
     MoveLayerMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
+    void process(Worker& worker) override;
+};
+
+struct DisconnectMessage : IMessage {
+    uint userId_;
+    uint projectId_;
+
+    DisconnectMessage(std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 

@@ -52,14 +52,12 @@ void CreateProjectMessage::process(Worker& worker) {
     worker.createProjectJson(idProj, nomProjet_, size_.x, size_.y, scale_);
 
     auto liveProj = LiveProject(worker.loadProjectJson(idProj));
-    liveProj.connectedID_.push_back(userId_);
-    liveProj.userRole_[userId_] = worker.getRole(userId_, idProj);
+    liveProj.addConnection(userId_, 2);
     worker.mapProjet_.emplace(idProj, std::move(liveProj));
 
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseCreateProject>(userId_, idProj);
     worker.pushNetwork(std::move(rps));
-
 
     }
 }
@@ -130,16 +128,14 @@ void GetProjectDataMessage::process(Worker& worker) {
 
     if (worker.mapProjet_.find(projectId_) == worker.mapProjet_.end()) {
         auto liveProj = LiveProject(worker.loadProjectJson(projectId_));
-        liveProj.connectedID_.push_back(userId_);
-        liveProj.userRole_[userId_] = worker.getRole(userId_, projectId_);
+        liveProj.addConnection(userId_, worker.getRole(userId_, projectId_));
         worker.mapProjet_.emplace(projectId_, std::move(liveProj));
 
     }
     else {
-        auto item_id_Projet = (worker.mapProjet_).find(projectId_);
-        worker.writeProjetJson(item_id_Projet->second.json_, projectId_);
-        item_id_Projet->second.connectedID_.push_back(userId_);
-        item_id_Projet->second.userRole_[userId_] = worker.getRole(userId_, projectId_);
+        LiveProject& currentLiveProj = (worker.mapProjet_.find(projectId_))->second;
+        worker.writeProjetJson(currentLiveProj.getJson(), projectId_);
+        currentLiveProj.addConnection(userId_, worker.getRole(userId_, projectId_));
 
     }
     QByteArray jsonData = worker.getByteJson(projectId_);
@@ -151,11 +147,16 @@ void GetProjectDataMessage::process(Worker& worker) {
 
 
 std::vector<uint> ModifProjetMessage::getUserLists(Worker& worker) {
-    std::vector<uint> usersId = worker.mapProjet_.find(projectId_)->second.connectedID_;
-
+    auto itProject = worker.mapProjet_.find(projectId_);
+    
+    if (itProject == worker.mapProjet_.end()) {
+        return std::vector<uint>(); 
+    }
+    
+    std::vector<uint> usersId = itProject->second.getConnected();
     auto it = std::find(usersId.begin(), usersId.end(), userId_);
+    
     if (it != usersId.end()) {
-        
         *it = usersId.back(); 
         usersId.pop_back();
     }
@@ -260,6 +261,26 @@ void MoveLayerMessage::process(Worker& worker) {
     worker.pushNetwork(std::move(rps));
 }
 
+DisconnectMessage::DisconnectMessage(std::shared_ptr<Client>& client) {
+    userId_ = client->id;
+    projectId_ = client->projectId;
+}
+
+void DisconnectMessage::process(Worker& worker) {
+    auto itProject = worker.mapProjet_.find(projectId_);
+    
+    if (itProject == worker.mapProjet_.end()) {
+        return; 
+    }
+    
+    if (itProject->second.removeConnection(userId_)) {
+        //Message de sauvegarde de projet
+        worker.mapProjet_.erase(projectId_);
+    }
+
+}
+
+
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client>& c) {
     uint8_t typeRaw;
@@ -301,25 +322,14 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
         case MsgProtocole::MAP_PUT_PIXELS_DIAM_REQ:
             return std::make_unique<PutPixelsDiamondMessage>(data_packet, c);
 
-<<<<<<< HEAD
-        case MsgProtocole::MAP_ERASER_CARRE_REQ:
+        case MsgProtocole::MAP_ERASE_PIXELS_CARRE_REQ:
             return std::make_unique<ErasePixelsCarreMessage>(data_packet, c);
 
-        case MsgProtocole::MAP_ERASER_CIRCLE_REQ:
+        case MsgProtocole::MAP_ERASE_PIXELS_CIRCLE_REQ:
             return std::make_unique<ErasePixelsCircleMessage>(data_packet, c);
 
-        case MsgProtocole::MAP_ERASER_DIAM_REQ:
-            return std::make_unique<ErasePixelsDiamondMessage>(data_packet, c);
-=======
-        case MsgProtocole::MAP_ERASE_PIXELS_CARRE_REQ:
-            return std::make_unique<ErasePixelsCarreMessage>(data_packet, c->id);
-
-        case MsgProtocole::MAP_ERASE_PIXELS_CIRCLE_REQ:
-            return std::make_unique<ErasePixelsCircleMessage>(data_packet, c->id);
-
         case MsgProtocole::MAP_ERASE_PIXELS_DIAM_REQ:
-            return std::make_unique<ErasePixelsDiamondMessage>(data_packet, c->id);
->>>>>>> main
+            return std::make_unique<ErasePixelsDiamondMessage>(data_packet, c);
 
         case MsgProtocole::MAP_MOV_LAYER_REQ:
             return std::make_unique<MoveLayerMessage>(data_packet, c);

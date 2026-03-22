@@ -17,7 +17,7 @@ public:
   bool copyRecursively(const QString &srcPath, const QString& destinationPath);
   bool updateJsonDup(uint newId, const QString& newName);
   bool deleteProject(uint id);
-  void addCalque(uint projetId, uint largeur, uint hauteur, uint calqueId);
+  void addCalquePixel(uint projetId, uint largeur, uint hauteur, uint calqueId);
   QByteArray getByteJson(uint projetId);
   QByteArray getByteImages(uint projetId);
   bool writeProjetJson(QJsonObject& jsonObject, uint id);
