@@ -4,6 +4,7 @@
 #include "../project/Tool/pixelbrush.hpp"
 #include "../project/Tool/pixelshift.hpp"
 #include "../project/Tool/spriteshift.hpp"
+#include "../project/Tool/spriteeraser.hpp"
 #include "../project/Tool/tool.hpp"
 #include "../project/project.hpp"
 #include "../project/toolbar.hpp"
@@ -52,6 +53,7 @@ void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,
                                       uint8_t a, Shape shape, bool eraser,
                                       float size_x, float size_y) {
 
+  std::cout<<"RECEIVERINWINDOW TRAITEMENT SQUARE SPRITE BRUSH"<< std::endl;
   ToolBar &toolbar = app_->getProject()->getToolBar();
   std::shared_ptr<Map> map = app_->getProject()->getMap();
   ToolType last_tool = toolbar.getSelected();
@@ -108,5 +110,33 @@ void ReceiverInWindow::shiftLayer(uint layer_id, int delta_x, int delta_y){
   map->selectLayerId(last_layer_id);
   toolbar.selectTool(last_tool);
 
+}
+
+
+  void ReceiverInWindow::eraseSprite(uint layer_id, int pos_x,int pos_y,Shape shape,float size_x, float size_y){
+  std::cout<<"RECEIVERINWINDOW TRAITEMENT SQUARE SPRITE ERASER"<< std::endl;
+  ToolBar &toolbar = app_->getProject()->getToolBar();
+  std::shared_ptr<Map> map = app_->getProject()->getMap();
+  ToolType last_tool = toolbar.getSelected();
+  uint last_layer_id = map->getCurrentLayer()->getId();
+  toolbar.selectTool(SPRITEERASER);
+  std::shared_ptr<SpriteEraser> spriteeraser =
+      static_pointer_cast<SpriteEraser>(toolbar.getSelectedTool());
+  Shape last_shape = spriteeraser->getShape();
+  sf::Vector2f last_size = spriteeraser->getSize();
+
+  spriteeraser->setShape(shape);
+  if (shape != DIAMOND) {
+    spriteeraser->setSize(size_x, 1);
+  } else {
+    spriteeraser->setSize(size_x, size_y);
+  }
+  map->selectLayerId(layer_id);
+  spriteeraser->paint(sf::Vector2i(pos_x, pos_y));
+  map->selectLayerId(last_layer_id);
+
+  spriteeraser->setShape(last_shape);
+  spriteeraser->setSize(last_size.x, last_size.y);
+  toolbar.selectTool(last_tool);
 }
 

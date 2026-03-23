@@ -21,6 +21,7 @@ public:
                       uint8_t b, uint8_t a, Shape shape, bool eraser,
                       float size_x, float size_y);
   void shiftLayer(uint layer_id, int delta_x, int delta_y);
+  void eraseSprite(uint layer_id, int pos_x,int pos_y,Shape shape,float size_x, float size_y);
   void updateShareToken(std::string newTok);
 
   void setState();

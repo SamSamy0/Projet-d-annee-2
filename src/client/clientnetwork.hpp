@@ -42,6 +42,10 @@ public:
                    float size);
   void eraseDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y,
                     float size_x, float size_y);
+  void eraseSpriteSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size);
+  void eraseSpriteCircle(uint proj_id, uint layer_id, int pos_x, int pos_y, float size);
+  void eraseSpriteDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y, float size_x, float size_y);
+
   void shiftLayer(uint proj_id, uint layer_id, int delta_x, int delta_y);
 
   void sendMessageChat();
