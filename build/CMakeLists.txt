@@ -140,6 +140,8 @@ set(SERVER_SOURCES
     ../src/server/servernetwork.cpp
     ../src/server/worker.cpp
     ../src/server/LiveProject.cpp
+    ../src/server/saveworker.cpp
+    ../src/server/savetask.cpp
 )
 
 add_executable(server ${SERVER_SOURCES})

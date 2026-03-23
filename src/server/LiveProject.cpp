@@ -9,9 +9,33 @@ LiveProject::LiveProject(QJsonObject json) : json_(std::move(json)) {
             QJsonObject layerObj = layerValue.toObject();
 
             int id = layerObj["id"].toInt();
-            mapModif_[id];
+            layersImage_[id] ;
         }
     }
+}
+
+LiveProject::LiveProject(uint id, const QString &projectName, uint width, uint height, uint scale) {
+    QJsonObject firstLayer;
+    QJsonArray emptylayers;
+    
+    json_["id"] = static_cast<int>(id);
+    json_["name"] = projectName;
+    json_["width"] =  static_cast<int>(width);
+    json_["height"] =  static_cast<int>(height);
+    json_["scale"] = static_cast<int>(scale);
+    json_["layerId"] = (int)1;
+
+    firstLayer["type"] = "pixel";
+    firstLayer["id"] = 0;
+    firstLayer["x"] = 0;
+    firstLayer["y"] = 0;
+
+    emptylayers.append(firstLayer);
+
+    json_["layers"] = emptylayers;
+    QImage image(width, height , QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+    layersImage_[0] = image;
 }
 
 void LiveProject::addConnection(uint userId, uint8_t role) {
@@ -32,14 +56,18 @@ bool LiveProject::removeConnection(uint userId) {
     return connectedID_.empty();
 }
 
-void LiveProject::addModif(ModifProject& modifPrj) {
-
-}
-
 QJsonObject& LiveProject::getJson() {
     return json_;
 }
 
 std::vector<uint>& LiveProject::getConnected() {
     return connectedID_;
+}
+
+void LiveProject::addLayerImage(uint layerId, const QImage& img){
+        layersImage_[layerId] = img;
+}
+
+uint LiveProject::getScale() {
+    return json_["scale"].toInt();
 }

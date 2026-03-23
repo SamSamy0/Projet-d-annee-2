@@ -27,12 +27,12 @@ class ServerNetworkManager{
     void handleNewConnection();
     void handleClientMessages();
     void stop();
-    bool start();
     void respond();
 public:
     ServerNetworkManager(MutexQueue<IMessage>& mes , MutexQueue<Reponse>& rep);
 
     void run();
+    bool start();
 
     std::unordered_map<uint, std::shared_ptr<Client>> mapUser_Socket_;
 };

@@ -79,6 +79,7 @@ void ServerNetworkManager::handleClientMessages() {
 void ServerNetworkManager::respond(){
     std::unique_ptr<Reponse> rps;
     while(mRunning_) {
+        std::cout << (int)mapUser_Socket_.size() << std::endl;
         rps = repQueu_.pop();
         rps->envoyer(*this);
     }
@@ -86,8 +87,6 @@ void ServerNetworkManager::respond(){
 
 
 void ServerNetworkManager::run() {
-    if (!start()) return;
-
     listenThread_ = std::thread(&ServerNetworkManager::listen, this);
 
     respond();

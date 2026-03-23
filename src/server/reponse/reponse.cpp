@@ -27,9 +27,16 @@ ReponseAuth::ReponseAuth(std::shared_ptr<Client> client, uint id)
 void ReponseAuth::envoyer(ServerNetworkManager& servManage) {
     client_->sock->send(dataPacket_);
     
-    if (userId_ != 0) {
+    if (userId_ != 0 and userId_ != -1) {
         servManage.mapUser_Socket_[userId_] = std::move(client_);
     }
+}
+
+ReponseDeconnection::ReponseDeconnection(uint id) : ReponseSolo(id) {}
+
+void ReponseDeconnection::envoyer(ServerNetworkManager& servManager) {
+    servManager.mapUser_Socket_.erase(userId_);
+
 }
 
 ReponseRenameProject::ReponseRenameProject(uint userId, uint projectId, std::string newName, bool success): ReponseSolo(userId){

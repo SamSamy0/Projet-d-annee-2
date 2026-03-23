@@ -7,6 +7,8 @@
 #include <QImage>
 #include <QColor>
 #include <iostream>
+#include <QBuffer>
+#include <QSaveFile>
 
 
 ProjectsManager::ProjectsManager(const std::string &rootPath)
@@ -18,7 +20,7 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
     }
 }
 
-bool ProjectsManager::createProjectJson(uint id, const QString &projectName, uint width, uint height, uint scale) {
+/*bool ProjectsManager::createProjectJson(uint id, const QString &projectName, uint width, uint height, uint scale) {
     if (!ensureDirectoryExists(id)) {
         return false;
     }
@@ -49,14 +51,17 @@ bool ProjectsManager::createProjectJson(uint id, const QString &projectName, uin
         QJsonDocument doc(root);
         file.write(doc.toJson(QJsonDocument::Indented));
         file.close();
+        addCalquePixel(id, width, height, 0);
         return true;
     }
 
     qCritical() << "Impossible d'ouvrir le fichier en écriture :" << filePath;
     return false;
-}
+}*/
 
 bool ProjectsManager::writeProjetJson(QJsonObject& jsonObject, uint id) {
+
+    ensureDirectoryExists(id);
 
     QString filePath = getProjectPath(id) + "/donnees.json";
     QFile file(filePath);
@@ -72,20 +77,49 @@ bool ProjectsManager::writeProjetJson(QJsonObject& jsonObject, uint id) {
     return false;
 }
 
-bool ProjectsManager::saveImage(uint id, const QString &fileName, const QByteArray &data) {
+QByteArray imageToPng(const QImage& image) {
+    QByteArray ba;
+
+    QBuffer buffer(&ba);
+    
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "PNG");
+
+    return ba;
+}
+
+bool ProjectsManager::saveImage(uint id, uint imageId, const QImage &data) {
     if (!ensureDirectoryExists(id)) return false;
 
-    QString destPath = getProjectPath(id) + "/images/" + fileName;
+    QString destPath = getProjectPath(id) + "/images/" + QString::number(imageId) + ".png";
 
-    QFile file(destPath);
+
+    
+    QSaveFile file(destPath);
     if (file.open(QIODevice::WriteOnly)) {
-        file.write(data);
-        file.close();
-        return true;
+        if (data.save(&file, "PNG")) {
+            return file.commit();
+        }
     }
 
     qCritical() << "Impossible d'écrire le média reçu pour le projet" << id;
     return false;
+}
+
+QImage ProjectsManager::loadImage(uint projectId, uint layerId) {
+    QString path = getProjectPath(projectId) + "/images/" + QString::number(layerId) + ".png";
+
+    QImage img;
+    if (!img.load(path, "PNG")) {
+        qCritical() << "[ProjectsManager] Impossible de charger l'image :" << path;
+        return QImage(); 
+    }
+
+    if (img.format() != QImage::Format_ARGB32) {
+        img = img.convertToFormat(QImage::Format_ARGB32);
+    }
+
+    return img;
 }
 
 bool ProjectsManager::updateProjectName(uint id, const QString& newName){
@@ -154,6 +188,8 @@ bool ProjectsManager::copyRecursively(const QString &srcFilePath,
     }
     return true;
 }
+
+
 bool ProjectsManager::updateJsonDup(uint newId, const QString& newName){
     QJsonObject root = loadProjectJson(newId);
     if (root.isEmpty())return false;
@@ -229,35 +265,4 @@ bool ProjectsManager::deleteProject(uint id) {
     }
     qCritical() << "Erreur de suppression de projet pour l'ID:" << id;
     return false;
-}
-
-void ProjectsManager::addCalquePixel(uint projetId, uint largeur, uint hauteur, uint calqueId) {
-
-    QString destPath = getProjectPath(projetId) + "/images/calque_" + QString::number(calqueId) + ".png";
-    QImage image(largeur, hauteur, QImage::Format_ARGB32);
-    image.fill(Qt::transparent);
-    if (image.save(destPath, "PNG")) {
-        qDebug() << "Nouveau calque sauvegardé avec succès :" << destPath;
-
-    } else {
-        qWarning() << "Erreur : Impossible de créer le fichier PNG pour le calque :" << destPath;
-    }
-}
-
-QByteArray ProjectsManager::getByteJson(uint projetId) {
-    QString filePath = getProjectPath(projetId) + "/donnees.json";
-
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qWarning() << "Erreur : Impossible d'ouvrir le fichier JSON :" << filePath;
-        return QByteArray();
-    }
-
-    QByteArray donneesJson = file.readAll();
-
-    file.close();
-    
-
-
-    return donneesJson;
 }

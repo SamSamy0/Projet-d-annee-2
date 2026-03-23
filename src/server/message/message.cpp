@@ -2,6 +2,8 @@
 #include "../worker.hpp"
 #include "../../common/protocol.hpp"
 #include "../reponse/reponse.hpp"
+#include <QPainter>
+#include <QImage>
 
 
 
@@ -41,17 +43,18 @@ void RegisterMessage::process(Worker& worker) {
 
 
 
-CreateProjectMessage::CreateProjectMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
+CreateProjectMessage::CreateProjectMessage(sf::Packet& data_packet, std::shared_ptr<Client> client) {
     data_packet >> nomProjet_ >> size_.x >> size_.y >> scale_;
     userId_ = client->id;
+    client_ = std::move(client);
 }
 
 void CreateProjectMessage::process(Worker& worker) {
     if (userId_ > 0) {
     uint idProj = worker.addProjectSQL(nomProjet_, userId_);
-    worker.createProjectJson(idProj, nomProjet_, size_.x, size_.y, scale_);
+    client_->projectId = idProj;
 
-    auto liveProj = LiveProject(worker.loadProjectJson(idProj));
+    auto liveProj = LiveProject(idProj, QString::fromStdString(nomProjet_), size_.x, size_.y, scale_);
     liveProj.addConnection(userId_, 2);
     worker.mapProjet_.emplace(idProj, std::move(liveProj));
 
@@ -82,7 +85,7 @@ DuplicateProjectMessage::DuplicateProjectMessage(sf::Packet& dataPacket, std::sh
 }
 
 void DuplicateProjectMessage::process(Worker& worker){
-    long long newId = worker.duplicateProject(projectId_, newName, userId_);
+    uint newId = worker.duplicateProject(projectId_, newName, userId_);
     std::unique_ptr<Reponse>rps;
     if (newId != -1){
         rps = std::make_unique<ReponseDuplicateProject>(userId_, newId, newName);
@@ -129,16 +132,16 @@ void GetProjectDataMessage::process(Worker& worker) {
     if (worker.mapProjet_.find(projectId_) == worker.mapProjet_.end()) {
         auto liveProj = LiveProject(worker.loadProjectJson(projectId_));
         liveProj.addConnection(userId_, worker.getRole(userId_, projectId_));
+        for(auto it = liveProj.layersImage_.begin(); it != liveProj.layersImage_.end(); ++it) {
+            liveProj.addLayerImage(it->first, worker.getProjMngr().loadImage(projectId_, it->first));
+        }
         worker.mapProjet_.emplace(projectId_, std::move(liveProj));
 
     }
-    else {
-        LiveProject& currentLiveProj = (worker.mapProjet_.find(projectId_))->second;
-        worker.writeProjetJson(currentLiveProj.getJson(), projectId_);
-        currentLiveProj.addConnection(userId_, worker.getRole(userId_, projectId_));
+    LiveProject& liveProj = worker.mapProjet_.at(projectId_);
+    QJsonDocument doc(liveProj.getJson());
 
-    }
-    QByteArray jsonData = worker.getByteJson(projectId_);
+    QByteArray jsonData = doc.toJson(QJsonDocument::Indented);
 
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseProjectData>(userId_, jsonData);
@@ -169,6 +172,21 @@ PutPixelsCarreMessage::PutPixelsCarreMessage(sf::Packet& data_packet, std::share
 }
 
 void PutPixelsCarreMessage::process(Worker& worker) {
+    uint scale = worker.mapProjet_.at(projectId_).getScale();
+    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
+    QPainter painter(&image);
+    QColor color(red_, green_, blue_, opa_);
+
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QBrush(color));
+    
+    float topLeftX = pos_.x - (taille_*scale)/2.0f;
+    float topLeftY = pos_.y - (taille_*scale)/2.0f;
+
+    painter.drawRect(QRectF(topLeftX, topLeftY, taille_ * scale, taille_ * scale));
+
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
 
@@ -183,6 +201,26 @@ PutPixelsCircleMessage::PutPixelsCircleMessage(sf::Packet& data_packet, std::sha
 }
 
 void PutPixelsCircleMessage::process(Worker& worker) {
+    uint scale = worker.mapProjet_.at(projectId_).getScale();
+    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
+    QPainter painter(&image);
+    QColor color(red_, green_, blue_, opa_);
+    QPolygonF polygon;
+
+    for (int i = 0; i < 30; ++i) {
+
+        float angle = i * 2 * M_PI / 30;
+        float px = pos_.x + std::cos(angle) * taille_ * scale/ 2.0f;
+        float py = pos_.y + std::sin(angle) * taille_ * scale / 2.0f;
+        polygon << QPointF(px, py);
+    }
+
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QBrush(color));
+
+    painter.drawPolygon(polygon);
 
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
@@ -197,6 +235,26 @@ PutPixelsDiamondMessage::PutPixelsDiamondMessage(sf::Packet& data_packet, std::s
 }
 
 void PutPixelsDiamondMessage::process(Worker& worker) {
+    uint scale = worker.mapProjet_.at(projectId_).getScale();
+    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
+    QPainter painter(&image);
+    QColor color(red_, green_, blue_, opa_);
+    QPolygonF polygon;
+
+    float h_demi = hauteur_ * scale/ 2.0f;
+    float l_demi = largeur_ * scale / 2.0f;
+    polygon << QPointF(pos_.x, pos_.y - h_demi);
+    polygon << QPointF(pos_.x + l_demi, pos_.y);
+    polygon << QPointF(pos_.x, pos_.y + h_demi);
+    polygon << QPointF(pos_.x - l_demi, pos_.y);
+
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QBrush(color));
+
+    painter.drawPolygon(polygon);
+
 
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
@@ -267,6 +325,10 @@ DisconnectMessage::DisconnectMessage(std::shared_ptr<Client>& client) {
 }
 
 void DisconnectMessage::process(Worker& worker) {
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseDeconnection>(userId_);
+    worker.pushNetwork(std::move(rps));
+    
     auto itProject = worker.mapProjet_.find(projectId_);
     
     if (itProject == worker.mapProjet_.end()) {
@@ -274,6 +336,9 @@ void DisconnectMessage::process(Worker& worker) {
     }
     
     if (itProject->second.removeConnection(userId_)) {
+        std::unique_ptr<SaveTask> savetsk;
+        savetsk = std::make_unique<SaveTask>(itProject->first, std::move(itProject->second.getJson()), std::move(itProject->second.layersImage_));
+        worker.pushSave(std::move(savetsk));
         //Message de sauvegarde de projet
         worker.mapProjet_.erase(projectId_);
     }

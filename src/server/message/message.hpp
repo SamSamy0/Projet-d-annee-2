@@ -36,8 +36,9 @@ struct CreateProjectMessage : IMessage{
     std::string nomProjet_;
     sf::Vector2u size_;
     uint scale_;
+    std::shared_ptr<Client> client_;
     
-    CreateProjectMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
+    CreateProjectMessage(sf::Packet& dataPacket, std::shared_ptr<Client> client);
     void process(Worker& worker) override;
 };
 

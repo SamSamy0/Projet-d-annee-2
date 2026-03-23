@@ -16,7 +16,6 @@ struct Reponse {
     virtual void envoyer(ServerNetworkManager& servManager) = 0; 
 };
 
-
 struct ReponseSolo : Reponse {
     uint userId_;
 
@@ -29,6 +28,12 @@ struct ReponseAuth : ReponseSolo {
     std::shared_ptr<Client> client_;
 
     ReponseAuth(std::shared_ptr<Client> client, uint userId);
+    virtual void envoyer(ServerNetworkManager& servManager) override;
+};
+
+struct ReponseDeconnection : ReponseSolo {
+
+    ReponseDeconnection(uint userId);
     virtual void envoyer(ServerNetworkManager& servManager) override;
 };
 
