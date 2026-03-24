@@ -237,6 +237,22 @@ void ErasePixelsDiamondMessage::process(Worker &worker) {
   worker.pushNetwork(std::move(rps));
 }
 
+
+PutSpriteMessage::PutSpriteMessage(sf::Packet &data_packet, uint userId){
+
+  userId_ = userId;
+  data_packet >> projectId_ >> calqueId_ >> asset_id >> pos_.x >> pos_.y >> taille_;
+
+}
+void PutSpriteMessage::process(Worker &worker){
+
+  std::vector<uint> usersId = this->getUserLists(worker);
+  std::unique_ptr<Reponse> rps;
+
+  rps = std::make_unique<ReponsePutSprite>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+}
+
 EraseSpriteSquareMessage::EraseSpriteSquareMessage(sf::Packet &data_packet, uint userId){
 
   userId_ = userId;
@@ -377,6 +393,8 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::MAP_MOV_LAYER_REQ:
     return std::make_unique<MoveLayerMessage>(data_packet, c->id);
+  case MsgProtocole::MAP_PUT_SPRITE_REQ:
+    return std::make_unique<PutSpriteMessage>(data_packet, c->id);
   case MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REQ:
     return std::make_unique<EraseSpriteSquareMessage>(data_packet, c->id);
   case MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REQ:

@@ -143,6 +143,14 @@ struct ErasePixelsDiamondMessage : ErasePixelsMessage {
   void process(Worker &worker) override;
 };
 
+struct PutSpriteMessage : ModifProjetMessage{
+  sf::Vector2u pos_;
+  float taille_;
+  std::string asset_id;
+  PutSpriteMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+
 struct EraseSpriteMessage : ModifProjetMessage{
   sf::Vector2u pos_;
 };

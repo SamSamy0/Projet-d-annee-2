@@ -251,6 +251,21 @@ void ClientNetworkManager::shiftLayer(uint proj_id, uint layer_id, int delta_x,
               << std::endl;
 }
 
+
+void ClientNetworkManager::drawSprite(uint proj_id, uint layer_id, std::string asset_id, int pos_x, int pos_y, float size_x){
+
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_PUT_SPRITE_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << proj_id << layer_id << asset_id << pos_x<<pos_y<<size_x;
+
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
 void ClientNetworkManager::eraseSpriteSquare(uint proj_id, uint layer_id,
                                              int pos_x, int pos_y, float size) {
   sf::Packet packet;

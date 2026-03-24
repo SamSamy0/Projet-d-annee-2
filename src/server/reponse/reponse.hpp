@@ -101,6 +101,11 @@ struct ReponseErasePixelsDiamond : ReponseGroupe {
    ReponseErasePixelsDiamond(std::vector<uint> usersId, ErasePixelsDiamondMessage& mess);
 };
 
+struct ReponsePutSprite : ReponseGroupe{
+
+   ReponsePutSprite(std::vector<uint> usersId, PutSpriteMessage& mess);
+};
+
 struct ReponseEraseSpriteSquare : ReponseGroupe {
 
     ReponseEraseSpriteSquare(std::vector<uint> usersId, EraseSpriteSquareMessage& mess);
