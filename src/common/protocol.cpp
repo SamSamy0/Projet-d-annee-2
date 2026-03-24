@@ -15,6 +15,7 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::LOB_SHARE_PROJECT_REQ: return "LOB_SHARE_PROJECT_REQ";
         case MsgProtocole::LOB_SHARE_PROJECT_REP: return "LOB_SHARE_PROJECT_REP";
         case MsgProtocole::LOB_JOIN_PROJECT_REQ: return "LOB_JOIN_PROJECT_REQ";
+        case MsgProtocole::LOB_JOIN_PROJECT_REP: return "LOB_JOIN_PROJECT_REP";
         case MsgProtocole::LOB_IMPORT_PROJECT_REQ: return "LOB_IMPORT_PROJECT_REQ";
         case MsgProtocole::LOB_EXPORT_PNG_PROJECT_REQ: return "LOB_EXPORT_PNG_PROJECT_REQ";
         case MsgProtocole::LOB_EXPORT_JSON_PROJECT_REP: return "LOB_EXPORT_JSON_PROJECT_REP";
@@ -40,8 +41,8 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::MAP_PUT_SPRITE_REP: return "MAP_PUT_SPRITE_REP";
         case MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REQ: return"MAP_ERASE_SPRITE_CIRCLE_REQ";
         case MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REP: return "MAP_ERASE_SPRITE_CIRCLE_REP";
-        case MsgProtocole::MAP_ERASE_SPRITE_CARRE_REQ:return "MAP_ERASE_SPRITE_CARRE_REQ";
-        case MsgProtocole::MAP_ERASE_SPRITE_CARRE_REP:return "MAP_ERASE_SPRITE_CARRE_REP";
+        case MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REQ:return "MAP_ERASE_SPRITE_SQUARE_REQ";
+        case MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REP:return "MAP_ERASE_SPRITE_SQUARE_REP";
         case MsgProtocole::MAP_ERASE_SPRITE_DIAM_REQ:return "MAP_ERASE_SPRITE_DIAM_REQ";
         case MsgProtocole::MAP_ERASE_SPRITE_DIAM_REP:return "MAP_ERASE_SPRITE_DIAM_REP";
         case MsgProtocole::MAP_MOV_SPRITE_REQ: return "MAP_MOV_SPRITE_REQ";
@@ -52,12 +53,12 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::MAP_RESIZE_SPRITE_REP: return "MAP_RESIZE_SPRITE_REP";
         case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REQ: return "MAP_PUT_PIXELS_CIRCLE_REQ";
         case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP: return "MAP_PUT_PIXELS_CIRCLE_REP";
-        case MsgProtocole::MAP_PUT_PIXELS_CARRE_REQ: return "MAP_PUT_PIXELS_CARRE_REQ";
-        case MsgProtocole::MAP_PUT_PIXELS_CARRE_REP: return "MAP_PUT_PIXELS_CARRE_REP";
+        case MsgProtocole::MAP_PUT_PIXELS_SQUARE_REQ: return "MAP_PUT_PIXELS_SQUARE_REQ";
+        case MsgProtocole::MAP_PUT_PIXELS_SQUARE_REP: return "MAP_PUT_PIXELS_SQUARE_REP";
         case MsgProtocole::MAP_PUT_PIXELS_DIAM_REQ: return "MAP_PUT_PIXELS_LOSAN_REQ";
         case MsgProtocole::MAP_PUT_PIXELS_DIAM_REP: return "MAP_PUT_PIXELS_LOSAN_REP";
-        case MsgProtocole::MAP_ERASE_PIXELS_CARRE_REQ: return "MAP_ERASE_PIXELS_CARRE_REQ";
-        case MsgProtocole::MAP_ERASE_PIXELS_CARRE_REP: return "MAP_ERASE_PIXELS_CARRE_REP";
+        case MsgProtocole::MAP_ERASE_PIXELS_SQUARE_REQ: return "MAP_ERASE_PIXELS_SQUARE_REQ";
+        case MsgProtocole::MAP_ERASE_PIXELS_SQUARE_REP: return "MAP_ERASE_PIXELS_SQUARE_REP";
         case MsgProtocole::MAP_ERASE_PIXELS_CIRCLE_REQ: return "MAP_ERASE_PIXELS_CIRCLE_REQ";
         case MsgProtocole::MAP_ERASE_PIXELS_CIRCLE_REP: return "MAP_ERASE_PIXELS_CIRCLE_REP";
         case MsgProtocole::MAP_ERASE_PIXELS_DIAM_REQ: return "MAP_ERASE_PIXELS_DIAM_REQ";

@@ -31,6 +31,8 @@ public:
     bool renameProject(uint projectId, const std::string& newName);
     uint duplicateProject(uint oldId, const std::string& newName, uint userId);
     bool deleteProject(uint projectId);
+    std::string generateShareToken(uint8_t role, uint projectId);
+    bool checkShareToken(uint userId, std::string token);
 
     bool writeProjetJson(QJsonObject& jsonObject, uint id);
     QJsonObject loadProjectJson(uint id);

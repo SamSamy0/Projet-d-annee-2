@@ -4,6 +4,8 @@
 #include "../project/Tool/pixelbrush.hpp"
 #include "../project/Tool/pixelshift.hpp"
 #include "../project/Tool/spriteshift.hpp"
+#include "../project/Tool/spriteeraser.hpp"
+#include "../project/Tool/spritebrush.hpp"
 #include "../project/Tool/tool.hpp"
 #include "../project/project.hpp"
 #include "../project/toolbar.hpp"
@@ -16,6 +18,8 @@ void ReceiverInWindow::switchConnectState(uint8_t connect) {
   if (connect == 1) {
     app_->changeView(std::make_unique<MenuView>(*app_));
     app_->getNetwork().getProjectList();
+  } else {
+    app_->showLoginError("Identifiant ou mot de passe incorrect.");
   }
 }
 
@@ -23,21 +27,23 @@ void ReceiverInWindow::addProjectToList(ProjectData projet) {
   app_->addProjectList(projet);
 }
 
-void ReceiverInWindow::updateProjectNameInList(uint id, const std::string& newName){
-    app_->updateProjectNameInList(id, newName);
-    
+void ReceiverInWindow::updateProjectNameInList(uint id,
+                                               const std::string &newName) {
+  app_->updateProjectNameInList(id, newName);
 }
 
+void ReceiverInWindow::clearProjList() { app_->clearProjList(); }
 void ReceiverInWindow::updateCreatedProjectId(uint projId) {
-    app_->updateCreatedProjectId(projId);
+  app_->updateCreatedProjectId(projId);
 }
 
 void ReceiverInWindow::setState() {
   app_->changeView(std::make_unique<GameView>(*app_));
 }
 
-void ReceiverInWindow::updateShareToken(std::string token){
-    app_->updateShareToken(token);
+void ReceiverInWindow::updateShareToken(std::string token) {
+  std::cout << "token in receiverwindow" << token << std::endl;
+  app_->updateShareToken(token);
 }
 void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
                                       std::string name, uint id) {
@@ -48,7 +54,6 @@ void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,
                                       uint8_t r, uint8_t g, uint8_t b,
                                       uint8_t a, Shape shape, bool eraser,
                                       float size_x, float size_y) {
-
   ToolBar &toolbar = app_->getProject()->getToolBar();
   std::shared_ptr<Map> map = app_->getProject()->getMap();
   ToolType last_tool = toolbar.getSelected();
@@ -82,6 +87,23 @@ void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,
   toolbar.selectTool(last_tool);
 }
 
+  void ReceiverInWindow::drawSprite(uint layer_id, std::string asset_id, int pos_x, int pos_y, float size){
+  std::cout<<"receiver in window sprite put"<<std::endl;
+  ToolBar &toolbar = app_->getProject()->getToolBar();
+  std::shared_ptr<Map> map = app_->getProject()->getMap();
+  ToolType last_tool = toolbar.getSelected();
+  uint last_layer_id = map->getCurrentLayer()->getId();
+  toolbar.selectTool(SPRITEBRUSH);
+  std::shared_ptr<SpriteBrush> spritebrush = static_pointer_cast<SpriteBrush>(toolbar.getSelectedTool());
+  sf::Vector2f last_size = spritebrush->getSize();
+  spritebrush->setSize(size,0);
+  map->selectLayerId(layer_id);
+  spritebrush->paint(sf::Vector2i(pos_x, pos_y),map->getAssetManager().getAsset(asset_id));
+  spritebrush->setSize(last_size.x,last_size.y);
+  map->selectLayerId(last_layer_id);
+  toolbar.selectTool(last_tool);
+
+}
 
 
 void ReceiverInWindow::shiftLayer(uint layer_id, int delta_x, int delta_y){
@@ -90,20 +112,46 @@ void ReceiverInWindow::shiftLayer(uint layer_id, int delta_x, int delta_y){
   ToolType last_tool = toolbar.getSelected();
   uint last_layer_id = map->getCurrentLayer()->getId();
   map->selectLayerId(layer_id);
-  if(map->getCurrentLayer()->getType() == SPRITELAYER){
+  if (map->getCurrentLayer()->getType() == SPRITELAYER) {
     toolbar.selectTool(SPRITESHIFT);
     std::shared_ptr<SpriteShift> shift =
         static_pointer_cast<SpriteShift>(toolbar.getSelectedTool());
-    shift->shift(sf::Vector2i(delta_x,delta_y));
-  }
-  else{toolbar.selectTool(PIXELSHIFT);
+    shift->shift(sf::Vector2i(delta_x, delta_y));
+  } else {
+    toolbar.selectTool(PIXELSHIFT);
     std::shared_ptr<PixelShift> shift =
         static_pointer_cast<PixelShift>(toolbar.getSelectedTool());
-    shift->shift(sf::Vector2i(delta_x,delta_y));
+    shift->shift(sf::Vector2i(delta_x, delta_y));
   }
 
   map->selectLayerId(last_layer_id);
   toolbar.selectTool(last_tool);
+}
 
+
+  void ReceiverInWindow::eraseSprite(uint layer_id, int pos_x,int pos_y,Shape shape,float size_x, float size_y){
+  ToolBar &toolbar = app_->getProject()->getToolBar();
+  std::shared_ptr<Map> map = app_->getProject()->getMap();
+  ToolType last_tool = toolbar.getSelected();
+  uint last_layer_id = map->getCurrentLayer()->getId();
+  toolbar.selectTool(SPRITEERASER);
+  std::shared_ptr<SpriteEraser> spriteeraser =
+      static_pointer_cast<SpriteEraser>(toolbar.getSelectedTool());
+  Shape last_shape = spriteeraser->getShape();
+  sf::Vector2f last_size = spriteeraser->getSize();
+
+  spriteeraser->setShape(shape);
+  if (shape != DIAMOND) {
+    spriteeraser->setSize(size_x, 1);
+  } else {
+    spriteeraser->setSize(size_x, size_y);
+  }
+  map->selectLayerId(layer_id);
+  spriteeraser->paint(sf::Vector2i(pos_x, pos_y));
+
+  spriteeraser->setShape(last_shape);
+  spriteeraser->setSize(last_size.x, last_size.y);
+  map->selectLayerId(last_layer_id);
+  toolbar.selectTool(last_tool);
 }
 

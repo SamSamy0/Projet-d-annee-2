@@ -43,7 +43,15 @@ void LoginView::init() {
   editBoxPassword->setPosition({"10%", "50%"});
   editBoxPassword->setDefaultText("Mot de Passe...");
   editBoxPassword->setPasswordCharacter('*');
-  back->add(editBoxPassword);
+  back->add(editBoxPassword, "Password");
+
+  // Error label (hidden by default)
+  auto errorLabel = tgui::Label::create("");
+  errorLabel->setPosition({"10%", "65%"});
+  errorLabel->setSize({"80%", "8%"});
+  errorLabel->getRenderer()->setTextColor(sf::Color(220, 80, 80));
+  errorLabel->setTextSize(13);
+  back->add(errorLabel, "ErrorLabel");
 
   // Login Button
   auto loginButton = tgui::Button::create("Connexion");
@@ -93,6 +101,19 @@ void LoginView::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
     std::cout << usrname->getText() << "   " << pswd->getText() << std::endl;
   }
 }
+void LoginView::showError(const std::string& message) {
+  auto& gui = app_.getGui();
+  auto back = gui.get<tgui::Panel>("Main login");
+  if (!back) return;
+  auto errorLabel = back->get<tgui::Label>("ErrorLabel");
+  if (!errorLabel) return;
+  errorLabel->setText(message);
+  auto usrname = back->get<tgui::EditBox>("Username");
+  auto pswd = back->get<tgui::EditBox>("Password");
+  if (usrname) usrname->setText("");
+  if (pswd) pswd->setText("");
+}
+
 void LoginView::handleEvents(const sf::Event &event) {
 
 };

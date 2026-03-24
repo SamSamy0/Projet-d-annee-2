@@ -22,29 +22,30 @@ class Application {
   User currentUser_;
   std::unique_ptr<View> currentView;
 
-  
-
 public:
   Application(ClientNetworkManager &manager);
   Application();
-  //Method for ReceiverInWindow
+  // Method for ReceiverInWindow
   void addProjectList(ProjectData project);
-  void updateProjectNameInList(long long id, const std::string& newName);
+  void clearProjList();
+  void updateProjectNameInList(long long id, const std::string &newName);
   void updateCreatedProjectId(uint32_t projId);
   void updateShareToken(std::string newToken);
-  
+
   void changeView(std::unique_ptr<View> newView);
+  void showLoginError(const std::string &message);
   void setState(projectState newState);
   void processEvents();
   void run();
   bool isOpen() const;
   void updateTextSize();
-  void loadProjectData(unsigned int scale, sf::Vector2u size, std::string name, uint id);
-  //Getters
+  void loadProjectData(unsigned int scale, sf::Vector2u size, std::string name,
+                       uint id);
+  // Getters
   sf::RenderWindow &getWindow();
   tgui::Gui &getGui();
   ClientNetworkManager &getNetwork();
   User &getUser();
-  std::unique_ptr<View>& getCurrentView();
-  std::unique_ptr<Project>& getProject();
+  std::unique_ptr<View> &getCurrentView();
+  std::unique_ptr<Project> &getProject();
 };
