@@ -269,7 +269,19 @@ ErasePixelsCarreMessage::ErasePixelsCarreMessage(sf::Packet& data_packet, std::s
 }
 
 void ErasePixelsCarreMessage::process(Worker& worker) {
+    uint scale = worker.mapProjet_.at(projectId_).getScale();
+    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
+    QPainter painter(&image);
 
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QBrush(Qt::transparent));
+    
+    float topLeftX = pos_.x - (taille_*scale)/2.0f;
+    float topLeftY = pos_.y - (taille_*scale)/2.0f;
+
+    painter.drawRect(QRectF(topLeftX, topLeftY, taille_ * scale, taille_ * scale));
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
 
@@ -283,6 +295,25 @@ ErasePixelsCircleMessage::ErasePixelsCircleMessage(sf::Packet& data_packet, std:
 }
 
 void ErasePixelsCircleMessage::process(Worker& worker) {
+    uint scale = worker.mapProjet_.at(projectId_).getScale();
+    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
+    QPainter painter(&image);
+    QPolygonF polygon;
+
+    for (int i = 0; i < 30; ++i) {
+
+        float angle = i * 2 * M_PI / 30;
+        float px = pos_.x + std::cos(angle) * taille_ * scale/ 2.0f;
+        float py = pos_.y + std::sin(angle) * taille_ * scale / 2.0f;
+        polygon << QPointF(px, py);
+    }
+
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QBrush(Qt::transparent));
+
+    painter.drawPolygon(polygon);
 
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
@@ -297,6 +328,24 @@ ErasePixelsDiamondMessage::ErasePixelsDiamondMessage(sf::Packet& data_packet, st
 }
 
 void ErasePixelsDiamondMessage::process(Worker& worker) {
+    uint scale = worker.mapProjet_.at(projectId_).getScale();
+    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
+    QPainter painter(&image);
+    QPolygonF polygon;
+
+    float h_demi = hauteur_ * scale/ 2.0f;
+    float l_demi = largeur_ * scale / 2.0f;
+    polygon << QPointF(pos_.x, pos_.y - h_demi);
+    polygon << QPointF(pos_.x + l_demi, pos_.y);
+    polygon << QPointF(pos_.x, pos_.y + h_demi);
+    polygon << QPointF(pos_.x - l_demi, pos_.y);
+
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QBrush(Qt::transparent));
+
+    painter.drawPolygon(polygon);
 
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
