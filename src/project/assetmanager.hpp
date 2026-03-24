@@ -11,7 +11,6 @@ struct Asset{
   std::string name;
   float size_m_horizontal;
   std::unique_ptr<sf::Texture> texture;
-
 };
 
 class AssetManager{

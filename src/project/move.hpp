@@ -20,6 +20,7 @@ class Move {
 		void goRight(float zoom);
 		void goTop(float zoom);
 		void goDown(float zoom);
+		sf::Vector2f getPosition();
 };	
 	
 

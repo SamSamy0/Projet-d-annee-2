@@ -53,4 +53,5 @@ public:
   // l'instant
   void detectZooming(sf::Event event);
   void setId(uint newId);
+  Move getPosition() { return move_; }
 };
