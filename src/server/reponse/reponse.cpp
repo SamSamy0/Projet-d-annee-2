@@ -102,8 +102,8 @@ ReponsePutPixelsCircle::ReponsePutPixelsCircle(std::vector<uint> usersId, PutPix
     dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.taille_;
 }
 
-ReponsePutPixelsCarre::ReponsePutPixelsCarre(std::vector<uint> usersId, PutPixelsCarreMessage& mess) : ReponseGroupe(usersId){
-    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_CARRE_REP);
+ReponsePutPixelsSquare::ReponsePutPixelsSquare(std::vector<uint> usersId, PutPixelsSquareMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_SQUARE_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
     dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.taille_;
@@ -124,8 +124,8 @@ ReponseErasePixelsCircle::ReponseErasePixelsCircle(std::vector<uint> usersId, Er
     dataPacket_ << mess.taille_;
 }
 
-ReponseErasePixelsCarre::ReponseErasePixelsCarre(std::vector<uint> usersId, ErasePixelsCarreMessage& mess) : ReponseGroupe(usersId){
-    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASE_PIXELS_CARRE_REP);
+ReponseErasePixelsSquare::ReponseErasePixelsSquare(std::vector<uint> usersId, ErasePixelsSquareMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASE_PIXELS_SQUARE_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
     dataPacket_ << mess.taille_;
@@ -133,6 +133,34 @@ ReponseErasePixelsCarre::ReponseErasePixelsCarre(std::vector<uint> usersId, Eras
 
 ReponseErasePixelsDiamond::ReponseErasePixelsDiamond(std::vector<uint> usersId, ErasePixelsDiamondMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASE_PIXELS_DIAM_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.hauteur_ << mess.largeur_;
+}
+
+ReponsePutSprite::ReponsePutSprite(std::vector<uint> usersId, PutSpriteMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_SPRITE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.asset_id <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.taille_;
+}
+
+ReponseEraseSpriteSquare::ReponseEraseSpriteSquare(std::vector<uint> usersId, EraseSpriteSquareMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.taille_;
+}
+
+ReponseEraseSpriteCircle::ReponseEraseSpriteCircle(std::vector<uint> usersId, EraseSpriteCircleMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.taille_;
+}
+
+ReponseEraseSpriteDiamond::ReponseEraseSpriteDiamond(std::vector<uint> usersId, EraseSpriteDiamondMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
     dataPacket_ << mess.hauteur_ << mess.largeur_;

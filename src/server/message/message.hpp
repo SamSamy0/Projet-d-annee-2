@@ -102,10 +102,10 @@ struct PutPixelsCircleMessage : PutPixelsMessage {
   void process(Worker &worker) override;
 };
 
-struct PutPixelsCarreMessage : PutPixelsMessage {
+struct PutPixelsSquareMessage : PutPixelsMessage {
   float taille_;
 
-  PutPixelsCarreMessage(sf::Packet &dataPacket, uint userId);
+  PutPixelsSquareMessage(sf::Packet &dataPacket, uint userId);
   void process(Worker &worker) override;
 };
 
@@ -128,10 +128,10 @@ struct ErasePixelsCircleMessage : ErasePixelsMessage {
   void process(Worker &worker) override;
 };
 
-struct ErasePixelsCarreMessage : ErasePixelsMessage {
+struct ErasePixelsSquareMessage : ErasePixelsMessage {
   float taille_;
 
-  ErasePixelsCarreMessage(sf::Packet &dataPacket, uint userId);
+  ErasePixelsSquareMessage(sf::Packet &dataPacket, uint userId);
   void process(Worker &worker) override;
 };
 
@@ -140,6 +140,39 @@ struct ErasePixelsDiamondMessage : ErasePixelsMessage {
   float largeur_;
 
   ErasePixelsDiamondMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+
+struct PutSpriteMessage : ModifProjetMessage{
+  sf::Vector2u pos_;
+  float taille_;
+  std::string asset_id;
+  PutSpriteMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+
+struct EraseSpriteMessage : ModifProjetMessage{
+  sf::Vector2u pos_;
+};
+
+struct EraseSpriteSquareMessage : EraseSpriteMessage{
+  float taille_;
+  EraseSpriteSquareMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+
+struct EraseSpriteCircleMessage : EraseSpriteMessage{
+  float taille_;
+
+  EraseSpriteCircleMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+
+struct EraseSpriteDiamondMessage : EraseSpriteMessage{
+  float hauteur_;
+  float largeur_;
+
+  EraseSpriteDiamondMessage(sf::Packet &dataPacket, uint userId);
   void process(Worker &worker) override;
 };
 

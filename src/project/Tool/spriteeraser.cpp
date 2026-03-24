@@ -4,11 +4,14 @@
 #include "../map.hpp"
 #include <memory>
 
-SpriteEraser::SpriteEraser(std::shared_ptr<Map> map, ClientNetworkManager &manager) : Brush(map, manager) {
+SpriteEraser::SpriteEraser(std::shared_ptr<Map> map,
+                           ClientNetworkManager &manager)
+    : Brush(map, manager) {
   type_ = SPRITEERASER;
 }
 
 void SpriteEraser::setShape(Shape s) { shape_ = s; }
+Shape SpriteEraser::getShape() const{return shape_;}
 
 bool SpriteEraser::checkColision(sf::Vector2i pos, sf::FloatRect r) {
   // border of the sprite
@@ -32,12 +35,15 @@ bool SpriteEraser::checkColision(sf::Vector2i pos, sf::FloatRect r) {
     break;
   }
   case CIRCLE: {
-    return (dx * dx) + (dy * dy) <= (size_m_.x * getScale() / 2) * (size_m_.x * getScale() / 2);
+    return (dx * dx) + (dy * dy) <=
+           (size_m_.x * getScale() / 2) * (size_m_.x * getScale() / 2);
     break;
   }
 
   case DIAMOND: {
-    return (dx / (size_m_.x * getScale() / 2)) + (dy / (size_m_.y * getScale() / 2)) <= 1.0f;
+    return (dx / (size_m_.x * getScale() / 2)) +
+               (dy / (size_m_.y * getScale() / 2)) <=
+           1.0f;
 
     break;
   }
@@ -49,13 +55,15 @@ void SpriteEraser::paint(sf::Vector2i pos) {
   if (layer->getType() != SPRITELAYER)
     return;
 
-  std::shared_ptr<SpriteLayer> spritelayer = static_pointer_cast<SpriteLayer>(layer);
+  std::shared_ptr<SpriteLayer> spritelayer =
+      static_pointer_cast<SpriteLayer>(layer);
 
   if (!spritelayer)
     return;
 
   /*I had two choices : use the id or the index of the sprite
-   * i chosed to use the id because its cleaner more logical even if complexity is higher */
+   * i chosed to use the id because its cleaner more logical even if complexity
+   * is higher */
   const std::vector<SpriteObject> &sprites = spritelayer->getSprites();
   pos -= spritelayer->getOffset();
 
@@ -67,6 +75,23 @@ void SpriteEraser::paint(sf::Vector2i pos) {
   }
 }
 
-
-
-  void SpriteEraser::paintSender(sf::Vector2i pos){paint(pos);} //Elle n'envoie pas encore de message 
+void SpriteEraser::paintSender(sf::Vector2i pos) {
+  paint(pos);
+  switch (shape_) {
+  case SQUARE: {
+    manager_.eraseSpriteSquare(map_->getId(), map_->getCurrentLayer()->getId(),
+                               pos.x, pos.y, getSize().x);
+    break;
+  }
+  case CIRCLE: {
+    manager_.eraseSpriteCircle(map_->getId(), map_->getCurrentLayer()->getId(),
+                               pos.x, pos.y, getSize().x);
+    break;
+  }
+  case DIAMOND: {
+    manager_.eraseSpriteDiamond(map_->getId(), map_->getCurrentLayer()->getId(),
+                               pos.x, pos.y, getSize().x, getSize().y);
+    break;
+  }
+  }
+}

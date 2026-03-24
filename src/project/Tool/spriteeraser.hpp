@@ -8,6 +8,7 @@ class SpriteEraser : public Brush {
 public:
   SpriteEraser(std::shared_ptr<Map> map, ClientNetworkManager &manager);
   void setShape(Shape s);
+  Shape getShape() const;
   bool checkColision(sf::Vector2i pos, sf::FloatRect r);
   void paint(sf::Vector2i pos) override;
   void paintSender(sf::Vector2i pos) override;

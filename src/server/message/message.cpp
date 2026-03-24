@@ -149,18 +149,18 @@ std::vector<uint> ModifProjetMessage::getUserLists(Worker &worker) {
   return usersId;
 }
 
-PutPixelsCarreMessage::PutPixelsCarreMessage(sf::Packet &data_packet,
+PutPixelsSquareMessage::PutPixelsSquareMessage(sf::Packet &data_packet,
                                              uint userId) {
   userId_ = userId;
   data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> red_ >>
       green_ >> blue_ >> opa_ >> taille_;
 }
 
-void PutPixelsCarreMessage::process(Worker &worker) {
+void PutPixelsSquareMessage::process(Worker &worker) {
   std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 
-  rps = std::make_unique<ReponsePutPixelsCarre>(usersId, *this);
+  rps = std::make_unique<ReponsePutPixelsSquare>(usersId, *this);
   worker.pushNetwork(std::move(rps));
 }
 
@@ -194,17 +194,17 @@ void PutPixelsDiamondMessage::process(Worker &worker) {
   worker.pushNetwork(std::move(rps));
 }
 
-ErasePixelsCarreMessage::ErasePixelsCarreMessage(sf::Packet &data_packet,
+ErasePixelsSquareMessage::ErasePixelsSquareMessage(sf::Packet &data_packet,
                                                  uint userId) {
   userId_ = userId;
   data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> taille_;
 }
 
-void ErasePixelsCarreMessage::process(Worker &worker) {
+void ErasePixelsSquareMessage::process(Worker &worker) {
   std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 
-  rps = std::make_unique<ReponseErasePixelsCarre>(usersId, *this);
+  rps = std::make_unique<ReponseErasePixelsSquare>(usersId, *this);
   worker.pushNetwork(std::move(rps));
 }
 
@@ -236,6 +236,72 @@ void ErasePixelsDiamondMessage::process(Worker &worker) {
   rps = std::make_unique<ReponseErasePixelsDiamond>(usersId, *this);
   worker.pushNetwork(std::move(rps));
 }
+
+
+PutSpriteMessage::PutSpriteMessage(sf::Packet &data_packet, uint userId){
+
+  userId_ = userId;
+  data_packet >> projectId_ >> calqueId_ >> asset_id >> pos_.x >> pos_.y >> taille_;
+
+}
+void PutSpriteMessage::process(Worker &worker){
+
+  std::vector<uint> usersId = this->getUserLists(worker);
+  std::unique_ptr<Reponse> rps;
+
+  rps = std::make_unique<ReponsePutSprite>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+}
+
+EraseSpriteSquareMessage::EraseSpriteSquareMessage(sf::Packet &data_packet, uint userId){
+
+  userId_ = userId;
+  data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> taille_;
+
+}
+
+void EraseSpriteSquareMessage::process(Worker &worker){
+
+  std::vector<uint> usersId = this->getUserLists(worker);
+  std::unique_ptr<Reponse> rps;
+
+  rps = std::make_unique<ReponseEraseSpriteSquare>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+}
+
+EraseSpriteCircleMessage::EraseSpriteCircleMessage(sf::Packet &data_packet, uint userId){
+
+  userId_ = userId;
+  data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> taille_;
+
+}
+
+void EraseSpriteCircleMessage::process(Worker &worker){
+
+  std::vector<uint> usersId = this->getUserLists(worker);
+  std::unique_ptr<Reponse> rps;
+
+  rps = std::make_unique<ReponseEraseSpriteCircle>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+}
+
+
+EraseSpriteDiamondMessage::EraseSpriteDiamondMessage(sf::Packet &data_packet,
+                                                     uint userId) {
+  userId_ = userId;
+  data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> hauteur_ >>
+      largeur_;
+}
+
+void EraseSpriteDiamondMessage::process(Worker &worker){
+
+  std::vector<uint> usersId = this->getUserLists(worker);
+  std::unique_ptr<Reponse> rps;
+
+  rps = std::make_unique<ReponseEraseSpriteDiamond>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+}
+
 
 MoveLayerMessage::MoveLayerMessage(sf::Packet &data_packet, uint userId) {
   userId_ = userId;
@@ -316,8 +382,8 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
   case MsgProtocole::LOB_JOIN_PROJECT_REQ:
     return std::make_unique<CheckTokenMessage>(data_packet, c->id);
       
-  case MsgProtocole::MAP_PUT_PIXELS_CARRE_REQ:
-    return std::make_unique<PutPixelsCarreMessage>(data_packet, c->id);
+  case MsgProtocole::MAP_PUT_PIXELS_SQUARE_REQ:
+    return std::make_unique<PutPixelsSquareMessage>(data_packet, c->id);
 
   case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REQ:
     return std::make_unique<PutPixelsCircleMessage>(data_packet, c->id);
@@ -327,6 +393,14 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::MAP_MOV_LAYER_REQ:
     return std::make_unique<MoveLayerMessage>(data_packet, c->id);
+  case MsgProtocole::MAP_PUT_SPRITE_REQ:
+    return std::make_unique<PutSpriteMessage>(data_packet, c->id);
+  case MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REQ:
+    return std::make_unique<EraseSpriteSquareMessage>(data_packet, c->id);
+  case MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REQ:
+    return std::make_unique<EraseSpriteCircleMessage>(data_packet, c->id);
+  case MsgProtocole::MAP_ERASE_SPRITE_DIAM_REQ:
+    return std::make_unique<EraseSpriteDiamondMessage>(data_packet, c->id);
 
   default:
     std::cout << "pas de message" << std::endl;
