@@ -30,6 +30,7 @@ void ClientHandler::process(ServerEvent &event) {
   case MsgProtocole::LOB_PROJECT_LIST_REP: {
     uint32_t size;
     *(event.data_packet_) >> size;
+    handleWindow_.clearProjList();
 
     for (uint i = 0; i < static_cast<uint>(size); ++i) {
       ProjectData projet;

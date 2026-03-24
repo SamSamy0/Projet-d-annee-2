@@ -28,5 +28,5 @@ public:
   virtual ~View() = default;
   virtual void init() = 0;
   virtual void handleEvents(const sf::Event &event) = 0;
-  virtual void render() {}
+  virtual void render() {};
 };

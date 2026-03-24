@@ -32,14 +32,14 @@ class MenuView : public View {
                   tgui::Gui &gui);
   ProjectData getProjectData(std::unique_ptr<Project> &proj);
   ProjectData askProjectData();
-  void generateToken(uint8_t role, uint id );
+  void generateToken(uint8_t role, uint id);
 
 public:
   MenuView(Application &app);
   ~MenuView() override = default;
   void init() override;
   void handleEvents(const sf::Event &event) override;
-
+  void clearProjList();
   void addProjectList(ProjectData projet);
   void updateProjectNameInList(long long id, const std::string &name);
   void updateList();

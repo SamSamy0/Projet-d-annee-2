@@ -76,14 +76,20 @@ bool Worker::renameProject(uint projectId, const std::string& newName){
 }
 
 std::string Worker::generateShareToken(uint8_t role, uint projectId){
-    std::string alphnum = "abcdefghijklmnopqrstuvwxyzABCDEFJHIJKLMNOPQRSTUVWXYZ123456789";
+    std::string alphanum = "abcdefghijklmnopqrstuvwxyzABCDEFJHIJKLMNOPQRSTUVWXYZ123456789";
+    std::random_device rd;
+    std::mt19937 generator(rd());
+
+    // Create a distribution to uniformly select from all
+    // characters
+    std::uniform_int_distribution<> distribution(0, alphanum.size() - 1);
     std::string token = "";
     int length = 8;
     for (int i = 0; i <= length ; i ++){
-        token += alphnum[rand()%alphnum.length()];
+        token += alphanum[distribution(generator)];
     }
     
-    if (dbManager_.saveToken(token, role, projectId)){
+    if (dbManager_.saveToken(token, role, projectId, 0)){
         return token;
         
     };

@@ -30,9 +30,15 @@ void Application::updateTextSize() {
   gui.setTextSize(static_cast<unsigned int>(0.03 * windowHeight));
 }
 
-void Application::showLoginError(const std::string& message) {
-  if (auto loginView = dynamic_cast<LoginView*>(currentView.get())) {
+void Application::showLoginError(const std::string &message) {
+  if (auto loginView = dynamic_cast<LoginView *>(currentView.get())) {
     loginView->showError(message);
+  }
+}
+
+void Application::clearProjList() {
+  if (auto menuView = dynamic_cast<MenuView *>(currentView.get())) {
+    menuView->clearProjList();
   }
 }
 
@@ -99,7 +105,7 @@ void Application::updateCreatedProjectId(uint32_t projId) {
 };
 
 void Application::updateShareToken(std::string newTok) {
-  std::cout <<"token in app" <<newTok <<std::endl;
+  std::cout << "token in app" << newTok << std::endl;
   auto menuView = dynamic_cast<MenuView *>(currentView.get());
   menuView->setShareToken(newTok);
 }
