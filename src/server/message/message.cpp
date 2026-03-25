@@ -391,14 +391,27 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
   case MsgProtocole::MAP_PUT_PIXELS_DIAM_REQ:
     return std::make_unique<PutPixelsDiamondMessage>(data_packet, c->id);
 
+  case MsgProtocole::MAP_ERASE_PIXELS_SQUARE_REQ:
+    return std::make_unique<ErasePixelsSquareMessage>(data_packet, c->id);
+
+  case MsgProtocole::MAP_ERASE_PIXELS_CIRCLE_REQ:
+    return std::make_unique<ErasePixelsCircleMessage>(data_packet, c->id);
+
+  case MsgProtocole::MAP_ERASE_PIXELS_DIAM_REQ:
+    return std::make_unique<ErasePixelsDiamondMessage>(data_packet, c->id);
+
   case MsgProtocole::MAP_MOV_LAYER_REQ:
     return std::make_unique<MoveLayerMessage>(data_packet, c->id);
+
   case MsgProtocole::MAP_PUT_SPRITE_REQ:
     return std::make_unique<PutSpriteMessage>(data_packet, c->id);
+
   case MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REQ:
     return std::make_unique<EraseSpriteSquareMessage>(data_packet, c->id);
+
   case MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REQ:
     return std::make_unique<EraseSpriteCircleMessage>(data_packet, c->id);
+
   case MsgProtocole::MAP_ERASE_SPRITE_DIAM_REQ:
     return std::make_unique<EraseSpriteDiamondMessage>(data_packet, c->id);
 
