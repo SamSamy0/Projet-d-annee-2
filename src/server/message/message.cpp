@@ -169,8 +169,8 @@ std::vector<uint> ModifProjetMessage::getUserLists(Worker& worker) {
 PutPixelsSquareMessage::PutPixelsSquareMessage(sf::Packet &data_packet,
                                              std::shared_ptr<Client>& client) {
   userId_ = client->id;
-  data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> red_ >>
-      green_ >> blue_ >> opa_ >> taille_;
+  data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> taille_ >> red_ >>
+      green_ >> blue_ >> opa_ ;
 }
 
 void PutPixelsSquareMessage::process(Worker &worker) {
@@ -197,7 +197,7 @@ void PutPixelsSquareMessage::process(Worker &worker) {
 
 PutPixelsCircleMessage::PutPixelsCircleMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
     userId_ = client->id;
-    data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> red_ >> green_ >> blue_ >> opa_ >> taille_;
+    data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> taille_ >>red_ >> green_ >> blue_ >> opa_ ;
 }
 
 void PutPixelsCircleMessage::process(Worker& worker) {
@@ -231,7 +231,7 @@ void PutPixelsCircleMessage::process(Worker& worker) {
 
 PutPixelsDiamondMessage::PutPixelsDiamondMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
     userId_ = client->id;
-    data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> red_ >> green_ >> blue_ >> opa_ >> hauteur_ >> largeur_;
+    data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> hauteur_ >> largeur_ >> red_ >> green_ >> blue_ >> opa_ ;
 }
 
 void PutPixelsDiamondMessage::process(Worker& worker) {
