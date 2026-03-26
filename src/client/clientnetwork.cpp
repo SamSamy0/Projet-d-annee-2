@@ -162,7 +162,7 @@ void ClientNetworkManager::drawSquare(uint proj_id, uint layer_id, int pos_x,
   MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_SQUARE_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << pos_x << pos_y << r << g << b << a << size;
+  packet << proj_id << layer_id << pos_x << pos_y << size << r << g << b << a;
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
@@ -176,7 +176,7 @@ void ClientNetworkManager::drawCircle(uint proj_id, uint layer_id, int pos_x,
   MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << pos_x << pos_y << r << g << b << a << size;
+  packet << proj_id << layer_id << pos_x << pos_y << size << r << g << b << a;
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
@@ -191,8 +191,8 @@ void ClientNetworkManager::drawDiamond(uint proj_id, uint layer_id, int pos_x,
   MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_DIAM_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << pos_x << pos_y << r << g << b << a
-        << size_y << size_x;
+  packet << proj_id << layer_id << pos_x << pos_y << size_y << size_x
+        << r << g << b << a;
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)

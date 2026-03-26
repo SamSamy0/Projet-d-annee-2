@@ -106,21 +106,21 @@ ReponsePutPixelsCircle::ReponsePutPixelsCircle(std::vector<uint> usersId, PutPix
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
-    dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.taille_;
+    dataPacket_ << mess.taille_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ ;
 }
 
 ReponsePutPixelsSquare::ReponsePutPixelsSquare(std::vector<uint> usersId, PutPixelsSquareMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_SQUARE_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
-    dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.taille_;
+    dataPacket_  << mess.taille_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_;
 }
 
 ReponsePutPixelsDiamond::ReponsePutPixelsDiamond(std::vector<uint> usersId, PutPixelsDiamondMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_DIAM_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
-    dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.hauteur_ << mess.largeur_;
+    dataPacket_ << mess.hauteur_ << mess.largeur_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ ;
 }
 
 
