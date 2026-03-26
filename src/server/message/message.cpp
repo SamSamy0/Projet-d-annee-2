@@ -498,10 +498,8 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
   switch (type) {
   case MsgProtocole::AUTH_LOGIN_REQ:
     return std::make_unique<LoginMessage>(data_packet, std::move(c));
-
   case MsgProtocole::AUTH_REGISTER_REQ:
-    return std::make_unique<RegisterMessage>(data_packet, c);
-
+    return std::make_unique<RegisterMessage>(data_packet, std::move(c));
   case MsgProtocole::LOB_CREATE_PROJECT_REQ:
     return std::make_unique<CreateProjectMessage>(data_packet, c);
 
