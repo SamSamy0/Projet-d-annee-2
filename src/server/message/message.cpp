@@ -128,7 +128,6 @@ GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, std::share
 }
 
 void GetProjectDataMessage::process(Worker& worker) {
-
     if (worker.mapProjet_.find(projectId_) == worker.mapProjet_.end()) {
         auto liveProj = LiveProject(worker.loadProjectJson(projectId_));
         liveProj.addConnection(userId_, worker.getRole(userId_, projectId_));
