@@ -1,25 +1,27 @@
 #include "GameView.hpp"
-#include "../MenuView.hpp"
 #include "../../project/Chat/userMessage.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
 #include "../../project/Tool/pixelshift.hpp"
+#include "../MenuView.hpp"
 
 GameView::GameView(Application &app)
     : View(app), project(app_.getProject().get()),
       currentUser(app_.getUser()) {};
 
 void GameView::init() {
-  
   app_.getGui().removeAllWidgets();
-  
-  initToolbar();
+
+  // If not spectator
+  if (project->getRole() != 0) {
+    initToolbar();
+    initPenOptions();
+    initPenSpriteOptions();
+    initEraserOptions();
+    initEraserSpriteOptions();
+    initSpriteBrushOptions();
+  }
   initLayerPanel();
   initChatWidget();
-  initPenOptions();
-  initPenSpriteOptions();
-  initEraserOptions();
-  initEraserSpriteOptions();
-  initSpriteBrushOptions();
   initMinimap();
   refreshChat();
 }
@@ -46,7 +48,7 @@ void GameView::handleEvents(const sf::Event &event) {
       }
     }
   }
-  
+
   // ON RELEASE
   if (auto mouseEvent = event.getIf<sf::Event::MouseButtonReleased>()) {
     if (mouseEvent->button == sf::Mouse::Button::Left) {

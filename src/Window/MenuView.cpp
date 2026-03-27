@@ -246,6 +246,10 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
       // Open Action
     } else if (item == "Ouvrir") {
       std::cout << "Ouverture du projet " << std::endl;
+      std::cout << "futur role : " << static_cast<int>(project.role)
+                << std::endl;
+
+      app_.setCurrentProjRole(project.role);
       manager.getProjectData(id);
 
       // Rename Action
@@ -485,7 +489,7 @@ void MenuView::popupCreate(tgui::Panel::Ptr background) {
     // Les getText() sont appelés au moment du clic !
     if (checkInput(scale, sizePx, sizePy))
       this->createProj(scale->getText(), sizePx->getText(), sizePy->getText(),
-                       name->getText(), 0, app_.getWindow(), app_.getGui());
+                       name->getText(), 2, app_.getWindow(), app_.getGui());
   });
 }
 
@@ -526,8 +530,9 @@ void MenuView::createProj(tgui::String scale, tgui::String sizeX,
   manager.createProject(nameS, size, scaleInt);
   gui.removeAllWidgets();
 
+  // Role = 2 bc owner
   app_.getProject() = std::make_unique<Project>(
-      scaleInt, size, nameS, id, app_.getWindow(), gui, app_.getNetwork());
+      scaleInt, size, nameS, id, app_.getWindow(), gui, app_.getNetwork(), 2);
 
   projectList.push_back(getProjectData(app_.getProject()));
 
@@ -541,7 +546,7 @@ ProjectData MenuView::askProjectData() {
 }
 
 ProjectData MenuView::getProjectData(std::unique_ptr<Project> &newProj) {
-  return ProjectData{newProj->getId(), 0, newProj->getName()};
+  return ProjectData{newProj->getId(), newProj->getRole(), newProj->getName()};
 }
 
 void MenuView::updateCreatedProjectId(uint32_t projId) {
@@ -717,11 +722,11 @@ void MenuView::popupCreateToken(tgui::Panel::Ptr background,
 
     if (selected == "Editeur") {
       std::cout << "Editeur" << std::endl;
-      generateToken(0, project.projectId);
+      generateToken(1, project.projectId);
 
     } else if (selected == "Spectateur") {
       std::cout << "Spectateur" << std::endl;
-      generateToken(1, project.projectId);
+      generateToken(0, project.projectId);
     }
     exitAction(background);
   });
