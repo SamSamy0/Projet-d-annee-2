@@ -46,4 +46,5 @@ public:
   void updateCreatedProjectId(uint32_t projId);
   void setShareToken(std::string token);
   void resetShareToken();
+  void deleteProject(long long id);
 };

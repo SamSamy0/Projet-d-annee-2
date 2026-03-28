@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Window/Application.hpp"
+#include "../server/datamanager/memberentry.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -20,12 +21,15 @@ public:
   void drawPixelBrush(uint layer_id, int pos_x, int pos_y, uint8_t r, uint8_t g,
                       uint8_t b, uint8_t a, Shape shape, bool eraser,
                       float size_x, float size_y);
-  void drawSprite(uint layer_id, std::string asset_id, int pos_x, int pos_y, float size);
-  void eraseSprite(uint layer_id, int pos_x,int pos_y,Shape shape,float size_x, float size_y);
+  void drawSprite(uint layer_id, std::string asset_id, int pos_x, int pos_y,
+                  float size);
+  void eraseSprite(uint layer_id, int pos_x, int pos_y, Shape shape,
+                   float size_x, float size_y);
   void shiftLayer(uint layer_id, int delta_x, int delta_y);
   void updateShareToken(std::string newTok);
   void clearProjList();
-
+  void clearMemberList();
+  void setMemberList(std::vector<MemberEntry> memberList);
   void setState();
   void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                       uint id);

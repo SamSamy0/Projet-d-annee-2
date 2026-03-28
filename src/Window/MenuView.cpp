@@ -219,7 +219,7 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   // }
   menu->addItem("Dupliquer");
   menu->addItem("Partager");
-  menu->addItem("Quitter");
+  // menu->addItem("Quitter");
   float menuHeight = menu->getItemCount() * 45;
   menu->setSize(150, menuHeight);
   menu->setItemHeight(45);
@@ -228,28 +228,20 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
 
   gui.add(menu, "popup");
   menu->setTextSize(20);
+  int8_t projectRole = project.role;
+  app_.setCurrentProjRole(projectRole);
   // menu->onUnfocus([this, menu]() { gui.remove(menu); });
-  menu->onItemSelect([this, menu, id, toHover, project, &manager,
+  menu->onItemSelect([this, menu, id, toHover, project, projectRole, &manager,
                       &gui](const tgui::String &item) {
     // Delete Action
     if (item == "Supprimer") {
-      auto it = std::find_if(
-          projectList.begin(), projectList.end(),
-          [id](const ProjectData &p) { return p.projectId == id; });
-
-      if (it != projectList.end()) {
-        projectList.erase(it);
-        std::cout << "Suppression du projet " << id << std::endl;
-        init();
-      }
-      manager.delProject(id);
+      deleteProject(id);
       // Open Action
     } else if (item == "Ouvrir") {
       std::cout << "Ouverture du projet " << std::endl;
       std::cout << "futur role : " << static_cast<int>(project.role)
                 << std::endl;
 
-      app_.setCurrentProjRole(project.role);
       manager.getProjectData(id);
 
       // Rename Action
@@ -262,15 +254,33 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
 
     } else if (item == "Partager") {
       initInputWidget(focusPopup::TOKEN, project);
-
-    } else if (item == "Quitter") {
     }
+    //                else if (item == "Quitter") {
+    // // If owner
+    // if (projectRole == 2) {
+    //   // display choseSuccesorWindow
+    // }
+    // }
     activeMoreButton->getRenderer()->setBackgroundColor(
         tgui::Color::Transparent);
 
     gui.remove(menu);
     // toHover->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   });
+}
+
+void MenuView::deleteProject(long long id) {
+  auto &manager = app_.getNetwork();
+  auto it =
+      std::find_if(projectList.begin(), projectList.end(),
+                   [id](const ProjectData &p) { return p.projectId == id; });
+
+  if (it != projectList.end()) {
+    projectList.erase(it);
+    std::cout << "Suppression du projet " << id << std::endl;
+    init();
+  }
+  manager.delProject(id);
 }
 
 void MenuView::closePopup() {

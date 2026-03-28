@@ -26,6 +26,75 @@ void GameView::init() {
   refreshChat();
 }
 
+void GameView::displayMemberList() {
+  std::cout << "Génération de la popup !" << std::endl;
+  auto &gui = app_.getGui();
+
+  if (gui.get("memberListPopup")) {
+    gui.remove(gui.get("memberListPopup"));
+  }
+
+  auto parent = tgui::Panel::create();
+  parent->setSize("40%", "60%");
+  parent->setPosition("30%", "20%");
+  parent->getRenderer()->setBackgroundColor({40, 40, 40, 240});
+  parent->getRenderer()->setRoundedBorderRadius(10);
+  gui.add(parent, "memberListPopup");
+
+  // Title
+  auto title = tgui::Label::create("Membres du projet");
+  title->setPosition("center", "5%");
+  title->setTextSize(24);
+  title->getRenderer()->setTextColor(sf::Color::White);
+  parent->add(title);
+
+  auto exitB = tgui::Button::create("✕");
+  exitB->setSize(30, 30);
+  exitB->setPosition("100% - 35", "5");
+  exitB->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+  exitB->getRenderer()->setTextColor(sf::Color::White);
+  exitB->getRenderer()->setBackgroundColorHover(sf::Color(255, 100, 100));
+  parent->add(exitB);
+
+  exitB->onPress(
+      [this]() { app_.getGui().remove(app_.getGui().get("memberListPopup")); });
+
+  auto panel = tgui::ScrollablePanel::create();
+  panel->setPosition("5%", "18%");
+  panel->setSize("90%", "75%");
+  panel->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+  panel->getRenderer()->setBorders(0);
+  panel->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Automatic);
+  parent->add(panel);
+
+  for (int i = 0; i < (int)allUsers_.size(); i++) {
+    auto row = tgui::Panel::create();
+    row->setSize("96%", 56);
+    row->setPosition("2%", i * 64);
+    row->getRenderer()->setBackgroundColor(sf::Color(32, 32, 40));
+    row->getRenderer()->setRoundedBorderRadius(8);
+    panel->add(row);
+
+    // Pseudo
+    auto label = tgui::Label::create(allUsers_[i].pseudo);
+    label->setPosition(20, "center");
+    label->setTextSize(18);
+    label->getRenderer()->setTextColor(sf::Color(220, 220, 235));
+    row->add(label);
+
+    std::string nomRole = (allUsers_[i].role == 1) ? "Editeur" : "Spectateur";
+    if (allUsers_[i].role == 2)
+      nomRole = "Propriétaire";
+
+    auto labelRole = tgui::Label::create(nomRole);
+    labelRole->setPosition("100% - 150", "center");
+    labelRole->setTextSize(14);
+    labelRole->getRenderer()->setTextColor(sf::Color(140, 140, 160));
+    row->add(labelRole);
+  }
+}
+void GameView::clearMemberList() { allUsers_.clear(); }
+
 void GameView::render() {
   if (project)
     drawMinimap();
@@ -99,4 +168,13 @@ void GameView::handleEvents(const sf::Event &event) {
         project->getMap()->zooming(wheelEvent); // ZOOM
     }
   }
+}
+
+void GameView::getAllUsers() {
+  auto &manager = app_.getNetwork();
+  manager.getUsersProjects(project->getId());
+}
+void GameView::setAllUsers(std::vector<MemberEntry> users) {
+  allUsers_ = users;
+  displayMemberList();
 }
