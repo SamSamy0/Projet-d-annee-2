@@ -4,6 +4,7 @@
 #include <vector>
 #include <SFML/Config.hpp>
 #include <iostream>
+#include <algorithm>
 #include "map.hpp"
 #include "Layer/pixellayer.hpp"
 #include "Layer/spritelayer.hpp"
@@ -52,7 +53,6 @@ unsigned int Map::getScale() const { return scale_; }
 
 vector<shared_ptr<Layer>>& Map::getLayers() { return layers_; }
 
-void Map::insertLayer(shared_ptr<Layer> layer) { layers_.insert(layers_.begin()+selected_+1, layer) ; }
 
 void Map::createPixelLayer(){
     int n = layers_.size() + 1;
@@ -72,6 +72,30 @@ void Map::createSpriteLayer(){
     layers_.push_back(spritelayer);
     layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
 }
+
+  void Map::layerUp(){
+    if (selected_ == 0) return;
+    std::swap(layers_[selected_], layers_[selected_ - 1]);
+    selected_ -= 1;
+}
+  void Map::layerDawn(){
+    if (selected_ >= layers_.size()-1) return;
+    std::swap(layers_[selected_], layers_[selected_ + 1]);
+    selected_ += 1;
+}
+
+
+void Map::deleteLayer(uint layer_id){
+    if (layers_.size() <= 1) return;
+
+} //TODO: deleteLayer
+
+void Map::deleteLayer(){
+    if (layers_.size() <= 1) return;
+    layers_.erase(layers_.begin() + selected_);
+    selected_ = (selected_ > 0) ? selected_ - 1 : 0;
+}
+
 
 shared_ptr<Layer> Map::getCurrentLayer(){
     if(layers_.size() == 0){

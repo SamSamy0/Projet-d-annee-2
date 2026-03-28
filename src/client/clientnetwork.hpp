@@ -1,5 +1,6 @@
 #pragma once
 #include "../common/protocol.hpp"
+#include "../project/Layer/layer.hpp"
 #include "serverevent.hpp"
 #include <SFML/Network.hpp>
 #include <deque>
@@ -28,6 +29,7 @@ public:
   void delProject(uint project_id);
   void getProjectData(uint project_id);
   void joinProject(std::string project_code);
+  void createLayer(uint proj_id, uint current_layer_id,LayerType type);
 
   void drawSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size,
                   uint8_t r, uint8_t g, uint8_t b, uint8_t a);

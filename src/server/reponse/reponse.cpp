@@ -94,6 +94,10 @@ void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
 }
 
 
+ReponseCreateLayer::ReponseCreateLayer(std::vector<uint> usersId, CreateLayerMessage& mess) : ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_CREATE_LAYER_REP);
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.type_;
+}
 
 ReponsePutPixelsCircle::ReponsePutPixelsCircle(std::vector<uint> usersId, PutPixelsCircleMessage& mess) : ReponseGroupe(usersId) {
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP);
@@ -119,8 +123,8 @@ ReponsePutPixelsDiamond::ReponsePutPixelsDiamond(std::vector<uint> usersId, PutP
 
 ReponseErasePixelsCircle::ReponseErasePixelsCircle(std::vector<uint> usersId, ErasePixelsCircleMessage& mess) : ReponseGroupe(usersId) {
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASE_PIXELS_CIRCLE_REP);
-
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+
     dataPacket_ << mess.taille_;
 }
 

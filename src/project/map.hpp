@@ -42,9 +42,12 @@ public:
   void selectLayerId(uint id);
   bool hasLayer() const;
   const sf::RenderTexture& getRenderTexture() const { return render_texture_; }
-  void insertLayer(shared_ptr<Layer> layer);
   void createPixelLayer();
   void createSpriteLayer();
+  void layerUp();
+  void layerDawn();
+  void deleteLayer();
+  void deleteLayer(uint layer_id);
   void displayMap(sf::RenderWindow &window, sf::View &viewMap);
   void closeWindowManager(sf::RenderWindow &window, const sf::Event &ev);
   void detectMovement();

@@ -149,6 +149,20 @@ std::vector<uint> ModifProjetMessage::getUserLists(Worker &worker) {
   return usersId;
 }
 
+CreateLayerMessage::CreateLayerMessage(sf::Packet &data_packet, uint userId){
+  userId_ = userId;
+  data_packet >>projectId_ >> calqueId_>>type_;
+}
+
+void CreateLayerMessage::process(Worker &worker){
+  std::vector<uint> usersId = this->getUserLists(worker);
+  std::unique_ptr<Reponse> rps;
+
+  rps = std::make_unique<ReponseCreateLayer>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+}
+
+
 PutPixelsSquareMessage::PutPixelsSquareMessage(sf::Packet &data_packet,
                                              uint userId) {
   userId_ = userId;
@@ -381,6 +395,9 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::LOB_JOIN_PROJECT_REQ:
     return std::make_unique<CheckTokenMessage>(data_packet, c->id);
+
+  case MsgProtocole::MAP_CREATE_LAYER_REQ:
+    return std::make_unique<CreateLayerMessage>(data_packet, c->id);
       
   case MsgProtocole::MAP_PUT_PIXELS_SQUARE_REQ:
     return std::make_unique<PutPixelsSquareMessage>(data_packet, c->id);

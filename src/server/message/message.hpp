@@ -87,6 +87,12 @@ struct ModifProjetMessage : IMessage {
   std::vector<uint> getUserLists(Worker &worker);
 };
 
+struct CreateLayerMessage : ModifProjetMessage{
+  uint8_t type_;
+  CreateLayerMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+
 struct PutPixelsMessage : ModifProjetMessage {
   sf::Vector2u pos_;
   uint8_t red_;

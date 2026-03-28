@@ -70,6 +70,9 @@ struct ReponseGroupe : Reponse {
 };
 
 
+struct ReponseCreateLayer : ReponseGroupe{
+   ReponseCreateLayer(std::vector<uint> usersId, CreateLayerMessage& mess);
+};
 
 struct ReponsePutPixelsCircle : ReponseGroupe {
     

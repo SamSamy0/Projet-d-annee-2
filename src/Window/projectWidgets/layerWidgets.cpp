@@ -144,12 +144,10 @@ void GameView::initLayerPanel() {
   goUpLayer->getRenderer()->setBorders({0});
   goUpLayer->getRenderer()->setRoundedBorderRadius(8);
   goUpLayer->onClick([this]() {
-    auto& layers = project->getMap()->getLayers();
-    unsigned int selectedLayer = project->getMap()->getLayerSelected();
-    if (selectedLayer == layers.size() - 1) return;
-    std::swap(layers[selectedLayer], layers[selectedLayer + 1]);
-    project->getMap()->selectLayer(selectedLayer + 1);
+    project->getMap()->layerDawn();
     refreshLayerList();
+    app_.getNetwork(); //TODO:SYNCHRO
+
   });
   layerPanel_->add(goUpLayer);
 
@@ -163,12 +161,9 @@ void GameView::initLayerPanel() {
   goDownLayer->getRenderer()->setBorders({0});
   goDownLayer->getRenderer()->setRoundedBorderRadius(8);
   goDownLayer->onClick([this]() {
-    auto& layers = project->getMap()->getLayers();
-    unsigned int selectedLayer = project->getMap()->getLayerSelected();
-    if (selectedLayer == 0) return;
-    std::swap(layers[selectedLayer], layers[selectedLayer - 1]);
-    project->getMap()->selectLayer(selectedLayer - 1);
+    project->getMap()->layerUp();
     refreshLayerList();
+    app_.getNetwork(); //TODO:SYNCHRO
   });
   layerPanel_->add(goDownLayer);
   
@@ -239,20 +234,17 @@ void GameView::initLayerPanel() {
 
     createPixelLayerButton->onClick([this, popup]() {
       auto& gui = app_.getGui();
-      LayerType type = project->getMap()->getCurrentLayer()->getType();
-      project->getMap()->createPixelLayer();
-      checkTypeTool(type);
-      refreshLayerList();
       gui.remove(popup);
+      createLayer(PIXELLAYER);
+      app_.getNetwork().createLayer(project->getId(),project->getMap()->getCurrentLayer()->getId(),PIXELLAYER);
+      
     });
 
     createSpriteLayerButton->onClick([this, popup]() {
       auto& gui = app_.getGui();
-      LayerType type = project->getMap()->getCurrentLayer()->getType();
-      project->getMap()->createSpriteLayer();
-      checkTypeTool(type);
-      refreshLayerList();
       gui.remove(popup);
+      createLayer(SPRITELAYER);
+      app_.getNetwork().createLayer(project->getId(),project->getMap()->getCurrentLayer()->getId(),SPRITELAYER);
     });
   });
   layerPanel_->add(addLayerButton);
@@ -268,15 +260,11 @@ void GameView::initLayerPanel() {
   removeLayerButton->getRenderer()->setBorders({0});
   removeLayerButton->getRenderer()->setRoundedBorderRadius(8);
   removeLayerButton->onClick([this]() {
-    vector<shared_ptr<Layer>> &layers = project->getMap()->getLayers();
-    if (layers.size() <= 1) return;
     LayerType type = project->getMap()->getCurrentLayer()->getType();
-    unsigned int selected = project->getMap()->getLayerSelected();
-    layers.erase(layers.begin() + selected);
-    unsigned int newSelected = (selected > 0) ? selected - 1 : 0;
-    project->getMap()->selectLayer(newSelected);
+    project->getMap()->deleteLayer();
     checkTypeTool(type);
     refreshLayerList();
+    app_.getNetwork(); //TODO:SYNCHRO SUPPRIMER UNE COUCHE
   });
   layerPanel_->add(removeLayerButton);
   removeLayerButton->setTextSize(15);
@@ -373,4 +361,15 @@ void GameView::refreshLayerList() {
       break;
     }
   }
+}
+
+
+  void GameView::createLayer(LayerType t){
+      LayerType type = project->getMap()->getCurrentLayer()->getType();
+      if(t == SPRITELAYER)
+      project->getMap()->createSpriteLayer();
+      else if(t==PIXELLAYER)
+      project->getMap()->createPixelLayer();
+      checkTypeTool(type);
+      refreshLayerList();
 }

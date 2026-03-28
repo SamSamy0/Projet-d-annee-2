@@ -141,6 +141,16 @@ void ClientHandler::process(ServerEvent &event) {
 
     break;
   }
+  case MsgProtocole::MAP_CREATE_LAYER_REP:{
+    uint project_id;
+    uint current_layer_id;
+    uint8_t type_int;
+    *(event.data_packet_) >> project_id >> current_layer_id >> type_int;
+    LayerType type = static_cast<LayerType>(type_int);
+    handleWindow_.createLayer(current_layer_id,type);
+
+
+    }
 
   case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP: {
     uint project_id;

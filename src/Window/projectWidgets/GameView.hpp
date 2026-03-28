@@ -48,4 +48,7 @@ public:
   void init() override;
   void render() override;
   void handleEvents(const sf::Event &events) override;
+
+
+  void createLayer(LayerType);
 };
