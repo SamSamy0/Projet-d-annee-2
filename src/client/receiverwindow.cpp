@@ -51,11 +51,11 @@ void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
 
 
 void ReceiverInWindow::createLayer(uint current_layer_id,LayerType type){
-  std::shared_ptr<Map> map = app_->getProject()->getMap();
-  uint last_layer = map->getLayerSelected();
-  map->selectLayerId(current_layer_id);
   dynamic_cast<GameView*>(app_->getCurrentView().get())->createLayer(type);
-  map->selectLayerId(last_layer);
+}
+
+void ReceiverInWindow::deleteLayer(uint current_layer_id){
+  dynamic_cast<GameView*>(app_->getCurrentView().get())->deleteLayer(current_layer_id);
 }
 
 void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,

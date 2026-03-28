@@ -264,7 +264,7 @@ void GameView::initLayerPanel() {
     project->getMap()->deleteLayer();
     checkTypeTool(type);
     refreshLayerList();
-    app_.getNetwork(); //TODO:SYNCHRO SUPPRIMER UNE COUCHE
+    app_.getNetwork().deleteLayer(project->getId(),project->getMap()->getCurrentLayer()->getId()); 
   });
   layerPanel_->add(removeLayerButton);
   removeLayerButton->setTextSize(15);
@@ -372,4 +372,11 @@ void GameView::refreshLayerList() {
       project->getMap()->createPixelLayer();
       checkTypeTool(type);
       refreshLayerList();
+}
+
+  void GameView::deleteLayer(uint layer_id){
+    LayerType type = project->getMap()->getCurrentLayer()->getType();
+    project->getMap()->deleteLayer(layer_id);
+    checkTypeTool(type);
+    refreshLayerList();
 }

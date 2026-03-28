@@ -87,8 +87,19 @@ void Map::createSpriteLayer(){
 
 void Map::deleteLayer(uint layer_id){
     if (layers_.size() <= 1) return;
+    int j;
 
-} //TODO: deleteLayer
+    for(int i = 0; i<layers_.size(); i++){
+        if(layers_[i]->getId() == layer_id){
+            j = i;
+            break;
+        }
+    }
+    if(j != -1)
+        layers_.erase(layers_.begin() + j);
+    if (selected_ == j && selected_ > 0) selected_ -= 1;
+    else if (selected_ > j) selected_ -= 1;
+}
 
 void Map::deleteLayer(){
     if (layers_.size() <= 1) return;

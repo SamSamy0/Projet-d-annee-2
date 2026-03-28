@@ -35,7 +35,6 @@ class GameView : public View {
   void initMinimap();
   void drawMinimap();
   void refreshChat();
-  void refreshLayerList();
 
   // Detection in map
   void toolOnClick();
@@ -51,4 +50,6 @@ public:
 
 
   void createLayer(LayerType);
+  void deleteLayer(uint layer_id);
+  void refreshLayerList();
 };

@@ -63,6 +63,9 @@ void ClientNetworkManager::askRegister(std::string pseudo,
               << std::endl;
 }
 
+
+
+
 void ClientNetworkManager::createProject(std::string nomProjet,
                                          sf::Vector2u size, uint scale) {
   sf::Packet packet;
@@ -155,6 +158,34 @@ void ClientNetworkManager::joinProject(std::string project_code) {
               << std::endl;
 }
 
+void ClientNetworkManager::createLayer(uint proj_id, uint current_layer_id,LayerType type){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_CREATE_LAYER_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  uint8_t type_int = static_cast<uint8_t>(type);
+  packet << proj_id << current_layer_id << type_int;
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
+
+
+void ClientNetworkManager::deleteLayer(uint proj_id, uint current_layer_id){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_REMOVE_LAYER_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << proj_id << current_layer_id;
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
+
 void ClientNetworkManager::drawSquare(uint proj_id, uint layer_id, int pos_x,
                                       int pos_y, float size, uint8_t r,
                                       uint8_t g, uint8_t b, uint8_t a) {
@@ -170,19 +201,6 @@ void ClientNetworkManager::drawSquare(uint proj_id, uint layer_id, int pos_x,
 }
 
 
-
-void ClientNetworkManager::createLayer(uint proj_id, uint current_layer_id,LayerType type){
-  sf::Packet packet;
-  MsgProtocole msg = MsgProtocole::MAP_CREATE_LAYER_REQ;
-
-  packet << static_cast<uint8_t>(msg);
-  uint8_t type_int = static_cast<uint8_t>(type);
-  packet << proj_id << current_layer_id << type_int;
-
-  if (socket_.send(packet) != sf::Socket::Status::Done)
-    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
-              << std::endl;
-}
 
 void ClientNetworkManager::drawCircle(uint proj_id, uint layer_id, int pos_x,
                                       int pos_y, float size, uint8_t r,

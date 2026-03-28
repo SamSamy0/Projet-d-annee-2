@@ -93,6 +93,12 @@ struct CreateLayerMessage : ModifProjetMessage{
   void process(Worker &worker) override;
 };
 
+
+struct DeleteLayerMessage : ModifProjetMessage{
+  DeleteLayerMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+
 struct PutPixelsMessage : ModifProjetMessage {
   sf::Vector2u pos_;
   uint8_t red_;

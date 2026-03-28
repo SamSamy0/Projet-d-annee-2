@@ -151,7 +151,7 @@ std::vector<uint> ModifProjetMessage::getUserLists(Worker &worker) {
 
 CreateLayerMessage::CreateLayerMessage(sf::Packet &data_packet, uint userId){
   userId_ = userId;
-  data_packet >>projectId_ >> calqueId_>>type_;
+  data_packet >>projectId_ >> calqueId_>> type_;
 }
 
 void CreateLayerMessage::process(Worker &worker){
@@ -161,6 +161,21 @@ void CreateLayerMessage::process(Worker &worker){
   rps = std::make_unique<ReponseCreateLayer>(usersId, *this);
   worker.pushNetwork(std::move(rps));
 }
+
+
+DeleteLayerMessage::DeleteLayerMessage(sf::Packet &data_packet, uint userId){
+  userId_ = userId;
+  data_packet >>projectId_ >>calqueId_;
+}
+
+void DeleteLayerMessage::process(Worker &worker){
+  std::vector<uint> usersId = this->getUserLists(worker);
+  std::unique_ptr<Reponse> rps;
+
+  rps = std::make_unique<ReponseDeleteLayer>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+}
+
 
 
 PutPixelsSquareMessage::PutPixelsSquareMessage(sf::Packet &data_packet,
@@ -398,6 +413,9 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::MAP_CREATE_LAYER_REQ:
     return std::make_unique<CreateLayerMessage>(data_packet, c->id);
+
+  case MsgProtocole::MAP_REMOVE_LAYER_REQ:
+    return std::make_unique<DeleteLayerMessage>(data_packet,c->id);
       
   case MsgProtocole::MAP_PUT_PIXELS_SQUARE_REQ:
     return std::make_unique<PutPixelsSquareMessage>(data_packet, c->id);

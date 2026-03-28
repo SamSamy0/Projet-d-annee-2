@@ -18,6 +18,7 @@ public:
   void updateProjectNameInList(uint id, const std::string &name);
   void updateCreatedProjectId(uint ProjectId);
   void createLayer(uint current_layer_id,LayerType type);
+  void deleteLayer(uint current_layer_id);
   void drawPixelBrush(uint layer_id, int pos_x, int pos_y, uint8_t r, uint8_t g,
                       uint8_t b, uint8_t a, Shape shape, bool eraser,
                       float size_x, float size_y);

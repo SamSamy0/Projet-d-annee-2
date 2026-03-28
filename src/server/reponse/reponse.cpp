@@ -99,6 +99,12 @@ ReponseCreateLayer::ReponseCreateLayer(std::vector<uint> usersId, CreateLayerMes
     dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.type_;
 }
 
+ReponseDeleteLayer::ReponseDeleteLayer(std::vector<uint> usersId, DeleteLayerMessage& mess): ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_REMOVE_LAYER_REP);
+    dataPacket_ << mess.projectId_ << mess.calqueId_;
+}
+
+
 ReponsePutPixelsCircle::ReponsePutPixelsCircle(std::vector<uint> usersId, PutPixelsCircleMessage& mess) : ReponseGroupe(usersId) {
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP);
 
