@@ -2,8 +2,7 @@
 #include "../../common/protocol.hpp"
 #include "../reponse/reponse.hpp"
 #include "../worker.hpp"
-#include <QPainter>
-#include <QImage>
+
 
 
 
@@ -129,11 +128,8 @@ GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, std::share
 
 void GetProjectDataMessage::process(Worker& worker) {
     if (worker.mapProjet_.find(projectId_) == worker.mapProjet_.end()) {
-        auto liveProj = LiveProject(worker.loadProjectJson(projectId_));
+        LiveProject liveProj = LiveProject(projectId_);
         liveProj.addConnection(userId_, worker.getRole(userId_, projectId_));
-        for(auto it = liveProj.layersImage_.begin(); it != liveProj.layersImage_.end(); ++it) {
-            liveProj.addLayerImage(it->first, worker.getProjMngr().loadImage(projectId_, it->first));
-        }
         worker.mapProjet_.emplace(projectId_, std::move(liveProj));
 
     }
@@ -170,28 +166,24 @@ PutPixelsSquareMessage::PutPixelsSquareMessage(sf::Packet &data_packet,
   userId_ = client->id;
   data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> taille_ >> red_ >>
       green_ >> blue_ >> opa_ ;
+
+  std::cout << projectId_ << " " << calqueId_ << " " << pos_.x << " " << pos_.y << " " << taille_ << " " << red_ << " "<<
+      green_ << " "<< blue_ << " "<< opa_ ;
 }
 
 void PutPixelsSquareMessage::process(Worker &worker) {
-    uint scale = worker.mapProjet_.at(projectId_).getScale();
-    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
-    QPainter painter(&image);
-    QColor color(red_, green_, blue_, opa_);
+  auto liveProj = worker.mapProjet_.find(projectId_);
 
-    painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(color));
-    
-    float topLeftX = pos_.x - (taille_*scale)/2.0f;
-    float topLeftY = pos_.y - (taille_*scale)/2.0f;
-
-    painter.drawRect(QRectF(topLeftX, topLeftY, taille_ * scale, taille_ * scale));
-  std::vector<uint> usersId = this->getUserLists(worker);
-  std::unique_ptr<Reponse> rps;
-
-  rps = std::make_unique<ReponsePutPixelsSquare>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+  
+  if (liveProj->second.drawPixelRect(userId_, calqueId_, pos_.x, pos_.y, taille_, red_, green_, blue_, opa_)) {
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponsePutPixelsSquare>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 PutPixelsCircleMessage::PutPixelsCircleMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
@@ -200,32 +192,18 @@ PutPixelsCircleMessage::PutPixelsCircleMessage(sf::Packet& data_packet, std::sha
 }
 
 void PutPixelsCircleMessage::process(Worker& worker) {
-    uint scale = worker.mapProjet_.at(projectId_).getScale();
-    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
-    QPainter painter(&image);
-    QColor color(red_, green_, blue_, opa_);
-    QPolygonF polygon;
+  auto liveProj = worker.mapProjet_.find(projectId_);
 
-    for (int i = 0; i < 30; ++i) {
-
-        float angle = i * 2 * M_PI / 30;
-        float px = pos_.x + std::cos(angle) * taille_ * scale/ 2.0f;
-        float py = pos_.y + std::sin(angle) * taille_ * scale / 2.0f;
-        polygon << QPointF(px, py);
-    }
-
-    painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(color));
-
-    painter.drawPolygon(polygon);
-
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+  
+  if (liveProj->second.drawPixelCircle(userId_, calqueId_, pos_.x, pos_.y, taille_, red_, green_, blue_, opa_)) {
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
-
-  rps = std::make_unique<ReponsePutPixelsCircle>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+    rps = std::make_unique<ReponsePutPixelsCircle>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 PutPixelsDiamondMessage::PutPixelsDiamondMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
@@ -234,32 +212,18 @@ PutPixelsDiamondMessage::PutPixelsDiamondMessage(sf::Packet& data_packet, std::s
 }
 
 void PutPixelsDiamondMessage::process(Worker& worker) {
-    uint scale = worker.mapProjet_.at(projectId_).getScale();
-    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
-    QPainter painter(&image);
-    QColor color(red_, green_, blue_, opa_);
-    QPolygonF polygon;
+    auto liveProj = worker.mapProjet_.find(projectId_);
 
-    float h_demi = hauteur_ * scale/ 2.0f;
-    float l_demi = largeur_ * scale / 2.0f;
-    polygon << QPointF(pos_.x, pos_.y - h_demi);
-    polygon << QPointF(pos_.x + l_demi, pos_.y);
-    polygon << QPointF(pos_.x, pos_.y + h_demi);
-    polygon << QPointF(pos_.x - l_demi, pos_.y);
-
-    painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(color));
-
-    painter.drawPolygon(polygon);
-
-
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+  
+  if (liveProj->second.drawPixelDiam(userId_, calqueId_, pos_.x, pos_.y, hauteur_, largeur_, red_, green_, blue_, opa_)) {
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
-
-  rps = std::make_unique<ReponsePutPixelsDiamond>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+    rps = std::make_unique<ReponsePutPixelsDiamond>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 ErasePixelsSquareMessage::ErasePixelsSquareMessage(sf::Packet &data_packet,
@@ -269,23 +233,18 @@ ErasePixelsSquareMessage::ErasePixelsSquareMessage(sf::Packet &data_packet,
 }
 
 void ErasePixelsSquareMessage::process(Worker &worker) {
-    uint scale = worker.mapProjet_.at(projectId_).getScale();
-    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
-    QPainter painter(&image);
+  auto liveProj = worker.mapProjet_.find(projectId_);
 
-    painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(Qt::transparent));
-    
-    float topLeftX = pos_.x - (taille_*scale)/2.0f;
-    float topLeftY = pos_.y - (taille_*scale)/2.0f;
-
-    painter.drawRect(QRectF(topLeftX, topLeftY, taille_ * scale, taille_ * scale));  std::vector<uint> usersId = this->getUserLists(worker);
-  std::unique_ptr<Reponse> rps;
-
-  rps = std::make_unique<ReponseErasePixelsSquare>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+  
+  if (liveProj->second.erasePixelRect(userId_, calqueId_, pos_.x, pos_.y, taille_)) {
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseErasePixelsSquare>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 ErasePixelsCircleMessage::ErasePixelsCircleMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
@@ -294,31 +253,18 @@ ErasePixelsCircleMessage::ErasePixelsCircleMessage(sf::Packet& data_packet, std:
 }
 
 void ErasePixelsCircleMessage::process(Worker& worker) {
-    uint scale = worker.mapProjet_.at(projectId_).getScale();
-    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
-    QPainter painter(&image);
-    QPolygonF polygon;
+  auto liveProj = worker.mapProjet_.find(projectId_);
 
-    for (int i = 0; i < 30; ++i) {
-
-        float angle = i * 2 * M_PI / 30;
-        float px = pos_.x + std::cos(angle) * taille_ * scale/ 2.0f;
-        float py = pos_.y + std::sin(angle) * taille_ * scale / 2.0f;
-        polygon << QPointF(px, py);
-    }
-
-    painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(Qt::transparent));
-
-    painter.drawPolygon(polygon);
-
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+  
+  if (liveProj->second.erasePixelCircle(userId_, calqueId_, pos_.x, pos_.y, taille_)) {
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
-
-  rps = std::make_unique<ReponseErasePixelsCircle>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+    rps = std::make_unique<ReponseErasePixelsCircle>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 ErasePixelsDiamondMessage::ErasePixelsDiamondMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
@@ -327,30 +273,18 @@ ErasePixelsDiamondMessage::ErasePixelsDiamondMessage(sf::Packet& data_packet, st
 }
 
 void ErasePixelsDiamondMessage::process(Worker& worker) {
-    uint scale = worker.mapProjet_.at(projectId_).getScale();
-    QImage & image = worker.mapProjet_.at(projectId_).layersImage_[calqueId_];
-    QPainter painter(&image);
-    QPolygonF polygon;
+  auto liveProj = worker.mapProjet_.find(projectId_);
 
-    float h_demi = hauteur_ * scale/ 2.0f;
-    float l_demi = largeur_ * scale / 2.0f;
-    polygon << QPointF(pos_.x, pos_.y - h_demi);
-    polygon << QPointF(pos_.x + l_demi, pos_.y);
-    polygon << QPointF(pos_.x, pos_.y + h_demi);
-    polygon << QPointF(pos_.x - l_demi, pos_.y);
-
-    painter.setRenderHint(QPainter::Antialiasing, false);
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(Qt::transparent));
-
-    painter.drawPolygon(polygon);
-
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+  
+  if (liveProj->second.erasePixelDiam(userId_, calqueId_, pos_.x, pos_.y, hauteur_, largeur_)) {
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
-
-  rps = std::make_unique<ReponseErasePixelsDiamond>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+    rps = std::make_unique<ReponseErasePixelsDiamond>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 
@@ -478,7 +412,7 @@ void DisconnectMessage::process(Worker& worker) {
     
     if (itProject->second.removeConnection(userId_)) {
         std::unique_ptr<SaveTask> savetsk;
-        savetsk = std::make_unique<SaveTask>(itProject->first, std::move(itProject->second.getJson()), std::move(itProject->second.layersImage_));
+        savetsk = std::make_unique<SaveTask>(worker.mapProjet_.at(projectId_), projectId_);
         worker.pushSave(std::move(savetsk));
         //Message de sauvegarde de projet
         worker.mapProjet_.erase(projectId_);

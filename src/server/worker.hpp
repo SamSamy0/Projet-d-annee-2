@@ -42,6 +42,7 @@ public:
     }
 
     std::unordered_map<uint, LiveProject> mapProjet_;
+    ProjectsManager projManager_;
 
 
 
@@ -52,7 +53,7 @@ private:
     MutexQueue<Reponse>& repQueue_;
     MutexQueue<SaveTask>& saveQueue_;
     DatabaseManager dbManager_;
-    ProjectsManager projManager_;
+
     
 };
 
