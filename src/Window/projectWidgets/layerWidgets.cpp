@@ -261,10 +261,11 @@ void GameView::initLayerPanel() {
   removeLayerButton->getRenderer()->setRoundedBorderRadius(8);
   removeLayerButton->onClick([this]() {
     LayerType type = project->getMap()->getCurrentLayer()->getType();
+    uint layer_id = project->getMap()->getCurrentLayer()->getId();
     project->getMap()->deleteLayer();
     checkTypeTool(type);
     refreshLayerList();
-    app_.getNetwork().deleteLayer(project->getId(),project->getMap()->getCurrentLayer()->getId()); 
+    app_.getNetwork().deleteLayer(project->getId(),layer_id); 
   });
   layerPanel_->add(removeLayerButton);
   removeLayerButton->setTextSize(15);

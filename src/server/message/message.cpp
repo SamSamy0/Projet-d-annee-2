@@ -165,7 +165,7 @@ void CreateLayerMessage::process(Worker &worker){
 
 DeleteLayerMessage::DeleteLayerMessage(sf::Packet &data_packet, uint userId){
   userId_ = userId;
-  data_packet >>projectId_ >>calqueId_;
+  data_packet >>projectId_ >> calqueId_;
 }
 
 void DeleteLayerMessage::process(Worker &worker){
