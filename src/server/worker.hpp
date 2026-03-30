@@ -8,14 +8,16 @@
 #include "datamanager/projectsmanager.hpp"
 #include "reponse/reponse.hpp"
 #include "LiveProject.hpp"
+#include "savetask.hpp"
 
 class Worker {
 public:
-    explicit Worker(MutexQueue<IMessage>& d_queue, MutexQueue<Reponse>& r_queue);
+    explicit Worker(MutexQueue<IMessage>& d_queue, MutexQueue<Reponse>& r_queue, MutexQueue<SaveTask>& s_queue);
     ~Worker() = default;
     void run();
     void stop();
     void pushNetwork(std::unique_ptr<Reponse> rps);
+    void pushSave(std::unique_ptr<SaveTask> save);
 
     uint verifyLogin(const std::string& pseudo, const std::string& password);
     uint addUser(const std::string& pseudo, const std::string& password);
@@ -32,21 +34,26 @@ public:
     std::string generateShareToken(uint8_t role, uint projectId);
     bool checkShareToken(uint userId, std::string token);
 
-    bool createProjectJson(uint id, const std::string &projectName, uint width, uint height, uint scale);
     bool writeProjetJson(QJsonObject& jsonObject, uint id);
     QJsonObject loadProjectJson(uint id);
-    bool saveImage(uint id, const std::string &fileName, const QByteArray &data);
-    QByteArray getByteJson(uint projetId);
+
+    ProjectsManager& getProjMngr() {
+        return projManager_;
+    }
 
     std::unordered_map<uint, LiveProject> mapProjet_;
+    ProjectsManager projManager_;
+
+
 
 
 private:
     std::atomic<bool> mRunning_;
     MutexQueue<IMessage>& demQueue_;
     MutexQueue<Reponse>& repQueue_;
+    MutexQueue<SaveTask>& saveQueue_;
     DatabaseManager dbManager_;
-    ProjectsManager projManager_;
+
     
 };
 

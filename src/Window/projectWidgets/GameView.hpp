@@ -45,7 +45,7 @@ public:
   GameView(Application &app);
   ~GameView() override = default;
   void init() override;
-  void render() override;
+  void render();
   void handleEvents(const sf::Event &events) override;
 
 

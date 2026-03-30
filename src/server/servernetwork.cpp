@@ -63,6 +63,7 @@ void ServerNetworkManager::handleClientMessages() {
         }
         
         if (status == sf::Socket::Status::Disconnected || status == sf::Socket::Status::Error) {
+            messageQueu_.push(std::make_unique<DisconnectMessage>(client));
             selector_.remove(*client->sock);
             return true;
         }
@@ -78,6 +79,7 @@ void ServerNetworkManager::handleClientMessages() {
 void ServerNetworkManager::respond(){
     std::unique_ptr<Reponse> rps;
     while(mRunning_) {
+        std::cout << (int)mapUser_Socket_.size() << std::endl;
         rps = repQueu_.pop();
         rps->envoyer(*this);
     }
@@ -85,8 +87,6 @@ void ServerNetworkManager::respond(){
 
 
 void ServerNetworkManager::run() {
-    if (!start()) return;
-
     listenThread_ = std::thread(&ServerNetworkManager::listen, this);
 
     respond();

@@ -79,11 +79,12 @@ void MenuView::init() {
   // shareProjB->onPress(&MenuView::shareProj, this);
   // rightPanel->add(shareProjB);
   // std::cout <<"now token " <<shareToken <<std::endl;
-  // if (shareToken != "FFFFF") {
-  std::cout << "yes siiiir" << shareToken << std::endl;
-  rightPanel->add(displayToken());
-  // }
+  if (shareToken != "FFFFF") {
+    std::cout << "yes siiiir" << shareToken << std::endl;
+    rightPanel->add(displayToken());
+  }
 }
+void MenuView::clearProjList() { projectList.clear(); }
 void MenuView::handleEvents(const sf::Event &event) {
   auto &gui = app_.getGui();
   if (const auto *mouseClick = event.getIf<sf::Event::MouseButtonPressed>()) {

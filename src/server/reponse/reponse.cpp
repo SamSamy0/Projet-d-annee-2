@@ -6,8 +6,8 @@
 ReponseSolo::ReponseSolo(uint id) : userId_(id) {}
 
 void ReponseSolo::envoyer(ServerNetworkManager& servManage) {
-    auto client = servManage.map_.find(userId_);
-    if (client != servManage.map_.end()) {
+    auto client = servManage.mapUser_Socket_.find(userId_);
+    if (client != servManage.mapUser_Socket_.end()) {
         client->second->sock->send(dataPacket_);
     }
 }
@@ -27,9 +27,16 @@ ReponseAuth::ReponseAuth(std::shared_ptr<Client> client, uint id)
 void ReponseAuth::envoyer(ServerNetworkManager& servManage) {
     client_->sock->send(dataPacket_);
     
-    if (userId_ != 0) {
-        servManage.map_[userId_] = std::move(client_);
+    if (userId_ != 0 and userId_ != -1) {
+        servManage.mapUser_Socket_[userId_] = std::move(client_);
     }
+}
+
+ReponseDeconnection::ReponseDeconnection(uint id) : ReponseSolo(id) {}
+
+void ReponseDeconnection::envoyer(ServerNetworkManager& servManager) {
+    servManager.mapUser_Socket_.erase(userId_);
+
 }
 
 ReponseRenameProject::ReponseRenameProject(uint userId, uint projectId, std::string newName, bool success): ReponseSolo(userId){
@@ -86,8 +93,8 @@ ReponseGroupe::ReponseGroupe(std::vector<uint> usersId) : usersId_(std::move(use
 
 void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
     for (auto Id : usersId_) {
-        auto client = servManager.map_.find(Id);
-        if (client != servManager.map_.end()) {
+        auto client = servManager.mapUser_Socket_.find(Id);
+        if (client != servManager.mapUser_Socket_.end()) {
             client->second->sock->send(dataPacket_);
         }
     } 
@@ -109,21 +116,21 @@ ReponsePutPixelsCircle::ReponsePutPixelsCircle(std::vector<uint> usersId, PutPix
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
-    dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.taille_;
+    dataPacket_ << mess.taille_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ ;
 }
 
 ReponsePutPixelsSquare::ReponsePutPixelsSquare(std::vector<uint> usersId, PutPixelsSquareMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_SQUARE_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
-    dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.taille_;
+    dataPacket_  << mess.taille_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_;
 }
 
 ReponsePutPixelsDiamond::ReponsePutPixelsDiamond(std::vector<uint> usersId, PutPixelsDiamondMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_DIAM_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
-    dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ << mess.hauteur_ << mess.largeur_;
+    dataPacket_ << mess.hauteur_ << mess.largeur_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ ;
 }
 
 

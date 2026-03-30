@@ -29,10 +29,13 @@ DatabaseManager::DatabaseManager() {
         "PRIMARY KEY (user_id, project_id), "
         "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,"
         "FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE)");
-    query.exec("CREATE TABLE IF NOT EXISTS token ("
-               "tok TEXT, "
-               "role INTEGER, "
-               "projet_id INTEGER)");
+    query.exec(
+        "CREATE TABLE IF NOT EXISTS token ("
+        "tok TEXT UNIQUE, "
+        "role INTEGER, "
+        "project_id INTEGER, "
+        "isUsed BIT, "
+        "FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE)");
   }
 }
 
@@ -286,15 +289,17 @@ bool DatabaseManager::removeProject(const uint projectId) {
   return true;
 }
 
-bool DatabaseManager::saveToken(std::string token, uint8_t role,
-                                int projectId) {
+bool DatabaseManager::saveToken(std::string token, uint8_t role, int projectId,
+                                bool used) {
   QSqlQuery query;
   // query.prepare("INSERT INTO users (pseudo, password) VALUES (:p, :pw)");
   query.prepare(
-      "INSERT INTO token (tok, role, projet_id) VALUES (:t, :r, :pId)");
+      "INSERT INTO token (tok, role, project_id, isUsed) VALUES (:t, :r, :pId, "
+      ":u)");
   query.bindValue(":t", QString::fromStdString(token));
   query.bindValue(":r", static_cast<qlonglong>(role));
   query.bindValue(":pId", static_cast<qlonglong>(projectId));
+  query.bindValue(":u", static_cast<bool>(used));
 
   if (!query.exec()) {
     qDebug() << "Erreur creation token:" << query.lastError().text();
@@ -308,21 +313,32 @@ bool DatabaseManager::checkToken(uint userId, std::string token) {
   std::vector<ProjectEntry> projects;
   QSqlQuery query;
 
-  query.prepare("SELECT projet_id, role FROM token WHERE tok = :t");
+  // query.prepare("SELECT projet_id, role FROM token WHERE tok = :t");
+  query.prepare("SELECT isUsed, project_id, role FROM token WHERE tok = :t");
   query.bindValue(":t", QString::fromStdString(token));
 
+  // If token ok -> adding project to projectList
   if (query.exec() && query.next()) {
     // std::string original = query.value(0).toString().toStdString();
-    // std::cout <<"passed and comparing 1 " <<original <<" with " << token <<std::endl;
-    // Token is valid
-    // if (original == token) {
-      uint projId = query.value(0).toUInt();
-      int role = query.value(1).toInt();
-      addLink(userId, projId, role);
-    // } else {
-    //   return false;
-    // }
-    return true;
+    // std::cout <<"passed and comparing 1 " <<original <<" with " << token
+    // <<std::endl; Token is valid if (original == token) {
+    bool isUsed = query.value(0).toBool();
+    uint projId = query.value(1).toUInt();
+    int role = query.value(2).toInt();
+
+    if (!isUsed) {
+      if (addLink(userId, projId, role)) {
+        // mark isUsed to true
+        QSqlQuery queryUsed;
+        queryUsed.prepare("UPDATE token SET isUsed = 1 WHERE tok = :t");
+        queryUsed.bindValue(":t", QString::fromStdString(token));
+        queryUsed.exec();
+
+        return true;
+      } else {
+        qDebug() << "Ce token a déjà été utilisé !";
+      }
+    }
   }
   return false;
 }

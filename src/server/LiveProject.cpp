@@ -1,14 +1,290 @@
 #include "LiveProject.hpp"
+#include <algorithm>
+#include <QPainter>
+#include <QImage>
 
-LiveProject::LiveProject(QJsonObject json) : json_(std::move(json)) {
-    
+LiveProject::LiveProject(uint projId) {
+    ProjectsManager prjManager;
+    json_ = prjManager.loadProjectJson(projId);
     QJsonArray layers = json_["layers"].toArray();
     for (const QJsonValue &layerValue : layers) {
         if (layerValue.isObject()) {
             QJsonObject layerObj = layerValue.toObject();
 
             int id = layerObj["id"].toInt();
-            mapModif_[id];
+            if (layerObj["type"].toString().toStdString() == "pixel"){
+                layersImage_[id] = prjManager.loadImage(projId, id);
+            }
+            else {
+                layersSprite_[id];
+                setupLayerSprite(id, prjManager.loadSprite(projId, id));
+            }
         }
     }
+    scale_ = json_["scale"].toInt();
+
+}
+
+LiveProject::LiveProject(uint id, const QString &projectName, uint width, uint height, uint scale) {
+    QJsonObject firstLayer;
+    QJsonArray emptylayers;
+    
+    json_["id"] = static_cast<int>(id);
+    json_["name"] = projectName;
+    json_["width"] =  static_cast<int>(width);
+    json_["height"] =  static_cast<int>(height);
+    json_["scale"] = static_cast<int>(scale);
+    json_["layerId"] = (int)1;
+
+    firstLayer["type"] = "pixel";
+    firstLayer["id"] = 0;
+    firstLayer["x"] = 0;
+    firstLayer["y"] = 0;
+
+    scale_ = scale;
+
+    emptylayers.append(firstLayer);
+
+    json_["layers"] = emptylayers;
+    QImage image(width, height , QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+    layersImage_[0] = image;
+}
+
+void LiveProject::addConnection(uint userId, uint8_t role) {
+    auto it = std::find(connectedID_.begin(), connectedID_.end(), userId);
+    if (it == connectedID_.end()) {
+        connectedID_.push_back(userId);
+        usersRoles_[userId] = role;}
+}
+
+bool LiveProject::removeConnection(uint userId) {
+    auto it = std::find(connectedID_.begin(), connectedID_.end(), userId);
+    if (it != connectedID_.end()) {
+        
+        *it = connectedID_.back(); 
+        connectedID_.pop_back();
+    }
+
+    return connectedID_.empty();
+}
+
+QJsonObject& LiveProject::getJson() {
+    return json_;
+}
+
+std::vector<uint>& LiveProject::getConnected() {
+    return connectedID_;
+}
+
+void LiveProject::setupLayerSprite(uint LayerId, const QJsonArray& sprites){
+    if (layersSprite_.find(LayerId) != layersSprite_.end()) {
+        for (const QJsonValue& sprite : sprites){
+            if (sprite.isObject()) {
+                QJsonObject objetSprite = sprite.toObject();
+                Sprite srpiteOpt;
+                srpiteOpt.id = objetSprite["interId"].toInt();
+                srpiteOpt.nameId = objetSprite["nameId"].toString().toStdString();
+                srpiteOpt.x = objetSprite["x"].toInt();
+                srpiteOpt.y = objetSprite["y"].toInt();
+                srpiteOpt.taille = objetSprite["size"].toDouble();
+                layersSprite_[LayerId].push_back(srpiteOpt);
+            }
+        }
+    }
+
+}
+
+uint LiveProject::getScale() {
+    return scale_;
+}
+
+bool LiveProject::drawPixelRect(uint userId, uint calqueId, uint x, uint y, float taille,
+    uint8_t r, uint8_t g, uint8_t b, uint8_t op) {
+    
+    auto cleVal = usersRoles_.find(userId);
+    if (cleVal == usersRoles_.end()) {
+        return false;
+    }
+
+    if (cleVal->second != 0 ){
+        if (layersImage_.find(calqueId) != layersImage_.end()) {
+        QPainter painter(&layersImage_[calqueId]);
+        QColor color(r, g, b, op);
+        
+        painter.setRenderHint(QPainter::Antialiasing, false);
+        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(color));
+        float topLeftX = x - (taille*scale_)/2.0f;
+        float topLeftY = y - (taille*scale_)/2.0f;
+        
+        painter.drawRect(QRectF(topLeftX, topLeftY, taille * scale_, taille * scale_));
+        return true;
+        }
+    }
+    return false;
+}
+
+bool LiveProject::drawPixelCircle(uint userId, uint calqueId, uint x, uint y, float taille,
+    uint8_t r, uint8_t g, uint8_t b, uint8_t op) {
+    
+    auto cleVal = usersRoles_.find(userId);
+    if (cleVal == usersRoles_.end()) {
+        return false;
+    }
+
+    if (cleVal->second != 0 ){
+        if (layersImage_.find(calqueId) != layersImage_.end()) {
+            QPainter painter(&layersImage_[calqueId]);
+            QColor color(r, g, b, op);
+            QPolygonF polygon;
+
+            for (int i = 0; i < 30; ++i) {
+
+                float angle = i * 2 * M_PI / 30;
+                float px = x + std::cos(angle) * taille * scale_/ 2.0f;
+                float py = y + std::sin(angle) * taille * scale_ / 2.0f;
+                polygon << QPointF(px, py);
+        }
+
+        painter.setRenderHint(QPainter::Antialiasing, false);
+        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(color));
+
+        painter.drawPolygon(polygon);
+        return true;
+        }
+    }
+    return false;
+}
+
+bool LiveProject::drawPixelDiam(uint userId, uint calqueId, uint x, uint y, float h, float w, 
+    uint8_t r, uint8_t g, uint8_t b, uint8_t op) {
+
+    auto cleVal = usersRoles_.find(userId);
+    if (cleVal == usersRoles_.end()) {
+        return false;
+    }
+
+    if (cleVal->second != 0 ){
+        if (layersImage_.find(calqueId) != layersImage_.end()) {
+            QPainter painter(&layersImage_[calqueId]);
+            QColor color(r, g, b, op);
+            QPolygonF polygon;
+
+            float h_demi = h * scale_/ 2.0f;
+            float l_demi = w * scale_ / 2.0f;
+            polygon << QPointF(x, y - h_demi);
+            polygon << QPointF(x + l_demi, y);
+            polygon << QPointF(x, y + h_demi);
+            polygon << QPointF(x - l_demi, y);
+
+            painter.setRenderHint(QPainter::Antialiasing, false);
+            painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(QBrush(color));
+
+            painter.drawPolygon(polygon);
+            return true;
+        }
+    }
+    return false;
+}
+
+bool LiveProject::erasePixelRect(uint userId, uint calqueId, uint x, uint y, float taille) {
+    
+    auto cleVal = usersRoles_.find(userId);
+    if (cleVal == usersRoles_.end()) {
+        return false;
+    }
+
+    if (cleVal->second != 0 ){
+        if (layersImage_.find(calqueId) != layersImage_.end()) {
+            QPainter painter(&layersImage_[calqueId]);
+        
+            painter.setRenderHint(QPainter::Antialiasing, false);
+            painter.setCompositionMode(QPainter::CompositionMode_Source);
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(QBrush(Qt::transparent));
+            float topLeftX = x - (taille*scale_)/2.0f;
+            float topLeftY = y - (taille*scale_)/2.0f;
+        
+            painter.drawRect(QRectF(topLeftX, topLeftY, taille * scale_, taille * scale_));
+            return true;
+        }
+    }
+    return false;
+}
+
+bool LiveProject::erasePixelCircle(uint userId, uint calqueId, uint x, uint y, float taille) {
+    
+    auto cleVal = usersRoles_.find(userId);
+    if (cleVal == usersRoles_.end()) {
+        return false;
+    }
+
+    if (cleVal->second != 0 ){
+        if (layersImage_.find(calqueId) != layersImage_.end()) {
+            QPainter painter(&layersImage_[calqueId]);
+            QPolygonF polygon;
+
+            for (int i = 0; i < 30; ++i) {
+
+                float angle = i * 2 * M_PI / 30;
+                float px = x + std::cos(angle) * taille * scale_/ 2.0f;
+                float py = y + std::sin(angle) * taille * scale_ / 2.0f;
+                polygon << QPointF(px, py);
+            }
+
+            painter.setRenderHint(QPainter::Antialiasing, false);
+            painter.setCompositionMode(QPainter::CompositionMode_Source);
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(QBrush(Qt::transparent));
+
+            painter.drawPolygon(polygon);
+            return true;
+        }
+    }
+    return false;
+}
+
+bool LiveProject::erasePixelDiam(uint userId, uint calqueId, uint x, uint y, float h, float w) {
+
+    auto cleVal = usersRoles_.find(userId);
+    if (cleVal == usersRoles_.end()) {
+        return false;
+    }
+
+    if (cleVal->second != 0 ){
+        if (layersImage_.find(calqueId) != layersImage_.end()) {
+            QPainter painter(&layersImage_[calqueId]);
+            QPolygonF polygon;
+
+            float h_demi = h * scale_/ 2.0f;
+            float l_demi = w * scale_ / 2.0f;
+            polygon << QPointF(x, y - h_demi);
+            polygon << QPointF(x + l_demi, y);
+            polygon << QPointF(x, y + h_demi);
+            polygon << QPointF(x - l_demi, y);
+
+            painter.setRenderHint(QPainter::Antialiasing, false);
+            painter.setCompositionMode(QPainter::CompositionMode_Source);
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(QBrush(Qt::transparent));
+
+            painter.drawPolygon(polygon);
+            return true;
+        }
+    }
+    return false;
+}
+
+std::unordered_map<uint, std::vector<Sprite>>& LiveProject::getSpritesMap() {
+    return layersSprite_;
+}
+
+std::unordered_map<uint, QImage>& LiveProject::getImageMap() {
+    return layersImage_;
 }

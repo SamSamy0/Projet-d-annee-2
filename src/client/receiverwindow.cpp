@@ -27,22 +27,23 @@ void ReceiverInWindow::addProjectToList(ProjectData projet) {
   app_->addProjectList(projet);
 }
 
-void ReceiverInWindow::updateProjectNameInList(uint id, const std::string& newName){
-    app_->updateProjectNameInList(id, newName);
-    
+void ReceiverInWindow::updateProjectNameInList(uint id,
+                                               const std::string &newName) {
+  app_->updateProjectNameInList(id, newName);
 }
 
+void ReceiverInWindow::clearProjList() { app_->clearProjList(); }
 void ReceiverInWindow::updateCreatedProjectId(uint projId) {
-    app_->updateCreatedProjectId(projId);
+  app_->updateCreatedProjectId(projId);
 }
 
 void ReceiverInWindow::setState() {
   app_->changeView(std::make_unique<GameView>(*app_));
 }
 
-void ReceiverInWindow::updateShareToken(std::string token){
-  std::cout <<"token in receiverwindow" << token <<std::endl;
-    app_->updateShareToken(token);
+void ReceiverInWindow::updateShareToken(std::string token) {
+  std::cout << "token in receiverwindow" << token << std::endl;
+  app_->updateShareToken(token);
 }
 void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
                                       std::string name, uint id) {
@@ -62,7 +63,6 @@ void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,
                                       uint8_t r, uint8_t g, uint8_t b,
                                       uint8_t a, Shape shape, bool eraser,
                                       float size_x, float size_y) {
-
   ToolBar &toolbar = app_->getProject()->getToolBar();
   std::shared_ptr<Map> map = app_->getProject()->getMap();
   ToolType last_tool = toolbar.getSelected();
@@ -124,21 +124,20 @@ void ReceiverInWindow::shiftLayer(uint layer_id, int delta_x, int delta_y){
   ToolType last_tool = toolbar.getSelected();
   uint last_layer_id = map->getCurrentLayer()->getId();
   map->selectLayerId(layer_id);
-  if(map->getCurrentLayer()->getType() == SPRITELAYER){
+  if (map->getCurrentLayer()->getType() == SPRITELAYER) {
     toolbar.selectTool(SPRITESHIFT);
     std::shared_ptr<SpriteShift> shift =
         static_pointer_cast<SpriteShift>(toolbar.getSelectedTool());
-    shift->shift(sf::Vector2i(delta_x,delta_y));
-  }
-  else{toolbar.selectTool(PIXELSHIFT);
+    shift->shift(sf::Vector2i(delta_x, delta_y));
+  } else {
+    toolbar.selectTool(PIXELSHIFT);
     std::shared_ptr<PixelShift> shift =
         static_pointer_cast<PixelShift>(toolbar.getSelectedTool());
-    shift->shift(sf::Vector2i(delta_x,delta_y));
+    shift->shift(sf::Vector2i(delta_x, delta_y));
   }
 
   map->selectLayerId(last_layer_id);
   toolbar.selectTool(last_tool);
-
 }
 
 
