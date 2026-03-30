@@ -20,7 +20,9 @@ struct LiveProject {
     bool erasePixelRect(uint userId, uint calqueId, uint x, uint y, float taille);
     bool erasePixelCircle(uint userId, uint calqueId, uint x, uint y, float taille);
     bool erasePixelDiam(uint userId, uint calqueId, uint x, uint y, float h, float w);
-    
+    bool addCalquePixel(uint userId);
+    bool addCalqueSprite(uint userId);
+    bool addSprite(uint userId, uint calqueId_, std::string asset_id, uint x, uint y, float taille);
 
 
     uint getScale();
@@ -29,11 +31,15 @@ struct LiveProject {
 
     private :
     QJsonObject json_;
+    QJsonArray layers_;
     std::vector<uint> connectedID_;
     std::unordered_map<uint, int8_t> usersRoles_;
     std::unordered_map<uint, QImage> layersImage_;
     std::unordered_map<uint, std::vector<Sprite>> layersSprite_;
     uint scale_;
+    uint lastUsedLayerId_;
+    uint height_;
+    uint width_;
     void setupLayerSprite(uint layerId, const QJsonArray& sprite);
 
 };

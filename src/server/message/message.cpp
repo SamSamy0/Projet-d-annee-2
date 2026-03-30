@@ -293,14 +293,24 @@ PutSpriteMessage::PutSpriteMessage(sf::Packet &data_packet, std::shared_ptr<Clie
   userId_ = client->id;
   data_packet >> projectId_ >> calqueId_ >> asset_id >> pos_.x >> pos_.y >> taille_;
 
+  std::cout <<"envoyed à ce calque :" << calqueId_ << std::endl;
+
 }
 void PutSpriteMessage::process(Worker &worker){
+  auto liveProj = worker.mapProjet_.find(projectId_);
 
-  std::vector<uint> usersId = this->getUserLists(worker);
-  std::unique_ptr<Reponse> rps;
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
 
-  rps = std::make_unique<ReponsePutSprite>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+  if (liveProj->second.addSprite(userId_, calqueId_, asset_id, pos_.x, pos_.y, taille_)) {
+
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+
+    rps = std::make_unique<ReponsePutSprite>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 EraseSpriteSquareMessage::EraseSpriteSquareMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client){

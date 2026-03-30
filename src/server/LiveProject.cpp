@@ -6,8 +6,8 @@
 LiveProject::LiveProject(uint projId) {
     ProjectsManager prjManager;
     json_ = prjManager.loadProjectJson(projId);
-    QJsonArray layers = json_["layers"].toArray();
-    for (const QJsonValue &layerValue : layers) {
+    layers_ = json_["layers"].toArray();
+    for (const QJsonValue &layerValue : layers_) {
         if (layerValue.isObject()) {
             QJsonObject layerObj = layerValue.toObject();
 
@@ -22,33 +22,47 @@ LiveProject::LiveProject(uint projId) {
         }
     }
     scale_ = json_["scale"].toInt();
+    lastUsedLayerId_ = json_["layerId"].toInt();
+    width_ = json_["width"].toInt();
+    height_ = json_["height"].toInt();
 
 }
 
 LiveProject::LiveProject(uint id, const QString &projectName, uint width, uint height, uint scale) {
     QJsonObject firstLayer;
-    QJsonArray emptylayers;
+    QJsonObject secondLayer;
     
     json_["id"] = static_cast<int>(id);
     json_["name"] = projectName;
     json_["width"] =  static_cast<int>(width);
     json_["height"] =  static_cast<int>(height);
     json_["scale"] = static_cast<int>(scale);
-    json_["layerId"] = (int)1;
+    json_["layerId"] = (int)2;
 
     firstLayer["type"] = "pixel";
     firstLayer["id"] = 0;
     firstLayer["x"] = 0;
     firstLayer["y"] = 0;
 
+    secondLayer["type"] = "sprite"; //
+    secondLayer["id"] = 1;
+    secondLayer["x"] = 0;
+    secondLayer["y"] = 0;
+
     scale_ = scale;
+    lastUsedLayerId_ = 2;//
+    height_ = height;
+    width_ = width;
 
-    emptylayers.append(firstLayer);
+    layers_.append(firstLayer);
+    layers_.append(secondLayer);//
 
-    json_["layers"] = emptylayers;
+    json_["layers"] = layers_;
     QImage image(width, height , QImage::Format_ARGB32);
     image.fill(Qt::transparent);
     layersImage_[0] = image;
+
+    layersSprite_[1]; //
 }
 
 void LiveProject::addConnection(uint userId, uint8_t role) {
@@ -287,4 +301,76 @@ std::unordered_map<uint, std::vector<Sprite>>& LiveProject::getSpritesMap() {
 
 std::unordered_map<uint, QImage>& LiveProject::getImageMap() {
     return layersImage_;
+}
+
+bool LiveProject::addCalquePixel(uint userId) {
+
+    auto cleVal = usersRoles_.find(userId);
+    if (cleVal == usersRoles_.end()) {
+        return false;
+    }
+
+    if (cleVal->second != 0 ) {
+
+        QJsonObject newLayer;
+        newLayer["type"] = "pixel";
+        newLayer["id"] = static_cast<int>(lastUsedLayerId_);
+        newLayer["x"] = 0;
+        newLayer["y"] = 0;        
+
+        layers_.append(newLayer);
+        QImage image(width_, height_ , QImage::Format_ARGB32);
+        image.fill(Qt::transparent);
+        layersImage_[lastUsedLayerId_] = image;
+
+        lastUsedLayerId_ += 1;
+        json_["layerId"] = static_cast<int>(lastUsedLayerId_);
+        return true;
+    }
+
+    return false;
+}
+
+bool LiveProject::addCalqueSprite(uint userId) {
+
+    auto cleVal = usersRoles_.find(userId);
+    if (cleVal == usersRoles_.end()) {
+        return false;
+    }
+
+    if (cleVal->second != 0 ) {
+
+        QJsonObject newLayer;
+        newLayer["type"] = "sprite";
+        newLayer["id"] = static_cast<int>(lastUsedLayerId_);
+        newLayer["x"] = 0;
+        newLayer["y"] = 0;        
+
+        layers_.append(newLayer);
+        layersSprite_[lastUsedLayerId_];
+
+        lastUsedLayerId_ += 1;
+        json_["layerId"] = static_cast<int>(lastUsedLayerId_);
+        return true;
+    }
+    
+    return false;
+}
+
+bool LiveProject::addSprite(uint userId, uint calqueId, std::string asset_id, uint x, uint y, float taille) {
+    auto cleVal = usersRoles_.find(userId);
+    if (cleVal == usersRoles_.end()) {
+        return false;
+    }
+
+    if (cleVal->second != 0 ){
+        if (layersSprite_.find(calqueId) != layersSprite_.end()) {
+
+            Sprite sprite = {0, asset_id, taille, x, y};
+            layersSprite_[calqueId].push_back(std::move(sprite));
+
+            return true;
+        }
+    }
+    return false;
 }
