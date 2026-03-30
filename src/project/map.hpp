@@ -44,8 +44,8 @@ public:
   const sf::RenderTexture& getRenderTexture() const { return render_texture_; }
   void createPixelLayer();
   void createSpriteLayer();
-  void layerUp();
-  void layerDawn();
+  void layerUp(uint layerId);
+  void layerDawn(uint layerId);
   void deleteLayer();
   void deleteLayer(uint layer_id);
   void displayMap(sf::RenderWindow &window, sf::View &viewMap);

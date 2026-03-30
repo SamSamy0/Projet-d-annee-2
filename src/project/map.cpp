@@ -73,16 +73,53 @@ void Map::createSpriteLayer(){
     layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
 }
 
-  void Map::layerUp(){
-    if (selected_ == 0) return;
-    std::swap(layers_[selected_], layers_[selected_ - 1]);
-    selected_ -= 1;
+// void Map::layerUp(uint layerId){
+//     if (selected_ == 0) return;
+//     std::swap(layers_[selected_], layers_[selected_ - 1]);
+//     selected_ -= 1;
+// }
+
+void Map::layerDawn(uint layerId){
+    if (layers_.size() <= 1) return;
+    int j = -1;
+
+    for(int i = 0; i<layers_.size(); i++){
+        if(layers_[i]->getId() == layerId){
+            j = i;
+            break;
+        }
+    }
+    if(j >= 0 && j < layers_.size()-1){
+        std::swap(layers_[j],layers_[j+1]);
+        if(selected_ == j) selected_ +=1;
+        else if(selected_ == j+1) selected_ -= 1;
+    }
 }
-  void Map::layerDawn(){
-    if (selected_ >= layers_.size()-1) return;
-    std::swap(layers_[selected_], layers_[selected_ + 1]);
-    selected_ += 1;
+
+void Map::layerUp(uint layerId){
+    if (layers_.size() <= 1) return;
+    int j = -1;
+
+    for(int i = 0; i<layers_.size(); i++){
+        if(layers_[i]->getId() == layerId){
+            j = i;
+            break;
+        }
+    }
+    if(j > 0){
+        std::swap(layers_[j],layers_[j-1]);
+        if(selected_ == j) selected_ -=1;
+        else if(selected_ == j-1) selected_ += 1;
+    }
+
+
 }
+
+// void Map::layerDawn(uint layerId){
+//     if (selected_ >= layers_.size()-1) return;
+//     std::swap(layers_[selected_], layers_[selected_ + 1]);
+//     selected_ += 1;
+// }
 
 
 void Map::deleteLayer(uint layer_id){
