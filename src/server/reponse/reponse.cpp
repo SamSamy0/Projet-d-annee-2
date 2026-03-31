@@ -111,6 +111,15 @@ ReponseDeleteLayer::ReponseDeleteLayer(std::vector<uint> usersId, DeleteLayerMes
     dataPacket_ << mess.projectId_ << mess.calqueId_;
 }
 
+ReponseOrganizeLayerUp::ReponseOrganizeLayerUp(std::vector<uint> usersId, OrganizeLayerUpMessage& mess) :ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ORGANIZE_LAYER_UP_REP);
+    dataPacket_ << mess.projectId_ << mess.calqueId_;
+}
+
+ReponseOrganizeLayerDawn::ReponseOrganizeLayerDawn(std::vector<uint> usersId, OrganizeLayerDawnMessage& mess) :ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ORGANIZE_LAYER_DAWN_REP);
+    dataPacket_ << mess.projectId_ << mess.calqueId_;
+}
 
 ReponsePutPixelsCircle::ReponsePutPixelsCircle(std::vector<uint> usersId, PutPixelsCircleMessage& mess) : ReponseGroupe(usersId) {
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP);

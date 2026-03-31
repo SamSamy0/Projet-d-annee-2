@@ -144,9 +144,10 @@ void GameView::initLayerPanel() {
   goUpLayer->getRenderer()->setBorders({0});
   goUpLayer->getRenderer()->setRoundedBorderRadius(8);
   goUpLayer->onClick([this]() {
+    uint layer_id = project->getMap()->getCurrentLayer()->getId();
     project->getMap()->layerDawn(project->getMap()->getCurrentLayer()->getId());
+    app_.getNetwork().layerDawn(project->getId(),layer_id); 
     refreshLayerList();
-    app_.getNetwork(); //TODO:SYNCHRO
 
   });
   layerPanel_->add(goUpLayer);
@@ -161,8 +162,9 @@ void GameView::initLayerPanel() {
   goDownLayer->getRenderer()->setBorders({0});
   goDownLayer->getRenderer()->setRoundedBorderRadius(8);
   goDownLayer->onClick([this]() {
+    uint layer_id = project->getMap()->getCurrentLayer()->getId();
     project->getMap()->layerUp(project->getMap()->getCurrentLayer()->getId());
-    app_.getNetwork(); //TODO:SYNCHRO
+    app_.getNetwork().layerUp(project->getId(),layer_id); 
     refreshLayerList();
   });
   layerPanel_->add(goDownLayer);
@@ -380,4 +382,14 @@ void GameView::refreshLayerList() {
     project->getMap()->deleteLayer(layer_id);
     checkTypeTool(type);
     refreshLayerList();
+}
+
+
+void GameView::layerUp(uint layer_id){
+  project->getMap()->layerUp(layer_id);
+  refreshLayerList();
+}
+void GameView::layerDawn(uint layer_id){
+  project->getMap()->layerDawn(layer_id);
+  refreshLayerList();
 }

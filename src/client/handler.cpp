@@ -159,6 +159,22 @@ void ClientHandler::process(ServerEvent &event) {
     break;
     }
 
+    case MsgProtocole::MAP_ORGANIZE_LAYER_UP_REP:{
+    uint project_id;
+    uint current_layer_id;
+    *(event.data_packet_) >> project_id >> current_layer_id;
+    handleWindow_.layerUp(current_layer_id);
+    break;
+    }
+
+    case MsgProtocole::MAP_ORGANIZE_LAYER_DAWN_REP:{
+    uint project_id;
+    uint current_layer_id;
+    *(event.data_packet_) >> project_id >> current_layer_id;
+    handleWindow_.layerDawn(current_layer_id);
+    break;
+}
+
   case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP: {
     uint project_id;
     uint layer_id;

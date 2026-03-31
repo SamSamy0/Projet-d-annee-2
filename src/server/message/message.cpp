@@ -203,8 +203,47 @@ void DeleteLayerMessage::process(Worker &worker){
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseDeleteLayer>(usersId, *this);
   worker.pushNetwork(std::move(rps));
+
 }
 
+
+OrganizeLayerDawnMessage::OrganizeLayerDawnMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client){
+  userId_ = client->id;
+  data_packet >>projectId_ >> calqueId_;
+}
+void OrganizeLayerDawnMessage::process(Worker &worker){
+  auto liveProj = worker.mapProjet_.find(projectId_);
+
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+
+  //TODO: la condition avec liveproj
+  std::vector<uint> usersId = this->getUserLists(worker);
+  std::unique_ptr<Reponse> rps;
+  rps = std::make_unique<ReponseOrganizeLayerDawn>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+}
+
+
+OrganizeLayerUpMessage::OrganizeLayerUpMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client){
+  userId_ = client->id;
+  data_packet >>projectId_ >> calqueId_;
+}
+
+void OrganizeLayerUpMessage::process(Worker &worker){
+  auto liveProj = worker.mapProjet_.find(projectId_);
+
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+
+  //TODO: la condition avec liveproj
+  std::vector<uint> usersId = this->getUserLists(worker);
+  std::unique_ptr<Reponse> rps;
+  rps = std::make_unique<ReponseOrganizeLayerUp>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+}
 
 
 PutPixelsSquareMessage::PutPixelsSquareMessage(sf::Packet &data_packet,
@@ -506,6 +545,12 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
 
   case MsgProtocole::MAP_CREATE_LAYER_REQ:
     return std::make_unique<CreateLayerMessage>(data_packet, c);
+
+  case MsgProtocole::MAP_ORGANIZE_LAYER_UP_REQ:
+    return std::make_unique<OrganizeLayerUpMessage>(data_packet,c);
+
+  case MsgProtocole::MAP_ORGANIZE_LAYER_DAWN_REQ:
+    return std::make_unique<OrganizeLayerDawnMessage>(data_packet,c);
 
   case MsgProtocole::MAP_REMOVE_LAYER_REQ:
     return std::make_unique<DeleteLayerMessage>(data_packet,c);

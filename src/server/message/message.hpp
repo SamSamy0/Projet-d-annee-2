@@ -106,6 +106,17 @@ struct DeleteLayerMessage : ModifProjetMessage{
   void process(Worker &worker) override;
 };
 
+struct OrganizeLayerUpMessage : ModifProjetMessage{
+  OrganizeLayerUpMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
+  void process(Worker &worker) override;
+};
+
+
+struct OrganizeLayerDawnMessage : ModifProjetMessage{
+  OrganizeLayerDawnMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
+  void process(Worker &worker) override;
+};
+
 struct PutPixelsMessage : ModifProjetMessage {
   sf::Vector2u pos_;
   uint8_t red_;

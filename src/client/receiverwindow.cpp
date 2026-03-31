@@ -59,6 +59,15 @@ void ReceiverInWindow::deleteLayer(uint current_layer_id){
   dynamic_cast<GameView*>(app_->getCurrentView().get())->deleteLayer(current_layer_id);
 }
 
+void ReceiverInWindow::layerUp(uint layer_id){
+  dynamic_cast<GameView*>(app_->getCurrentView().get())->layerUp(layer_id);
+}
+
+void ReceiverInWindow::layerDawn(uint layer_id){
+  dynamic_cast<GameView*>(app_->getCurrentView().get())->layerDawn(layer_id);
+}
+
+
 void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,
                                       uint8_t r, uint8_t g, uint8_t b,
                                       uint8_t a, Shape shape, bool eraser,
