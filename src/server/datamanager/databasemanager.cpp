@@ -269,6 +269,8 @@ bool DatabaseManager::removeLink(const uint userId, const uint projectId) {
   query.prepare("DELETE FROM links WHERE user_id = :uId AND project_id = :pId");
   query.bindValue(":uId", userId);
   query.bindValue(":pId", projectId);
+  std::cout << "removing user : " << userId << " from project: " << projectId
+            << std::endl;
 
   if (!query.exec()) {
     qDebug() << "Erreur suppression lien:" << query.lastError().text();

@@ -27,8 +27,8 @@ void GameView::init() {
 }
 
 void GameView::displayMemberList() {
-  std::cout << "Génération de la popup !" << std::endl;
   auto &gui = app_.getGui();
+  auto &manager = app_.getNetwork();
 
   if (gui.get("memberListPopup")) {
     gui.remove(gui.get("memberListPopup"));
@@ -42,7 +42,7 @@ void GameView::displayMemberList() {
   gui.add(parent, "memberListPopup");
 
   // Title
-  auto title = tgui::Label::create("Membres du projet");
+  auto title = tgui::Label::create("Choisissez un nouveau propriétaire");
   title->setPosition("center", "5%");
   title->setTextSize(24);
   title->getRenderer()->setTextColor(sf::Color::White);
@@ -68,6 +68,9 @@ void GameView::displayMemberList() {
   parent->add(panel);
 
   for (int i = 0; i < (int)allUsers_.size(); i++) {
+    if (allUsers_[i].pseudo == currentUser.getUser()) {
+      continue;
+    }
     auto row = tgui::Panel::create();
     row->setSize("96%", 56);
     row->setPosition("2%", i * 64);
@@ -76,21 +79,45 @@ void GameView::displayMemberList() {
     panel->add(row);
 
     // Pseudo
-    auto label = tgui::Label::create(allUsers_[i].pseudo);
+    std::string pseudo = allUsers_[i].pseudo;
+    int8_t userId = allUsers_[i].userId;
+    auto label = tgui::Label::create(pseudo);
     label->setPosition(20, "center");
     label->setTextSize(18);
     label->getRenderer()->setTextColor(sf::Color(220, 220, 235));
     row->add(label);
+
+    // Clickable
+    auto clickable = tgui::Button::create();
+    clickable->setSize("100%", "100%");
+    clickable->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+    clickable->getRenderer()->setBackgroundColorHover(
+        tgui::Color(255, 255, 255, 20));
+    clickable->getRenderer()->setRoundedBorderRadius(8);
+    Project *proj = project;
+    clickable->onPress([this, pseudo, userId, proj, &manager] {
+      std::cout << "click on " << pseudo;
+      std::cout << " id is " << static_cast<int>(userId) << std::endl;
+      manager.changeRole(userId, project->getId(), 2);
+      // BUG: Mauvais id du user
+      app_.getNetwork().leaveProject(project->getId());
+      app_.getNetwork().getProjectList();
+      app_.changeView(std::make_unique<MenuView>(app_));
+
+      // Get user by pseudo
+      // Ask server to change owner (and to delete current Owner)
+    });
 
     std::string nomRole = (allUsers_[i].role == 1) ? "Editeur" : "Spectateur";
     if (allUsers_[i].role == 2)
       nomRole = "Propriétaire";
 
     auto labelRole = tgui::Label::create(nomRole);
-    labelRole->setPosition("100% - 150", "center");
+    labelRole->setPosition("100% - 300", "center");
     labelRole->setTextSize(14);
     labelRole->getRenderer()->setTextColor(sf::Color(140, 140, 160));
     row->add(labelRole);
+    row->add(clickable);
   }
 }
 void GameView::clearMemberList() { allUsers_.clear(); }

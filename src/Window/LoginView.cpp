@@ -83,7 +83,7 @@ void LoginView::init() {
 void LoginView::login(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   auto &manager = app_.getNetwork();
   auto &currentUser_ = app_.getUser();
-  currentUser_ = User(static_cast<std::string>(usrname->getText()));
+  currentUser_ = User(static_cast<std::string>(usrname->getText()), 0);
   manager.login(static_cast<std::string>(usrname->getText()),
                 static_cast<std::string>(pswd->getText()));
 }
@@ -95,23 +95,27 @@ void LoginView::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   // NOTE: I have to put the condition username 3-15 car
 
   if (usrname->getText() != "") {
-    currentUser_ = User(static_cast<std::string>(usrname->getText()));
+    currentUser_ = User(static_cast<std::string>(usrname->getText()), 0);
     manager.askRegister(static_cast<std::string>(usrname->getText()),
                         static_cast<std::string>(pswd->getText()));
     std::cout << usrname->getText() << "   " << pswd->getText() << std::endl;
   }
 }
-void LoginView::showError(const std::string& message) {
-  auto& gui = app_.getGui();
+void LoginView::showError(const std::string &message) {
+  auto &gui = app_.getGui();
   auto back = gui.get<tgui::Panel>("Main login");
-  if (!back) return;
+  if (!back)
+    return;
   auto errorLabel = back->get<tgui::Label>("ErrorLabel");
-  if (!errorLabel) return;
+  if (!errorLabel)
+    return;
   errorLabel->setText(message);
   auto usrname = back->get<tgui::EditBox>("Username");
   auto pswd = back->get<tgui::EditBox>("Password");
-  if (usrname) usrname->setText("");
-  if (pswd) pswd->setText("");
+  if (usrname)
+    usrname->setText("");
+  if (pswd)
+    pswd->setText("");
 }
 
 void LoginView::handleEvents(const sf::Event &event) {

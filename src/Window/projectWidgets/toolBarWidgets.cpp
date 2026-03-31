@@ -240,8 +240,6 @@ void GameView::initToolbar() {
       app_.getNetwork().delProject(project->getId());
       app_.getNetwork().getProjectList();
       app_.changeView(std::make_unique<MenuView>(app_));
-      // dynamic_cast<MenuView *>(app_.getCurrentView().get())
-      //     ->deleteProject(project->getId());
     }
   });
 

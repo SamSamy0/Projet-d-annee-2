@@ -14,10 +14,12 @@ void ReponseSolo::envoyer(ServerNetworkManager &servManage) {
 ReponseAuth::ReponseAuth(std::shared_ptr<Client> client, uint id)
     : ReponseSolo(id), client_(std::move(client)) {
   dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::AUTH_RESULT);
+  // If ID didn't generate
   if (id == -1) {
     dataPacket_ << static_cast<std::uint8_t>(0);
+    // If ID generated
   } else {
-    dataPacket_ << static_cast<std::uint8_t>(1);
+    dataPacket_ << static_cast<std::uint8_t>(1) << static_cast<uint>(id);
     client_->id = id;
   }
 }

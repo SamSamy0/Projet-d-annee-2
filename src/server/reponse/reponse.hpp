@@ -45,6 +45,10 @@ struct ReponseGenerateToken : ReponseSolo {
   ReponseGenerateToken(uint userId_, std::string token);
 };
 
+struct ReponseChangeRole : ReponseSolo {
+  ReponseChangeRole(uint userId_, uint target, uint projectId_, int8_t role);
+};
+
 struct ReponseJoinProject : ReponseSolo {
   ReponseJoinProject(uint userId_, bool success);
 };

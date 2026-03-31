@@ -37,6 +37,8 @@ void ReceiverInWindow::clearMemberList() {
   dynamic_cast<GameView *>(app_->getCurrentView().get())->clearMemberList();
 }
 
+void ReceiverInWindow::setUserId(uint newId) { app_->setUserId(newId); }
+
 void ReceiverInWindow::updateCreatedProjectId(uint projId) {
   app_->updateCreatedProjectId(projId);
 }

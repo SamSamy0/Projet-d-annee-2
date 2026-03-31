@@ -70,11 +70,27 @@ struct GetProjectsListMessage : IMessage {
   void process(Worker &worker) override;
 };
 
+struct ChangeRoleMessage : IMessage {
+  uint userId_;
+  uint target_;
+  uint projectId_;
+  int8_t role_;
+  ChangeRoleMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+
 struct DeleteProjectMessage : IMessage {
   uint userId_;
   uint projectId_;
 
   DeleteProjectMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+
+struct LeaveProjectMessage : IMessage {
+  uint userId_;
+  uint projectId_;
+  LeaveProjectMessage(sf::Packet &dataPacket, uint userId);
   void process(Worker &worker) override;
 };
 

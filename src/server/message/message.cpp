@@ -112,13 +112,23 @@ void DeleteProjectMessage::process(Worker &worker) {
     worker.removeLink(userId_, projectId_);
   }
 }
-// void LoginMessage::process(Worker &worker) {
-//    uint id = worker.verifyLogin(this->pseudo_, this->password_);
-//
-//    std::unique_ptr<Reponse> rps;
-//    rps = std::make_unique<ReponseAuth>(std::move(client_), id);
-//    worker.pushNetwork(std::move(rps));
-//  }
+
+ChangeRoleMessage::ChangeRoleMessage(sf::Packet &data_packet, uint userId) {
+  userId_ = userId;
+  data_packet >> target_ >> projectId_ >> role_;
+}
+
+void ChangeRoleMessage::process(Worker &worker) {
+  worker.changeRole(target_, projectId_, role_);
+}
+
+LeaveProjectMessage::LeaveProjectMessage(sf::Packet &data_packet, uint userId) {
+  userId_ = userId;
+  data_packet >> projectId_;
+}
+void LeaveProjectMessage::process(Worker &worker) {
+  worker.removeLink(userId_, projectId_);
+}
 
 GetMemberMessage::GetMemberMessage(sf::Packet &data_packet, uint userId) {
   userId_ = userId;
@@ -409,14 +419,24 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::MAP_MOV_LAYER_REQ:
     return std::make_unique<MoveLayerMessage>(data_packet, c->id);
+
   case MsgProtocole::MAP_PUT_SPRITE_REQ:
     return std::make_unique<PutSpriteMessage>(data_packet, c->id);
+
   case MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REQ:
     return std::make_unique<EraseSpriteSquareMessage>(data_packet, c->id);
+
   case MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REQ:
     return std::make_unique<EraseSpriteCircleMessage>(data_packet, c->id);
+
   case MsgProtocole::MAP_ERASE_SPRITE_DIAM_REQ:
     return std::make_unique<EraseSpriteDiamondMessage>(data_packet, c->id);
+
+  case MsgProtocole::PROJ_CHANGE_ROLE_REQ:
+    return std::make_unique<ChangeRoleMessage>(data_packet, c->id);
+
+  case MsgProtocole::PROJ_LEAVE_PROJ_REQ:
+    return std::make_unique<LeaveProjectMessage>(data_packet, c->id);
 
   default:
     std::cout << "pas de message" << std::endl;

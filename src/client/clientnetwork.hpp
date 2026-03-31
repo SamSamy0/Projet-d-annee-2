@@ -28,6 +28,8 @@ public:
   void delProject(uint project_id);
   void getProjectData(uint project_id);
   void joinProject(std::string project_code);
+  void leaveProject(uint project_id);
+  void changeRole(uint userId, uint projectId, int8_t role);
 
   void drawSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size,
                   uint8_t r, uint8_t g, uint8_t b, uint8_t a);
@@ -42,10 +44,14 @@ public:
                    float size);
   void eraseDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y,
                     float size_x, float size_y);
-  void drawSprite(uint proj_id, uint layer_id, std::string asset_id, int pos_x, int pos_y, float size_x);
-  void eraseSpriteSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size);
-  void eraseSpriteCircle(uint proj_id, uint layer_id, int pos_x, int pos_y, float size);
-  void eraseSpriteDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y, float size_x, float size_y);
+  void drawSprite(uint proj_id, uint layer_id, std::string asset_id, int pos_x,
+                  int pos_y, float size_x);
+  void eraseSpriteSquare(uint proj_id, uint layer_id, int pos_x, int pos_y,
+                         float size);
+  void eraseSpriteCircle(uint proj_id, uint layer_id, int pos_x, int pos_y,
+                         float size);
+  void eraseSpriteDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y,
+                          float size_x, float size_y);
 
   void shiftLayer(uint proj_id, uint layer_id, int delta_x, int delta_y);
 

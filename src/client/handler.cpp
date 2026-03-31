@@ -23,8 +23,10 @@ void ClientHandler::process(ServerEvent &event) {
   switch (event.message_type_) {
   case MsgProtocole::AUTH_RESULT: {
     uint8_t accept;
-    *(event.data_packet_) >> accept;
+    uint userId;
+    *(event.data_packet_) >> accept >> userId;
     handleWindow_.switchConnectState(accept);
+    handleWindow_.setUserId(userId);
     break;
   }
 
@@ -148,6 +150,15 @@ void ClientHandler::process(ServerEvent &event) {
       memberList.push_back(member);
     }
     handleWindow_.setMemberList(memberList);
+    break;
+  }
+
+  case MsgProtocole::PROJ_CHANGE_ROLE_REP: {
+    bool sucess;
+    *(event.data_packet_) >> sucess;
+    if (sucess) {
+      std::cout << "Congrats your the new owner" << std::endl;
+    }
     break;
   }
 

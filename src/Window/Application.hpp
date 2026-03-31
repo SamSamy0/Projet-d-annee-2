@@ -33,6 +33,7 @@ public:
   void updateCreatedProjectId(uint32_t projId);
   void updateShareToken(std::string newToken);
   void setCurrentProjRole(int8_t role) { currentProjRole = role; };
+  void setUserId(uint userId) { currentUser_.setId(userId); }
 
   void changeView(std::unique_ptr<View> newView);
   void showLoginError(const std::string &message);

@@ -15,6 +15,7 @@ public:
   ReceiverInWindow(Application &w);
   // Method on Window
   void switchConnectState(uint8_t connect);
+  void setUserId(uint newId);
   void addProjectToList(ProjectData projet);
   void updateProjectNameInList(uint id, const std::string &name);
   void updateCreatedProjectId(uint ProjectId);
