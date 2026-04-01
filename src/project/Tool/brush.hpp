@@ -17,6 +17,5 @@ public:
   void onDrag(sf::Vector2i pos);
   void onRelease();
   virtual void paintSender(sf::Vector2i pos) = 0;
-  virtual void paint(sf::Vector2i pos) = 0;
   virtual ~Brush() = default;
 };

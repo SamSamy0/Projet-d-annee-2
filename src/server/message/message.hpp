@@ -178,35 +178,17 @@ struct ErasePixelsDiamondMessage : ErasePixelsMessage {
 struct PutSpriteMessage : ModifProjetMessage{
   sf::Vector2u pos_;
   float taille_;
-  std::string asset_id;
+  std::string asset_id_;
   PutSpriteMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };
 
 struct EraseSpriteMessage : ModifProjetMessage{
-  sf::Vector2u pos_;
-};
-
-struct EraseSpriteSquareMessage : EraseSpriteMessage{
-  float taille_;
-  EraseSpriteSquareMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
+  uint sprite_id_;
+  EraseSpriteMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };
 
-struct EraseSpriteCircleMessage : EraseSpriteMessage{
-  float taille_;
-
-  EraseSpriteCircleMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
-  void process(Worker &worker) override;
-};
-
-struct EraseSpriteDiamondMessage : EraseSpriteMessage{
-  float hauteur_;
-  float largeur_;
-
-  EraseSpriteDiamondMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
-  void process(Worker& worker) override;
-};
 
 struct MoveLayerMessage : ModifProjetMessage {
   int deltaX_;

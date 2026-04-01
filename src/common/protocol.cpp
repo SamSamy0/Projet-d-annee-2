@@ -41,12 +41,8 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::MAP_IMPORT_SPRITE_REP: return "MAP_IMPORT_SPRITE_REP";
         case MsgProtocole::MAP_PUT_SPRITE_REQ: return "MAP_PUT_SPRITE_REQ";
         case MsgProtocole::MAP_PUT_SPRITE_REP: return "MAP_PUT_SPRITE_REP";
-        case MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REQ: return"MAP_ERASE_SPRITE_CIRCLE_REQ";
-        case MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REP: return "MAP_ERASE_SPRITE_CIRCLE_REP";
-        case MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REQ:return "MAP_ERASE_SPRITE_SQUARE_REQ";
-        case MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REP:return "MAP_ERASE_SPRITE_SQUARE_REP";
-        case MsgProtocole::MAP_ERASE_SPRITE_DIAM_REQ:return "MAP_ERASE_SPRITE_DIAM_REQ";
-        case MsgProtocole::MAP_ERASE_SPRITE_DIAM_REP:return "MAP_ERASE_SPRITE_DIAM_REP";
+        case MsgProtocole::MAP_ERASE_SPRITE_REQ:return "MAP_ERASE_SPRITE_REQ";
+        case MsgProtocole::MAP_ERASE_SPRITE_REP:return "MAP_ERASE_SPRITE_REP";
         case MsgProtocole::MAP_MOV_SPRITE_REQ: return "MAP_MOV_SPRITE_REQ";
         case MsgProtocole::MAP_MOV_SPRITE_REP: return "MAP_MOV_SPRITE_REP";
         case MsgProtocole::MAP_ROTATE_SPRITE_REQ: return "MAP_ROTATE_SPRITE_REQ";

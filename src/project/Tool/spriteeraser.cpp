@@ -50,16 +50,16 @@ bool SpriteEraser::checkColision(sf::Vector2i pos, sf::FloatRect r) {
   }
 }
 
-void SpriteEraser::paint(sf::Vector2i pos) {
+int SpriteEraser::paint(sf::Vector2i pos) {
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
   if (layer->getType() != SPRITELAYER)
-    return;
+    return -1;
 
   std::shared_ptr<SpriteLayer> spritelayer =
       static_pointer_cast<SpriteLayer>(layer);
 
   if (!spritelayer)
-    return;
+    return -1;
 
   /*I had two choices : use the id or the index of the sprite
    * i chosed to use the id because its cleaner more logical even if complexity
@@ -69,29 +69,18 @@ void SpriteEraser::paint(sf::Vector2i pos) {
 
   for (int i = sprites.size() - 1; i >= 0; i--) {
     if (checkColision(pos, sprites[i].sprite.getGlobalBounds())) {
+      uint id = sprites[i].id;
       spritelayer->erase(sprites[i].id);
+      return id;
       break;
     }
   }
+  return -1;
 }
 
 void SpriteEraser::paintSender(sf::Vector2i pos) {
-  paint(pos);
-  switch (shape_) {
-  case SQUARE: {
-    manager_.eraseSpriteSquare(map_->getId(), map_->getCurrentLayer()->getId(),
-                               pos.x, pos.y, getSize().x);
-    break;
-  }
-  case CIRCLE: {
-    manager_.eraseSpriteCircle(map_->getId(), map_->getCurrentLayer()->getId(),
-                               pos.x, pos.y, getSize().x);
-    break;
-  }
-  case DIAMOND: {
-    manager_.eraseSpriteDiamond(map_->getId(), map_->getCurrentLayer()->getId(),
-                               pos.x, pos.y, getSize().x, getSize().y);
-    break;
-  }
-  }
+  int id = paint(pos);
+  if(id != -1){
+    manager_.eraseSprite(map_->getId(), map_->getCurrentLayer()->getId(),id);
+}
 }

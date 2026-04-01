@@ -53,6 +53,15 @@ unsigned int Map::getScale() const { return scale_; }
 
 vector<shared_ptr<Layer>>& Map::getLayers() { return layers_; }
 
+shared_ptr<Layer> Map::getLayer(uint id){
+    for (size_t i = 0; i < layers_.size(); ++i) {
+        if (layers_[i]->getId() == id) {
+            return layers_[i];
+            break;
+        }
+    }
+    return nullptr;
+}
 
 void Map::createPixelLayer(){
     int n = layers_.size() + 1;

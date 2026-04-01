@@ -322,13 +322,12 @@ void ClientNetworkManager::drawSprite(uint proj_id, uint layer_id, std::string a
               << std::endl;
 }
 
-void ClientNetworkManager::eraseSpriteSquare(uint proj_id, uint layer_id,
-                                             int pos_x, int pos_y, float size) {
+void ClientNetworkManager::eraseSprite(uint proj_id, uint layer_id, uint sprite_id) {
   sf::Packet packet;
-  MsgProtocole msg = MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REQ;
+  MsgProtocole msg = MsgProtocole::MAP_ERASE_SPRITE_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << pos_x<<pos_y<<size ;
+  packet << proj_id << layer_id << sprite_id ;
 
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
@@ -336,30 +335,3 @@ void ClientNetworkManager::eraseSpriteSquare(uint proj_id, uint layer_id,
               << std::endl;
 }
 
-void ClientNetworkManager::eraseSpriteCircle(uint proj_id, uint layer_id,
-                                             int pos_x, int pos_y, float size){
-
-  sf::Packet packet;
-  MsgProtocole msg = MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REQ;
-
-  packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << pos_x<<pos_y<<size ;
-
-  if (socket_.send(packet) != sf::Socket::Status::Done)
-    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
-              << std::endl;
-}
-void ClientNetworkManager::eraseSpriteDiamond(uint proj_id, uint layer_id,
-                                              int pos_x, int pos_y,
-                                              float size_x, float size_y) {
-
-  sf::Packet packet;
-  MsgProtocole msg = MsgProtocole::MAP_ERASE_SPRITE_DIAM_REQ;
-
-  packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << pos_x<<pos_y<<size_x<<size_y ;
-
-  if (socket_.send(packet) != sf::Socket::Status::Done)
-    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
-              << std::endl;
-}

@@ -1,10 +1,10 @@
 #include "receiverwindow.hpp"
 #include "../Window/MenuView.hpp"
 #include "../Window/projectWidgets/GameView.hpp"
+#include "../project/Layer/spritelayer.hpp"
 #include "../project/Tool/pixelbrush.hpp"
 #include "../project/Tool/pixelshift.hpp"
 #include "../project/Tool/spriteshift.hpp"
-#include "../project/Tool/spriteeraser.hpp"
 #include "../project/Tool/spritebrush.hpp"
 #include "../project/Tool/tool.hpp"
 #include "../project/project.hpp"
@@ -150,31 +150,9 @@ void ReceiverInWindow::shiftLayer(uint layer_id, int delta_x, int delta_y){
 }
 
 
-  void ReceiverInWindow::eraseSprite(uint layer_id, int pos_x,int pos_y,Shape shape,float size_x, float size_y){
-
-  ToolBar &toolbar = app_->getProject()->getToolBar();
-  std::shared_ptr<Map> map = app_->getProject()->getMap();
-  ToolType last_tool = toolbar.getSelected();
-  uint last_layer_id = map->getCurrentLayer()->getId();
-  map->selectLayerId(layer_id);
-  toolbar.selectTool(SPRITEERASER);
-  std::shared_ptr<SpriteEraser> spriteeraser =
-      static_pointer_cast<SpriteEraser>(toolbar.getSelectedTool());
-  Shape last_shape = spriteeraser->getShape();
-  sf::Vector2f last_size = spriteeraser->getSize();
-
-  spriteeraser->setShape(shape);
-  if (shape != DIAMOND) {
-    spriteeraser->setSize(size_x, 1);
-  } else {
-    spriteeraser->setSize(size_x, size_y);
-  }
-
-  spriteeraser->paint(sf::Vector2i(pos_x, pos_y));
-
-  spriteeraser->setShape(last_shape);
-  spriteeraser->setSize(last_size.x, last_size.y);
-  map->selectLayerId(last_layer_id);
-  toolbar.selectTool(last_tool);
+  void ReceiverInWindow::eraseSprite(uint layer_id, uint sprite_id){
+    shared_ptr<Layer> layer = app_->getProject()->getMap()->getLayer(layer_id);
+    if(layer->getType() == SPRITELAYER)
+    static_pointer_cast<SpriteLayer>(layer)->erase(sprite_id);
 }
 

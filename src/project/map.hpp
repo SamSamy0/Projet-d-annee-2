@@ -37,6 +37,7 @@ public:
   vector<shared_ptr<Layer>> &getLayers();
   shared_ptr<Layer> getCurrentLayer();
   unsigned int getLayerSelected() const;
+  shared_ptr<Layer> getLayer(uint id);
   uint getId();
   void selectLayer(unsigned int i);
   void selectLayerId(uint id);

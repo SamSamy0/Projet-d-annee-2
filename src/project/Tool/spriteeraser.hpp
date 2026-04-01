@@ -10,6 +10,6 @@ public:
   void setShape(Shape s);
   Shape getShape() const;
   bool checkColision(sf::Vector2i pos, sf::FloatRect r);
-  void paint(sf::Vector2i pos) override;
+  int paint(sf::Vector2i pos);
   void paintSender(sf::Vector2i pos) override;
 };
