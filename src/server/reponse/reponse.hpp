@@ -45,10 +45,6 @@ struct ReponseGenerateToken : ReponseSolo {
   ReponseGenerateToken(uint userId_, std::string token);
 };
 
-struct ReponseChangeRole : ReponseSolo {
-  ReponseChangeRole(uint userId_, uint target, uint projectId_, int8_t role);
-};
-
 struct ReponseJoinProject : ReponseSolo {
   ReponseJoinProject(uint userId_, bool success);
 };
@@ -74,6 +70,11 @@ struct ReponseGroupe : Reponse {
 protected:
   ReponseGroupe(std::vector<uint> usersId);
   virtual void envoyer(ServerNetworkManager &servManager) override;
+};
+
+struct ReponseChangeRole : ReponseGroupe {
+  ReponseChangeRole(std::vector<uint> usersId_, uint target, uint projectId_,
+                    int8_t role, bool success);
 };
 
 struct ReponsePutPixelsCircle : ReponseGroupe {

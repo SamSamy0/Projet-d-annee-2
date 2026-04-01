@@ -56,7 +56,6 @@ ReponseGenerateToken::ReponseGenerateToken(uint userId, std::string token)
     : ReponseSolo(userId) {
   dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_SHARE_PROJECT_REP);
   dataPacket_ << token;
-  std::cout << "TOKen in reponse: " << token << std::endl;
 }
 ReponseJoinProject::ReponseJoinProject(uint userId, bool success)
     : ReponseSolo(userId) {
@@ -67,7 +66,6 @@ ReponseJoinProject::ReponseJoinProject(uint userId, bool success)
 ReponseGetMember::ReponseGetMember(uint userId,
                                    std::vector<MemberEntry> memberList)
     : ReponseSolo(userId) {
-  std::cout << "Réponse get member" << std::endl;
   dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::PROJ_GET_MEMBERS_REP);
   dataPacket_ << static_cast<std::uint32_t>(memberList.size());
   for (auto &entry : memberList) {
@@ -116,6 +114,19 @@ void ReponseGroupe::envoyer(ServerNetworkManager &servManager) {
     if (client != servManager.map_.end()) {
       client->second->sock->send(dataPacket_);
     }
+  }
+}
+
+ReponseChangeRole::ReponseChangeRole(std::vector<uint> usersId, uint target,
+                                     uint projectId, int8_t role, bool success)
+    : ReponseGroupe(usersId) {
+  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::PROJ_CHANGE_ROLE_REP);
+  dataPacket_ << static_cast<std::uint8_t>(success ? 1 : 0);
+
+  if (success) {
+    dataPacket_ << projectId;
+    dataPacket_ << target;
+    dataPacket_ << role;
   }
 }
 

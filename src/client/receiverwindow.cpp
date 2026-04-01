@@ -48,7 +48,6 @@ void ReceiverInWindow::setState() {
 }
 
 void ReceiverInWindow::updateShareToken(std::string token) {
-  std::cout << "token in receiverwindow" << token << std::endl;
   app_->updateShareToken(token);
 }
 void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
@@ -95,7 +94,6 @@ void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,
 
 void ReceiverInWindow::drawSprite(uint layer_id, std::string asset_id,
                                   int pos_x, int pos_y, float size) {
-  std::cout << "receiver in window sprite put" << std::endl;
   ToolBar &toolbar = app_->getProject()->getToolBar();
   std::shared_ptr<Map> map = app_->getProject()->getMap();
   ToolType last_tool = toolbar.getSelected();
@@ -165,5 +163,16 @@ void ReceiverInWindow::eraseSprite(uint layer_id, int pos_x, int pos_y,
 void ReceiverInWindow::setMemberList(std::vector<MemberEntry> memberList) {
   if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
     gameView->setAllUsers(memberList);
+  }
+}
+
+void ReceiverInWindow::updateMemberList(uint projectId, uint target,
+                                        int8_t role) {
+  // If we are in a game view
+  if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
+    // If its about the project we are in
+    if (app_->getProject() and app_->getProject()->getId() == projectId) {
+      gameView->updateMemberRole(target, role);
+    }
   }
 }

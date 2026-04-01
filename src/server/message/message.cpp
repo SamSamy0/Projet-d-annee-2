@@ -61,6 +61,7 @@ RenameProjectMessage::RenameProjectMessage(sf::Packet &dataPacket,
 
 void RenameProjectMessage::process(Worker &worker) {
   bool success = worker.renameProject(projectId_, newName_);
+
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseRenameProject>(userID_, projectId_, newName_,
                                                success);
@@ -111,15 +112,6 @@ void DeleteProjectMessage::process(Worker &worker) {
   } else {
     worker.removeLink(userId_, projectId_);
   }
-}
-
-ChangeRoleMessage::ChangeRoleMessage(sf::Packet &data_packet, uint userId) {
-  userId_ = userId;
-  data_packet >> target_ >> projectId_ >> role_;
-}
-
-void ChangeRoleMessage::process(Worker &worker) {
-  worker.changeRole(target_, projectId_, role_);
 }
 
 LeaveProjectMessage::LeaveProjectMessage(sf::Packet &data_packet, uint userId) {
@@ -180,6 +172,27 @@ std::vector<uint> ModifProjetMessage::getUserLists(Worker &worker) {
     usersId.pop_back();
   }
   return usersId;
+}
+ChangeRoleMessage::ChangeRoleMessage(sf::Packet &data_packet, uint userId) {
+  userId_ = userId;
+  data_packet >> target_ >> projectId_ >> role_;
+}
+
+void ChangeRoleMessage::process(Worker &worker) {
+  bool success = worker.changeRole(target_, projectId_, role_);
+
+  // Getting all connected users
+  std::vector<uint> usersId;
+  auto it = worker.mapProjet_.find(projectId_);
+  if (it != worker.mapProjet_.end()) {
+    usersId = it->second.connectedID_;
+  }
+
+  // Building the group response
+  std::unique_ptr<Reponse> rps;
+  rps = std::make_unique<ReponseChangeRole>(usersId, target_, projectId_, role_,
+                                            success);
+  worker.pushNetwork(std::move(rps));
 }
 
 PutPixelsSquareMessage::PutPixelsSquareMessage(sf::Packet &data_packet,

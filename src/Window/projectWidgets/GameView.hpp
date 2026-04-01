@@ -11,6 +11,8 @@ class GameView : public View {
   Project *project;
   User currentUser;
   std::vector<MemberEntry> allUsers_;
+  bool Transferring = false;
+  tgui::Button::Ptr activeMoreButton = nullptr;
 
   // Chat widget
   tgui::Panel::Ptr chatPanel_ = nullptr;
@@ -41,6 +43,7 @@ class GameView : public View {
 
   void displayMemberList();
   void getAllUsers();
+  void showUserManagment(tgui::Button::Ptr toHover, int place);
 
   // Detection in map
   void toolOnClick();
@@ -54,5 +57,6 @@ public:
   void render();
   void handleEvents(const sf::Event &events) override;
   void setAllUsers(std::vector<MemberEntry> users);
+  void updateMemberRole(uint targetId, int8_t role);
   void clearMemberList();
 };

@@ -25,7 +25,7 @@ void LoginView::init() {
   auto editBoxUsername = tgui::EditBox::create();
   editBoxUsername->setPosition({"10%", "32%"});
   editBoxUsername->setSize({"80%", "13%"});
-  editBoxUsername->setDefaultText("Pseudonyme...");
+  editBoxUsername->setDefaultText("Pseudo...");
   editBoxUsername->getRenderer()->setBackgroundColor(sf::Color(20, 20, 28));
   editBoxUsername->getRenderer()->setBackgroundColorHover(
       sf::Color(24, 24, 34));

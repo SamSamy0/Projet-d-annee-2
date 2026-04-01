@@ -89,8 +89,6 @@ void MenuView::handleEvents(const sf::Event &event) {
   auto &gui = app_.getGui();
   if (const auto *mouseClick = event.getIf<sf::Event::MouseButtonPressed>()) {
     auto popup = gui.get("popup");
-    auto background = gui.get("background");
-    auto btnMore = gui.get("BtnMore");
     // If popup exists
     if (popup) {
       // Gets position of where menu pops

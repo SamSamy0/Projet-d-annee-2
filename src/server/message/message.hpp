@@ -70,15 +70,6 @@ struct GetProjectsListMessage : IMessage {
   void process(Worker &worker) override;
 };
 
-struct ChangeRoleMessage : IMessage {
-  uint userId_;
-  uint target_;
-  uint projectId_;
-  int8_t role_;
-  ChangeRoleMessage(sf::Packet &dataPacket, uint userId);
-  void process(Worker &worker) override;
-};
-
 struct DeleteProjectMessage : IMessage {
   uint userId_;
   uint projectId_;
@@ -107,6 +98,14 @@ struct ModifProjetMessage : IMessage {
   uint projectId_;
   uint calqueId_;
   std::vector<uint> getUserLists(Worker &worker);
+};
+
+struct ChangeRoleMessage : ModifProjetMessage {
+  uint target_;
+  uint projectId_;
+  int8_t role_;
+  ChangeRoleMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
 };
 
 struct PutPixelsMessage : ModifProjetMessage {

@@ -154,10 +154,16 @@ void ClientHandler::process(ServerEvent &event) {
   }
 
   case MsgProtocole::PROJ_CHANGE_ROLE_REP: {
-    bool sucess;
-    *(event.data_packet_) >> sucess;
-    if (sucess) {
-      std::cout << "Congrats your the new owner" << std::endl;
+    bool success;
+    *(event.data_packet_) >> success;
+    if (success) {
+      std::cout << "=== Congrats Roles Changed !! ===" << std::endl;
+      uint projectId;
+      uint targetId;
+      int8_t newrole;
+      *(event.data_packet_) >> projectId >> targetId >> newrole;
+
+      handleWindow_.updateMemberList(projectId, targetId, newrole);
     }
     break;
   }

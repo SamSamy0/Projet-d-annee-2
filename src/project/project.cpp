@@ -90,3 +90,4 @@ void Project::setId(uint newId) {
 }
 
 int8_t Project::getRole() { return role_; }
+void Project::setRole(int8_t newRole) { role_ = newRole; }

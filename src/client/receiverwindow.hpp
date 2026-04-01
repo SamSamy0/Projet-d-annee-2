@@ -31,6 +31,7 @@ public:
   void clearProjList();
   void clearMemberList();
   void setMemberList(std::vector<MemberEntry> memberList);
+  void updateMemberList(uint projectId, uint target, int8_t role);
   void setState();
   void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                       uint id);
