@@ -28,9 +28,9 @@ void GameView::displayMemberList() {
   auto &gui = app_.getGui();
   auto &manager = app_.getNetwork();
 
-  // if (gui.get("memberListPopup")) {
-  //   gui.remove(gui.get("memberListPopup"));
-  // }
+  if (gui.get("memberListPopup")) {
+    gui.remove(gui.get("memberListPopup"));
+  }
 
   // If owner is alone, he can leave project instantly
   if (Transferring && allUsers_.size() == 1 &&
@@ -192,6 +192,9 @@ void GameView::showUserManagment(tgui::Button::Ptr toHover, int place) {
             // WARNING YOU CAN'T DOWNGRADE A SPECTATOR
           }
         } else if (item == "Ejecter") {
+          manager.kickUser(allUsers_[place].userId, project->getId());
+          displayMemberList();
+
         } else if (item == "Propriétaire") {
         }
 

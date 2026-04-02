@@ -167,6 +167,18 @@ void ClientHandler::process(ServerEvent &event) {
     }
     break;
   }
+  case MsgProtocole::PROJ_KICK_USER_REP: {
+    bool success;
+    *(event.data_packet_) >> success;
+    std::cout << "kicked if success = " << success << std::endl;
+    if (success) {
+      std::cout << "!!! You've been kicked !!!" << std::endl;
+      uint targetId;
+      uint projectId;
+      *(event.data_packet_) >> targetId >> projectId;
+      handleWindow_.kickUser();
+    }
+  }
 
   case MsgProtocole::LOB_JOIN_PROJECT_REP: {
     bool success;

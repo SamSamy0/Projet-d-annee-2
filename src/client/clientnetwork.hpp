@@ -28,6 +28,7 @@ public:
   void delProject(uint project_id);
   void getProjectData(uint project_id);
   void joinProject(std::string project_code);
+  void kickUser(uint targetId, uint projectId);
   void leaveProject(uint project_id);
   void changeRole(uint userId, uint projectId, int8_t role);
 

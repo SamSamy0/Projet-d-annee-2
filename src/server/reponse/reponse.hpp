@@ -63,6 +63,9 @@ struct ReponseUsersProjects : ReponseSolo {
 struct ReponseCreateProject : ReponseSolo {
   ReponseCreateProject(uint userId, uint projectId_);
 };
+struct ReponseKickUserProject : ReponseSolo {
+  ReponseKickUserProject(uint targetId, uint projectId, bool success);
+};
 
 struct ReponseGroupe : Reponse {
   std::vector<uint> usersId_;

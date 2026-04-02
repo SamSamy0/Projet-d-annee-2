@@ -122,6 +122,19 @@ void LeaveProjectMessage::process(Worker &worker) {
   worker.removeLink(userId_, projectId_);
 }
 
+KickUserMessage::KickUserMessage(sf::Packet &data_packet, uint userId) {
+  userId_ = userId;
+  data_packet >> targetId_ >> projectId_;
+}
+void KickUserMessage::process(Worker &worker) {
+  bool success = worker.removeLink(targetId_, projectId_);
+  std::unique_ptr<Reponse> rps;
+  std::cout << "Reussi a kick( message): " << success << std::endl;
+  rps =
+      std::make_unique<ReponseKickUserProject>(targetId_, projectId_, success);
+  worker.pushNetwork(std::move(rps));
+}
+
 GetMemberMessage::GetMemberMessage(sf::Packet &data_packet, uint userId) {
   userId_ = userId;
   data_packet >> projectId_;
@@ -449,6 +462,9 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::PROJ_LEAVE_PROJ_REQ:
     return std::make_unique<LeaveProjectMessage>(data_packet, c->id);
+
+  case MsgProtocole::PROJ_KICK_USER_REQ:
+    return std::make_unique<KickUserMessage>(data_packet, c->id);
 
   default:
     std::cout << "pas de message" << std::endl;

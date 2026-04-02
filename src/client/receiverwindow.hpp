@@ -35,4 +35,5 @@ public:
   void setState();
   void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                       uint id);
+  void kickUser();
 };

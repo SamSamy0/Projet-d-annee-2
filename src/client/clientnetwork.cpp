@@ -166,6 +166,17 @@ void ClientNetworkManager::joinProject(std::string project_code) {
               << std::endl;
 }
 
+void ClientNetworkManager::kickUser(uint targetId, uint projectId) {
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::PROJ_KICK_USER_REQ;
+  packet << static_cast<uint8_t>(msg);
+  packet << static_cast<uint32_t>(targetId);
+  packet << static_cast<uint32_t>(projectId);
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
 void ClientNetworkManager::leaveProject(uint projectId) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::PROJ_LEAVE_PROJ_REQ;

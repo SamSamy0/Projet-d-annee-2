@@ -76,6 +76,8 @@ enum class MsgProtocole : uint8_t {
   PROJ_CHANGE_ROLE_REP,
   PROJ_LEAVE_PROJ_REQ,
   PROJ_LEAVE_PROJ_REP,
+  PROJ_KICK_USER_REQ,
+  PROJ_KICK_USER_REP,
 
 };
 

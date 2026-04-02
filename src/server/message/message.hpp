@@ -85,6 +85,14 @@ struct LeaveProjectMessage : IMessage {
   void process(Worker &worker) override;
 };
 
+struct KickUserMessage : IMessage {
+  uint userId_;
+  uint targetId_;
+  uint projectId_;
+  KickUserMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+
 struct GetProjectDataMessage : IMessage {
   uint userId_;
   uint projectId_;
