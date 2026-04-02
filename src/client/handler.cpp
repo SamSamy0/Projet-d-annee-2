@@ -142,6 +142,38 @@ void ClientHandler::process(ServerEvent &event) {
 
     break;
   }
+  case MsgProtocole::MAP_CREATE_LAYER_REP:{
+    uint project_id;
+    uint current_layer_id;
+    uint8_t type_int;
+    *(event.data_packet_) >> project_id >> current_layer_id >> type_int;
+    LayerType type = static_cast<LayerType>(type_int);
+    handleWindow_.createLayer(current_layer_id,type);
+    break;
+    }
+  case MsgProtocole::MAP_REMOVE_LAYER_REP:{
+    uint project_id;
+    uint current_layer_id;
+    *(event.data_packet_) >> project_id >> current_layer_id;
+    handleWindow_.deleteLayer(current_layer_id);
+    break;
+    }
+
+    case MsgProtocole::MAP_ORGANIZE_LAYER_UP_REP:{
+    uint project_id;
+    uint current_layer_id;
+    *(event.data_packet_) >> project_id >> current_layer_id;
+    handleWindow_.layerUp(current_layer_id);
+    break;
+    }
+
+    case MsgProtocole::MAP_ORGANIZE_LAYER_DAWN_REP:{
+    uint project_id;
+    uint current_layer_id;
+    *(event.data_packet_) >> project_id >> current_layer_id;
+    handleWindow_.layerDawn(current_layer_id);
+    break;
+}
 
   case MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP: {
     uint project_id;
@@ -161,6 +193,7 @@ void ClientHandler::process(ServerEvent &event) {
   }
 
   case MsgProtocole::MAP_PUT_PIXELS_SQUARE_REP: {
+    std::cout<<"traitement de la réponse : worker"<<std::endl;
     uint project_id;
     uint layer_id;
     int pos_x;
@@ -244,41 +277,12 @@ void ClientHandler::process(ServerEvent &event) {
                                  Shape::DIAMOND, true, size_x, size_y);
     break;
   }
-
-  case MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REP: {
+  case MsgProtocole::MAP_ERASE_SPRITE_REP: {
     uint project_id;
     uint layer_id;
-    int pos_x;
-    int pos_y;
-    float size;
-    *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size;
-    handleWindow_.eraseSprite(layer_id, pos_x, pos_y,
-                                 Shape::SQUARE,size,0);
-    break;
-    }
-  case MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REP: {
-    uint project_id;
-    uint layer_id;
-    int pos_x;
-    int pos_y;
-    float size;
-    *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size;
-    handleWindow_.eraseSprite(layer_id, pos_x, pos_y,
-                                 Shape::CIRCLE,size,0);
-    break;
-    }
-
-  case MsgProtocole::MAP_ERASE_SPRITE_DIAM_REP: {
-    uint project_id;
-    uint layer_id;
-    int pos_x;
-    int pos_y;
-    float size_x;
-    float size_y;
-    *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >>
-        size_x >> size_y;
-    handleWindow_.eraseSprite(layer_id, pos_x, pos_y,
-                                 Shape::DIAMOND,size_x,size_y);
+    uint sprite_id;
+    *(event.data_packet_) >> project_id >> layer_id >>sprite_id;
+    handleWindow_.eraseSprite(layer_id,sprite_id);
     break;
     }
 

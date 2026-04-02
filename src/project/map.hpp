@@ -37,14 +37,18 @@ public:
   vector<shared_ptr<Layer>> &getLayers();
   shared_ptr<Layer> getCurrentLayer();
   unsigned int getLayerSelected() const;
+  shared_ptr<Layer> getLayer(uint id);
   uint getId();
   void selectLayer(unsigned int i);
   void selectLayerId(uint id);
   bool hasLayer() const;
   const sf::RenderTexture& getRenderTexture() const { return render_texture_; }
-  void insertLayer(shared_ptr<Layer> layer);
   void createPixelLayer();
   void createSpriteLayer();
+  void layerUp(uint layerId);
+  void layerDawn(uint layerId);
+  void deleteLayer();
+  void deleteLayer(uint layer_id);
   void displayMap(sf::RenderWindow &window, sf::View &viewMap);
   void closeWindowManager(sf::RenderWindow &window, const sf::Event &ev);
   void detectMovement();

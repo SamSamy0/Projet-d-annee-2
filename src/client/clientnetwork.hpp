@@ -1,5 +1,6 @@
 #pragma once
 #include "../common/protocol.hpp"
+#include "../project/Layer/layer.hpp"
 #include "serverevent.hpp"
 #include <SFML/Network.hpp>
 #include <deque>
@@ -28,6 +29,10 @@ public:
   void delProject(uint project_id);
   void getProjectData(uint project_id);
   void joinProject(std::string project_code);
+  void createLayer(uint proj_id, uint current_layer_id,LayerType type);
+  void deleteLayer(uint proj_id, uint current_layer_id);
+  void layerUp(uint proj_id, uint current_layer_id);
+  void layerDawn(uint proj_id, uint current_layer_id);
 
   void drawSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size,
                   uint8_t r, uint8_t g, uint8_t b, uint8_t a);
@@ -43,9 +48,7 @@ public:
   void eraseDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y,
                     float size_x, float size_y);
   void drawSprite(uint proj_id, uint layer_id, std::string asset_id, int pos_x, int pos_y, float size_x);
-  void eraseSpriteSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size);
-  void eraseSpriteCircle(uint proj_id, uint layer_id, int pos_x, int pos_y, float size);
-  void eraseSpriteDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y, float size_x, float size_y);
+  void eraseSprite(uint proj_id, uint layer_id, uint sprite_id);
 
   void shiftLayer(uint proj_id, uint layer_id, int delta_x, int delta_y);
 

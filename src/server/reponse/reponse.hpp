@@ -75,6 +75,22 @@ struct ReponseGroupe : Reponse {
 };
 
 
+struct ReponseCreateLayer : ReponseGroupe{
+   ReponseCreateLayer(std::vector<uint> usersId, CreateLayerMessage& mess);
+};
+
+
+struct ReponseDeleteLayer : ReponseGroupe{
+   ReponseDeleteLayer(std::vector<uint> usersId, DeleteLayerMessage& mess);
+};
+
+struct ReponseOrganizeLayerUp : ReponseGroupe{
+    ReponseOrganizeLayerUp(std::vector<uint> usersId, OrganizeLayerUpMessage& mess);
+};
+
+struct ReponseOrganizeLayerDawn : ReponseGroupe{
+    ReponseOrganizeLayerDawn(std::vector<uint> usersId, OrganizeLayerDawnMessage& mess);
+};
 
 struct ReponsePutPixelsCircle : ReponseGroupe {
     
@@ -111,18 +127,9 @@ struct ReponsePutSprite : ReponseGroupe{
    ReponsePutSprite(std::vector<uint> usersId, PutSpriteMessage& mess);
 };
 
-struct ReponseEraseSpriteSquare : ReponseGroupe {
+struct ReponseEraseSprite : ReponseGroupe {
 
-    ReponseEraseSpriteSquare(std::vector<uint> usersId, EraseSpriteSquareMessage& mess);
-};
-
-struct ReponseEraseSpriteCircle : ReponseGroupe {
-
-    ReponseEraseSpriteCircle(std::vector<uint> usersId, EraseSpriteCircleMessage& mess);
-};
-struct ReponseEraseSpriteDiamond : ReponseGroupe {
-
-    ReponseEraseSpriteDiamond(std::vector<uint> usersId, EraseSpriteDiamondMessage& mess);
+    ReponseEraseSprite(std::vector<uint> usersId, EraseSpriteMessage& mess);
 };
 
 struct ReponseMoveLayer : ReponseGroupe {

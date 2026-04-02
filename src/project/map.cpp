@@ -4,6 +4,7 @@
 #include <vector>
 #include <SFML/Config.hpp>
 #include <iostream>
+#include <algorithm>
 #include "map.hpp"
 #include "Layer/pixellayer.hpp"
 #include "Layer/spritelayer.hpp"
@@ -52,7 +53,15 @@ unsigned int Map::getScale() const { return scale_; }
 
 vector<shared_ptr<Layer>>& Map::getLayers() { return layers_; }
 
-void Map::insertLayer(shared_ptr<Layer> layer) { layers_.insert(layers_.begin()+selected_+1, layer) ; }
+shared_ptr<Layer> Map::getLayer(uint id){
+    for (size_t i = 0; i < layers_.size(); ++i) {
+        if (layers_[i]->getId() == id) {
+            return layers_[i];
+            break;
+        }
+    }
+    return nullptr;
+}
 
 void Map::createPixelLayer(){
     int n = layers_.size() + 1;
@@ -72,6 +81,85 @@ void Map::createSpriteLayer(){
     layers_.push_back(spritelayer);
     layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
 }
+
+// void Map::layerUp(uint layerId){
+//     if (selected_ == 0) return;
+//     std::swap(layers_[selected_], layers_[selected_ - 1]);
+//     selected_ -= 1;
+// }
+
+void Map::layerDawn(uint layerId){
+    if (layers_.size() <= 1) return;
+    int j = -1;
+
+    for(int i = 0; i<layers_.size(); i++){
+        if(layers_[i]->getId() == layerId){
+            j = i;
+            break;
+        }
+    }
+    if(j >= 0 && j < layers_.size()-1){
+        std::swap(layers_[j],layers_[j+1]);
+        if(selected_ == j) selected_ +=1;
+        else if(selected_ == j+1) selected_ -= 1;
+    }
+}
+
+void Map::layerUp(uint layerId){
+    if (layers_.size() <= 1) return;
+    int j = -1;
+
+    for(int i = 0; i<layers_.size(); i++){
+        if(layers_[i]->getId() == layerId){
+            j = i;
+            break;
+        }
+    }
+    if(j > 0){
+        std::swap(layers_[j],layers_[j-1]);
+        if(selected_ == j) selected_ -=1;
+        else if(selected_ == j-1) selected_ += 1;
+    }
+
+
+}
+
+// void Map::layerDawn(uint layerId){
+//     if (selected_ >= layers_.size()-1) return;
+//     std::swap(layers_[selected_], layers_[selected_ + 1]);
+//     selected_ += 1;
+// }
+
+
+void Map::deleteLayer(uint layer_id){
+    if (layers_.size() <= 1) return;
+    int j = -1;
+
+    for(int i = 0; i<layers_.size(); i++){
+        if(layers_[i]->getId() == layer_id){
+            j = i;
+            break;
+        }
+    }
+    if(j != -1){
+        layers_.erase(layers_.begin() + j);
+        if (selected_ == j && selected_ > 0) selected_ -= 1;
+        else if (selected_ > j) selected_ -= 1;
+
+        if (layers_.empty()) 
+                    selected_ = 0;
+        else if (selected_ >= layers_.size()) 
+        selected_ = layers_.size() - 1;
+                
+    }
+}
+
+void Map::deleteLayer(){
+    if (layers_.size() <= 1) return;
+    layers_.erase(layers_.begin() + selected_);
+    selected_ = (selected_ > 0) ? selected_ - 1 : 0;
+}
+
 
 shared_ptr<Layer> Map::getCurrentLayer(){
     if(layers_.size() == 0){
