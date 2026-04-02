@@ -393,7 +393,6 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::AUTH_REGISTER_REQ:
     return std::make_unique<RegisterMessage>(data_packet, std::move(c));
-
   case MsgProtocole::LOB_CREATE_PROJECT_REQ:
     return std::make_unique<CreateProjectMessage>(data_packet, c->id);
 
