@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <QImage>
 #include "datamanager/projectsmanager.hpp"
+#include "SpriteLayer.hpp"
 
 struct LiveProject {
     LiveProject(uint projId);
@@ -26,7 +27,7 @@ struct LiveProject {
 
 
     uint getScale();
-    std::unordered_map<uint, std::vector<Sprite>>& getSpritesMap();
+    std::unordered_map<uint, SpriteLayer>& getSpritesMap();
     std::unordered_map<uint, QImage>& getImageMap();
 
     private :
@@ -35,11 +36,11 @@ struct LiveProject {
     std::vector<uint> connectedID_;
     std::unordered_map<uint, int8_t> usersRoles_;
     std::unordered_map<uint, QImage> layersImage_;
-    std::unordered_map<uint, std::vector<Sprite>> layersSprite_;
+    std::unordered_map<uint, SpriteLayer> layersSprite_;
     uint scale_;
     uint lastUsedLayerId_;
     uint height_;
     uint width_;
-    void setupLayerSprite(uint layerId, const QJsonArray& sprite);
+    void setupLayerSprite(uint layerId, const QJsonObject& sprite);
 
 };

@@ -142,6 +142,7 @@ set(SERVER_SOURCES
     ../src/server/LiveProject.cpp
     ../src/server/saveworker.cpp
     ../src/server/savetask.cpp
+    ../src/server/SpriteLayer.cpp
 )
 
 add_executable(server ${SERVER_SOURCES})

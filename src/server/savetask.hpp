@@ -6,7 +6,7 @@
 class SaveTask {
     QJsonObject json_;
     std::vector<std::pair<uint, QImage>> layersImage_;
-    std::vector<std::pair<uint, std::vector<Sprite>>> layersSprite_;
+    std::vector<std::pair<uint, QJsonObject>> layersSprite_;
     uint projetId_;
 
     public:

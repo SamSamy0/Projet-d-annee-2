@@ -389,7 +389,7 @@ void PutSpriteMessage::process(Worker &worker){
     return;
   }
 
-  if (liveProj->second.addSprite(userId_, calqueId_, asset_id, pos_.x, pos_.y, taille_)) {
+  if (liveProj->second.addSprite(userId_, calqueId_, asset_id_, pos_.x, pos_.y, taille_)) {
 
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;

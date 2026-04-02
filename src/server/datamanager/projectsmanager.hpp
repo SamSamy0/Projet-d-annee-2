@@ -18,8 +18,8 @@ public:
   bool updateJsonDup(uint newId, const QString& newName);
   bool deleteProject(uint id);
   bool writeProjetJson(QJsonObject& jsonObject, uint id);
-  bool saveSprite(uint id, uint imageId, QJsonArray& sprite);
-  QJsonArray loadSprite(uint id, uint layerId);
+  bool saveSprite(uint id, uint imageId, QJsonObject& sprite);
+  QJsonObject loadSprite(uint id, uint layerId);
 
 private:
   QString getProjectPath(uint id) const;

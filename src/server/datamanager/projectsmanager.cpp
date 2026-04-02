@@ -77,7 +77,7 @@ bool ProjectsManager::writeProjetJson(QJsonObject& jsonObject, uint id) {
     return false;
 }
 
-bool ProjectsManager::saveSprite(uint id, uint layerId, QJsonArray& jsonObject) {
+bool ProjectsManager::saveSprite(uint id, uint layerId, QJsonObject& jsonObject) {
 
     ensureDirectoryExists(id);
 
@@ -95,13 +95,13 @@ bool ProjectsManager::saveSprite(uint id, uint layerId, QJsonArray& jsonObject) 
     return false;
 }
 
-QJsonArray ProjectsManager::loadSprite(uint id, uint layerId) {
+QJsonObject ProjectsManager::loadSprite(uint id, uint layerId) {
     QString filePath = getProjectPath(id) + "/images/" + QString::number(layerId) + ".json";
     QFile file(filePath);
 
     if (!file.open(QIODevice::ReadOnly)) {
         qWarning() << "Impossible d'ouvrir le fichier layer pour l'ID" << layerId << ":" << filePath;
-        return QJsonArray();
+        return QJsonObject();
     }
 
     QByteArray rawData = file.readAll();
@@ -112,15 +112,15 @@ QJsonArray ProjectsManager::loadSprite(uint id, uint layerId) {
 
     if (error.error != QJsonParseError::NoError) {
         qCritical() << "Erreur de parsing JSON pour le layer" << layerId << ":" << error.errorString();
-        return QJsonArray();
+        return QJsonObject();
     }
 
-    if (!doc.isArray()) {
+    if (!doc.isObject()) {
         qCritical() << "Le contenu du fichier n'est pas un objet JSON valide pour le layer" << layerId;
-        return QJsonArray();
+        return QJsonObject();
     }
 
-    return doc.array();
+    return doc.object();
 }
 
 /*QByteArray imageToPng(const QImage& image) {

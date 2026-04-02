@@ -62,7 +62,8 @@ LiveProject::LiveProject(uint id, const QString &projectName, uint width, uint h
     image.fill(Qt::transparent);
     layersImage_[0] = image;
 
-    layersSprite_[1]; //
+    layersSprite_[1] = SpriteLayer();
+    qDebug() << "nv liveporj";
 }
 
 void LiveProject::addConnection(uint userId, uint8_t role) {
@@ -91,22 +92,10 @@ std::vector<uint>& LiveProject::getConnected() {
     return connectedID_;
 }
 
-void LiveProject::setupLayerSprite(uint LayerId, const QJsonArray& sprites){
+void LiveProject::setupLayerSprite(uint LayerId, const QJsonObject& sprites){
     if (layersSprite_.find(LayerId) != layersSprite_.end()) {
-        for (const QJsonValue& sprite : sprites){
-            if (sprite.isObject()) {
-                QJsonObject objetSprite = sprite.toObject();
-                Sprite srpiteOpt;
-                srpiteOpt.id = objetSprite["interId"].toInt();
-                srpiteOpt.nameId = objetSprite["nameId"].toString().toStdString();
-                srpiteOpt.x = objetSprite["x"].toInt();
-                srpiteOpt.y = objetSprite["y"].toInt();
-                srpiteOpt.taille = objetSprite["size"].toDouble();
-                layersSprite_[LayerId].push_back(srpiteOpt);
-            }
-        }
+        layersSprite_[LayerId] = SpriteLayer(sprites);
     }
-
 }
 
 uint LiveProject::getScale() {
@@ -295,7 +284,7 @@ bool LiveProject::erasePixelDiam(uint userId, uint calqueId, uint x, uint y, flo
     return false;
 }
 
-std::unordered_map<uint, std::vector<Sprite>>& LiveProject::getSpritesMap() {
+std::unordered_map<uint, SpriteLayer>& LiveProject::getSpritesMap() {
     return layersSprite_;
 }
 
@@ -363,14 +352,13 @@ bool LiveProject::addSprite(uint userId, uint calqueId, std::string asset_id, ui
         return false;
     }
 
-    if (cleVal->second != 0 ){
-        if (layersSprite_.find(calqueId) != layersSprite_.end()) {
+    if (cleVal->second = 0 ){
+        return false;
+    }
 
-            Sprite sprite = {0, asset_id, taille, x, y};
-            layersSprite_[calqueId].push_back(std::move(sprite));
-
-            return true;
-        }
+    if (layersSprite_.find(calqueId) != layersSprite_.end()) {
+        layersSprite_[calqueId].addSprite(asset_id, taille, x, y);
+        return true;        
     }
     return false;
 }

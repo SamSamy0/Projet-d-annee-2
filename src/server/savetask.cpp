@@ -8,9 +8,9 @@ SaveTask::SaveTask(LiveProject& livePrj, uint projId)
         layersImage_.emplace_back(it->first, it->second);
     }
 
-    std::unordered_map<uint, std::vector<Sprite>>& layersSpritePrj = livePrj.getSpritesMap();
+    std::unordered_map<uint, SpriteLayer>& layersSpritePrj = livePrj.getSpritesMap();
     for (auto it = layersSpritePrj.begin(); it != layersSpritePrj.end(); ++it) {
-        layersSprite_.emplace_back(it->first, it->second);
+        layersSprite_.emplace_back(it->first, it->second.load());
     }
 }
 
@@ -21,16 +21,6 @@ void SaveTask::execute(ProjectsManager prjManager) {
     }
 
     for(auto layer : layersSprite_) {
-        QJsonArray layerJson;
-        for (auto srpiteOpt : layer.second) {
-            QJsonObject objetSprite;
-            objetSprite["interId"] = static_cast<int>(srpiteOpt.id);
-            objetSprite["nameId"] = QString::fromStdString(srpiteOpt.nameId);
-            objetSprite["x"] = static_cast<int>(srpiteOpt.x);
-            objetSprite["y"] = static_cast<int>(srpiteOpt.y);
-            objetSprite["size"] = static_cast<float>(srpiteOpt.taille);
-            layerJson.append(objetSprite);
-        }
-        prjManager.saveSprite(projetId_, layer.first, layerJson);
+        prjManager.saveSprite(projetId_, layer.first, layer.second);
     }
 }
