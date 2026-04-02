@@ -67,20 +67,7 @@ void MenuView::init() {
   joinProjB->onPress(&MenuView::joinProj, this, rightPanel);
   rightPanel->add(joinProjB);
 
-  // auto shareProjB = tgui::Button::create("Partager un projet");
-  // shareProjB->setPosition("10%", "20%");
-  // shareProjB->setSize("80%", "6%");
-  // shareProjB->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
-  // shareProjB->getRenderer()->setBackgroundColorHover(sf::Color(55, 55, 70));
-  // shareProjB->getRenderer()->setTextColor(sf::Color(180, 180, 200));
-  // shareProjB->getRenderer()->setBorders(1);
-  // shareProjB->getRenderer()->setBorderColor(sf::Color(60, 60, 80));
-  // shareProjB->getRenderer()->setRoundedBorderRadius(8);
-  // shareProjB->onPress(&MenuView::shareProj, this);
-  // rightPanel->add(shareProjB);
-  // std::cout <<"now token " <<shareToken <<std::endl;
   if (shareToken != "FFFFF") {
-    std::cout << "yes siiiir" << shareToken << std::endl;
     rightPanel->add(displayToken());
   }
 }
@@ -210,14 +197,14 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   menu->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
   menu->getRenderer()->setTextColor(tgui::Color::White);
   menu->addItem("Ouvrir");
-  menu->addItem("Supprimer");
-  // If Editor or Owner
-  // if (project.role == 0 || project.role == 1) {
-  menu->addItem("Renommer");
-  // }
   menu->addItem("Dupliquer");
   menu->addItem("Partager");
-  // menu->addItem("Quitter");
+  if (project.role == 1) {
+    // On désactive les deux derniers items (index 3 et 4)
+    menu->addItem("Renommer");
+  } else {
+    menu->addItem("Supprimer");
+  }
   float menuHeight = menu->getItemCount() * 45;
   menu->setSize(150, menuHeight);
   menu->setItemHeight(45);

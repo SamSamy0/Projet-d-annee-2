@@ -28,8 +28,17 @@ void GameView::displayMemberList() {
   auto &gui = app_.getGui();
   auto &manager = app_.getNetwork();
 
-  if (gui.get("memberListPopup")) {
-    gui.remove(gui.get("memberListPopup"));
+  // if (gui.get("memberListPopup")) {
+  //   gui.remove(gui.get("memberListPopup"));
+  // }
+
+  // If owner is alone, he can leave project instantly
+  if (Transferring && allUsers_.size() == 1 &&
+      allUsers_[0].userId == currentUser.getId()) {
+    app_.getNetwork().leaveProject(project->getId());
+    app_.getNetwork().getProjectList();
+    app_.changeView(std::make_unique<MenuView>(app_));
+    return;
   }
 
   auto parent = tgui::Panel::create();
@@ -101,9 +110,6 @@ void GameView::displayMemberList() {
       app_.getNetwork().leaveProject(project->getId());
       app_.getNetwork().getProjectList();
       app_.changeView(std::make_unique<MenuView>(app_));
-
-      // Get user by pseudo
-      // Ask server to change owner (and to delete current Owner)
     });
 
     std::string nomRole = (allUsers_[i].role == 1) ? "Editeur" : "Spectateur";
@@ -112,27 +118,32 @@ void GameView::displayMemberList() {
 
     auto labelRole = tgui::Label::create(nomRole);
     if (Transferring) {
-      labelRole->setPosition("100% - 300", "center");
+      labelRole->setPosition("70%", "center");
       labelRole->setTextSize(14);
       labelRole->getRenderer()->setTextColor(sf::Color(140, 140, 160));
       row->add(labelRole);
       row->add(clickable);
 
     } else {
-      labelRole->setPosition("100% - 500", "center");
       // Adding more button
-      auto btn = tgui::Button::create("•••");
-      btn->setSize(80, 35);
-      btn->setPosition("100% -90", "center + 10");
-      btn->getRenderer()->setBackgroundColor(sf::Color::Transparent);
-      btn->getRenderer()->setBackgroundColorHover(sf::Color(55, 55, 70));
-      btn->getRenderer()->setTextColor(sf::Color(140, 140, 160));
-      btn->getRenderer()->setBorders(0);
-      btn->getRenderer()->setRoundedBorderRadius(6);
-      row->add(labelRole);
-      row->add(btn, "BtnMore");
-      btn->onPress(&GameView::showUserManagment, this, btn, i);
-      btn->setTextSize(20);
+      if (project->getRole() == 2) {
+        labelRole->setPosition("70%", "center");
+        auto btn = tgui::Button::create("•••");
+        btn->setSize(80, 35);
+        btn->setPosition("100% -90", "center + 10");
+        btn->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+        btn->getRenderer()->setBackgroundColorHover(sf::Color(55, 55, 70));
+        btn->getRenderer()->setTextColor(sf::Color(140, 140, 160));
+        btn->getRenderer()->setBorders(0);
+        btn->getRenderer()->setRoundedBorderRadius(6);
+        row->add(labelRole);
+        row->add(btn, "BtnMore");
+        btn->onPress(&GameView::showUserManagment, this, btn, i);
+        btn->setTextSize(20);
+      } else {
+        labelRole->setPosition("70%", "center");
+        row->add(labelRole);
+      }
     }
   }
 }
@@ -151,7 +162,7 @@ void GameView::showUserManagment(tgui::Button::Ptr toHover, int place) {
   menu->getRenderer()->setTextColor(tgui::Color::White);
   menu->addItem("Promouvoir");
   menu->addItem("Retrograder");
-  menu->addItem("Bannir");
+  menu->addItem("Ejecter");
   // }
   menu->addItem("Propriétaire");
   // menu->addItem("Quitter");
@@ -180,7 +191,7 @@ void GameView::showUserManagment(tgui::Button::Ptr toHover, int place) {
           } else if (role == 1) {
             // WARNING YOU CAN'T DOWNGRADE A SPECTATOR
           }
-        } else if (item == "Bannir") {
+        } else if (item == "Ejecter") {
         } else if (item == "Propriétaire") {
         }
 
