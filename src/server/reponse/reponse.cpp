@@ -51,14 +51,6 @@ ReponseDuplicateProject::ReponseDuplicateProject(uint userId, uint projectId,
   dataPacket_ << static_cast<std::uint32_t>(projectId);
   dataPacket_ << newName;
 }
-ReponseKickUserProject::ReponseKickUserProject(uint targetId, uint projectId,
-                                               bool success)
-    : ReponseSolo(targetId) {
-  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::PROJ_KICK_USER_REP);
-  dataPacket_ << static_cast<std::uint8_t>(success ? 1 : 0);
-  dataPacket_ << static_cast<std::uint32_t>(targetId);
-  dataPacket_ << static_cast<std::uint32_t>(projectId);
-}
 
 ReponseGenerateToken::ReponseGenerateToken(uint userId, std::string token)
     : ReponseSolo(userId) {
@@ -123,6 +115,15 @@ void ReponseGroupe::envoyer(ServerNetworkManager &servManager) {
       client->second->sock->send(dataPacket_);
     }
   }
+}
+ReponseKickUserProject::ReponseKickUserProject(std::vector<uint> usersId,
+                                               uint targetId, uint projectId,
+                                               bool success)
+    : ReponseGroupe(usersId) {
+  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::PROJ_KICK_USER_REP);
+  dataPacket_ << static_cast<std::uint8_t>(success ? 1 : 0);
+  dataPacket_ << static_cast<std::uint32_t>(targetId);
+  dataPacket_ << static_cast<std::uint32_t>(projectId);
 }
 
 ReponseChangeRole::ReponseChangeRole(std::vector<uint> usersId, uint target,

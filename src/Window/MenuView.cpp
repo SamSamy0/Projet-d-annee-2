@@ -199,10 +199,11 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   menu->addItem("Ouvrir");
   menu->addItem("Dupliquer");
   menu->addItem("Partager");
-  if (project.role == 1) {
+  if (project.role >= 1) {
     // On désactive les deux derniers items (index 3 et 4)
     menu->addItem("Renommer");
-  } else {
+  }
+  if (project.role == 2) {
     menu->addItem("Supprimer");
   }
   float menuHeight = menu->getItemCount() * 45;

@@ -85,14 +85,6 @@ struct LeaveProjectMessage : IMessage {
   void process(Worker &worker) override;
 };
 
-struct KickUserMessage : IMessage {
-  uint userId_;
-  uint targetId_;
-  uint projectId_;
-  KickUserMessage(sf::Packet &dataPacket, uint userId);
-  void process(Worker &worker) override;
-};
-
 struct GetProjectDataMessage : IMessage {
   uint userId_;
   uint projectId_;
@@ -113,6 +105,13 @@ struct ChangeRoleMessage : ModifProjetMessage {
   uint projectId_;
   int8_t role_;
   ChangeRoleMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+struct KickUserMessage : ModifProjetMessage {
+  // std::vector<uint> usersId_;
+  uint targetId_;
+  uint projectId_;
+  KickUserMessage(sf::Packet &dataPacket, uint userId);
   void process(Worker &worker) override;
 };
 

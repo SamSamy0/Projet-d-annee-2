@@ -176,8 +176,12 @@ void ReceiverInWindow::updateMemberList(uint projectId, uint target,
     }
   }
 }
-void ReceiverInWindow::kickUser() {
-  app_->getNetwork().getProjectList();
-  app_->changeView(std::make_unique<MenuView>(*app_));
+void ReceiverInWindow::kickUser(uint targetId) {
+  if (app_->getUser().getId() == targetId) {
+    app_->getNetwork().getProjectList();
+    app_->changeView(std::make_unique<MenuView>(*app_));
+  } else {
+    app_->getNetwork().getUsersProjects(app_->getProject()->getId());
+  }
   // TODO: Afficher une fenetre d'info qu'on a été kick
 }

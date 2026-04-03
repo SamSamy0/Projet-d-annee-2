@@ -176,8 +176,9 @@ void ClientHandler::process(ServerEvent &event) {
       uint targetId;
       uint projectId;
       *(event.data_packet_) >> targetId >> projectId;
-      handleWindow_.kickUser();
+      handleWindow_.kickUser(targetId);
     }
+    break;
   }
 
   case MsgProtocole::LOB_JOIN_PROJECT_REP: {

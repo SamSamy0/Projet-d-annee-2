@@ -128,10 +128,19 @@ KickUserMessage::KickUserMessage(sf::Packet &data_packet, uint userId) {
 }
 void KickUserMessage::process(Worker &worker) {
   bool success = worker.removeLink(targetId_, projectId_);
+  // Getting all connected users
+  std::vector<uint> usersId;
+  auto it = worker.mapProjet_.find(projectId_);
+  if (it != worker.mapProjet_.end()) {
+    usersId = it->second.connectedID_;
+  }
+
+  // Building the group response
   std::unique_ptr<Reponse> rps;
+  rps = std::make_unique<ReponseKickUserProject>(usersId, targetId_, projectId_,
+                                                 success);
+
   std::cout << "Reussi a kick( message): " << success << std::endl;
-  rps =
-      std::make_unique<ReponseKickUserProject>(targetId_, projectId_, success);
   worker.pushNetwork(std::move(rps));
 }
 

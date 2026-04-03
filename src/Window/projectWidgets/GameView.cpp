@@ -127,7 +127,7 @@ void GameView::displayMemberList() {
     } else {
       // Adding more button
       if (project->getRole() == 2) {
-        labelRole->setPosition("70%", "center");
+        labelRole->setPosition("62.5%", "center");
         auto btn = tgui::Button::create("•••");
         btn->setSize(80, 35);
         btn->setPosition("100% -90", "center + 10");

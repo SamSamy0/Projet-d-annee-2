@@ -63,9 +63,6 @@ struct ReponseUsersProjects : ReponseSolo {
 struct ReponseCreateProject : ReponseSolo {
   ReponseCreateProject(uint userId, uint projectId_);
 };
-struct ReponseKickUserProject : ReponseSolo {
-  ReponseKickUserProject(uint targetId, uint projectId, bool success);
-};
 
 struct ReponseGroupe : Reponse {
   std::vector<uint> usersId_;
@@ -73,6 +70,10 @@ struct ReponseGroupe : Reponse {
 protected:
   ReponseGroupe(std::vector<uint> usersId);
   virtual void envoyer(ServerNetworkManager &servManager) override;
+};
+struct ReponseKickUserProject : ReponseGroupe {
+  ReponseKickUserProject(std::vector<uint> usersId, uint targetId,
+                         uint projectId, bool success);
 };
 
 struct ReponseChangeRole : ReponseGroupe {
