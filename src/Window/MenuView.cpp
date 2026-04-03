@@ -679,7 +679,9 @@ void MenuView::popupCreateToken(tgui::Panel::Ptr background,
   comboBox->setSize("80%", "13%");
   comboBox->setPosition("10%", "44%");
   comboBox->addItem("Spectateur");
-  comboBox->addItem("Editeur");
+  if (project.role > 0) {
+    comboBox->addItem("Editeur");
+  }
   comboBox->setSelectedItem("Spectateur");
   comboBox->getRenderer()->setBackgroundColor(tgui::Color(40, 40, 52));
   // comboBox->getRenderer()->setBackgroundColorHover(tgui::Color(50, 50, 65));

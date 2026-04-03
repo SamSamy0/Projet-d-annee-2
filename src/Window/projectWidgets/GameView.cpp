@@ -196,6 +196,15 @@ void GameView::showUserManagment(tgui::Button::Ptr toHover, int place) {
           displayMemberList();
 
         } else if (item == "Propriétaire") {
+          // We find the owner position
+          for (int i = 0; i < (int)allUsers_.size(); i++) {
+            if (allUsers_[i].pseudo == currentUser.getUser()) {
+              // We downgrade owner to editor
+              manager.changeRole(allUsers_[i].userId, project->getId(), 1);
+            }
+          }
+          // Change target role to owner
+          manager.changeRole(allUsers_[place].userId, project->getId(), 2);
         }
 
         activeMoreButton->getRenderer()->setBackgroundColor(
