@@ -30,6 +30,7 @@ void SpriteSelection::onPress(sf::Vector2i pos) {
   if (layer->getType() == SPRITELAYER) {
     std::shared_ptr<SpriteLayer> spritelayer =
         static_pointer_cast<SpriteLayer>(layer);
+    startSelectionPos_ = pos;
     pos -= spritelayer->getOffset();
 
     bool hit = false;
@@ -47,15 +48,26 @@ void SpriteSelection::onPress(sf::Vector2i pos) {
     if (hit) {
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
         if (isSelected(hitedId)) {
-          // selected_.erase(hitedId);
+          selected_.erase(std::remove(selected_.begin(),selected_.end(),hitedId),selected_.end()); //remove the id from selection
         } else {
           selected_.push_back(hitedId);
         }
       } else {
         if (!isSelected(hitedId)) {
+          selected_.clear();
+          selected_.push_back(hitedId);
         }
       }
+      state_ = DRAGING;
     } else {
+      if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)){
+        selected_.clear();
+      }
+      state_ = SELECTION;
     }
   }
+  lastPos_ = pos;
 }
+
+void SpriteSelection::onDrag(sf::Vector2i pos) {}
+void SpriteSelection::onRelease() {isDrawing_ = false;}
