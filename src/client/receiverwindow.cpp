@@ -178,8 +178,10 @@ void ReceiverInWindow::updateMemberList(uint projectId, uint target,
 }
 void ReceiverInWindow::kickUser(uint targetId) {
   if (app_->getUser().getId() == targetId) {
-    app_->getNetwork().getProjectList();
-    app_->changeView(std::make_unique<MenuView>(*app_));
+    if (auto gameView =
+            dynamic_cast<GameView *>(app_->getCurrentView().get())) {
+      gameView->popupKicked();
+    }
   } else {
     app_->getNetwork().getUsersProjects(app_->getProject()->getId());
   }

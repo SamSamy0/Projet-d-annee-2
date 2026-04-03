@@ -59,4 +59,5 @@ public:
   void setAllUsers(std::vector<MemberEntry> users);
   void updateMemberRole(uint targetId, int8_t role);
   void clearMemberList();
+  void popupKicked();
 };
