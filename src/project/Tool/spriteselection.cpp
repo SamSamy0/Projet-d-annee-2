@@ -76,28 +76,16 @@ void SpriteSelection::onDrag(sf::Vector2i pos) {
     pos -= spritelayer->getOffset();
     sf::Vector2i delta = sf::Vector2i(lastPos_.x -pos.x,lastPos_.y-pos.y);
 
-    switch (state_){
 
-      case DRAGING :{
+      if(state_ == DRAGING){
         for(uint id : selected_){
           spritelayer->shiftSprite(id,delta);
         }
-        break;
       }
-
-      case SELECTION : {
-
-
-
-        break;
-      }
-
-
 
 
 
       lastPos_ = pos;
-
     }
 
 
@@ -108,5 +96,29 @@ void SpriteSelection::onDrag(sf::Vector2i pos) {
   }
 
 
+void SpriteSelection::onRelease() {
+  std::shared_ptr<Layer> layer = map_->getCurrentLayer();
+  if (layer->getType() == SPRITELAYER) {
+    std::shared_ptr<SpriteLayer> spritelayer = static_pointer_cast<SpriteLayer>(layer);
+
+    if(state_ == SELECTION){
+      sf::FloatRect selectionRect;
+      selectionRect.size.x = std::max(startSelectionPos_.x,lastPos_.x) - std::min(startSelectionPos_.x,lastPos_.x);
+      selectionRect.size.y = std::max(startSelectionPos_.y,lastPos_.y) - std::min(startSelectionPos_.y,lastPos_.y);
+      selectionRect.position.x =(startSelectionPos_.x + lastPos_.x)/2 ;
+      selectionRect.position.y = (startSelectionPos_.y+lastPos_.y)/2;
+      
+
+
+    }
+
+
+
+
+
+
+
+
+  isDrawing_ = false;
+  }
 }
-void SpriteSelection::onRelease() {isDrawing_ = false;}
