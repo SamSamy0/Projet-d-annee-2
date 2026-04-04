@@ -69,5 +69,44 @@ void SpriteSelection::onPress(sf::Vector2i pos) {
   lastPos_ = pos;
 }
 
-void SpriteSelection::onDrag(sf::Vector2i pos) {}
+void SpriteSelection::onDrag(sf::Vector2i pos) {
+  std::shared_ptr<Layer> layer = map_->getCurrentLayer();
+  if (layer->getType() == SPRITELAYER) {
+    std::shared_ptr<SpriteLayer> spritelayer = static_pointer_cast<SpriteLayer>(layer);
+    pos -= spritelayer->getOffset();
+    sf::Vector2i delta = sf::Vector2i(lastPos_.x -pos.x,lastPos_.y-pos.y);
+
+    switch (state_){
+
+      case DRAGING :{
+        for(uint id : selected_){
+          spritelayer->shiftSprite(id,delta);
+        }
+        break;
+      }
+
+      case SELECTION : {
+
+
+
+        break;
+      }
+
+
+
+
+
+      lastPos_ = pos;
+
+    }
+
+
+
+
+
+
+  }
+
+
+}
 void SpriteSelection::onRelease() {isDrawing_ = false;}
