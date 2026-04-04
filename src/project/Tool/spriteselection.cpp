@@ -77,11 +77,12 @@ void SpriteSelection::onDrag(sf::Vector2i pos) {
     sf::Vector2i delta = sf::Vector2i(lastPos_.x -pos.x,lastPos_.y-pos.y);
 
 
-      if(state_ == DRAGING){
-        for(uint id : selected_){
-          spritelayer->shiftSprite(id,delta);
-        }
+    if(state_ == DRAGING){
+      for(uint id : selected_){
+        spritelayer->shiftSprite(id,delta);
+        
       }
+    }
 
 
 
@@ -107,6 +108,18 @@ void SpriteSelection::onRelease() {
       selectionRect.size.y = std::max(startSelectionPos_.y,lastPos_.y) - std::min(startSelectionPos_.y,lastPos_.y);
       selectionRect.position.x =(startSelectionPos_.x + lastPos_.x)/2 ;
       selectionRect.position.y = (startSelectionPos_.y+lastPos_.y)/2;
+      const std::vector<SpriteObject> &sprites = spritelayer->getSprites();
+      for(const auto& sprite : sprites){
+        if(selectionRect.findIntersection(sprite.sprite.getGlobalBounds())){
+          if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)){
+            
+            
+          }
+
+        }
+
+      }
+
       
 
 
