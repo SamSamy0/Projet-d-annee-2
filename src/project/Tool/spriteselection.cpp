@@ -30,8 +30,8 @@ void SpriteSelection::onPress(sf::Vector2i pos) {
   if (layer->getType() == SPRITELAYER) {
     std::shared_ptr<SpriteLayer> spritelayer =
         static_pointer_cast<SpriteLayer>(layer);
-    startSelectionPos_ = pos;
     pos -= spritelayer->getOffset();
+    startSelectionPos_ = pos;
 
     bool hit = false;
     uint hitedId;
@@ -58,12 +58,12 @@ void SpriteSelection::onPress(sf::Vector2i pos) {
           selected_.push_back(hitedId);
         }
       }
-      state_ = DRAGING;
+      state_ = SelectionState::DRAGING;
     } else {
       if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)){
         selected_.clear();
       }
-      state_ = SELECTION;
+      state_ = SelectionState::SELECTION;
     }
   }
   lastPos_ = pos;
@@ -74,25 +74,17 @@ void SpriteSelection::onDrag(sf::Vector2i pos) {
   if (layer->getType() == SPRITELAYER) {
     std::shared_ptr<SpriteLayer> spritelayer = static_pointer_cast<SpriteLayer>(layer);
     pos -= spritelayer->getOffset();
-    sf::Vector2i delta = sf::Vector2i(lastPos_.x -pos.x,lastPos_.y-pos.y);
+    sf::Vector2i delta = sf::Vector2i(pos.x -lastPos_.x,pos.y- lastPos_.y);
 
 
-    if(state_ == DRAGING){
+    if(state_ == SelectionState::DRAGING){
       for(uint id : selected_){
         spritelayer->shiftSprite(id,delta);
         
       }
     }
-
-
-
       lastPos_ = pos;
     }
-
-
-
-
-
 
   }
 
@@ -102,36 +94,43 @@ void SpriteSelection::onRelease() {
   if (layer->getType() == SPRITELAYER) {
     std::shared_ptr<SpriteLayer> spritelayer = static_pointer_cast<SpriteLayer>(layer);
 
-    if(state_ == SELECTION){
+    if(state_ == SelectionState::SELECTION){
       sf::FloatRect selectionRect;
-      selectionRect.size.x = std::max(startSelectionPos_.x,lastPos_.x) - std::min(startSelectionPos_.x,lastPos_.x);
-      selectionRect.size.y = std::max(startSelectionPos_.y,lastPos_.y) - std::min(startSelectionPos_.y,lastPos_.y);
-      selectionRect.position.x =(startSelectionPos_.x + lastPos_.x)/2 ;
-      selectionRect.position.y = (startSelectionPos_.y+lastPos_.y)/2;
+
+
+      selectionRect.size.x = std::abs(startSelectionPos_.x-lastPos_.x);
+      selectionRect.size.y = std::abs(startSelectionPos_.y-lastPos_.y);
+
+      //top left corner of the Rectangle
+      selectionRect.position.x =std::min(startSelectionPos_.x,lastPos_.x)  ;
+      selectionRect.position.y = std::min(startSelectionPos_.y,lastPos_.y);
+
       const std::vector<SpriteObject> &sprites = spritelayer->getSprites();
+
+      bool isCtrl = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl);
+
+      if(!isCtrl){
+        selected_.clear();
+      }
       for(const auto& sprite : sprites){
         if(selectionRect.findIntersection(sprite.sprite.getGlobalBounds())){
-          if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)){
-            
-            
+          if(isCtrl){
+            if(!isSelected(sprite.id))
+              selected_.push_back(sprite.id); //WARNING: ATTENTION AU COMPORTEMENT SI ON PRESSE CTRL ON CLICK PUIS ON LE RELACHE AVANT ON RELEASE
+            else{
+              selected_.erase(std::remove(selected_.begin(),selected_.end(),sprite.id),selected_.end());
+            }
           }
-
+          else
+            selected_.push_back(sprite.id);
+          }
         }
-
-      }
-
-      
-
-
     }
 
+    else if(state_ == SelectionState::DRAGING){
 
-
-
-
-
-
-
+    }
   isDrawing_ = false;
   }
+  state_ = SelectionState::NONE;
 }
