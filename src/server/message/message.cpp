@@ -53,7 +53,7 @@ void CreateProjectMessage::process(Worker& worker) {
     uint idProj = worker.addProjectSQL(nomProjet_, userId_);
     client_->projectId = idProj;
 
-    auto liveProj = LiveProject(idProj, QString::fromStdString(nomProjet_), size_.x, size_.y, scale_);
+    auto liveProj = LiveProject(idProj, nomProjet_, size_.x, size_.y, scale_);
     liveProj.addConnection(userId_, 2);
     worker.mapProjet_.emplace(idProj, std::move(liveProj));
 
@@ -175,13 +175,12 @@ void CreateLayerMessage::process(Worker &worker){
     return;
   }
 
-
-
-  //TODO: la condition avec liveproj
-  std::vector<uint> usersId = this->getUserLists(worker);
-  std::unique_ptr<Reponse> rps;
-  rps = std::make_unique<ReponseCreateLayer>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+  if (liveProj->second.addCalque(userId_, calqueId_, type_)) {
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseCreateLayer>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 
@@ -198,11 +197,12 @@ void DeleteLayerMessage::process(Worker &worker){
     return;
   }
 
-  //TODO: la condition avec liveproj
-  std::vector<uint> usersId = this->getUserLists(worker);
-  std::unique_ptr<Reponse> rps;
-  rps = std::make_unique<ReponseDeleteLayer>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+  if (liveProj->second.removeCalque(userId_, calqueId_)) {
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseDeleteLayer>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 
 }
 
@@ -218,11 +218,12 @@ void OrganizeLayerDawnMessage::process(Worker &worker){
     return;
   }
 
-  //TODO: la condition avec liveproj
-  std::vector<uint> usersId = this->getUserLists(worker);
-  std::unique_ptr<Reponse> rps;
-  rps = std::make_unique<ReponseOrganizeLayerDawn>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+  if (liveProj->second.moveCalqueDown(userId_, calqueId_)) {
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseOrganizeLayerDawn>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 
@@ -238,11 +239,12 @@ void OrganizeLayerUpMessage::process(Worker &worker){
     return;
   }
 
-  //TODO: la condition avec liveproj
-  std::vector<uint> usersId = this->getUserLists(worker);
-  std::unique_ptr<Reponse> rps;
-  rps = std::make_unique<ReponseOrganizeLayerUp>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+  if (liveProj->second.moveCalqueUp(userId_, calqueId_)) {
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseOrganizeLayerUp>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 
@@ -251,9 +253,6 @@ PutPixelsSquareMessage::PutPixelsSquareMessage(sf::Packet &data_packet,
   userId_ = client->id;
   data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> taille_ >> red_ >>
       green_ >> blue_ >> opa_ ;
-
-  std::cout << projectId_ << " " << calqueId_ << " " << pos_.x << " " << pos_.y << " " << taille_ << " " << red_ << " "<<
-      green_ << " "<< blue_ << " "<< opa_ ;
 }
 
 void PutPixelsSquareMessage::process(Worker &worker) {

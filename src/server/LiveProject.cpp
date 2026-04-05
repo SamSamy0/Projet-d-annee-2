@@ -5,66 +5,22 @@
 
 LiveProject::LiveProject(uint projId) {
     ProjectsManager prjManager;
-    json_ = prjManager.loadProjectJson(projId);
-    layers_ = json_["layers"].toArray();
-    for (const QJsonValue &layerValue : layers_) {
-        if (layerValue.isObject()) {
-            QJsonObject layerObj = layerValue.toObject();
+    QJsonObject json_ = prjManager.loadProjectJson(projId);
+    QJsonArray layers = json_["layers"].toArray();
 
-            int id = layerObj["id"].toInt();
-            if (layerObj["type"].toString().toStdString() == "pixel"){
-                layersImage_[id] = prjManager.loadImage(projId, id);
-            }
-            else {
-                layersSprite_[id];
-                setupLayerSprite(id, prjManager.loadSprite(projId, id));
-            }
-        }
-    }
+
     scale_ = json_["scale"].toInt();
-    lastUsedLayerId_ = json_["layerId"].toInt();
     width_ = json_["width"].toInt();
     height_ = json_["height"].toInt();
+    id_ = json_["id"].toInt();
+    name_ = json_["name"].toString().toStdString();
 
+    layers_ = LayerManager(layers, projId,  json_["layerId"].toInt(), height_, width_, scale_);
 }
 
-LiveProject::LiveProject(uint id, const QString &projectName, uint width, uint height, uint scale) {
-    QJsonObject firstLayer;
-    QJsonObject secondLayer;
-    
-    json_["id"] = static_cast<int>(id);
-    json_["name"] = projectName;
-    json_["width"] =  static_cast<int>(width);
-    json_["height"] =  static_cast<int>(height);
-    json_["scale"] = static_cast<int>(scale);
-    json_["layerId"] = (int)2;
-
-    firstLayer["type"] = "pixel";
-    firstLayer["id"] = 0;
-    firstLayer["x"] = 0;
-    firstLayer["y"] = 0;
-
-    secondLayer["type"] = "sprite"; //
-    secondLayer["id"] = 1;
-    secondLayer["x"] = 0;
-    secondLayer["y"] = 0;
-
-    scale_ = scale;
-    lastUsedLayerId_ = 2;//
-    height_ = height;
-    width_ = width;
-
-    layers_.append(firstLayer);
-    layers_.append(secondLayer);//
-
-    json_["layers"] = layers_;
-    QImage image(width, height , QImage::Format_ARGB32);
-    image.fill(Qt::transparent);
-    layersImage_[0] = image;
-
-    layersSprite_[1] = SpriteLayer();
-    qDebug() << "nv liveporj";
-}
+LiveProject::LiveProject(uint id, const std::string &projectName, uint width, uint height, uint scale) 
+    : layers_(height, width, scale), name_(projectName), scale_(scale), height_(height),  width_(width), 
+    id_(id) { }
 
 void LiveProject::addConnection(uint userId, uint8_t role) {
     auto it = std::find(connectedID_.begin(), connectedID_.end(), userId);
@@ -84,19 +40,22 @@ bool LiveProject::removeConnection(uint userId) {
     return connectedID_.empty();
 }
 
-QJsonObject& LiveProject::getJson() {
-    return json_;
+QJsonObject LiveProject::getJson() {
+    QJsonObject json;
+    json["height"] = static_cast<int>(height_);
+    json["width"] = static_cast<int>(width_);
+    json["scale"] = static_cast<int>(scale_);
+    json["id"] = static_cast<int>(id_);
+    json["name"] = QString::fromStdString(name_);
+
+    json["layers"] = layers_.getJson();
+    return json;
 }
 
 std::vector<uint>& LiveProject::getConnected() {
     return connectedID_;
 }
 
-void LiveProject::setupLayerSprite(uint LayerId, const QJsonObject& sprites){
-    if (layersSprite_.find(LayerId) != layersSprite_.end()) {
-        layersSprite_[LayerId] = SpriteLayer(sprites);
-    }
-}
 
 uint LiveProject::getScale() {
     return scale_;
@@ -104,249 +63,111 @@ uint LiveProject::getScale() {
 
 bool LiveProject::drawPixelRect(uint userId, uint calqueId, uint x, uint y, float taille,
     uint8_t r, uint8_t g, uint8_t b, uint8_t op) {
-    
-    auto cleVal = usersRoles_.find(userId);
-    if (cleVal == usersRoles_.end()) {
+
+    if (!canModify(userId)) {
         return false;
     }
-
-    if (cleVal->second != 0 ){
-        if (layersImage_.find(calqueId) != layersImage_.end()) {
-        QPainter painter(&layersImage_[calqueId]);
-        QColor color(r, g, b, op);
-        
-        painter.setRenderHint(QPainter::Antialiasing, false);
-        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(QBrush(color));
-        float topLeftX = x - (taille*scale_)/2.0f;
-        float topLeftY = y - (taille*scale_)/2.0f;
-        
-        painter.drawRect(QRectF(topLeftX, topLeftY, taille * scale_, taille * scale_));
-        return true;
-        }
-    }
-    return false;
+    
+    return layers_.drawPixelRect(calqueId, x, y, taille, r, g, b, op);
 }
 
 bool LiveProject::drawPixelCircle(uint userId, uint calqueId, uint x, uint y, float taille,
     uint8_t r, uint8_t g, uint8_t b, uint8_t op) {
     
-    auto cleVal = usersRoles_.find(userId);
-    if (cleVal == usersRoles_.end()) {
+    if (!canModify(userId)) {
         return false;
     }
 
-    if (cleVal->second != 0 ){
-        if (layersImage_.find(calqueId) != layersImage_.end()) {
-            QPainter painter(&layersImage_[calqueId]);
-            QColor color(r, g, b, op);
-            QPolygonF polygon;
-
-            for (int i = 0; i < 30; ++i) {
-
-                float angle = i * 2 * M_PI / 30;
-                float px = x + std::cos(angle) * taille * scale_/ 2.0f;
-                float py = y + std::sin(angle) * taille * scale_ / 2.0f;
-                polygon << QPointF(px, py);
-        }
-
-        painter.setRenderHint(QPainter::Antialiasing, false);
-        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(QBrush(color));
-
-        painter.drawPolygon(polygon);
-        return true;
-        }
-    }
-    return false;
+    return layers_.drawPixelCircle(calqueId, x, y, taille, r, g, b, op);
 }
 
 bool LiveProject::drawPixelDiam(uint userId, uint calqueId, uint x, uint y, float h, float w, 
     uint8_t r, uint8_t g, uint8_t b, uint8_t op) {
 
-    auto cleVal = usersRoles_.find(userId);
-    if (cleVal == usersRoles_.end()) {
+    if (!canModify(userId)) {
         return false;
     }
 
-    if (cleVal->second != 0 ){
-        if (layersImage_.find(calqueId) != layersImage_.end()) {
-            QPainter painter(&layersImage_[calqueId]);
-            QColor color(r, g, b, op);
-            QPolygonF polygon;
-
-            float h_demi = h * scale_/ 2.0f;
-            float l_demi = w * scale_ / 2.0f;
-            polygon << QPointF(x, y - h_demi);
-            polygon << QPointF(x + l_demi, y);
-            polygon << QPointF(x, y + h_demi);
-            polygon << QPointF(x - l_demi, y);
-
-            painter.setRenderHint(QPainter::Antialiasing, false);
-            painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-            painter.setPen(Qt::NoPen);
-            painter.setBrush(QBrush(color));
-
-            painter.drawPolygon(polygon);
-            return true;
-        }
-    }
-    return false;
+    return layers_.drawPixelDiam(calqueId, x, y, h, w, r, g, b, op);
 }
 
 bool LiveProject::erasePixelRect(uint userId, uint calqueId, uint x, uint y, float taille) {
     
-    auto cleVal = usersRoles_.find(userId);
-    if (cleVal == usersRoles_.end()) {
+    if (!canModify(userId)) {
         return false;
     }
-
-    if (cleVal->second != 0 ){
-        if (layersImage_.find(calqueId) != layersImage_.end()) {
-            QPainter painter(&layersImage_[calqueId]);
-        
-            painter.setRenderHint(QPainter::Antialiasing, false);
-            painter.setCompositionMode(QPainter::CompositionMode_Source);
-            painter.setPen(Qt::NoPen);
-            painter.setBrush(QBrush(Qt::transparent));
-            float topLeftX = x - (taille*scale_)/2.0f;
-            float topLeftY = y - (taille*scale_)/2.0f;
-        
-            painter.drawRect(QRectF(topLeftX, topLeftY, taille * scale_, taille * scale_));
-            return true;
-        }
-    }
-    return false;
+    return layers_.erasePixelRect(calqueId, x, y, taille);
 }
 
 bool LiveProject::erasePixelCircle(uint userId, uint calqueId, uint x, uint y, float taille) {
     
-    auto cleVal = usersRoles_.find(userId);
-    if (cleVal == usersRoles_.end()) {
+    if (!canModify(userId)) {
         return false;
     }
 
-    if (cleVal->second != 0 ){
-        if (layersImage_.find(calqueId) != layersImage_.end()) {
-            QPainter painter(&layersImage_[calqueId]);
-            QPolygonF polygon;
-
-            for (int i = 0; i < 30; ++i) {
-
-                float angle = i * 2 * M_PI / 30;
-                float px = x + std::cos(angle) * taille * scale_/ 2.0f;
-                float py = y + std::sin(angle) * taille * scale_ / 2.0f;
-                polygon << QPointF(px, py);
-            }
-
-            painter.setRenderHint(QPainter::Antialiasing, false);
-            painter.setCompositionMode(QPainter::CompositionMode_Source);
-            painter.setPen(Qt::NoPen);
-            painter.setBrush(QBrush(Qt::transparent));
-
-            painter.drawPolygon(polygon);
-            return true;
-        }
-    }
-    return false;
+    return layers_.erasePixelCircle(calqueId, x, y, taille);
 }
 
 bool LiveProject::erasePixelDiam(uint userId, uint calqueId, uint x, uint y, float h, float w) {
 
-    auto cleVal = usersRoles_.find(userId);
-    if (cleVal == usersRoles_.end()) {
+    if (!canModify(userId)) {
         return false;
     }
 
-    if (cleVal->second != 0 ){
-        if (layersImage_.find(calqueId) != layersImage_.end()) {
-            QPainter painter(&layersImage_[calqueId]);
-            QPolygonF polygon;
-
-            float h_demi = h * scale_/ 2.0f;
-            float l_demi = w * scale_ / 2.0f;
-            polygon << QPointF(x, y - h_demi);
-            polygon << QPointF(x + l_demi, y);
-            polygon << QPointF(x, y + h_demi);
-            polygon << QPointF(x - l_demi, y);
-
-            painter.setRenderHint(QPainter::Antialiasing, false);
-            painter.setCompositionMode(QPainter::CompositionMode_Source);
-            painter.setPen(Qt::NoPen);
-            painter.setBrush(QBrush(Qt::transparent));
-
-            painter.drawPolygon(polygon);
-            return true;
-        }
-    }
-    return false;
+    return layers_.erasePixelDiam(calqueId, x, y, h, w);
 }
 
-std::unordered_map<uint, SpriteLayer>& LiveProject::getSpritesMap() {
-    return layersSprite_;
+const std::unordered_map<uint, SpriteLayer>& LiveProject::getSpritesMap() {
+    return layers_.getSpritesMap();
 }
 
-std::unordered_map<uint, QImage>& LiveProject::getImageMap() {
-    return layersImage_;
-}
-
-bool LiveProject::addCalquePixel(uint userId) {
-
-    auto cleVal = usersRoles_.find(userId);
-    if (cleVal == usersRoles_.end()) {
-        return false;
-    }
-
-    if (cleVal->second != 0 ) {
-
-        QJsonObject newLayer;
-        newLayer["type"] = "pixel";
-        newLayer["id"] = static_cast<int>(lastUsedLayerId_);
-        newLayer["x"] = 0;
-        newLayer["y"] = 0;        
-
-        layers_.append(newLayer);
-        QImage image(width_, height_ , QImage::Format_ARGB32);
-        image.fill(Qt::transparent);
-        layersImage_[lastUsedLayerId_] = image;
-
-        lastUsedLayerId_ += 1;
-        json_["layerId"] = static_cast<int>(lastUsedLayerId_);
-        return true;
-    }
-
-    return false;
-}
-
-bool LiveProject::addCalqueSprite(uint userId) {
-
-    auto cleVal = usersRoles_.find(userId);
-    if (cleVal == usersRoles_.end()) {
-        return false;
-    }
-
-    if (cleVal->second != 0 ) {
-
-        QJsonObject newLayer;
-        newLayer["type"] = "sprite";
-        newLayer["id"] = static_cast<int>(lastUsedLayerId_);
-        newLayer["x"] = 0;
-        newLayer["y"] = 0;        
-
-        layers_.append(newLayer);
-        layersSprite_[lastUsedLayerId_];
-
-        lastUsedLayerId_ += 1;
-        json_["layerId"] = static_cast<int>(lastUsedLayerId_);
-        return true;
-    }
-    
-    return false;
+const std::unordered_map<uint, QImage>& LiveProject::getImageMap() {
+    return layers_.getImageMap();
 }
 
 bool LiveProject::addSprite(uint userId, uint calqueId, std::string asset_id, uint x, uint y, float taille) {
+    if (!canModify(userId)) {
+        return false;
+    }
+
+    return layers_.addSprite(calqueId, asset_id, x, y, taille);
+}
+
+bool LiveProject::addCalque(uint userId, uint calqueId, uint8_t type) {
+    if (!canModify(userId)) {
+        return false;
+    }
+
+    return layers_.addCalque(calqueId, type);
+}
+
+bool LiveProject::removeCalque(uint userId, uint calqueId) {
+    if (!canModify(userId)) {
+        return false;
+    }
+
+    return layers_.removeCalque(calqueId);
+}
+
+bool LiveProject::moveCalqueUp(uint userId, uint calqueId) {
+    
+    if (!canModify(userId)) {
+        return false;
+    }
+
+   return layers_.moveCalqueUp(calqueId); 
+}
+
+bool LiveProject::moveCalqueDown(uint userId, uint calqueId) {
+       
+    if (!canModify(userId)) {
+        return false;
+    }
+
+   return layers_.moveCalqueDown(calqueId); 
+}
+
+bool LiveProject::canModify(uint userId) {
     auto cleVal = usersRoles_.find(userId);
     if (cleVal == usersRoles_.end()) {
         return false;
@@ -355,10 +176,14 @@ bool LiveProject::addSprite(uint userId, uint calqueId, std::string asset_id, ui
     if (cleVal->second = 0 ){
         return false;
     }
+    return true;
+}
 
-    if (layersSprite_.find(calqueId) != layersSprite_.end()) {
-        layersSprite_[calqueId].addSprite(asset_id, taille, x, y);
-        return true;        
+bool LiveProject::removeSprite(uint userId, uint calqueId, uint spriteId) {
+    
+    if (!canModify(userId)) {
+        return false;
     }
-    return false;
+
+    return layers_.removeSprite(calqueId, spriteId);
 }

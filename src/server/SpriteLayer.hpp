@@ -11,7 +11,7 @@ class SpriteLayer {
     public :
     SpriteLayer(const QJsonObject& origin);
     SpriteLayer();
-    QJsonObject load();
+    QJsonObject load() const ;
     void addSprite(std::string nameId, float taille, uint x, uint y);
     bool eraseSprite(uint idSprite);
 };

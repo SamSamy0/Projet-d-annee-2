@@ -52,7 +52,7 @@ bool SpriteLayer::eraseSprite(uint idSprite) {
     return false;
 }
 
-QJsonObject SpriteLayer::load() {
+QJsonObject SpriteLayer::load() const {
     QJsonObject layer;
     layer["lastId"] = static_cast<int>(lastId_);
     QJsonArray sprites;

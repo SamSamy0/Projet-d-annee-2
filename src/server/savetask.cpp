@@ -3,12 +3,12 @@
 SaveTask::SaveTask(LiveProject& livePrj, uint projId) 
     : json_(livePrj.getJson()), projetId_(projId)
 {
-    std::unordered_map<uint, QImage>& layersImagePrj = livePrj.getImageMap();
+    const std::unordered_map<uint, QImage>& layersImagePrj = livePrj.getImageMap();
     for (auto it = layersImagePrj.begin(); it != layersImagePrj.end(); ++it) {
         layersImage_.emplace_back(it->first, it->second);
     }
 
-    std::unordered_map<uint, SpriteLayer>& layersSpritePrj = livePrj.getSpritesMap();
+    const std::unordered_map<uint, SpriteLayer>& layersSpritePrj = livePrj.getSpritesMap();
     for (auto it = layersSpritePrj.begin(); it != layersSpritePrj.end(); ++it) {
         layersSprite_.emplace_back(it->first, it->second.load());
     }

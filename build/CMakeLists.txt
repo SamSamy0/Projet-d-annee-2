@@ -143,6 +143,7 @@ set(SERVER_SOURCES
     ../src/server/saveworker.cpp
     ../src/server/savetask.cpp
     ../src/server/SpriteLayer.cpp
+    ../src/server/LayerManager.cpp
 )
 
 add_executable(server ${SERVER_SOURCES})
