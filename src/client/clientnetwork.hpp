@@ -29,7 +29,7 @@ public:
   void delProject(uint project_id);
   void getProjectData(uint project_id);
   void joinProject(std::string project_code);
-  void createLayer(uint proj_id, uint current_layer_id,LayerType type);
+  void createLayer(uint proj_id,LayerType type);
   void deleteLayer(uint proj_id, uint current_layer_id);
   void layerUp(uint proj_id, uint current_layer_id);
   void layerDawn(uint proj_id, uint current_layer_id);

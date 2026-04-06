@@ -51,7 +51,7 @@ void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
 }
 
 
-void ReceiverInWindow::createLayer(uint current_layer_id,LayerType type){
+void ReceiverInWindow::createLayer(LayerType type){
   dynamic_cast<GameView*>(app_->getCurrentView().get())->createLayer(type);
 }
 

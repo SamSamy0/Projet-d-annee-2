@@ -17,7 +17,7 @@ public:
   void addProjectToList(ProjectData projet);
   void updateProjectNameInList(uint id, const std::string &name);
   void updateCreatedProjectId(uint ProjectId);
-  void createLayer(uint current_layer_id,LayerType type);
+  void createLayer(LayerType type);
   void deleteLayer(uint current_layer_id);
   void layerUp(uint layer_id);
   void layerDawn(uint layer_id);

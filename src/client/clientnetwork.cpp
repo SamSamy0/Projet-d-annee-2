@@ -158,13 +158,13 @@ void ClientNetworkManager::joinProject(std::string project_code) {
               << std::endl;
 }
 
-void ClientNetworkManager::createLayer(uint proj_id, uint current_layer_id,LayerType type){
+void ClientNetworkManager::createLayer(uint proj_id,LayerType type){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_CREATE_LAYER_REQ;
 
   packet << static_cast<uint8_t>(msg);
   uint8_t type_int = static_cast<uint8_t>(type);
-  packet << proj_id << current_layer_id << type_int;
+  packet << proj_id << type_int;
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)

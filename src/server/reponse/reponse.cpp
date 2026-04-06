@@ -103,7 +103,7 @@ void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
 
 ReponseCreateLayer::ReponseCreateLayer(std::vector<uint> usersId, CreateLayerMessage& mess) : ReponseGroupe(usersId) {
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_CREATE_LAYER_REP);
-    dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.type_;
+    dataPacket_ << mess.projectId_ << mess.type_;
 }
 
 ReponseDeleteLayer::ReponseDeleteLayer(std::vector<uint> usersId, DeleteLayerMessage& mess): ReponseGroupe(usersId) {

@@ -238,7 +238,7 @@ void GameView::initLayerPanel() {
       auto& gui = app_.getGui();
       gui.remove(popup);
       createLayer(PIXELLAYER);
-      app_.getNetwork().createLayer(project->getId(),project->getMap()->getCurrentLayer()->getId(),PIXELLAYER);
+      app_.getNetwork().createLayer(project->getId(),PIXELLAYER);
       
     });
 
@@ -246,7 +246,7 @@ void GameView::initLayerPanel() {
       auto& gui = app_.getGui();
       gui.remove(popup);
       createLayer(SPRITELAYER);
-      app_.getNetwork().createLayer(project->getId(),project->getMap()->getCurrentLayer()->getId(),SPRITELAYER);
+      app_.getNetwork().createLayer(project->getId(),SPRITELAYER);
     });
   });
   layerPanel_->add(addLayerButton);

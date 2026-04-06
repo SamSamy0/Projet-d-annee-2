@@ -165,7 +165,7 @@ std::vector<uint> ModifProjetMessage::getUserLists(Worker& worker) {
 
 CreateLayerMessage::CreateLayerMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client){
   userId_ = client->id;
-  data_packet >>projectId_ >> calqueId_>> type_;
+  data_packet >>projectId_ >> type_;
 }
 
 void CreateLayerMessage::process(Worker &worker){
