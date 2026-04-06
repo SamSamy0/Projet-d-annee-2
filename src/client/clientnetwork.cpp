@@ -197,9 +197,9 @@ void ClientNetworkManager::layerUp(uint proj_id, uint layer_id){
               << std::endl;
 }
 
-void ClientNetworkManager::layerDawn(uint proj_id, uint layer_id){
+void ClientNetworkManager::layerDown(uint proj_id, uint layer_id){
   sf::Packet packet;
-  MsgProtocole msg = MsgProtocole::MAP_ORGANIZE_LAYER_DAWN_REQ;
+  MsgProtocole msg = MsgProtocole::MAP_ORGANIZE_LAYER_DOWN_REQ;
 
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id;

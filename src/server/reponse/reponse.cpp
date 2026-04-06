@@ -116,8 +116,8 @@ ReponseOrganizeLayerUp::ReponseOrganizeLayerUp(std::vector<uint> usersId, Organi
     dataPacket_ << mess.projectId_ << mess.calqueId_;
 }
 
-ReponseOrganizeLayerDawn::ReponseOrganizeLayerDawn(std::vector<uint> usersId, OrganizeLayerDawnMessage& mess) :ReponseGroupe(usersId) {
-    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ORGANIZE_LAYER_DAWN_REP);
+ReponseOrganizeLayerDown::ReponseOrganizeLayerDown(std::vector<uint> usersId, OrganizeLayerDownMessage& mess) :ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ORGANIZE_LAYER_DOWN_REP);
     dataPacket_ << mess.projectId_ << mess.calqueId_;
 }
 

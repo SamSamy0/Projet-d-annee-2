@@ -20,7 +20,7 @@ public:
   void createLayer(LayerType type);
   void deleteLayer(uint current_layer_id);
   void layerUp(uint layer_id);
-  void layerDawn(uint layer_id);
+  void layerDown(uint layer_id);
   void drawPixelBrush(uint layer_id, int pos_x, int pos_y, uint8_t r, uint8_t g,
                       uint8_t b, uint8_t a, Shape shape, bool eraser,
                       float size_x, float size_y);

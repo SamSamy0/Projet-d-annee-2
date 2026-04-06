@@ -207,11 +207,11 @@ void DeleteLayerMessage::process(Worker &worker){
 }
 
 
-OrganizeLayerDawnMessage::OrganizeLayerDawnMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client){
+OrganizeLayerDownMessage::OrganizeLayerDownMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client){
   userId_ = client->id;
   data_packet >>projectId_ >> calqueId_;
 }
-void OrganizeLayerDawnMessage::process(Worker &worker){
+void OrganizeLayerDownMessage::process(Worker &worker){
   auto liveProj = worker.mapProjet_.find(projectId_);
 
   if (liveProj == worker.mapProjet_.end()) {
@@ -221,7 +221,7 @@ void OrganizeLayerDawnMessage::process(Worker &worker){
   //TODO: la condition avec liveproj
   std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
-  rps = std::make_unique<ReponseOrganizeLayerDawn>(usersId, *this);
+  rps = std::make_unique<ReponseOrganizeLayerDown>(usersId, *this);
   worker.pushNetwork(std::move(rps));
 }
 
@@ -516,8 +516,8 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
   case MsgProtocole::MAP_ORGANIZE_LAYER_UP_REQ:
     return std::make_unique<OrganizeLayerUpMessage>(data_packet,c);
 
-  case MsgProtocole::MAP_ORGANIZE_LAYER_DAWN_REQ:
-    return std::make_unique<OrganizeLayerDawnMessage>(data_packet,c);
+  case MsgProtocole::MAP_ORGANIZE_LAYER_DOWN_REQ:
+    return std::make_unique<OrganizeLayerDownMessage>(data_packet,c);
 
   case MsgProtocole::MAP_REMOVE_LAYER_REQ:
     return std::make_unique<DeleteLayerMessage>(data_packet,c);

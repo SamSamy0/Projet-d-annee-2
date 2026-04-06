@@ -88,7 +88,7 @@ void Map::createSpriteLayer(){
 //     selected_ -= 1;
 // }
 
-void Map::layerDawn(uint layerId){
+void Map::layerDown(uint layerId){
     if (layers_.size() <= 1) return;
     int j = -1;
 
@@ -124,7 +124,7 @@ void Map::layerUp(uint layerId){
 
 }
 
-// void Map::layerDawn(uint layerId){
+// void Map::layerDown(uint layerId){
 //     if (selected_ >= layers_.size()-1) return;
 //     std::swap(layers_[selected_], layers_[selected_ + 1]);
 //     selected_ += 1;

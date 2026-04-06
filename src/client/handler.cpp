@@ -167,11 +167,11 @@ void ClientHandler::process(ServerEvent &event) {
     break;
     }
 
-    case MsgProtocole::MAP_ORGANIZE_LAYER_DAWN_REP:{
+    case MsgProtocole::MAP_ORGANIZE_LAYER_DOWN_REP:{
     uint project_id;
     uint current_layer_id;
     *(event.data_packet_) >> project_id >> current_layer_id;
-    handleWindow_.layerDawn(current_layer_id);
+    handleWindow_.layerDown(current_layer_id);
     break;
 }
 
@@ -193,7 +193,6 @@ void ClientHandler::process(ServerEvent &event) {
   }
 
   case MsgProtocole::MAP_PUT_PIXELS_SQUARE_REP: {
-    std::cout<<"traitement de la réponse : worker"<<std::endl;
     uint project_id;
     uint layer_id;
     int pos_x;

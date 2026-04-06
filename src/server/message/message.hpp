@@ -112,8 +112,8 @@ struct OrganizeLayerUpMessage : ModifProjetMessage{
 };
 
 
-struct OrganizeLayerDawnMessage : ModifProjetMessage{
-  OrganizeLayerDawnMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
+struct OrganizeLayerDownMessage : ModifProjetMessage{
+  OrganizeLayerDownMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };
 

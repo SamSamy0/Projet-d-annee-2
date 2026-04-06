@@ -88,8 +88,8 @@ struct ReponseOrganizeLayerUp : ReponseGroupe{
     ReponseOrganizeLayerUp(std::vector<uint> usersId, OrganizeLayerUpMessage& mess);
 };
 
-struct ReponseOrganizeLayerDawn : ReponseGroupe{
-    ReponseOrganizeLayerDawn(std::vector<uint> usersId, OrganizeLayerDawnMessage& mess);
+struct ReponseOrganizeLayerDown : ReponseGroupe{
+    ReponseOrganizeLayerDown(std::vector<uint> usersId, OrganizeLayerDownMessage& mess);
 };
 
 struct ReponsePutPixelsCircle : ReponseGroupe {

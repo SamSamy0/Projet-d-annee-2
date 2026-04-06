@@ -63,8 +63,8 @@ void ReceiverInWindow::layerUp(uint layer_id){
   dynamic_cast<GameView*>(app_->getCurrentView().get())->layerUp(layer_id);
 }
 
-void ReceiverInWindow::layerDawn(uint layer_id){
-  dynamic_cast<GameView*>(app_->getCurrentView().get())->layerDawn(layer_id);
+void ReceiverInWindow::layerDown(uint layer_id){
+  dynamic_cast<GameView*>(app_->getCurrentView().get())->layerDown(layer_id);
 }
 
 

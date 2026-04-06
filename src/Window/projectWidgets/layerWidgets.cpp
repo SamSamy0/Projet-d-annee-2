@@ -145,8 +145,8 @@ void GameView::initLayerPanel() {
   goUpLayer->getRenderer()->setRoundedBorderRadius(8);
   goUpLayer->onClick([this]() {
     uint layer_id = project->getMap()->getCurrentLayer()->getId();
-    project->getMap()->layerDawn(project->getMap()->getCurrentLayer()->getId());
-    app_.getNetwork().layerDawn(project->getId(),layer_id); 
+    project->getMap()->layerDown(project->getMap()->getCurrentLayer()->getId());
+    app_.getNetwork().layerDown(project->getId(),layer_id); 
     refreshLayerList();
 
   });
@@ -389,7 +389,7 @@ void GameView::layerUp(uint layer_id){
   project->getMap()->layerUp(layer_id);
   refreshLayerList();
 }
-void GameView::layerDawn(uint layer_id){
-  project->getMap()->layerDawn(layer_id);
+void GameView::layerDown(uint layer_id){
+  project->getMap()->layerDown(layer_id);
   refreshLayerList();
 }
