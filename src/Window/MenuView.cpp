@@ -89,8 +89,6 @@ void MenuView::handleEvents(const sf::Event &event) {
   auto &gui = app_.getGui();
   if (const auto *mouseClick = event.getIf<sf::Event::MouseButtonPressed>()) {
     auto popup = gui.get("popup");
-    auto background = gui.get("background");
-    auto btnMore = gui.get("BtnMore");
     // If popup exists
     if (popup) {
       // Gets position of where menu pops
@@ -219,7 +217,7 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   // }
   menu->addItem("Dupliquer");
   menu->addItem("Partager");
-  menu->addItem("Quitter");
+  // menu->addItem("Quitter");
   float menuHeight = menu->getItemCount() * 45;
   menu->setSize(150, menuHeight);
   menu->setItemHeight(45);
@@ -228,24 +226,20 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
 
   gui.add(menu, "popup");
   menu->setTextSize(20);
+  int8_t projectRole = project.role;
+  app_.setCurrentProjRole(projectRole);
   // menu->onUnfocus([this, menu]() { gui.remove(menu); });
-  menu->onItemSelect([this, menu, id, toHover, project, &manager,
+  menu->onItemSelect([this, menu, id, toHover, project, projectRole, &manager,
                       &gui](const tgui::String &item) {
     // Delete Action
     if (item == "Supprimer") {
-      auto it = std::find_if(
-          projectList.begin(), projectList.end(),
-          [id](const ProjectData &p) { return p.projectId == id; });
-
-      if (it != projectList.end()) {
-        projectList.erase(it);
-        std::cout << "Suppression du projet " << id << std::endl;
-        init();
-      }
-      manager.delProject(id);
+      deleteProject(id);
       // Open Action
     } else if (item == "Ouvrir") {
       std::cout << "Ouverture du projet " << std::endl;
+      std::cout << "futur role : " << static_cast<int>(project.role)
+                << std::endl;
+
       manager.getProjectData(id);
 
       // Rename Action
@@ -258,15 +252,33 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
 
     } else if (item == "Partager") {
       initInputWidget(focusPopup::TOKEN, project);
-
-    } else if (item == "Quitter") {
     }
+    //                else if (item == "Quitter") {
+    // // If owner
+    // if (projectRole == 2) {
+    //   // display choseSuccesorWindow
+    // }
+    // }
     activeMoreButton->getRenderer()->setBackgroundColor(
         tgui::Color::Transparent);
 
     gui.remove(menu);
     // toHover->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   });
+}
+
+void MenuView::deleteProject(long long id) {
+  auto &manager = app_.getNetwork();
+  auto it =
+      std::find_if(projectList.begin(), projectList.end(),
+                   [id](const ProjectData &p) { return p.projectId == id; });
+
+  if (it != projectList.end()) {
+    projectList.erase(it);
+    std::cout << "Suppression du projet " << id << std::endl;
+    init();
+  }
+  manager.delProject(id);
 }
 
 void MenuView::closePopup() {
@@ -485,7 +497,7 @@ void MenuView::popupCreate(tgui::Panel::Ptr background) {
     // Les getText() sont appelés au moment du clic !
     if (checkInput(scale, sizePx, sizePy))
       this->createProj(scale->getText(), sizePx->getText(), sizePy->getText(),
-                       name->getText(), 0, app_.getWindow(), app_.getGui());
+                       name->getText(), 2, app_.getWindow(), app_.getGui());
   });
 }
 
@@ -526,8 +538,9 @@ void MenuView::createProj(tgui::String scale, tgui::String sizeX,
   manager.createProject(nameS, size, scaleInt);
   gui.removeAllWidgets();
 
+  // Role = 2 bc owner
   app_.getProject() = std::make_unique<Project>(
-      scaleInt, size, nameS, id, app_.getWindow(), gui, app_.getNetwork());
+      scaleInt, size, nameS, id, app_.getWindow(), gui, app_.getNetwork(), 2);
 
   projectList.push_back(getProjectData(app_.getProject()));
 
@@ -541,7 +554,7 @@ ProjectData MenuView::askProjectData() {
 }
 
 ProjectData MenuView::getProjectData(std::unique_ptr<Project> &newProj) {
-  return ProjectData{newProj->getId(), 0, newProj->getName()};
+  return ProjectData{newProj->getId(), newProj->getRole(), newProj->getName()};
 }
 
 void MenuView::updateCreatedProjectId(uint32_t projId) {
@@ -717,11 +730,11 @@ void MenuView::popupCreateToken(tgui::Panel::Ptr background,
 
     if (selected == "Editeur") {
       std::cout << "Editeur" << std::endl;
-      generateToken(0, project.projectId);
+      generateToken(1, project.projectId);
 
     } else if (selected == "Spectateur") {
       std::cout << "Spectateur" << std::endl;
-      generateToken(1, project.projectId);
+      generateToken(0, project.projectId);
     }
     exitAction(background);
   });

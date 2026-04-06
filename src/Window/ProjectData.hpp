@@ -7,6 +7,8 @@ struct ProjectData {
   uint projectId;
   int8_t role;
   std::string projectName;
+  ProjectData(uint projectId, int8_t role, std::string projectName);
+  ProjectData() {};
   void setName(std::string newName);
 
   void print();

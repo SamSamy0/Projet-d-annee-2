@@ -3,9 +3,9 @@
 #include "../Window/projectWidgets/GameView.hpp"
 #include "../project/Tool/pixelbrush.hpp"
 #include "../project/Tool/pixelshift.hpp"
-#include "../project/Tool/spriteshift.hpp"
-#include "../project/Tool/spriteeraser.hpp"
 #include "../project/Tool/spritebrush.hpp"
+#include "../project/Tool/spriteeraser.hpp"
+#include "../project/Tool/spriteshift.hpp"
 #include "../project/Tool/tool.hpp"
 #include "../project/project.hpp"
 #include "../project/toolbar.hpp"
@@ -33,6 +33,12 @@ void ReceiverInWindow::updateProjectNameInList(uint id,
 }
 
 void ReceiverInWindow::clearProjList() { app_->clearProjList(); }
+void ReceiverInWindow::clearMemberList() {
+  dynamic_cast<GameView *>(app_->getCurrentView().get())->clearMemberList();
+}
+
+void ReceiverInWindow::setUserId(uint newId) { app_->setUserId(newId); }
+
 void ReceiverInWindow::updateCreatedProjectId(uint projId) {
   app_->updateCreatedProjectId(projId);
 }
@@ -42,7 +48,6 @@ void ReceiverInWindow::setState() {
 }
 
 void ReceiverInWindow::updateShareToken(std::string token) {
-  std::cout << "token in receiverwindow" << token << std::endl;
   app_->updateShareToken(token);
 }
 void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
@@ -87,26 +92,26 @@ void ReceiverInWindow::drawPixelBrush(uint layer_id, int pos_x, int pos_y,
   toolbar.selectTool(last_tool);
 }
 
-  void ReceiverInWindow::drawSprite(uint layer_id, std::string asset_id, int pos_x, int pos_y, float size){
-  std::cout<<"receiver in window sprite put"<<std::endl;
+void ReceiverInWindow::drawSprite(uint layer_id, std::string asset_id,
+                                  int pos_x, int pos_y, float size) {
   ToolBar &toolbar = app_->getProject()->getToolBar();
   std::shared_ptr<Map> map = app_->getProject()->getMap();
   ToolType last_tool = toolbar.getSelected();
   uint last_layer_id = map->getCurrentLayer()->getId();
   toolbar.selectTool(SPRITEBRUSH);
-  std::shared_ptr<SpriteBrush> spritebrush = static_pointer_cast<SpriteBrush>(toolbar.getSelectedTool());
+  std::shared_ptr<SpriteBrush> spritebrush =
+      static_pointer_cast<SpriteBrush>(toolbar.getSelectedTool());
   sf::Vector2f last_size = spritebrush->getSize();
-  spritebrush->setSize(size,0);
+  spritebrush->setSize(size, 0);
   map->selectLayerId(layer_id);
-  spritebrush->paint(sf::Vector2i(pos_x, pos_y),map->getAssetManager().getAsset(asset_id));
-  spritebrush->setSize(last_size.x,last_size.y);
+  spritebrush->paint(sf::Vector2i(pos_x, pos_y),
+                     map->getAssetManager().getAsset(asset_id));
+  spritebrush->setSize(last_size.x, last_size.y);
   map->selectLayerId(last_layer_id);
   toolbar.selectTool(last_tool);
-
 }
 
-
-void ReceiverInWindow::shiftLayer(uint layer_id, int delta_x, int delta_y){
+void ReceiverInWindow::shiftLayer(uint layer_id, int delta_x, int delta_y) {
   ToolBar &toolbar = app_->getProject()->getToolBar();
   std::shared_ptr<Map> map = app_->getProject()->getMap();
   ToolType last_tool = toolbar.getSelected();
@@ -128,8 +133,8 @@ void ReceiverInWindow::shiftLayer(uint layer_id, int delta_x, int delta_y){
   toolbar.selectTool(last_tool);
 }
 
-
-  void ReceiverInWindow::eraseSprite(uint layer_id, int pos_x,int pos_y,Shape shape,float size_x, float size_y){
+void ReceiverInWindow::eraseSprite(uint layer_id, int pos_x, int pos_y,
+                                   Shape shape, float size_x, float size_y) {
   ToolBar &toolbar = app_->getProject()->getToolBar();
   std::shared_ptr<Map> map = app_->getProject()->getMap();
   ToolType last_tool = toolbar.getSelected();
@@ -155,3 +160,19 @@ void ReceiverInWindow::shiftLayer(uint layer_id, int delta_x, int delta_y){
   toolbar.selectTool(last_tool);
 }
 
+void ReceiverInWindow::setMemberList(std::vector<MemberEntry> memberList) {
+  if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
+    gameView->setAllUsers(memberList);
+  }
+}
+
+void ReceiverInWindow::updateMemberList(uint projectId, uint target,
+                                        int8_t role) {
+  // If we are in a game view
+  if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
+    // If its about the project we are in
+    if (app_->getProject() and app_->getProject()->getId() == projectId) {
+      gameView->updateMemberRole(target, role);
+    }
+  }
+}

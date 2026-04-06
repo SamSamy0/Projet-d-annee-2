@@ -56,6 +56,12 @@ struct DuplicateProjectMessage : IMessage {
   DuplicateProjectMessage(sf::Packet &dataPacket, uint userId);
   void process(Worker &worker) override;
 };
+struct GetMemberMessage : IMessage {
+  uint userId_;
+  uint projectId_;
+  GetMemberMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
 
 struct GetProjectsListMessage : IMessage {
   uint userId_;
@@ -72,6 +78,13 @@ struct DeleteProjectMessage : IMessage {
   void process(Worker &worker) override;
 };
 
+struct LeaveProjectMessage : IMessage {
+  uint userId_;
+  uint projectId_;
+  LeaveProjectMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
+
 struct GetProjectDataMessage : IMessage {
   uint userId_;
   uint projectId_;
@@ -85,6 +98,14 @@ struct ModifProjetMessage : IMessage {
   uint projectId_;
   uint calqueId_;
   std::vector<uint> getUserLists(Worker &worker);
+};
+
+struct ChangeRoleMessage : ModifProjetMessage {
+  uint target_;
+  uint projectId_;
+  int8_t role_;
+  ChangeRoleMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
 };
 
 struct PutPixelsMessage : ModifProjetMessage {
@@ -143,7 +164,7 @@ struct ErasePixelsDiamondMessage : ErasePixelsMessage {
   void process(Worker &worker) override;
 };
 
-struct PutSpriteMessage : ModifProjetMessage{
+struct PutSpriteMessage : ModifProjetMessage {
   sf::Vector2u pos_;
   float taille_;
   std::string asset_id;
@@ -151,24 +172,24 @@ struct PutSpriteMessage : ModifProjetMessage{
   void process(Worker &worker) override;
 };
 
-struct EraseSpriteMessage : ModifProjetMessage{
+struct EraseSpriteMessage : ModifProjetMessage {
   sf::Vector2u pos_;
 };
 
-struct EraseSpriteSquareMessage : EraseSpriteMessage{
+struct EraseSpriteSquareMessage : EraseSpriteMessage {
   float taille_;
   EraseSpriteSquareMessage(sf::Packet &dataPacket, uint userId);
   void process(Worker &worker) override;
 };
 
-struct EraseSpriteCircleMessage : EraseSpriteMessage{
+struct EraseSpriteCircleMessage : EraseSpriteMessage {
   float taille_;
 
   EraseSpriteCircleMessage(sf::Packet &dataPacket, uint userId);
   void process(Worker &worker) override;
 };
 
-struct EraseSpriteDiamondMessage : EraseSpriteMessage{
+struct EraseSpriteDiamondMessage : EraseSpriteMessage {
   float hauteur_;
   float largeur_;
 

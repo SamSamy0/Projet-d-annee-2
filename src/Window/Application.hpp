@@ -21,6 +21,7 @@ class Application {
   std::unique_ptr<Project> project;
   User currentUser_;
   std::unique_ptr<View> currentView;
+  int8_t currentProjRole;
 
 public:
   Application(ClientNetworkManager &manager);
@@ -31,6 +32,8 @@ public:
   void updateProjectNameInList(long long id, const std::string &newName);
   void updateCreatedProjectId(uint32_t projId);
   void updateShareToken(std::string newToken);
+  void setCurrentProjRole(int8_t role) { currentProjRole = role; };
+  void setUserId(uint userId) { currentUser_.setId(userId); }
 
   void changeView(std::unique_ptr<View> newView);
   void showLoginError(const std::string &message);

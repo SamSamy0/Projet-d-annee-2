@@ -1,4 +1,5 @@
 #include "handler.hpp"
+#include "../server/datamanager/memberentry.hpp"
 #include "clientnetwork.hpp"
 #include <QByteArray>
 #include <QDebug>
@@ -22,8 +23,10 @@ void ClientHandler::process(ServerEvent &event) {
   switch (event.message_type_) {
   case MsgProtocole::AUTH_RESULT: {
     uint8_t accept;
-    *(event.data_packet_) >> accept;
+    uint userId;
+    *(event.data_packet_) >> accept >> userId;
     handleWindow_.switchConnectState(accept);
+    handleWindow_.setUserId(userId);
     break;
   }
 
@@ -50,7 +53,6 @@ void ClientHandler::process(ServerEvent &event) {
   }
 
   case MsgProtocole::LOB_GET_PROJECT_DATA_REP: {
-
     std::uint32_t jsonSize;
     // On suppose que l'octet d'en-tête (MsgProtocole) a déjà été extrait du
     // flux (stream >>) juste avant pour déclencher cet événement. On lit donc
@@ -126,6 +128,43 @@ void ClientHandler::process(ServerEvent &event) {
     std::string shareToken;
     *(event.data_packet_) >> shareToken;
     handleWindow_.updateShareToken(shareToken);
+    break;
+  }
+
+  case MsgProtocole::PROJ_GET_MEMBERS_REP: {
+    uint32_t size;
+    *(event.data_packet_) >> size;
+    handleWindow_.clearMemberList();
+
+    std::vector<MemberEntry> memberList;
+    for (uint i = 0; i < static_cast<uint>(size); ++i) {
+      MemberEntry member;
+      std::string pseudo;
+      uint32_t role;
+      uint32_t userId;
+
+      *(event.data_packet_) >> pseudo >> role >> userId;
+      member.pseudo = pseudo;
+      member.role = role;
+      member.userId = userId;
+      memberList.push_back(member);
+    }
+    handleWindow_.setMemberList(memberList);
+    break;
+  }
+
+  case MsgProtocole::PROJ_CHANGE_ROLE_REP: {
+    bool success;
+    *(event.data_packet_) >> success;
+    if (success) {
+      std::cout << "=== Congrats Roles Changed !! ===" << std::endl;
+      uint projectId;
+      uint targetId;
+      int8_t newrole;
+      *(event.data_packet_) >> projectId >> targetId >> newrole;
+
+      handleWindow_.updateMemberList(projectId, targetId, newrole);
+    }
     break;
   }
 
@@ -214,10 +253,11 @@ void ClientHandler::process(ServerEvent &event) {
     int pos_x;
     int pos_y;
     float size;
-    *(event.data_packet_) >> project_id >> layer_id >> asset_id >> pos_x >> pos_y >> size;
-    handleWindow_.drawSprite(layer_id,asset_id,pos_x,pos_y,size);
+    *(event.data_packet_) >> project_id >> layer_id >> asset_id >> pos_x >>
+        pos_y >> size;
+    handleWindow_.drawSprite(layer_id, asset_id, pos_x, pos_y, size);
     break;
-    }
+  }
 
   case MsgProtocole::MAP_ERASE_PIXELS_SQUARE_REP: {
     uint project_id;
@@ -252,10 +292,9 @@ void ClientHandler::process(ServerEvent &event) {
     int pos_y;
     float size;
     *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size;
-    handleWindow_.eraseSprite(layer_id, pos_x, pos_y,
-                                 Shape::SQUARE,size,0);
+    handleWindow_.eraseSprite(layer_id, pos_x, pos_y, Shape::SQUARE, size, 0);
     break;
-    }
+  }
   case MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REP: {
     uint project_id;
     uint layer_id;
@@ -263,10 +302,9 @@ void ClientHandler::process(ServerEvent &event) {
     int pos_y;
     float size;
     *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >> size;
-    handleWindow_.eraseSprite(layer_id, pos_x, pos_y,
-                                 Shape::CIRCLE,size,0);
+    handleWindow_.eraseSprite(layer_id, pos_x, pos_y, Shape::CIRCLE, size, 0);
     break;
-    }
+  }
 
   case MsgProtocole::MAP_ERASE_SPRITE_DIAM_REP: {
     uint project_id;
@@ -277,10 +315,10 @@ void ClientHandler::process(ServerEvent &event) {
     float size_y;
     *(event.data_packet_) >> project_id >> layer_id >> pos_x >> pos_y >>
         size_x >> size_y;
-    handleWindow_.eraseSprite(layer_id, pos_x, pos_y,
-                                 Shape::DIAMOND,size_x,size_y);
+    handleWindow_.eraseSprite(layer_id, pos_x, pos_y, Shape::DIAMOND, size_x,
+                              size_y);
     break;
-    }
+  }
 
   case MsgProtocole::MAP_MOV_LAYER_REP: {
     uint project_id;
