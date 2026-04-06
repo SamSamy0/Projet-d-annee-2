@@ -2,7 +2,7 @@
 #include <QJsonArray>
 
 SpriteLayer::SpriteLayer(const QJsonObject& origin) {
-    lastId_ = origin["lastId"].toInt();
+    lastId_ = origin["nextId"].toInt();
     QJsonArray sprites = origin["sprites"].toArray();
     for (const QJsonValue &sprite : sprites) {
         QJsonObject objetSprite = sprite.toObject();
@@ -54,7 +54,7 @@ bool SpriteLayer::eraseSprite(uint idSprite) {
 
 QJsonObject SpriteLayer::load() const {
     QJsonObject layer;
-    layer["lastId"] = static_cast<int>(lastId_);
+    layer["nextId"] = static_cast<int>(lastId_);
     QJsonArray sprites;
     for (const Sprite &sprite : sprites_) {
         QJsonObject objetSprite;

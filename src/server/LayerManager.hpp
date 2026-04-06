@@ -43,11 +43,13 @@ class LayerManager {
     bool removeSprite(uint calqueId, uint spriteId);
     bool moveCalqueUp(uint calqueId);
     bool moveCalqueDown(uint calqueId);
+    bool shiftCalque(uint calqueId, uint deltaX, uint deltaY);
 
     const std::unordered_map<uint, SpriteLayer>& getSpritesMap();
     const std::unordered_map<uint, QImage>& getImageMap();
 
     const QJsonArray getJson();
+    uint getNextLayerId();
 
 
 };

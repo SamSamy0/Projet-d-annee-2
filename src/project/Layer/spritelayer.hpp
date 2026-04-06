@@ -15,6 +15,7 @@ class SpriteLayer : public Layer {
 
 public:
   SpriteLayer(uint id, std::string name, sf::Vector2u size);
+  void setNextId(uint);
   const std::vector<SpriteObject> &getSprites()const;
   sf::Vector2i getOffset() const override;
   void draw(const sf::Sprite &s);

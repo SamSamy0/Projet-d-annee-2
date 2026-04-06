@@ -399,19 +399,24 @@ void PutSpriteMessage::process(Worker &worker){
 }
 
 EraseSpriteMessage::EraseSpriteMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client){
-
   userId_ = client->id;
   data_packet >> projectId_ >> calqueId_ >> sprite_id_;
-
+  qDebug() << projectId_ << " " << calqueId_ << " " << sprite_id_;
 }
 
 void EraseSpriteMessage::process(Worker &worker){
+  auto liveProj = worker.mapProjet_.find(projectId_);
 
-  std::vector<uint> usersId = this->getUserLists(worker);
-  std::unique_ptr<Reponse> rps;
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
 
-  rps = std::make_unique<ReponseEraseSprite>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+  if (liveProj->second.removeSprite(userId_, calqueId_, sprite_id_)) {
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseEraseSprite>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 
@@ -421,11 +426,17 @@ MoveLayerMessage::MoveLayerMessage(sf::Packet &data_packet, std::shared_ptr<Clie
 }
 
 void MoveLayerMessage::process(Worker &worker) {
-  std::vector<uint> usersId = this->getUserLists(worker);
-  std::unique_ptr<Reponse> rps;
+  auto liveProj = worker.mapProjet_.find(projectId_);
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+  if (liveProj->second.shiftCalque(userId_, calqueId_, deltaX_, deltaY_)){
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
 
-  rps = std::make_unique<ReponseMoveLayer>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+    rps = std::make_unique<ReponseMoveLayer>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 GenerateTokenMessage::GenerateTokenMessage(sf::Packet &dataPacket,

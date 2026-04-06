@@ -70,6 +70,7 @@ int SpriteEraser::paint(sf::Vector2i pos) {
   for (int i = sprites.size() - 1; i >= 0; i--) {
     if (checkColision(pos, sprites[i].sprite.getGlobalBounds())) {
       uint id = sprites[i].id;
+      std::cout << id << " id du sprite effacé" << std::endl;
       spritelayer->erase(sprites[i].id);
       return id;
       break;

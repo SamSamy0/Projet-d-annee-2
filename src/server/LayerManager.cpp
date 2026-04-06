@@ -320,3 +320,18 @@ const QJsonArray LayerManager::getJson() {
 
     return array;
 }
+
+bool LayerManager::shiftCalque(uint calqueId, uint deltaX, uint deltaY) {
+    auto it = mapId_.find(calqueId);
+    
+    if (it != mapId_.end()) {
+        it->second->x += deltaX;
+        it->second->y += deltaY;
+        return true;
+    }
+    return false;
+}
+
+uint LayerManager::getNextLayerId() {
+    return lastLayerId_;
+}

@@ -15,7 +15,7 @@ LiveProject::LiveProject(uint projId) {
     id_ = json_["id"].toInt();
     name_ = json_["name"].toString().toStdString();
 
-    layers_ = LayerManager(layers, projId,  json_["layerId"].toInt(), height_, width_, scale_);
+    layers_ = LayerManager(layers, projId,  json_["nextLayerId"].toInt(), height_, width_, scale_);
 }
 
 LiveProject::LiveProject(uint id, const std::string &projectName, uint width, uint height, uint scale) 
@@ -47,6 +47,7 @@ QJsonObject LiveProject::getJson() {
     json["scale"] = static_cast<int>(scale_);
     json["id"] = static_cast<int>(id_);
     json["name"] = QString::fromStdString(name_);
+    json["nextLayerId"] = static_cast<int>(layers_.getNextLayerId());
 
     json["layers"] = layers_.getJson();
     return json;
@@ -147,6 +148,14 @@ bool LiveProject::removeCalque(uint userId, uint calqueId) {
     }
 
     return layers_.removeCalque(calqueId);
+}
+
+bool LiveProject::shiftCalque(uint userId, uint calqueId, uint deltaX, uint deltaY) {
+    if (!canModify(userId)) {
+        return false;
+    }
+
+    return layers_.shiftCalque(calqueId, deltaX, deltaY);
 }
 
 bool LiveProject::moveCalqueUp(uint userId, uint calqueId) {

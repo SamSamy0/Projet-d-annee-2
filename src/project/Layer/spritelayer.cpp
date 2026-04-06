@@ -3,6 +3,7 @@
 SpriteLayer::SpriteLayer(uint id, std::string name, sf::Vector2u size)
     : Layer(id,name, size) {
   type_ = SPRITELAYER;
+  nextId_ = 0;
 }
 
 
@@ -37,4 +38,8 @@ void SpriteLayer::drawLayer(sf::RenderTarget &target) {
       target.draw(spriteobject.sprite, state);
     }
   }
+}
+
+void SpriteLayer::setNextId(uint nextId) {
+  nextId_= nextId;
 }
