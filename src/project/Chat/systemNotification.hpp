@@ -7,6 +7,8 @@ enum class typeNotification {
     DECONNEXION,
     LOCK,
     UNLOCK,
+    MASK,
+    UNMASK,
 };
 
 class SystemNotification : public MessageChat {
