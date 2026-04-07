@@ -1,10 +1,9 @@
 #pragma once
 #include "tool.hpp"
-#include "../Layer/spritelayer.hpp"
 #include <memory>
 
 
-enum SelectionState{
+enum class SelectionState{
   NONE,
   SELECTION,
   DRAGING,
@@ -15,7 +14,7 @@ class SpriteSelection : public Tool {
 
 
   std::vector<uint> selected_;
-  SelectionState state_ = NONE;
+  SelectionState state_ = SelectionState::NONE;
   sf::Vector2i startSelectionPos_;
   bool isSelected(uint)const;
 public:
@@ -25,6 +24,6 @@ public:
   void deleteSelectedSprite();
   void clearSelection();
   void onPress(sf::Vector2i pos) override;
-  void onDrag(sf::Vector2i pos)override{}
-  void onRelease() override{}
+  void onDrag(sf::Vector2i pos)override;
+  void onRelease() override;
 };

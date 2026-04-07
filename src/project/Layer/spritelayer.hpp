@@ -21,5 +21,6 @@ public:
   void draw(const sf::Sprite &s);
   void erase(uint id);
   void shift(sf::Vector2i v) override;
+  void shiftSprite(uint id, sf::Vector2i v);
   void drawLayer(sf::RenderTarget &target) override;
 };
