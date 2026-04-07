@@ -363,6 +363,10 @@ void GameView::refreshLayerList() {
         if (eraserOptionsPanel_) eraserOptionsPanel_->setVisible(true);
       }
       break;
+    case SPRITESELECTION:{
+        toolbar.selectTool(NONETOOL);
+        break;
+      }
     }
   }
 }
