@@ -82,11 +82,19 @@ void Map::createSpriteLayer(){
     layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
 }
 
-// void Map::layerUp(uint layerId){
-//     if (selected_ == 0) return;
-//     std::swap(layers_[selected_], layers_[selected_ - 1]);
-//     selected_ -= 1;
-// }
+void Map::renameLayer(uint layer_id, std::string name){
+    int j = -1;
+
+    for(int i = 0; i<layers_.size(); i++){
+        if(layers_[i]->getId() == layer_id){
+            j = i;
+            break;
+        }
+    }
+    if(j>=0)
+        layers_[j]->setName(name);
+
+}
 
 void Map::layerDown(uint layerId){
     if (layers_.size() <= 1) return;
@@ -124,11 +132,6 @@ void Map::layerUp(uint layerId){
 
 }
 
-// void Map::layerDown(uint layerId){
-//     if (selected_ >= layers_.size()-1) return;
-//     std::swap(layers_[selected_], layers_[selected_ + 1]);
-//     selected_ += 1;
-// }
 
 
 void Map::deleteLayer(uint layer_id){

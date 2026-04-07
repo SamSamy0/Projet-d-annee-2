@@ -185,6 +185,20 @@ void ClientNetworkManager::deleteLayer(uint proj_id, uint layer_id){
               << std::endl;
 }
 
+void ClientNetworkManager::renameLayer(uint proj_id, uint layer_id, std::string name){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_RENAME_LAYER_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << proj_id << layer_id << name;
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
+
+
 void ClientNetworkManager::layerUp(uint proj_id, uint layer_id){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ORGANIZE_LAYER_UP_REQ;

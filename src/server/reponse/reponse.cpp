@@ -111,6 +111,13 @@ ReponseDeleteLayer::ReponseDeleteLayer(std::vector<uint> usersId, DeleteLayerMes
     dataPacket_ << mess.projectId_ << mess.calqueId_;
 }
 
+
+ReponseRenameLayer::ReponseRenameLayer(std::vector<uint> usersId, RenameLayerMessage& mess): ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_RENAME_LAYER_REP);
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.name_;
+}
+
+
 ReponseOrganizeLayerUp::ReponseOrganizeLayerUp(std::vector<uint> usersId, OrganizeLayerUpMessage& mess) :ReponseGroupe(usersId) {
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ORGANIZE_LAYER_UP_REP);
     dataPacket_ << mess.projectId_ << mess.calqueId_;

@@ -31,6 +31,7 @@ public:
   void joinProject(std::string project_code);
   void createLayer(uint proj_id,LayerType type);
   void deleteLayer(uint proj_id, uint current_layer_id);
+  void renameLayer(uint proj_id, uint layer_id, std::string name);
   void layerUp(uint proj_id, uint current_layer_id);
   void layerDown(uint proj_id, uint current_layer_id);
 

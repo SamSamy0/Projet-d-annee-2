@@ -84,6 +84,12 @@ struct ReponseDeleteLayer : ReponseGroupe{
    ReponseDeleteLayer(std::vector<uint> usersId, DeleteLayerMessage& mess);
 };
 
+
+struct ReponseRenameLayer : ReponseGroupe{
+   ReponseRenameLayer(std::vector<uint> usersId, RenameLayerMessage& mess);
+};
+
+
 struct ReponseOrganizeLayerUp : ReponseGroupe{
     ReponseOrganizeLayerUp(std::vector<uint> usersId, OrganizeLayerUpMessage& mess);
 };

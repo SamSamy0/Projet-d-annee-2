@@ -125,6 +125,7 @@ void GameView::initLayerPanel() {
       unsigned int selectedLayer = project->getMap()->getLayerSelected();
       std::string newName = newLayerNameInput->getText().toStdString();
       if (!newName.empty()) layers[selectedLayer]->setName(newName);
+      app_.getNetwork().renameLayer(project->getId(),project->getMap()->getCurrentLayer()->getId(),newName);
       refreshLayerList();
       gui.remove(popup);
     });
@@ -384,6 +385,10 @@ void GameView::refreshLayerList() {
     refreshLayerList();
 }
 
+void GameView::renameLayer(uint layer_id,std::string name){
+project->getMap()->renameLayer(layer_id,name);
+refreshLayerList();
+}
 
 void GameView::layerUp(uint layer_id){
   project->getMap()->layerUp(layer_id);

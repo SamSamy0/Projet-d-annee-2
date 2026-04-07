@@ -54,4 +54,5 @@ public:
   void deleteLayer(uint layer_id);
   void layerUp(uint layer_id);
   void layerDown(uint layer_id);
+  void renameLayer(uint layer_id, std::string name);
 };

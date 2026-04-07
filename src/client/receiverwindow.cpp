@@ -59,6 +59,10 @@ void ReceiverInWindow::deleteLayer(uint current_layer_id){
   dynamic_cast<GameView*>(app_->getCurrentView().get())->deleteLayer(current_layer_id);
 }
 
+void ReceiverInWindow::renameLayer(uint layer_id, std::string name){
+  dynamic_cast<GameView*>(app_->getCurrentView().get())->renameLayer(layer_id,name);
+}
+
 void ReceiverInWindow::layerUp(uint layer_id){
   dynamic_cast<GameView*>(app_->getCurrentView().get())->layerUp(layer_id);
 }

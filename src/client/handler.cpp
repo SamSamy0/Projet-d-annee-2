@@ -159,6 +159,17 @@ void ClientHandler::process(ServerEvent &event) {
     break;
     }
 
+  case MsgProtocole::MAP_RENAME_LAYER_REP:{
+      uint project_id;
+      uint layer_id;
+      std::string name;
+      *(event.data_packet_) >> project_id >> layer_id>> name;
+      handleWindow_.renameLayer(layer_id,name);
+
+
+      break;
+    }
+
     case MsgProtocole::MAP_ORGANIZE_LAYER_UP_REP:{
     uint project_id;
     uint current_layer_id;

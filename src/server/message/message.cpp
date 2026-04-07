@@ -2,6 +2,7 @@
 #include "../../common/protocol.hpp"
 #include "../reponse/reponse.hpp"
 #include "../worker.hpp"
+#include <memory>
 
 
 
@@ -202,6 +203,28 @@ void DeleteLayerMessage::process(Worker &worker){
   std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseDeleteLayer>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+
+}
+
+
+RenameLayerMessage::RenameLayerMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client){
+  userId_ = client->id;
+  data_packet >>projectId_ >> calqueId_ >> name_;
+}
+
+void RenameLayerMessage::process(Worker &worker){
+
+  auto liveProj = worker.mapProjet_.find(projectId_);
+
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+
+  //TODO: la condition avec liveproj
+  std::vector<uint> usersId = this->getUserLists(worker);
+  std::unique_ptr<Reponse> rps;
+  rps = std::make_unique<ReponseRenameLayer>(usersId, *this);
   worker.pushNetwork(std::move(rps));
 
 }
@@ -513,14 +536,17 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
   case MsgProtocole::MAP_CREATE_LAYER_REQ:
     return std::make_unique<CreateLayerMessage>(data_packet, c);
 
+  case MsgProtocole::MAP_REMOVE_LAYER_REQ:
+    return std::make_unique<DeleteLayerMessage>(data_packet,c);
+
+  case MsgProtocole::MAP_RENAME_LAYER_REQ:
+    return std::make_unique<RenameLayerMessage>(data_packet,c);
+
   case MsgProtocole::MAP_ORGANIZE_LAYER_UP_REQ:
     return std::make_unique<OrganizeLayerUpMessage>(data_packet,c);
 
   case MsgProtocole::MAP_ORGANIZE_LAYER_DOWN_REQ:
     return std::make_unique<OrganizeLayerDownMessage>(data_packet,c);
-
-  case MsgProtocole::MAP_REMOVE_LAYER_REQ:
-    return std::make_unique<DeleteLayerMessage>(data_packet,c);
       
   case MsgProtocole::MAP_PUT_PIXELS_SQUARE_REQ:
     return std::make_unique<PutPixelsSquareMessage>(data_packet, c);
