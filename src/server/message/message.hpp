@@ -106,14 +106,21 @@ struct DeleteLayerMessage : ModifProjetMessage{
   void process(Worker &worker) override;
 };
 
+
+struct RenameLayerMessage : ModifProjetMessage{
+  std::string name_;
+  RenameLayerMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
+  void process(Worker &worker) override;
+};
+
 struct OrganizeLayerUpMessage : ModifProjetMessage{
   OrganizeLayerUpMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };
 
 
-struct OrganizeLayerDawnMessage : ModifProjetMessage{
-  OrganizeLayerDawnMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
+struct OrganizeLayerDownMessage : ModifProjetMessage{
+  OrganizeLayerDownMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };
 

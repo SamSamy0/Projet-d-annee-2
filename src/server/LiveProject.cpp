@@ -134,12 +134,12 @@ bool LiveProject::addSprite(uint userId, uint calqueId, std::string asset_id, ui
     return layers_.addSprite(calqueId, asset_id, x, y, taille);
 }
 
-bool LiveProject::addCalque(uint userId, uint calqueId, uint8_t type) {
+bool LiveProject::addCalque(uint userId, uint8_t type) {
     if (!canModify(userId)) {
         return false;
     }
 
-    return layers_.addCalque(calqueId, type);
+    return layers_.addCalque(type);
 }
 
 bool LiveProject::removeCalque(uint userId, uint calqueId) {

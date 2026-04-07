@@ -37,7 +37,7 @@ class LayerManager {
     bool erasePixelDiam(uint calqueId, uint x, uint y, float h, float w);
     bool addCalquePixel();
     bool addCalqueSprite();
-    bool addCalque(uint calqueId, uint8_t type);
+    bool addCalque( uint8_t type);
     bool removeCalque(uint calqueId);
     bool addSprite(uint calqueId, std::string asset_id, uint x, uint y, float taille);
     bool removeSprite(uint calqueId, uint spriteId);

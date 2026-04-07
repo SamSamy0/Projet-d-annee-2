@@ -235,10 +235,7 @@ bool LayerManager::addCalqueSprite() {
     return true;
 }
     
-bool LayerManager::addCalque(uint calqueId, uint8_t type) {
-    if (calqueId != lastLayerId_) {
-        return false;
-    }
+bool LayerManager::addCalque( uint8_t type) {
 
     if (type == 0) {
         return addCalquePixel();

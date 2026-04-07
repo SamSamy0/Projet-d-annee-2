@@ -125,6 +125,7 @@ void GameView::initLayerPanel() {
       unsigned int selectedLayer = project->getMap()->getLayerSelected();
       std::string newName = newLayerNameInput->getText().toStdString();
       if (!newName.empty()) layers[selectedLayer]->setName(newName);
+      app_.getNetwork().renameLayer(project->getId(),project->getMap()->getCurrentLayer()->getId(),newName);
       refreshLayerList();
       gui.remove(popup);
     });
@@ -145,8 +146,8 @@ void GameView::initLayerPanel() {
   goUpLayer->getRenderer()->setRoundedBorderRadius(8);
   goUpLayer->onClick([this]() {
     uint layer_id = project->getMap()->getCurrentLayer()->getId();
-    project->getMap()->layerDawn(project->getMap()->getCurrentLayer()->getId());
-    app_.getNetwork().layerDawn(project->getId(),layer_id); 
+    project->getMap()->layerDown(project->getMap()->getCurrentLayer()->getId());
+    app_.getNetwork().layerDown(project->getId(),layer_id); 
     refreshLayerList();
 
   });
@@ -238,7 +239,7 @@ void GameView::initLayerPanel() {
       auto& gui = app_.getGui();
       gui.remove(popup);
       createLayer(PIXELLAYER);
-      app_.getNetwork().createLayer(project->getId(),project->getMap()->getCurrentLayer()->getId(),PIXELLAYER);
+      app_.getNetwork().createLayer(project->getId(),PIXELLAYER);
       
     });
 
@@ -246,7 +247,7 @@ void GameView::initLayerPanel() {
       auto& gui = app_.getGui();
       gui.remove(popup);
       createLayer(SPRITELAYER);
-      app_.getNetwork().createLayer(project->getId(),project->getMap()->getCurrentLayer()->getId(),SPRITELAYER);
+      app_.getNetwork().createLayer(project->getId(),SPRITELAYER);
     });
   });
   layerPanel_->add(addLayerButton);
@@ -384,12 +385,16 @@ void GameView::refreshLayerList() {
     refreshLayerList();
 }
 
+void GameView::renameLayer(uint layer_id,std::string name){
+project->getMap()->renameLayer(layer_id,name);
+refreshLayerList();
+}
 
 void GameView::layerUp(uint layer_id){
   project->getMap()->layerUp(layer_id);
   refreshLayerList();
 }
-void GameView::layerDawn(uint layer_id){
-  project->getMap()->layerDawn(layer_id);
+void GameView::layerDown(uint layer_id){
+  project->getMap()->layerDown(layer_id);
   refreshLayerList();
 }

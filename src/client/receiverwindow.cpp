@@ -51,7 +51,7 @@ void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
 }
 
 
-void ReceiverInWindow::createLayer(uint current_layer_id,LayerType type){
+void ReceiverInWindow::createLayer(LayerType type){
   dynamic_cast<GameView*>(app_->getCurrentView().get())->createLayer(type);
 }
 
@@ -59,12 +59,16 @@ void ReceiverInWindow::deleteLayer(uint current_layer_id){
   dynamic_cast<GameView*>(app_->getCurrentView().get())->deleteLayer(current_layer_id);
 }
 
+void ReceiverInWindow::renameLayer(uint layer_id, std::string name){
+  dynamic_cast<GameView*>(app_->getCurrentView().get())->renameLayer(layer_id,name);
+}
+
 void ReceiverInWindow::layerUp(uint layer_id){
   dynamic_cast<GameView*>(app_->getCurrentView().get())->layerUp(layer_id);
 }
 
-void ReceiverInWindow::layerDawn(uint layer_id){
-  dynamic_cast<GameView*>(app_->getCurrentView().get())->layerDawn(layer_id);
+void ReceiverInWindow::layerDown(uint layer_id){
+  dynamic_cast<GameView*>(app_->getCurrentView().get())->layerDown(layer_id);
 }
 
 

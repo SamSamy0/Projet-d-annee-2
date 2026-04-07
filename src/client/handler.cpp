@@ -146,9 +146,9 @@ void ClientHandler::process(ServerEvent &event) {
     uint project_id;
     uint current_layer_id;
     uint8_t type_int;
-    *(event.data_packet_) >> project_id >> current_layer_id >> type_int;
+    *(event.data_packet_) >> project_id >> type_int;
     LayerType type = static_cast<LayerType>(type_int);
-    handleWindow_.createLayer(current_layer_id,type);
+    handleWindow_.createLayer(type);
     break;
     }
   case MsgProtocole::MAP_REMOVE_LAYER_REP:{
@@ -159,6 +159,17 @@ void ClientHandler::process(ServerEvent &event) {
     break;
     }
 
+  case MsgProtocole::MAP_RENAME_LAYER_REP:{
+      uint project_id;
+      uint layer_id;
+      std::string name;
+      *(event.data_packet_) >> project_id >> layer_id>> name;
+      handleWindow_.renameLayer(layer_id,name);
+
+
+      break;
+    }
+
     case MsgProtocole::MAP_ORGANIZE_LAYER_UP_REP:{
     uint project_id;
     uint current_layer_id;
@@ -167,11 +178,11 @@ void ClientHandler::process(ServerEvent &event) {
     break;
     }
 
-    case MsgProtocole::MAP_ORGANIZE_LAYER_DAWN_REP:{
+    case MsgProtocole::MAP_ORGANIZE_LAYER_DOWN_REP:{
     uint project_id;
     uint current_layer_id;
     *(event.data_packet_) >> project_id >> current_layer_id;
-    handleWindow_.layerDawn(current_layer_id);
+    handleWindow_.layerDown(current_layer_id);
     break;
 }
 
@@ -193,7 +204,6 @@ void ClientHandler::process(ServerEvent &event) {
   }
 
   case MsgProtocole::MAP_PUT_PIXELS_SQUARE_REP: {
-    std::cout<<"traitement de la réponse : worker"<<std::endl;
     uint project_id;
     uint layer_id;
     int pos_x;

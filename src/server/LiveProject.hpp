@@ -24,7 +24,7 @@ struct LiveProject {
     bool erasePixelCircle(uint userId, uint calqueId, uint x, uint y, float taille);
     bool erasePixelDiam(uint userId, uint calqueId, uint x, uint y, float h, float w);
 
-    bool addCalque(uint userId, uint calqueId, uint8_t type);
+    bool addCalque(uint userId, uint8_t type);
     bool removeCalque(uint userId, uint calqueId);
     bool shiftCalque(uint userId, uint calqueId, uint deltaX, uint deltaY);
 
