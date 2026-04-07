@@ -51,5 +51,7 @@ class LayerManager {
     const QJsonArray getJson();
     uint getNextLayerId();
 
+    const std::vector<uint> getLayerOrder();
+
 
 };

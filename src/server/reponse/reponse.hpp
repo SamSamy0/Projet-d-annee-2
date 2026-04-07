@@ -6,6 +6,7 @@
 #include "../client.hpp"
 #include <QFile>
 #include "../message/message.hpp"
+#include "../SpriteLayer.hpp"
 
 class ServerNetworkManager;
 
@@ -55,8 +56,13 @@ struct ReponseJoinProject: ReponseSolo{
 };
 
 struct ReponseProjectData : ReponseSolo {
-    ReponseProjectData(uint userId, QByteArray& jsonData);
+    ReponseProjectData(uint userId, const QJsonObject& jsonDoc, 
+                   const std::vector<uint>& layerOrder, 
+                   const std::unordered_map<uint, QImage>& imageMap, 
+                   const std::unordered_map<uint, SpriteLayer>& spriteMap);
+    static QByteArray imageToBytes(const QImage& image);
 };
+
 
 struct ReponseUsersProjects : ReponseSolo {
     ReponseUsersProjects(uint userId, std::vector<ProjectEntry>& projects);

@@ -332,3 +332,11 @@ bool LayerManager::shiftCalque(uint calqueId, uint deltaX, uint deltaY) {
 uint LayerManager::getNextLayerId() {
     return lastLayerId_;
 }
+
+const std::vector<uint> LayerManager::getLayerOrder() {
+    std::vector<uint> order;
+    for (const auto& layer : layers_) {
+        order.push_back(layer.id);
+    }
+    return order;
+}

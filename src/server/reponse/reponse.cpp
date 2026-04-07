@@ -1,6 +1,9 @@
 #include "reponse.hpp"
 #include "../../common/protocol.hpp"
 #include "../servernetwork.hpp"
+#include <QJsonDocument>
+#include <QBuffer>
+#include <QImage>
 
 
 ReponseSolo::ReponseSolo(uint id) : userId_(id) {}
@@ -63,12 +66,43 @@ ReponseJoinProject::ReponseJoinProject(uint userId, bool success): ReponseSolo(u
 }
 
 
-ReponseProjectData::ReponseProjectData(uint userId, QByteArray& jsonData) : ReponseSolo(userId) {
+ReponseProjectData::ReponseProjectData(uint userId, const QJsonObject& jsonDoc, 
+                   const std::vector<uint>& layerOrder, 
+                   const std::unordered_map<uint, QImage>& imageMap, 
+                   const std::unordered_map<uint, SpriteLayer>& spriteMap) : ReponseSolo(userId) {
     dataPacket_<<static_cast<std::uint8_t> (MsgProtocole::LOB_GET_PROJECT_DATA_REP);
-
+    
+    QJsonDocument doc(jsonDoc);
+    QByteArray jsonData = doc.toJson(QJsonDocument::Indented);
     QByteArray jsonCompresse = qCompress(jsonData, 9);
     dataPacket_ << static_cast<std::uint32_t>(jsonCompresse.size());
     dataPacket_.append(jsonCompresse.constData(), jsonCompresse.size());
+
+    for (uint id : layerOrder) {
+        dataPacket_ << id;
+        if (spriteMap.find(id) != spriteMap.end()) {
+            dataPacket_ << (uint8_t)1;
+            QJsonDocument doc(spriteMap.at(id).load());
+            QByteArray layerData = doc.toJson(QJsonDocument::Indented);
+            QByteArray layerCompress = qCompress(layerData);
+            dataPacket_ << static_cast<std::uint32_t>(layerCompress.size());
+            dataPacket_.append(layerCompress.constData(), layerCompress.size());
+        } else if (imageMap.find(id) != imageMap.end()) {
+            dataPacket_ << (uint8_t)0;
+            const QImage& img = imageMap.at(id);
+            QByteArray imageBytes = imageToBytes(img);
+            dataPacket_ << static_cast<std::uint32_t>(imageBytes.size());
+            dataPacket_.append(imageBytes.constData(), imageBytes.size());
+        }
+    }
+}
+
+QByteArray ReponseProjectData::imageToBytes(const QImage& image) {
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "PNG"); // Le format PNG compresse l'image proprement
+    return byteArray;
 }
 
 ReponseUsersProjects::ReponseUsersProjects(uint userId, std::vector<ProjectEntry>& projects) 

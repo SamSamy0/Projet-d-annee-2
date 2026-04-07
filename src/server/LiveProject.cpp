@@ -196,3 +196,7 @@ bool LiveProject::removeSprite(uint userId, uint calqueId, uint spriteId) {
 
     return layers_.removeSprite(calqueId, spriteId);
 }
+
+const std::vector<uint> LiveProject::getLayerOrder() {
+    return layers_.getLayerOrder();
+}

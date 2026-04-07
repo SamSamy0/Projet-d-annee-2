@@ -136,12 +136,10 @@ void GetProjectDataMessage::process(Worker& worker) {
     }
     LiveProject& liveProj = worker.mapProjet_.at(projectId_);
     liveProj.addConnection(userId_, 1); //WARNING: LE 1 EST FORCE CODER
-    QJsonDocument doc(liveProj.getJson());
-
-    QByteArray jsonData = doc.toJson(QJsonDocument::Indented);
 
   std::unique_ptr<Reponse> rps;
-  rps = std::make_unique<ReponseProjectData>(userId_, jsonData);
+  rps = std::make_unique<ReponseProjectData>(userId_, liveProj.getJson() , std::move(liveProj.getLayerOrder()), 
+  liveProj.getImageMap(), liveProj.getSpritesMap());
   worker.pushNetwork(std::move(rps));
 }
 

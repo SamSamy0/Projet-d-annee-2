@@ -38,6 +38,7 @@ struct LiveProject {
     uint getScale();
     const std::unordered_map<uint, SpriteLayer>& getSpritesMap();
     const std::unordered_map<uint, QImage>& getImageMap();
+    const std::vector<uint> getLayerOrder();
 
     private :
     std::vector<uint> connectedID_;
