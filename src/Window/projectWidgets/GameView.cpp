@@ -1,28 +1,196 @@
 #include "GameView.hpp"
-#include "../MenuView.hpp"
 #include "../../project/Chat/userMessage.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
 #include "../../project/Tool/pixelshift.hpp"
+#include "../MenuView.hpp"
+#include <qnamespace.h>
 
 GameView::GameView(Application &app)
     : View(app), project(app_.getProject().get()),
       currentUser(app_.getUser()) {};
 
 void GameView::init() {
-  
   app_.getGui().removeAllWidgets();
-  
+
   initToolbar();
-  initLayerPanel();
-  initChatWidget();
   initPenOptions();
   initPenSpriteOptions();
   initEraserOptions();
   initEraserSpriteOptions();
   initSpriteBrushOptions();
+  initLayerPanel();
+  initChatWidget();
   initMinimap();
   refreshChat();
 }
+
+void GameView::displayMemberList() {
+  auto &gui = app_.getGui();
+  auto &manager = app_.getNetwork();
+
+  if (gui.get("memberListPopup")) {
+    gui.remove(gui.get("memberListPopup"));
+  }
+
+  auto parent = tgui::Panel::create();
+  parent->setSize("40%", "60%");
+  parent->setPosition("30%", "20%");
+  parent->getRenderer()->setBackgroundColor({40, 40, 40, 240});
+  parent->getRenderer()->setRoundedBorderRadius(10);
+  gui.add(parent, "memberListPopup");
+
+  // Title
+
+  auto title =
+      tgui::Label::create(Transferring ? "Choisissez un nouveau propriétaire"
+                                       : "Membres du projet");
+  title->setPosition("center", "5%");
+  title->setTextSize(24);
+  title->getRenderer()->setTextColor(sf::Color::White);
+  parent->add(title);
+
+  auto exitB = tgui::Button::create("✕");
+  exitB->setSize(30, 30);
+  exitB->setPosition("100% - 35", "5");
+  exitB->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+  exitB->getRenderer()->setTextColor(sf::Color::White);
+  exitB->getRenderer()->setBackgroundColorHover(sf::Color(255, 100, 100));
+  parent->add(exitB);
+
+  exitB->onPress(
+      [this]() { app_.getGui().remove(app_.getGui().get("memberListPopup")); });
+
+  auto panel = tgui::ScrollablePanel::create();
+  panel->setPosition("5%", "18%");
+  panel->setSize("90%", "75%");
+  panel->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+  panel->getRenderer()->setBorders(0);
+  panel->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Automatic);
+  parent->add(panel);
+
+  for (int i = 0; i < (int)allUsers_.size(); i++) {
+    if (allUsers_[i].pseudo == currentUser.getUser()) {
+      continue;
+    }
+    auto row = tgui::Panel::create();
+    row->setSize("96%", 56);
+    row->setPosition("2%", i * 64);
+    row->getRenderer()->setBackgroundColor(sf::Color(32, 32, 40));
+    row->getRenderer()->setRoundedBorderRadius(8);
+    panel->add(row);
+
+    // Pseudo
+    std::string pseudo = allUsers_[i].pseudo;
+    int8_t userId = allUsers_[i].userId;
+    auto label = tgui::Label::create(pseudo);
+    label->setPosition(20, "center");
+    label->setTextSize(18);
+    label->getRenderer()->setTextColor(sf::Color(220, 220, 235));
+    row->add(label);
+
+    // Clickable
+    auto clickable = tgui::Button::create();
+    clickable->setSize("100%", "100%");
+    clickable->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+    clickable->getRenderer()->setBackgroundColorHover(
+        tgui::Color(255, 255, 255, 20));
+    clickable->getRenderer()->setRoundedBorderRadius(8);
+    Project *proj = project;
+    clickable->onPress([this, pseudo, userId, proj, &manager] {
+      manager.changeRole(userId, project->getId(), 2);
+      app_.getNetwork().leaveProject(project->getId());
+      app_.getNetwork().getProjectList();
+      app_.changeView(std::make_unique<MenuView>(app_));
+
+      // Get user by pseudo
+      // Ask server to change owner (and to delete current Owner)
+    });
+
+    std::string nomRole = (allUsers_[i].role == 1) ? "Editeur" : "Spectateur";
+    if (allUsers_[i].role == 2)
+      nomRole = "Propriétaire";
+
+    auto labelRole = tgui::Label::create(nomRole);
+    if (Transferring) {
+      labelRole->setPosition("100% - 300", "center");
+      labelRole->setTextSize(14);
+      labelRole->getRenderer()->setTextColor(sf::Color(140, 140, 160));
+      row->add(labelRole);
+      row->add(clickable);
+
+    } else {
+      labelRole->setPosition("100% - 500", "center");
+      // Adding more button
+      auto btn = tgui::Button::create("•••");
+      btn->setSize(80, 35);
+      btn->setPosition("100% -90", "center + 10");
+      btn->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+      btn->getRenderer()->setBackgroundColorHover(sf::Color(55, 55, 70));
+      btn->getRenderer()->setTextColor(sf::Color(140, 140, 160));
+      btn->getRenderer()->setBorders(0);
+      btn->getRenderer()->setRoundedBorderRadius(6);
+      row->add(labelRole);
+      row->add(btn, "BtnMore");
+      btn->onPress(&GameView::showUserManagment, this, btn, i);
+      btn->setTextSize(20);
+    }
+  }
+}
+
+void GameView::showUserManagment(tgui::Button::Ptr toHover, int place) {
+  auto &gui = app_.getGui();
+  auto &manager = app_.getNetwork();
+  activeMoreButton = toHover;
+  sf::Vector2f btnPos = toHover->getAbsolutePosition();
+  activeMoreButton->getRenderer()->setBackgroundColor(sf::Color(55, 55, 70));
+  auto menu = tgui::ListBox::create();
+  menu->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  menu->getRenderer()->setBorders(2);
+  menu->getRenderer()->setBorderColor(sf::Color::White);
+  menu->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
+  menu->getRenderer()->setTextColor(tgui::Color::White);
+  menu->addItem("Promouvoir");
+  menu->addItem("Retrograder");
+  menu->addItem("Bannir");
+  // }
+  menu->addItem("Propriétaire");
+  // menu->addItem("Quitter");
+  float menuHeight = menu->getItemCount() * 45;
+  menu->setSize(150, menuHeight);
+  menu->setItemHeight(45);
+
+  menu->setPosition(btnPos.x - 150, btnPos.y);
+
+  gui.add(menu, "popup");
+  menu->setTextSize(20);
+  menu->onItemSelect(
+      [this, menu, place, &manager, &gui](const tgui::String &item) {
+        int8_t role = project->getRole();
+        if (item == "Promouvoir") {
+          // Spector -> Editor
+          if (allUsers_[place].role == 0) {
+            manager.changeRole(allUsers_[place].userId, project->getId(), 1);
+          } else if (role == 1) {
+            // WARNING YOU ARE LOSING YOUR OWNER STATUS
+          }
+
+        } else if (item == "Retrograder") {
+          if (allUsers_[place].role == 1) {
+            manager.changeRole(allUsers_[place].userId, project->getId(), 0);
+          } else if (role == 1) {
+            // WARNING YOU CAN'T DOWNGRADE A SPECTATOR
+          }
+        } else if (item == "Bannir") {
+        } else if (item == "Propriétaire") {
+        }
+
+        activeMoreButton->getRenderer()->setBackgroundColor(
+            tgui::Color::Transparent);
+        gui.remove(menu);
+      });
+}
+
+void GameView::clearMemberList() { allUsers_.clear(); }
 
 void GameView::render() {
   if (project)
@@ -36,6 +204,26 @@ void GameView::handleEvents(const sf::Event &event) {
     project->getMap()->detectMovement();
   // ON PRESS
   if (const auto *mousePressed = event.getIf<sf::Event::MouseButtonPressed>()) {
+    // On menu
+    auto popup = gui.get("popup");
+    // If popup exists
+    if (popup) {
+      // Gets position of where menu pops
+      sf::Vector2f clickPos(mousePressed->position.x, mousePressed->position.y);
+      // If click outside the menu, then remove it
+      if (!popup->isMouseOnWidget(clickPos)) {
+        auto &gui = app_.getGui();
+        auto popup = gui.get("popup");
+        gui.remove(popup);
+        if (activeMoreButton) {
+          activeMoreButton->getRenderer()->setBackgroundColor(
+              tgui::Color::Transparent);
+          activeMoreButton = nullptr;
+        }
+      }
+    }
+
+    // On map
     if (mousePressed->button == sf::Mouse::Button::Left) {
       sf::Vector2i mousePos = mousePressed->position; // mouse position
       if (!gui.getWidgetBelowMouseCursor(mousePos, true)) {
@@ -46,7 +234,7 @@ void GameView::handleEvents(const sf::Event &event) {
       }
     }
   }
-  
+
   // ON RELEASE
   if (auto mouseEvent = event.getIf<sf::Event::MouseButtonReleased>()) {
     if (mouseEvent->button == sf::Mouse::Button::Left) {
@@ -97,4 +285,33 @@ void GameView::handleEvents(const sf::Event &event) {
         project->getMap()->zooming(wheelEvent); // ZOOM
     }
   }
+}
+
+void GameView::updateMemberRole(uint targetId, int8_t newRole) {
+  for (auto &i : allUsers_) {
+    if (i.userId == targetId) {
+      i.role = newRole;
+    }
+  }
+
+  // My role Changed
+  if (currentUser.getId() == targetId) {
+    project->setRole(newRole);
+    app_.setCurrentProjRole(newRole);
+    init();
+  }
+  auto &gui = app_.getGui();
+  if (gui.get("memberListPopup")) {
+    displayMemberList();
+  }
+}
+
+void GameView::getAllUsers() {
+  auto &manager = app_.getNetwork();
+  manager.getUsersProjects(project->getId());
+}
+void GameView::setAllUsers(std::vector<MemberEntry> users) {
+  allUsers_ = users;
+  displayMemberList();
+  Transferring = false;
 }

@@ -182,7 +182,7 @@ bool LiveProject::canModify(uint userId) {
         return false;
     }
 
-    if (cleVal->second = 0 ){
+    if (cleVal->second == 0 ){
         return false;
     }
     return true;

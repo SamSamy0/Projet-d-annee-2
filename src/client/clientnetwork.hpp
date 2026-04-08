@@ -34,6 +34,8 @@ public:
   void renameLayer(uint proj_id, uint layer_id, std::string name);
   void layerUp(uint proj_id, uint current_layer_id);
   void layerDown(uint proj_id, uint current_layer_id);
+  void leaveProject(uint project_id);
+  void changeRole(uint userId, uint projectId, int8_t role);
 
   void drawSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size,
                   uint8_t r, uint8_t g, uint8_t b, uint8_t a);

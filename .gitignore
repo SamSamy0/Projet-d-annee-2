@@ -10,3 +10,4 @@ build/*
 compile_commands.json
 src/server/test
 src/server/CMakeLists.txt
+.claude

@@ -4,9 +4,9 @@
 #include "GameView.hpp"
 
 void GameView::initChatWidget() {
-  auto& mainWindow = app_.getWindow();
-  auto& gui = app_.getGui();
-  float width  = mainWindow.getSize().x;
+  auto &mainWindow = app_.getWindow();
+  auto &gui = app_.getGui();
+  float width = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
 
   // Je crée le groupe de widgets pour le Chat
@@ -58,14 +58,17 @@ void GameView::initChatWidget() {
   chatSendButton_->setPosition(width * 0.01, height * 0.302);
   chatSendButton_->setTextSize(12);
   chatSendButton_->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
-  chatSendButton_->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
+  chatSendButton_->getRenderer()->setBackgroundColorHover(
+      tgui::Color(75, 130, 210));
   chatSendButton_->getRenderer()->setTextColor(tgui::Color::White);
   chatSendButton_->getRenderer()->setBorders({0});
   chatSendButton_->getRenderer()->setRoundedBorderRadius(8);
   chatSendButton_->onPress([this]() {
     tgui::String text = chatInput_->getText();
-    if (text.empty()) return;
-    auto msg = std::make_shared<UserMessage>(currentUser.getUser(), text.toStdString());
+    if (text.empty())
+      return;
+    auto msg = std::make_shared<UserMessage>(
+        currentUser.getUser(), currentUser.getId(), text.toStdString());
     project->getChat().addMessage(msg);
     chatInput_->setText("");
     refreshChat();
@@ -74,21 +77,23 @@ void GameView::initChatWidget() {
 }
 
 void GameView::refreshChat() {
-  auto& mainWindow = app_.getWindow();
-  
+  auto &mainWindow = app_.getWindow();
+
   chatMessages_->removeAllWidgets();
 
-  float width  = mainWindow.getSize().x;
+  float width = mainWindow.getSize().x;
   float height = mainWindow.getSize().y;
-  const auto& messages = project->getChat().getMessages();
+  const auto &messages = project->getChat().getMessages();
   float positionY = 4.0;
   float authorDataHeight = height * 0.022;
 
-  for (const auto& msg : messages) {
+  for (const auto &msg : messages) {
     if (msg->getType() == MessageType::USER) {
       Date date = msg->getDate();
       std::string pseudo = msg->getAuthor().getUser();
-      std::string authorDate = pseudo + " - " + std::to_string(date.day_) + "/" + std::to_string(date.month_) + "/" + std::to_string(date.year_);
+      std::string authorDate = pseudo + " - " + std::to_string(date.day_) +
+                               "/" + std::to_string(date.month_) + "/" +
+                               std::to_string(date.year_);
 
       auto author = tgui::Label::create();
       author->setText(authorDate);
@@ -108,5 +113,6 @@ void GameView::refreshChat() {
       positionY += message->getSize().y + 4.0;
     }
   }
-  chatMessages_->setVerticalScrollbarValue(chatMessages_->getVerticalScrollbarMaxValue());
+  chatMessages_->setVerticalScrollbarValue(
+      chatMessages_->getVerticalScrollbarMaxValue());
 }

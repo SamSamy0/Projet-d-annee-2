@@ -1,34 +1,36 @@
 #pragma once
-#include <vector>
-#include <string>
-#include <memory>
 #include "../user.hpp"
 #include "date.hpp"
+#include <memory>
+#include <string>
+#include <vector>
 
 using namespace std;
 
 enum class MessageType {
-    USER,
-    SYSTEM,
+  USER,
+  SYSTEM,
 };
 
 class MessageChat {
-    protected :
-        User author_;
-        Date date_;
-        MessageType type_;
-    public :
-        MessageChat() = default;
-        MessageChat(const User& author, const Date& date, MessageType type);
-        virtual string getTexte() const = 0;
-        User getAuthor() const;
-        Date getDate() const;
-        MessageType getType() const;
+protected:
+  User author_;
+  Date date_;
+  MessageType type_;
+
+public:
+  MessageChat() = default;
+  MessageChat(const User &author, const Date &date, MessageType type);
+  virtual string getTexte() const = 0;
+  User getAuthor() const;
+  Date getDate() const;
+  MessageType getType() const;
 };
 
 class Chat {
-    vector<shared_ptr<MessageChat>> messages_;
-    public :
-        void addMessage(shared_ptr<MessageChat> message);
-        vector<shared_ptr<MessageChat>> getMessages() const;
+  vector<shared_ptr<MessageChat>> messages_;
+
+public:
+  void addMessage(shared_ptr<MessageChat> message);
+  vector<shared_ptr<MessageChat>> getMessages() const;
 };

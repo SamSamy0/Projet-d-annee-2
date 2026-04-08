@@ -66,6 +66,13 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::CHAT_CONNECT_USER_REP: return "CHAT_CONNECT_USER_REP";
         case MsgProtocole::CHAT_DISCONNECT_USER_REP: return "CHAT_DISCONNECT_USER_REP";
         case MsgProtocole::CHAT_LOCK_LAYER_REP: return "CHAT_LOCK_LAYER_REP";
+        case MsgProtocole::PROJ_GET_MEMBERS_REQ: return "PROJ_GET_MEMBERS_REQ";
+        case MsgProtocole::PROJ_GET_MEMBERS_REP: return "PROJ_GET_MEMBERS_REP";
+        case MsgProtocole::PROJ_CHANGE_ROLE_REP: return "PROJ_CHANGE_ROLE_REP";
+        case MsgProtocole::PROJ_CHANGE_ROLE_REQ: return "PROJ_CHANGE_ROLE_REQ";
+        case MsgProtocole::PROJ_LEAVE_PROJ_REQ: return "PROJ_LEAV_PROJ_REQ";
+        case MsgProtocole::PROJ_LEAVE_PROJ_REP: return "PROJ_LEAV_PROJ_REQ";
+        
     }
 
     return "UNKNOWN";
