@@ -50,6 +50,12 @@ void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
   app_->loadProjectData(scale, size, name, id);
 }
 
+void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
+                                      std::string name, uint id, uint nextLayerId,
+                                      const std::vector<LayerLoadData>& layers) {
+  app_->loadProjectData(scale, size, name, id, nextLayerId, layers);
+}
+
 
 void ReceiverInWindow::createLayer(LayerType type){
   dynamic_cast<GameView*>(app_->getCurrentView().get())->createLayer(type);

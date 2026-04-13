@@ -2,10 +2,12 @@
 #include "clientnetwork.hpp"
 #include <QByteArray>
 #include <QDebug>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <SFML/Network.hpp>
 #include <iostream>
+#include <unordered_map>
 
 ClientHandler::ClientHandler(ClientNetworkManager &client_manager,
                              ReceiverInWindow &w)
@@ -50,41 +52,68 @@ void ClientHandler::process(ServerEvent &event) {
   }
 
   case MsgProtocole::LOB_GET_PROJECT_DATA_REP: {
-
     std::uint32_t jsonSize;
-    // On suppose que l'octet d'en-tête (MsgProtocole) a déjà été extrait du
-    // flux (stream >>) juste avant pour déclencher cet événement. On lit donc
-    // la taille.
     *(event.data_packet_) >> jsonSize;
 
-    // 1. Calcul du BON offset (1 octet pour le type de message + 4 octets
-    // pour la taille)
-    size_t offset = sizeof(std::uint8_t) + sizeof(std::uint32_t);
-    const char *ptrDonnees =
-        (const char *)(*(event.data_packet_)).getData() + offset;
+    // Offset brut : 1 octet type (déjà lu par clientnetwork) + 4 octets taille
+    const size_t headerOffset = sizeof(std::uint8_t) + sizeof(std::uint32_t);
+    const char*  rawBuf    = (const char*)(*(event.data_packet_)).getData();
+    const size_t totalSize = event.data_packet_->getDataSize();
 
-    // 2. Récupération des données COMPRESSÉES
-    QByteArray donneesCompressees(ptrDonnees, jsonSize);
-
-    // 3. DÉCOMPRESSION des données (Étape cruciale qui manquait)
-    QByteArray jsonBytes = qUncompress(donneesCompressees);
-
-    // Vérification de sécurité pour s'assurer que la décompression a réussi
+    // 1. Décompression et parsing du JSON d'en-tête
+    QByteArray jsonBytes = qUncompress(QByteArray(rawBuf + headerOffset, jsonSize));
     if (jsonBytes.isEmpty()) {
-      std::cerr
-          << "Erreur : La décompression a échoué ou les données sont vides."
-          << std::endl;
-    } else {
-      // 4. Lecture du JSON sur les données en clair
-      QJsonDocument doc = QJsonDocument::fromJson(jsonBytes);
-      QJsonObject entete = doc.object();
-
-      sf::Vector2u vec{static_cast<uint>(entete["width"].toInt()),
-                       static_cast<uint>(entete["height"].toInt())};
-      handleWindow_.addProjectData(entete["scale"].toInt(), vec,
-                                   entete["name"].toString().toStdString(),
-                                   entete["id"].toInt());
+      std::cerr << "Erreur : décompression du JSON projet échouée." << std::endl;
+      break;
     }
+    QJsonObject entete = QJsonDocument::fromJson(jsonBytes).object();
+
+    // 2. Index { layer_id -> {x, y} } pour retrouver les décalages sauvegardés
+    struct LayerMeta { int x, y; };
+    std::unordered_map<uint, LayerMeta> layerMeta;
+    QJsonArray layersJson = entete["layers"].toArray();
+    for (const auto& lv : layersJson) {
+      QJsonObject lo = lv.toObject();
+      uint lid = static_cast<uint>(lo["id"].toInt());
+      layerMeta[lid] = { lo["x"].toInt(), lo["y"].toInt() };
+    }
+
+    // 3. Lecture big-endian des données binaires de chaque layer
+    auto readU32BE = [](const char* buf, size_t p) -> uint32_t {
+      return (static_cast<uint32_t>(static_cast<uint8_t>(buf[p]))     << 24)
+           | (static_cast<uint32_t>(static_cast<uint8_t>(buf[p + 1])) << 16)
+           | (static_cast<uint32_t>(static_cast<uint8_t>(buf[p + 2])) <<  8)
+           |  static_cast<uint32_t>(static_cast<uint8_t>(buf[p + 3]));
+    };
+
+    std::vector<LayerLoadData> layers;
+    size_t pos = headerOffset + jsonSize;
+    while (pos + 9 <= totalSize) {       // min 4 (id) + 1 (type) + 4 (taille)
+      LayerLoadData ld;
+      ld.id   = readU32BE(rawBuf, pos); pos += 4;
+      ld.type = static_cast<uint8_t>(rawBuf[pos]); pos += 1;
+      uint32_t dataSize = readU32BE(rawBuf, pos); pos += 4;
+
+      if (pos + dataSize > totalSize) break;
+      ld.data = QByteArray(rawBuf + pos, dataSize);
+      pos += dataSize;
+
+      auto it = layerMeta.find(ld.id);
+      ld.x = (it != layerMeta.end()) ? it->second.x : 0;
+      ld.y = (it != layerMeta.end()) ? it->second.y : 0;
+
+      layers.push_back(std::move(ld));
+    }
+
+    // 4. Reconstruction du projet avec tous ses layers (pas de layer par défaut)
+    sf::Vector2u vec{ static_cast<uint>(entete["width"].toInt()),
+                      static_cast<uint>(entete["height"].toInt()) };
+    handleWindow_.addProjectData(
+        entete["scale"].toInt(), vec,
+        entete["name"].toString().toStdString(),
+        entete["id"].toInt(),
+        static_cast<uint>(entete["nextLayerId"].toInt()),
+        layers);
     break;
   }
 

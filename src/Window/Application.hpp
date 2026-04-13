@@ -6,11 +6,21 @@
 #include "../project/user.hpp"
 #include "ProjectData.hpp"
 #include "View.hpp"
+#include <QByteArray>
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
+#include <cstdint>
 #include <memory>
 #include <vector>
+
+// Données brutes d'un layer reçu du serveur (avant reconstruction SFML)
+struct LayerLoadData {
+  uint     id;
+  int      x, y;   // décalage accumulé (layer shift)
+  uint8_t  type;  
+  QByteArray data;
+};
 
 class Application {
   ClientNetworkManager &manager;
@@ -41,6 +51,9 @@ public:
   void updateTextSize();
   void loadProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                        uint id);
+  void loadProjectData(unsigned int scale, sf::Vector2u size, std::string name,
+                       uint id, uint nextLayerId,
+                       const std::vector<LayerLoadData>& layers);
   // Getters
   sf::RenderWindow &getWindow();
   tgui::Gui &getGui();

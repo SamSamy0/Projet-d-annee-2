@@ -34,4 +34,7 @@ public:
   void setState();
   void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                       uint id);
+  void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
+                      uint id, uint nextLayerId,
+                      const std::vector<LayerLoadData>& layers);
 };

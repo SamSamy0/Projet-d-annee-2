@@ -254,3 +254,7 @@ uint Map::getId(){
 void Map::setId(uint newId) {
     id_ = newId;
 }
+
+void Map::setNextLayerId(uint id) {
+    nextLayerId_ = id;
+}

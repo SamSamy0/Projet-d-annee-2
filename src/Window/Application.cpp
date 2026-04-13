@@ -2,6 +2,11 @@
 #include "LoginView.hpp"
 #include "MenuView.hpp"
 #include "projectWidgets/GameView.hpp"
+#include "../project/Layer/pixellayer.hpp"
+#include "../project/Layer/spritelayer.hpp"
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 Application::Application(ClientNetworkManager &manager)
     : mainWindow(
@@ -121,5 +126,67 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                   std::string name, uint id) {
   project = std::make_unique<Project>(scale, size, name, id, mainWindow, gui,
                                       manager);
+  changeView(std::make_unique<GameView>(*this));
+};
+
+void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
+                                  std::string name, uint id, uint nextLayerId,
+                                  const std::vector<LayerLoadData>& layers) {
+  // Constructeur avec vecteur vide → aucun layer par défaut créé
+  project = std::make_unique<Project>(scale, size, name, id, mainWindow, gui,
+                                      manager, std::vector<std::shared_ptr<Layer>>{});
+  auto map = project->getMap();
+
+  for (const auto& ld : layers) {
+    std::string layerName = "Layer " + std::to_string(ld.id);
+
+    if (ld.type == 0) {
+      // --- PixelLayer : données = PNG brut ---
+      auto layer = std::make_shared<PixelLayer>(ld.id, layerName, size);
+      sf::Texture texture;
+      if (texture.loadFromMemory(ld.data.constData(), ld.data.size())) {
+        sf::Sprite sprite(texture);
+        layer->draw(sprite);
+        layer->display();
+      }
+      if (ld.x != 0 || ld.y != 0)
+        layer->shift(sf::Vector2i(ld.x, ld.y));
+      map->getLayers().push_back(layer);
+
+    } else {
+      // --- SpriteLayer : données = JSON compressé ---
+      auto layer = std::make_shared<SpriteLayer>(ld.id, layerName, size);
+      QByteArray jsonRaw = qUncompress(ld.data);
+      if (!jsonRaw.isEmpty()) {
+        QJsonObject spriteJson = QJsonDocument::fromJson(jsonRaw).object();
+        layer->setNextId(static_cast<uint>(spriteJson["nextId"].toInt()));
+
+        QJsonArray sprites = spriteJson["sprites"].toArray();
+        for (const auto& sv : sprites) {
+          QJsonObject s = sv.toObject();
+          std::string nameId = s["nameId"].toString().toStdString();
+          int sx = s["x"].toInt();
+          int sy = s["y"].toInt();
+          float spriteSize = static_cast<float>(s["size"].toDouble());
+
+          Asset* asset = map->getAssetManager().getAsset(nameId);
+          if (asset && asset->texture) {
+            sf::Sprite sprite(*(asset->texture));
+            sf::FloatRect bounds = sprite.getLocalBounds();
+            sprite.setOrigin(sf::Vector2f(bounds.size.x / 2.0f, bounds.size.y / 2.0f));
+            float spriteScale = spriteSize * static_cast<float>(map->getScale()) / bounds.size.x;
+            sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
+            sprite.setPosition(sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
+            layer->draw(sprite);
+          }
+        }
+      }
+      if (ld.x != 0 || ld.y != 0)
+        layer->shift(sf::Vector2i(ld.x, ld.y));
+      map->getLayers().push_back(layer);
+    }
+  }
+
+  map->setNextLayerId(nextLayerId);
   changeView(std::make_unique<GameView>(*this));
 };
