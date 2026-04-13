@@ -73,6 +73,7 @@ RenameProjectMessage::RenameProjectMessage(sf::Packet& dataPacket, std::shared_p
 
 void RenameProjectMessage::process(Worker &worker) {
   bool success = worker.renameProject(projectId_, newName_);
+
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseRenameProject>(userID_, projectId_, newName_,
                                                success);
@@ -116,7 +117,10 @@ DeleteProjectMessage::DeleteProjectMessage(sf::Packet& data_packet, std::shared_
 
 void DeleteProjectMessage::process(Worker &worker) {
   if (worker.getRole(userId_, projectId_) == 2) {
+    // if owner -> delete project for everybody
     worker.deleteProject(projectId_);
+  } else {
+    worker.removeLink(userId_, projectId_);
   }
 }
 
@@ -126,6 +130,27 @@ GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, std::share
     data_packet >> projectId_;
     client->projectId = projectId_;
 }
+LeaveProjectMessage::LeaveProjectMessage(sf::Packet &data_packet, uint userId) {
+  userId_ = userId;
+  data_packet >> projectId_;
+}
+void LeaveProjectMessage::process(Worker &worker) {
+  worker.removeLink(userId_, projectId_);
+}
+
+GetMemberMessage::GetMemberMessage(sf::Packet &data_packet, uint userId) {
+  userId_ = userId;
+  data_packet >> projectId_;
+}
+
+void GetMemberMessage::process(Worker &worker) {
+  std::vector<MemberEntry> memberList = worker.getProjectMembers(projectId_);
+
+  std::unique_ptr<Reponse> rps;
+  rps = std::make_unique<ReponseGetMember>(userId_, memberList);
+  worker.pushNetwork(std::move(rps));
+}
+
 
 void GetProjectDataMessage::process(Worker& worker) {
     if (worker.mapProjet_.find(projectId_) == worker.mapProjet_.end()) {
@@ -160,6 +185,27 @@ std::vector<uint> ModifProjetMessage::getUserLists(Worker& worker) {
     }
     std::cout<< " taille usersID : "<<usersId.size()<<std::endl;
     return usersId;
+}
+ChangeRoleMessage::ChangeRoleMessage(sf::Packet &data_packet, uint userId) {
+  userId_ = userId;
+  data_packet >> target_ >> projectId_ >> role_;
+}
+
+void ChangeRoleMessage::process(Worker &worker) {
+  bool success = worker.changeRole(target_, projectId_, role_);
+
+  // Getting all connected users
+  std::vector<uint> usersId;
+  auto it = worker.mapProjet_.find(projectId_);
+  if (it != worker.mapProjet_.end()) {
+    usersId = it->second.getConnected();
+  }
+
+  // Building the group response
+  std::unique_ptr<Reponse> rps;
+  rps = std::make_unique<ReponseChangeRole>(usersId, target_, projectId_, role_,
+                                            success);
+  worker.pushNetwork(std::move(rps));
 }
 
 CreateLayerMessage::CreateLayerMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client){
@@ -283,13 +329,13 @@ void PutPixelsSquareMessage::process(Worker &worker) {
     return;
   }
   
-  if (liveProj->second.drawPixelRect(userId_, calqueId_, pos_.x, pos_.y, taille_, red_, green_, blue_, opa_)) {
+  // if (liveProj->second.drawPixelRect(userId_, calqueId_, pos_.x, pos_.y, taille_, red_, green_, blue_, opa_)) {
     std::cout<<"creation de la reponse"<<std::endl;
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponsePutPixelsSquare>(usersId, *this);
     worker.pushNetwork(std::move(rps));
-  }
+  // }
 }
 
 PutPixelsCircleMessage::PutPixelsCircleMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
@@ -304,12 +350,12 @@ void PutPixelsCircleMessage::process(Worker& worker) {
     return;
   }
   
-  if (liveProj->second.drawPixelCircle(userId_, calqueId_, pos_.x, pos_.y, taille_, red_, green_, blue_, opa_)) {
+  // if (liveProj->second.drawPixelCircle(userId_, calqueId_, pos_.x, pos_.y, taille_, red_, green_, blue_, opa_)) {
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponsePutPixelsCircle>(usersId, *this);
     worker.pushNetwork(std::move(rps));
-  }
+  // }
 }
 
 PutPixelsDiamondMessage::PutPixelsDiamondMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
@@ -324,12 +370,12 @@ void PutPixelsDiamondMessage::process(Worker& worker) {
     return;
   }
   
-  if (liveProj->second.drawPixelDiam(userId_, calqueId_, pos_.x, pos_.y, hauteur_, largeur_, red_, green_, blue_, opa_)) {
+  // if (liveProj->second.drawPixelDiam(userId_, calqueId_, pos_.x, pos_.y, hauteur_, largeur_, red_, green_, blue_, opa_)) {
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponsePutPixelsDiamond>(usersId, *this);
     worker.pushNetwork(std::move(rps));
-  }
+  // }
 }
 
 ErasePixelsSquareMessage::ErasePixelsSquareMessage(sf::Packet &data_packet,
@@ -345,12 +391,12 @@ void ErasePixelsSquareMessage::process(Worker &worker) {
     return;
   }
   
-  if (liveProj->second.erasePixelRect(userId_, calqueId_, pos_.x, pos_.y, taille_)) {
+  // if (liveProj->second.erasePixelRect(userId_, calqueId_, pos_.x, pos_.y, taille_)) {
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseErasePixelsSquare>(usersId, *this);
     worker.pushNetwork(std::move(rps));
-  }
+  // }
 }
 
 ErasePixelsCircleMessage::ErasePixelsCircleMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
@@ -399,7 +445,6 @@ PutSpriteMessage::PutSpriteMessage(sf::Packet &data_packet, std::shared_ptr<Clie
   userId_ = client->id;
   data_packet >> projectId_ >> calqueId_ >> asset_id_ >> pos_.x >> pos_.y >> taille_;
 
-  std::cout <<"envoyed à ce calque :" << calqueId_ << std::endl;
 
 }
 void PutSpriteMessage::process(Worker &worker){
@@ -410,6 +455,7 @@ void PutSpriteMessage::process(Worker &worker){
   }
 
   if (liveProj->second.addSprite(userId_, calqueId_, asset_id_, pos_.x, pos_.y, taille_)) {
+
 
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
@@ -481,7 +527,7 @@ CheckTokenMessage::CheckTokenMessage(sf::Packet &dataPacket, std::shared_ptr<Cli
 
 void CheckTokenMessage::process(Worker &worker) {
   bool sucess = worker.checkShareToken(userId_, token);
-  std::cout << "success or not ?" << sucess <<std::endl;
+  std::cout << "success or not ?" << sucess << std::endl;
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseJoinProject>(userId_, sucess);
   worker.pushNetwork(std::move(rps));
@@ -545,6 +591,9 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
   case MsgProtocole::LOB_DUPLICATE_PROJECT_REQ:
     return std::make_unique<DuplicateProjectMessage>(data_packet, c);
 
+  case MsgProtocole::PROJ_GET_MEMBERS_REQ:
+    return std::make_unique<GetMemberMessage>(data_packet, c->id);
+
   case MsgProtocole::LOB_SHARE_PROJECT_REQ:
     return std::make_unique<GenerateTokenMessage>(data_packet, c);
 
@@ -565,7 +614,7 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
 
   case MsgProtocole::MAP_ORGANIZE_LAYER_DOWN_REQ:
     return std::make_unique<OrganizeLayerDownMessage>(data_packet,c);
-      
+
   case MsgProtocole::MAP_PUT_PIXELS_SQUARE_REQ:
     return std::make_unique<PutPixelsSquareMessage>(data_packet, c);
 
@@ -593,9 +642,14 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
   case MsgProtocole::MAP_ERASE_SPRITE_REQ:
     return std::make_unique<EraseSpriteMessage>(data_packet, c);
 
-  
+  case MsgProtocole::PROJ_CHANGE_ROLE_REQ:
+    return std::make_unique<ChangeRoleMessage>(data_packet, c->id);
+
+  case MsgProtocole::PROJ_LEAVE_PROJ_REQ:
+    return std::make_unique<LeaveProjectMessage>(data_packet, c->id);
 
   default:
     std::cout << "pas de message" << std::endl;
     return nullptr;
-  }  }
+  }
+}

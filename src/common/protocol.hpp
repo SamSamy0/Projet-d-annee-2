@@ -1,4 +1,4 @@
-#pragma once   // un seul acces a la fois
+#pragma once // un seul acces a la fois
 #include <cstdint>
 #include <string>
 
@@ -71,6 +71,12 @@ AUTH_LOGIN_REQ,
     CHAT_CONNECT_USER_REP,
     CHAT_DISCONNECT_USER_REP,
     CHAT_LOCK_LAYER_REP,
+    PROJ_GET_MEMBERS_REQ,
+    PROJ_GET_MEMBERS_REP,
+    PROJ_CHANGE_ROLE_REQ,
+    PROJ_CHANGE_ROLE_REP,
+    PROJ_LEAVE_PROJ_REQ,
+    PROJ_LEAVE_PROJ_REP,
 
 };
 

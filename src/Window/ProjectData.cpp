@@ -8,4 +8,6 @@ void ProjectData::print() {
   std::cout << "#############################################" << std::endl;
 }
 
+ProjectData::ProjectData(uint projectId, int8_t role, std::string projectName)
+    : projectId{projectId}, role{role}, projectName{projectName} {};
 void ProjectData::setName(std::string newName) { projectName = newName; }

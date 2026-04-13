@@ -66,10 +66,7 @@ set(SOURCES
     ../src/Window/MenuView.cpp
     ../src/Window/projectWidgets/GameView.cpp
     ../src/Window/View.hpp
-    # ../src/Window/Window.cpp
-    # ../src/Window/windowLogin.cpp
-    # ../src/Window/windowMenu.cpp
-    # ../src/Window/projectWidgets/windowGame.cpp
+    ../src/Window/ProjectData.cpp
     ../src/Window/projectWidgets/toolBarWidgets.cpp
     ../src/Window/projectWidgets/layerWidgets.cpp
     ../src/Window/projectWidgets/chatWidgets.cpp

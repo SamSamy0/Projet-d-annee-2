@@ -147,6 +147,17 @@ void ClientNetworkManager::createProjectCode(uint8_t role, uint project_id) {
               << std::endl;
 }
 
+void ClientNetworkManager::getUsersProjects(uint projId) {
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::PROJ_GET_MEMBERS_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << static_cast<uint32_t>(projId);
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
 void ClientNetworkManager::joinProject(std::string project_code) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::LOB_JOIN_PROJECT_REQ;
@@ -166,6 +177,16 @@ void ClientNetworkManager::createLayer(uint proj_id,LayerType type){
   uint8_t type_int = static_cast<uint8_t>(type);
   packet << proj_id << type_int;
 
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+void ClientNetworkManager::leaveProject(uint projectId) {
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::PROJ_LEAVE_PROJ_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << static_cast<uint32_t>(projectId);
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;
@@ -218,6 +239,18 @@ void ClientNetworkManager::layerDown(uint proj_id, uint layer_id){
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id;
 
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
+void ClientNetworkManager::changeRole(uint userId, uint projectId,
+                                      int8_t role) {
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::PROJ_CHANGE_ROLE_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << userId << projectId << role;
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;
@@ -321,15 +354,14 @@ void ClientNetworkManager::shiftLayer(uint proj_id, uint layer_id, int delta_x,
               << std::endl;
 }
 
-
-void ClientNetworkManager::drawSprite(uint proj_id, uint layer_id, std::string asset_id, int pos_x, int pos_y, float size_x){
-
+void ClientNetworkManager::drawSprite(uint proj_id, uint layer_id,
+                                      std::string asset_id, int pos_x,
+                                      int pos_y, float size_x) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_PUT_SPRITE_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << asset_id << pos_x<<pos_y<<size_x;
-
+  packet << proj_id << layer_id << asset_id << pos_x << pos_y << size_x;
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)

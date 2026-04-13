@@ -11,7 +11,7 @@ class MenuView : public View {
   void shareProj();
   void joinProj(tgui::Panel::Ptr panel);
   void displayProjList(tgui::Panel::Ptr parent);
-  void showProjectMenu(ProjectData, tgui::Button::Ptr toHover);
+  void showProjectMenu(ProjectData p, tgui::Button::Ptr toHover);
   void initInputWidget(focusPopup focus, ProjectData project = ProjectData{});
   void popupRename(tgui::Panel::Ptr back, ProjectData project, focusPopup view);
   void popupCreate(tgui::Panel::Ptr background);
@@ -46,4 +46,5 @@ public:
   void updateCreatedProjectId(uint32_t projId);
   void setShareToken(std::string token);
   void resetShareToken();
+  void deleteProject(long long id);
 };

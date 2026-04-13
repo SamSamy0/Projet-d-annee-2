@@ -1,35 +1,32 @@
 #pragma once
-#include <vector>
-#include <utility>
-#include <SFML/Network.hpp>
-#include "../datamanager/projectentry.hpp"
 #include "../client.hpp"
-#include <QFile>
+#include "../datamanager/memberentry.hpp"
+#include "../datamanager/projectentry.hpp"
 #include "../message/message.hpp"
 #include "../SpriteLayer.hpp"
 
 class ServerNetworkManager;
 
 struct Reponse {
-    sf::Packet dataPacket_;
-    virtual ~Reponse() = default;
+  sf::Packet dataPacket_;
+  virtual ~Reponse() = default;
 
-    virtual void envoyer(ServerNetworkManager& servManager) = 0; 
+  virtual void envoyer(ServerNetworkManager &servManager) = 0;
 };
 
 struct ReponseSolo : Reponse {
-    uint userId_;
+  uint userId_;
 
-    protected:
-    ReponseSolo(uint id);
-    virtual void envoyer(ServerNetworkManager& servManager) override;
+protected:
+  ReponseSolo(uint id);
+  virtual void envoyer(ServerNetworkManager &servManager) override;
 };
 
 struct ReponseAuth : ReponseSolo {
-    std::shared_ptr<Client> client_;
+  std::shared_ptr<Client> client_;
 
-    ReponseAuth(std::shared_ptr<Client> client, uint userId);
-    virtual void envoyer(ServerNetworkManager& servManager) override;
+  ReponseAuth(std::shared_ptr<Client> client, uint userId);
+  virtual void envoyer(ServerNetworkManager &servManager) override;
 };
 
 struct ReponseDeconnection : ReponseSolo {
@@ -44,15 +41,18 @@ struct ReponseRenameProject: ReponseSolo{
     // virtual void envoyer(ServerNetworkManager& servManager) override;
 };
 
-struct ReponseDuplicateProject: ReponseSolo{
-    ReponseDuplicateProject(uint userId_, uint projectId_, std::string newName);
+struct ReponseDuplicateProject : ReponseSolo {
+  ReponseDuplicateProject(uint userId_, uint projectId_, std::string newName);
 };
-struct ReponseGenerateToken: ReponseSolo{
-    ReponseGenerateToken(uint userId_, std::string token);
+struct ReponseGenerateToken : ReponseSolo {
+  ReponseGenerateToken(uint userId_, std::string token);
 };
 
-struct ReponseJoinProject: ReponseSolo{
-    ReponseJoinProject(uint userId_, bool success);
+struct ReponseJoinProject : ReponseSolo {
+  ReponseJoinProject(uint userId_, bool success);
+};
+struct ReponseGetMember : ReponseSolo {
+  ReponseGetMember(uint userId_, std::vector<MemberEntry> memberList);
 };
 
 struct ReponseProjectData : ReponseSolo {
@@ -65,19 +65,19 @@ struct ReponseProjectData : ReponseSolo {
 
 
 struct ReponseUsersProjects : ReponseSolo {
-    ReponseUsersProjects(uint userId, std::vector<ProjectEntry>& projects);
+  ReponseUsersProjects(uint userId, std::vector<ProjectEntry> &projects);
 };
 
 struct ReponseCreateProject : ReponseSolo {
-    ReponseCreateProject(uint userId, uint projectId_);
+  ReponseCreateProject(uint userId, uint projectId_);
 };
 
 struct ReponseGroupe : Reponse {
-    std::vector<uint> usersId_;
+  std::vector<uint> usersId_;
 
-    protected:
-    ReponseGroupe(std::vector<uint> usersId);
-    virtual void envoyer(ServerNetworkManager& servManager) override;
+protected:
+  ReponseGroupe(std::vector<uint> usersId);
+  virtual void envoyer(ServerNetworkManager &servManager) override;
 };
 
 
@@ -104,39 +104,43 @@ struct ReponseOrganizeLayerDown : ReponseGroupe{
     ReponseOrganizeLayerDown(std::vector<uint> usersId, OrganizeLayerDownMessage& mess);
 };
 
+struct ReponseChangeRole : ReponseGroupe {
+  ReponseChangeRole(std::vector<uint> usersId_, uint target, uint projectId_,
+                    int8_t role, bool success);
+};
+
 struct ReponsePutPixelsCircle : ReponseGroupe {
-    
-   ReponsePutPixelsCircle(std::vector<uint> usersId, PutPixelsCircleMessage& mess);
+  ReponsePutPixelsCircle(std::vector<uint> usersId,
+                         PutPixelsCircleMessage &mess);
 };
 
 struct ReponsePutPixelsSquare : ReponseGroupe {
-    
-   ReponsePutPixelsSquare(std::vector<uint> usersId, PutPixelsSquareMessage& mess);
+  ReponsePutPixelsSquare(std::vector<uint> usersId,
+                         PutPixelsSquareMessage &mess);
 };
 
 struct ReponsePutPixelsDiamond : ReponseGroupe {
-    
-   ReponsePutPixelsDiamond(std::vector<uint> usersId, PutPixelsDiamondMessage& mess);
+  ReponsePutPixelsDiamond(std::vector<uint> usersId,
+                          PutPixelsDiamondMessage &mess);
 };
 
 struct ReponseErasePixelsCircle : ReponseGroupe {
-    
-   ReponseErasePixelsCircle(std::vector<uint> usersId, ErasePixelsCircleMessage& mess);
+  ReponseErasePixelsCircle(std::vector<uint> usersId,
+                           ErasePixelsCircleMessage &mess);
 };
 
 struct ReponseErasePixelsSquare : ReponseGroupe {
-    
-   ReponseErasePixelsSquare(std::vector<uint> usersId, ErasePixelsSquareMessage& mess);
+  ReponseErasePixelsSquare(std::vector<uint> usersId,
+                           ErasePixelsSquareMessage &mess);
 };
 
 struct ReponseErasePixelsDiamond : ReponseGroupe {
-    
-   ReponseErasePixelsDiamond(std::vector<uint> usersId, ErasePixelsDiamondMessage& mess);
+  ReponseErasePixelsDiamond(std::vector<uint> usersId,
+                            ErasePixelsDiamondMessage &mess);
 };
 
-struct ReponsePutSprite : ReponseGroupe{
-
-   ReponsePutSprite(std::vector<uint> usersId, PutSpriteMessage& mess);
+struct ReponsePutSprite : ReponseGroupe {
+  ReponsePutSprite(std::vector<uint> usersId, PutSpriteMessage &mess);
 };
 
 struct ReponseEraseSprite : ReponseGroupe {
@@ -145,6 +149,5 @@ struct ReponseEraseSprite : ReponseGroupe {
 };
 
 struct ReponseMoveLayer : ReponseGroupe {
-    
-   ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage& mess);
+  ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage &mess);
 };

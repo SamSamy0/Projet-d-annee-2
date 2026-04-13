@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Window/Application.hpp"
+#include "../server/datamanager/memberentry.hpp"
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -14,6 +15,7 @@ public:
   ReceiverInWindow(Application &w);
   // Method on Window
   void switchConnectState(uint8_t connect);
+  void setUserId(uint newId);
   void addProjectToList(ProjectData projet);
   void updateProjectNameInList(uint id, const std::string &name);
   void updateCreatedProjectId(uint ProjectId);
@@ -30,7 +32,9 @@ public:
   void shiftLayer(uint layer_id, int delta_x, int delta_y);
   void updateShareToken(std::string newTok);
   void clearProjList();
-
+  void clearMemberList();
+  void setMemberList(std::vector<MemberEntry> memberList);
+  void updateMemberList(uint projectId, uint target, int8_t role);
   void setState();
   void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                       uint id);

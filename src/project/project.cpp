@@ -11,16 +11,17 @@ const string FONT_PATH{"../res/police/ARIAL.TTF"};
 // Constructors
 Project::Project(unsigned int scale, sf::Vector2u size, std::string name,
                  uint id, sf::RenderWindow &window, tgui::Gui &gui,
-                 ClientNetworkManager &manager)
+                 ClientNetworkManager &manager, int8_t role)
     : map_{std::make_shared<Map>(id_, size, scale)}, name_{name}, id_{id},
-      window_{window}, toolbar_{map_, manager}, gui_{gui} {}
+      window_{window}, toolbar_{map_, manager}, gui_{gui}, role_{role} {}
 
 Project::Project(unsigned int scale, sf::Vector2u size, std::string name,
                  uint id, sf::RenderWindow &window, tgui::Gui &gui,
                  ClientNetworkManager &manager,
-                 std::vector<std::shared_ptr<Layer>> layers)
+                 std::vector<std::shared_ptr<Layer>> layers, int8_t role)
     : map_{std::make_shared<Map>(id_, size, scale, layers)}, name_{name},
-      id_{id}, window_{window}, toolbar_{map_, manager}, gui_{gui} {}
+      id_{id}, window_{window}, toolbar_{map_, manager}, gui_{gui},
+      role_{role} {}
 
 // ----- [Getters] -----
 uint Project::getId() { return id_; }
@@ -48,7 +49,8 @@ void Project::displayScale() {
   scaleText.setString("1 m = " + to_string(getScale()) + " px");
   scaleText.setCharacterSize(17);
   scaleText.setFillColor(sf::Color::White);
-  scaleText.setPosition(sf::Vector2f(window_.getSize().x - scaleText.getLocalBounds().size.x - 10.f, 10.f));
+  scaleText.setPosition(sf::Vector2f(
+      window_.getSize().x - scaleText.getLocalBounds().size.x - 10.f, 10.f));
 
   window_.setView(window_.getDefaultView());
   window_.draw(scaleText);
@@ -63,7 +65,8 @@ void Project::displayBackground() {
   sf::RectangleShape left;
 
   left.setPosition(sf::Vector2f(0, window_.getSize().y * 0.05));
-  left.setSize(sf::Vector2f(window_.getSize().x * 0.18, window_.getSize().y * 1.5));
+  left.setSize(
+      sf::Vector2f(window_.getSize().x * 0.18, window_.getSize().y * 1.5));
   left.setFillColor(sf::Color(36, 40, 47));
 
   window_.draw(top);
@@ -81,8 +84,10 @@ void Project::display() {
   displayScale();
 }
 
-void Project::setId(uint newId){
+void Project::setId(uint newId) {
   id_ = newId;
   map_->setId(newId);
 }
 
+int8_t Project::getRole() { return role_; }
+void Project::setRole(int8_t newRole) { role_ = newRole; }

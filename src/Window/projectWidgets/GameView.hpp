@@ -1,4 +1,5 @@
 #pragma once
+#include "../../server/datamanager/memberentry.hpp"
 #include "../Application.hpp"
 #include "../View.hpp"
 
@@ -9,6 +10,9 @@ class GameView : public View {
   tgui::ScrollablePanel::Ptr layersList_ = nullptr;
   Project *project;
   User currentUser;
+  std::vector<MemberEntry> allUsers_;
+  bool Transferring = false;
+  tgui::Button::Ptr activeMoreButton = nullptr;
 
   // Chat widget
   tgui::Panel::Ptr chatPanel_ = nullptr;
@@ -37,6 +41,10 @@ class GameView : public View {
   void refreshChat();
   void refreshLayerList();
 
+  void displayMemberList();
+  void getAllUsers();
+  void showUserManagment(tgui::Button::Ptr toHover, int place);
+
   // Detection in map
   void toolOnClick();
   void toolOnRelease();
@@ -49,10 +57,12 @@ public:
   void render();
   void handleEvents(const sf::Event &events) override;
 
-
   void createLayer(LayerType);
   void deleteLayer(uint layer_id);
   void layerUp(uint layer_id);
   void layerDown(uint layer_id);
   void renameLayer(uint layer_id, std::string name);
+  void setAllUsers(std::vector<MemberEntry> users);
+  void updateMemberRole(uint targetId, int8_t role);
+  void clearMemberList();
 };
