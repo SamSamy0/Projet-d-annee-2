@@ -200,3 +200,11 @@ bool LiveProject::removeSprite(uint userId, uint calqueId, uint spriteId) {
 const std::vector<uint> LiveProject::getLayerOrder() {
     return layers_.getLayerOrder();
 }
+
+bool LiveProject::renameCalque(uint userId, uint calqueId, std::string newName) {
+    if (!canModify(userId)) {
+        return false;
+    }
+
+    return layers_.renameCalque(calqueId, newName);
+}

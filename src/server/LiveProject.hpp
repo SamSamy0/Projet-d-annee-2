@@ -27,6 +27,7 @@ struct LiveProject {
     bool addCalque(uint userId, uint8_t type);
     bool removeCalque(uint userId, uint calqueId);
     bool shiftCalque(uint userId, uint calqueId, uint deltaX, uint deltaY);
+    bool renameCalque(uint userId, uint calqueId, std::string newName);
 
     bool addSprite(uint userId, uint calqueId, std::string asset_id, uint x, uint y, float taille);
     bool removeSprite(uint userId, uint calqueId, uint spriteId);

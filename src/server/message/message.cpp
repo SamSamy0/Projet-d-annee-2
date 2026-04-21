@@ -156,12 +156,12 @@ void GetMemberMessage::process(Worker &worker) {
 void GetProjectDataMessage::process(Worker& worker) {
     if (worker.mapProjet_.find(projectId_) == worker.mapProjet_.end()) {
         LiveProject liveProj = LiveProject(projectId_);
-        liveProj.addConnection(userId_, 1); //WARNING: LE 1 EST FORCE CODER
+        liveProj.addConnection(userId_, worker.getRole(userId_, projectId_)); //WARNING: LE 1 EST FORCE CODER
         worker.mapProjet_.emplace(projectId_, std::move(liveProj));
 
     }
     LiveProject& liveProj = worker.mapProjet_.at(projectId_);
-    liveProj.addConnection(userId_, 1); //WARNING: LE 1 EST FORCE CODER
+    liveProj.addConnection(userId_, worker.getRole(userId_, projectId_)); //WARNING: LE 1 EST FORCE CODER
 
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseProjectData>(userId_, liveProj.getJson() , std::move(liveProj.getLayerOrder()), 
@@ -265,12 +265,12 @@ void RenameLayerMessage::process(Worker &worker){
   if (liveProj == worker.mapProjet_.end()) {
     return;
   }
-
-  //TODO: la condition avec liveproj
-  std::vector<uint> usersId = this->getUserLists(worker);
-  std::unique_ptr<Reponse> rps;
-  rps = std::make_unique<ReponseRenameLayer>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+  if (liveProj->second.renameCalque(userId_, calqueId_, name_)) {
+      std::vector<uint> usersId = this->getUserLists(worker);
+      std::unique_ptr<Reponse> rps;
+      rps = std::make_unique<ReponseRenameLayer>(usersId, *this);
+      worker.pushNetwork(std::move(rps));
+  }
 
 }
 

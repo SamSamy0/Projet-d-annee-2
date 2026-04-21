@@ -342,3 +342,13 @@ const std::vector<uint> LayerManager::getLayerOrder() {
     }
     return order;
 }
+
+bool LayerManager::renameCalque(uint calqueId, std::string newName) {
+    auto it = mapId_.find(calqueId);
+    
+    if (it != mapId_.end()) {
+        it->second->name = newName;
+        return true;
+    }
+    return false;
+}

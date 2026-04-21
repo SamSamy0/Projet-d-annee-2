@@ -45,6 +45,7 @@ class LayerManager {
     bool moveCalqueUp(uint calqueId);
     bool moveCalqueDown(uint calqueId);
     bool shiftCalque(uint calqueId, uint deltaX, uint deltaY);
+    bool renameCalque(uint calqueId, std::string newName);
 
     const std::unordered_map<uint, SpriteLayer>& getSpritesMap();
     const std::unordered_map<uint, QImage>& getImageMap();
