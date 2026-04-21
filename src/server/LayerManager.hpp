@@ -9,6 +9,7 @@ struct Layer {
     uint id;
     int x;
     int y;
+    std::string name;
 };
 
 class LayerManager {

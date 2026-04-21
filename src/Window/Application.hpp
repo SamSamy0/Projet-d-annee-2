@@ -20,6 +20,7 @@ struct LayerLoadData {
   int      x, y;   // décalage accumulé (layer shift)
   uint8_t  type;  
   QByteArray data;
+  std::string name;
 };
 
 class Application {

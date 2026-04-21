@@ -135,15 +135,13 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                   const std::vector<LayerLoadData>& layers) {
   // Constructeur avec vecteur vide → aucun layer par défaut créé
   project = std::make_unique<Project>(scale, size, name, id, mainWindow, gui,
-                                      manager, std::vector<std::shared_ptr<Layer>>{});
+                                      manager, std::vector<std::shared_ptr<Layer>>{}, currentProjRole);
   auto map = project->getMap();
 
-  for (const auto& ld : layers) {
-    std::string layerName = "Layer " + std::to_string(ld.id);
-
+  for (const auto& ld : layers) {;
     if (ld.type == 0) {
       // --- PixelLayer : données = PNG brut ---
-      auto layer = std::make_shared<PixelLayer>(ld.id, layerName, size);
+      auto layer = std::make_shared<PixelLayer>(ld.id, ld.name, size);
       sf::Texture texture;
       if (texture.loadFromMemory(ld.data.constData(), ld.data.size())) {
         sf::Sprite sprite(texture);
@@ -156,7 +154,7 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
 
     } else {
       // --- SpriteLayer : données = JSON compressé ---
-      auto layer = std::make_shared<SpriteLayer>(ld.id, layerName, size);
+      auto layer = std::make_shared<SpriteLayer>(ld.id, ld.name, size);
       QByteArray jsonRaw = qUncompress(ld.data);
       if (!jsonRaw.isEmpty()) {
         QJsonObject spriteJson = QJsonDocument::fromJson(jsonRaw).object();

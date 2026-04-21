@@ -72,13 +72,13 @@ void ClientHandler::process(ServerEvent &event) {
     QJsonObject entete = QJsonDocument::fromJson(jsonBytes).object();
 
     // 2. Index { layer_id -> {x, y} } pour retrouver les décalages sauvegardés
-    struct LayerMeta { int x, y; };
+    struct LayerMeta { int x, y; std::string name; };
     std::unordered_map<uint, LayerMeta> layerMeta;
     QJsonArray layersJson = entete["layers"].toArray();
     for (const auto& lv : layersJson) {
       QJsonObject lo = lv.toObject();
       uint lid = static_cast<uint>(lo["id"].toInt());
-      layerMeta[lid] = { lo["x"].toInt(), lo["y"].toInt() };
+      layerMeta[lid] = { lo["x"].toInt(), lo["y"].toInt(), lo["name"].toString().toStdString() };
     }
 
     // 3. Lecture big-endian des données binaires de chaque layer
@@ -104,6 +104,7 @@ void ClientHandler::process(ServerEvent &event) {
       auto it = layerMeta.find(ld.id);
       ld.x = (it != layerMeta.end()) ? it->second.x : 0;
       ld.y = (it != layerMeta.end()) ? it->second.y : 0;
+      ld.name = (it != layerMeta.end()) ? it->second.name : "Layer " + std::to_string(ld.id);
 
       layers.push_back(std::move(ld));
     }

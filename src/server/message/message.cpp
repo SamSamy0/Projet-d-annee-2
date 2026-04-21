@@ -130,6 +130,7 @@ GetProjectDataMessage::GetProjectDataMessage(sf::Packet& data_packet, std::share
     data_packet >> projectId_;
     client->projectId = projectId_;
 }
+
 LeaveProjectMessage::LeaveProjectMessage(sf::Packet &data_packet, uint userId) {
   userId_ = userId;
   data_packet >> projectId_;
