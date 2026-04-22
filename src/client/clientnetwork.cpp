@@ -381,11 +381,11 @@ void ClientNetworkManager::eraseSprite(uint proj_id, uint layer_id, uint sprite_
               << std::endl;
 }
 
-void ClientNetworkManager::sendMessageChat(std::string message,int min, int hour, int day, int month,int year){
+void ClientNetworkManager::sendMessageChat(std::string message){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::CHAT_MESSAGE_REQ;
 
-  packet << message << min << hour << day << month << year;
+  packet << message ;
   
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
