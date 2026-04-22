@@ -15,4 +15,6 @@ class SystemNotification : public MessageChat {
     typeNotification typeNotif_;
     public :
         string getTexte() const;
+        string getJsonTexte() const;
+        SystemNotification(const User& user, const Date& date, const std::string& message);
 };

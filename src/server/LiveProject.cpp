@@ -16,6 +16,7 @@ LiveProject::LiveProject(uint projId) {
     name_ = json_["name"].toString().toStdString();
 
     layers_ = LayerManager(layers, projId,  json_["nextLayerId"].toInt(), height_, width_, scale_);
+    chat_ = Chat(prjManager.loadChat(projId));
 }
 
 LiveProject::LiveProject(uint id, const std::string &projectName, uint width, uint height, uint scale) 
@@ -207,4 +208,8 @@ bool LiveProject::renameCalque(uint userId, uint calqueId, std::string newName) 
     }
 
     return layers_.renameCalque(calqueId, newName);
+}
+
+const QJsonArray LiveProject::getChatJson() {
+    return chat_.toJson();
 }

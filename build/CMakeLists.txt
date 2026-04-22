@@ -141,6 +141,10 @@ set(SERVER_SOURCES
     ../src/server/savetask.cpp
     ../src/server/SpriteLayer.cpp
     ../src/server/LayerManager.cpp
+    ../src/project/Chat/chat.cpp
+    ../src/project/Chat/userMessage.cpp
+    ../src/project/Chat/systemNotification.cpp
+    ../src/project/Chat/date.cpp
 )
 
 add_executable(server ${SERVER_SOURCES})

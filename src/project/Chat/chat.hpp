@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <QJsonArray>
 
 using namespace std;
 
@@ -22,6 +23,7 @@ public:
   MessageChat() = default;
   MessageChat(const User &author, const Date &date, MessageType type);
   virtual string getTexte() const = 0;
+  virtual string getJsonTexte() const = 0;
   User getAuthor() const;
   Date getDate() const;
   MessageType getType() const;
@@ -33,4 +35,7 @@ class Chat {
 public:
   void addMessage(shared_ptr<MessageChat> message);
   vector<shared_ptr<MessageChat>> getMessages() const;
+  Chat(const QJsonArray& jsonArray);
+  Chat() = default;
+  QJsonArray toJson() const;
 };

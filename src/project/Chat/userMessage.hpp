@@ -10,4 +10,6 @@ class UserMessage : public MessageChat {
 public:
   UserMessage(const string &pseudo, const uint userId, const string &message);
   string getTexte() const;
+  string getJsonTexte() const;
+  UserMessage(const User &author, const Date &date, const string &message);
 };

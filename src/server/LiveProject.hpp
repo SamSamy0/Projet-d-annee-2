@@ -8,6 +8,7 @@
 #include "datamanager/projectsmanager.hpp"
 #include "SpriteLayer.hpp"
 #include "LayerManager.hpp"
+#include "../project/Chat/chat.hpp"
 
 struct LiveProject {
     LiveProject(uint projId);
@@ -41,6 +42,8 @@ struct LiveProject {
     const std::unordered_map<uint, QImage>& getImageMap();
     const std::vector<uint> getLayerOrder();
 
+    const QJsonArray getChatJson();
+
     private :
     std::vector<uint> connectedID_;
     std::unordered_map<uint, int8_t> usersRoles_;
@@ -50,6 +53,7 @@ struct LiveProject {
     uint height_;
     uint width_;
     LayerManager layers_;
+    Chat chat_;
 
     
     bool canModify(uint userId);

@@ -1,7 +1,7 @@
 #include "savetask.hpp"
 
 SaveTask::SaveTask(LiveProject& livePrj, uint projId) 
-    : json_(livePrj.getJson()), projetId_(projId)
+    : json_(livePrj.getJson()), projetId_(projId), chat_(livePrj.getChatJson())
 {
     const std::unordered_map<uint, QImage>& layersImagePrj = livePrj.getImageMap();
     for (auto it = layersImagePrj.begin(); it != layersImagePrj.end(); ++it) {
@@ -16,6 +16,7 @@ SaveTask::SaveTask(LiveProject& livePrj, uint projId)
 
 void SaveTask::execute(ProjectsManager prjManager) {
     prjManager.writeProjetJson(json_, projetId_);
+    prjManager.saveChat(projetId_, chat_);
     for (auto layer : layersImage_) {
         prjManager.saveImage(projetId_, layer.first, layer.second);
     }

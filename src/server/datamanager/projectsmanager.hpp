@@ -20,6 +20,8 @@ public:
   bool writeProjetJson(QJsonObject& jsonObject, uint id);
   bool saveSprite(uint id, uint imageId, QJsonObject& sprite);
   QJsonObject loadSprite(uint id, uint layerId);
+  bool saveChat(uint projectId, QJsonArray& chat);
+  QJsonArray loadChat(uint projectId);
 
 private:
   QString getProjectPath(uint id) const;

@@ -1,4 +1,7 @@
 #include "chat.hpp"
+#include "userMessage.hpp"
+#include "systemNotification.hpp"
+#include <QJsonObject>
 
 using namespace std;
 
@@ -14,4 +17,44 @@ void Chat::addMessage(shared_ptr<MessageChat> message) {
 
 vector<shared_ptr<MessageChat>> Chat::getMessages() const {
     return messages_;
+}
+
+Chat::Chat(const QJsonArray& jsonArray) {
+    for (const auto& item : jsonArray) {
+        QJsonObject obj = item.toObject();
+
+        string pseudo = obj["author"].toString().toStdString();
+        uint id = static_cast<uint>(obj["id"].toInt());
+        User author(pseudo, id);
+
+        int day = obj["day"].toInt();
+        int month = obj["month"].toInt();
+        int year = obj["year"].toInt();
+        Date date(day, month, year);
+
+        MessageType type = obj["type"].toString() == "USER" ? MessageType::USER : MessageType::SYSTEM;
+        string texte = obj["texte"].toString().toStdString();
+
+        if (type == MessageType::USER) {
+            addMessage(make_shared<UserMessage>(author, date, texte));
+        } else {
+            addMessage(make_shared<SystemNotification>(author, date, texte));
+        }
+    }
+}
+
+QJsonArray Chat::toJson() const {
+    QJsonArray jsonArray;
+    for (const auto& message : messages_) {
+        QJsonObject obj;
+        obj["author"] = QString::fromStdString(message->getAuthor().getUser());
+        obj["id"] = static_cast<int>(message->getAuthor().getId());
+        obj["day"] = message->getDate().day_;
+        obj["month"] = message->getDate().month_;
+        obj["year"] = message->getDate().year_;
+        obj["type"] = message->getType() == MessageType::USER ? "USER" : "SYSTEM";
+        obj["texte"] = QString::fromStdString(message->getJsonTexte());
+        jsonArray.append(obj);
+    }
+    return jsonArray;
 }
