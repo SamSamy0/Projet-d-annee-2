@@ -13,6 +13,9 @@
 #include "../project/toolbar.hpp"
 #include <iostream>
 #include <memory>
+#include "../project/Chat/date.hpp"
+#include "../project/Chat/chat.hpp"
+#include "../project/Chat/userMessage.hpp"
 
 ReceiverInWindow::ReceiverInWindow(Application &app) : app_(&app) {}
 
@@ -186,5 +189,15 @@ void ReceiverInWindow::updateMemberList(uint projectId, uint target,
     if (app_->getProject() and app_->getProject()->getId() == projectId) {
       gameView->updateMemberRole(target, role);
     }
+  }
+}
+
+void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,int min,int hour,int day,int month,int year){
+  Date date(min,hour,day,month,year);
+  if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
+    if (app_->getProject()) {
+      app_->getProject()->getChat().addMessage(make_shared<UserMessage>(User(pseudo, 0), date, message));
+    }
+    gameView->refreshChat();
   }
 }

@@ -269,4 +269,9 @@ ReponseMoveLayer::ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage& 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.deltaX_ << mess.deltaY_;
 }
 
+ReponseChat::ReponseChat(std::vector<uint> usersId,ChatMessage& mess) : ReponseGroupe(usersId){
+     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::CHAT_MESSAGE_REP);
+     dataPacket_ << mess.pseudo_ << mess.message_ << mess.min_ << mess.hour_ << mess.day_ << mess.month_ <<mess.year_;
+}
+
 

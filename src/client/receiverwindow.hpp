@@ -41,4 +41,5 @@ public:
   void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                       uint id, uint nextLayerId,
                       const std::vector<LayerLoadData>& layers);
+  void addChatMess(std::string pseudo, std::string message,int min,int hour,int day,int month,int year);
 };

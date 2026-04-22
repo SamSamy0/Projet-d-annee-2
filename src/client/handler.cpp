@@ -376,5 +376,19 @@ void ClientHandler::process(ServerEvent &event) {
     handleWindow_.shiftLayer(layer_id, delta_x, delta_y);
     break;
   }
+
+  case MsgProtocole::CHAT_MESSAGE_REP: {
+    std::string pseudo; 
+    std::string message;
+    int min;
+    int hour;
+    int day;
+    int month;
+    int year;
+    *(event.data_packet_) >> pseudo >> message >> min >> hour >> day >> month >> year;
+    handleWindow_.addChatMess(pseudo, message, min, hour, day, month, year);
+
+    break;
+  }
   }
 }

@@ -249,4 +249,19 @@ struct CheckTokenMessage : IMessage {
   void process(Worker &worker) override;
 };
 
+struct ChatMessage : IMessage {
+  uint userId_;
+  std::string message_;
+  std::string pseudo_;
+  int min_ = 0;
+  int hour_ = 0;
+  int day_ = 0;
+  int month_ = 0;
+  int year_ = 0;
+  uint projectId_;
+  ChatMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
+  void process(Worker &worker) override;
+};
+
+
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client>& client);

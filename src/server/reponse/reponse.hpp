@@ -151,3 +151,7 @@ struct ReponseEraseSprite : ReponseGroupe {
 struct ReponseMoveLayer : ReponseGroupe {
   ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage &mess);
 };
+
+struct ReponseChat : ReponseGroupe {
+  ReponseChat(std::vector<uint> usersId,ChatMessage& mess);
+};

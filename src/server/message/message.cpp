@@ -561,6 +561,28 @@ void DisconnectMessage::process(Worker& worker) {
 
 }
 
+ChatMessage::ChatMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client){
+  userId_ = client->id;
+  pseudo_ = client->pseudo;
+  projectId_= client->projectId;
+  dataPacket >> message_;
+}
+
+void ChatMessage::process(Worker& worker){
+  auto itProject = worker.mapProjet_.find(projectId_);
+    
+  if (itProject == worker.mapProjet_.end()) {
+      return; 
+  }
+  
+  std::vector<uint> usersId = itProject->second.getConnected();
+
+  std::unique_ptr<Reponse> rps;
+
+  rps = std::make_unique<ReponseChat>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+}
+
 
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client>& c) {
@@ -648,6 +670,8 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
 
   case MsgProtocole::PROJ_LEAVE_PROJ_REQ:
     return std::make_unique<LeaveProjectMessage>(data_packet, c->id);
+  case MsgProtocole::CHAT_MESSAGE_REQ:
+    return std::make_unique<ChatMessage>(data_packet, c);
 
   default:
     std::cout << "pas de message" << std::endl;
