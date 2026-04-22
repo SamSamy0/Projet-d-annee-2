@@ -3,7 +3,7 @@
 Date UserMessage::currentDate() {
   time_t t = time(nullptr);
   tm *now = localtime(&t);
-  return Date(now->tm_mday, now->tm_mon + 1, now->tm_year - 100);
+  return Date(now->tm_min, now->tm_hour, now->tm_mday, now->tm_mon + 1, now->tm_year - 100);
 }
 
 UserMessage::UserMessage(const string &pseudo, const uint id,

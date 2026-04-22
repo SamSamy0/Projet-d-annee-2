@@ -27,10 +27,12 @@ Chat::Chat(const QJsonArray& jsonArray) {
         uint id = static_cast<uint>(obj["id"].toInt());
         User author(pseudo, id);
 
+        int min = obj["min"].toInt();
+        int hour = obj["hour"].toInt();
         int day = obj["day"].toInt();
         int month = obj["month"].toInt();
         int year = obj["year"].toInt();
-        Date date(day, month, year);
+        Date date(min, hour, day, month, year);
 
         MessageType type = obj["type"].toString() == "USER" ? MessageType::USER : MessageType::SYSTEM;
         string texte = obj["texte"].toString().toStdString();
@@ -49,9 +51,13 @@ QJsonArray Chat::toJson() const {
         QJsonObject obj;
         obj["author"] = QString::fromStdString(message->getAuthor().getUser());
         obj["id"] = static_cast<int>(message->getAuthor().getId());
+
+        obj["min"] = message->getDate().min_;
+        obj["hour"] = message->getDate().hour_;
         obj["day"] = message->getDate().day_;
         obj["month"] = message->getDate().month_;
         obj["year"] = message->getDate().year_;
+
         obj["type"] = message->getType() == MessageType::USER ? "USER" : "SYSTEM";
         obj["texte"] = QString::fromStdString(message->getJsonTexte());
         jsonArray.append(obj);
