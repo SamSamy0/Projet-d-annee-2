@@ -66,7 +66,6 @@ void SpriteSelection::onPress(sf::Vector2i pos) {
       pivotPos_ = findPivot();
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
         state_ = SelectionState::ROTATING;
-        initAngle_ = atan2(pos.y - pivotPos_.y, pos.x - pivotPos_.x);
 
       } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
         state_ = SelectionState::RESIZING;
@@ -96,12 +95,22 @@ void SpriteSelection::onDrag(sf::Vector2i pos) {
     }
 
     else if (state_ == SelectionState::ROTATING) {
+      sf::Vector2f delta =
+          sf::Vector2f((pos.x - lastPos_.x), (pos.y - lastPos_.y));
+      float sensitivity = 0.01f;
+      float scaled_dist = (delta.x - delta.y) * sensitivity;
+
+      if (scaled_dist != 0.0f) {
+        for (uint id : selected_) {
+          spritelayer->rotateSprite(id, scaled_dist, pivotPos_);
+        }
+      }
 
     } else if (state_ == SelectionState::RESIZING) {
       sf::Vector2f delta =
           sf::Vector2f((pos.x - lastPos_.x), (pos.y - lastPos_.y));
       float sensitivity = 0.01f;
-      float scaleFactor = 1.0f + (delta.x + delta.y) * sensitivity;
+      float scaleFactor = 1.0f + (delta.x - delta.y) * sensitivity;
 
       if (scaleFactor > 0.001) {
         for (uint id : selected_) {

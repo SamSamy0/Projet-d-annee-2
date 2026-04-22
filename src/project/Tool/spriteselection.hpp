@@ -15,7 +15,6 @@ class SpriteSelection : public Tool {
   SelectionState state_ = SelectionState::NONE;
   sf::Vector2i startSelectionPos_;
   sf::Vector2f pivotPos_;
-  float initAngle_;
 
   bool isSelected(uint) const;
   sf::Vector2f findPivot();
@@ -29,4 +28,6 @@ public:
   void onPress(sf::Vector2i pos) override;
   void onDrag(sf::Vector2i pos) override;
   void onRelease() override;
+  void rotate();
+  void resize();
 };

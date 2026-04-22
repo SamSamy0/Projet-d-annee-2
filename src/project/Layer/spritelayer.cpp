@@ -69,14 +69,18 @@ void SpriteLayer::rotateSprite(uint spriteId, float angle, sf::Vector2f pivot) {
   for (SpriteObject &sprite : sprites_) {
     if (sprite.id == spriteId) {
 
-      float rad = 2 * sf::priv::pi / 360 * angle; // Conversion in radiant
       sf::Vector2f pos = sprite.sprite.getPosition();
       sf::Vector2f dist = pos - pivot;
 
-      float newX = dist.x * std::cos(angle) - dist.y * std::cos(angle);
-      float newY = dist.x * sin(angle) + dist.y * cos(angle);
+      float cosA = std::cos(angle);
+      float sinA = std::sin(angle);
 
-      sprite.sprite.setPosition(sf::Vector2f(newX, newY));
+      // Rotation Matrix
+      float newX = dist.x * cosA - dist.y * sinA;
+      float newY = dist.x * sinA + dist.y * cosA;
+
+      sprite.sprite.setPosition(pivot + sf::Vector2f(newX, newY));
+      sprite.sprite.rotate(sf::radians(angle));
     }
   }
 }
