@@ -69,7 +69,7 @@ void GameView::initChatWidget() {
       return;
     auto msg = std::make_shared<UserMessage>(
         currentUser.getUser(), currentUser.getId(), text.toStdString());
-    project->getChat().addMessage(msg);
+    app_.getNetwork().sendMessageChat(text.toStdString());
     chatInput_->setText("");
     refreshChat();
   });
