@@ -2,7 +2,9 @@
 #include "../Layer/layer.hpp"
 #include "../Layer/spritelayer.hpp"
 #include "../map.hpp"
+#include <SFML/Window/Keyboard.hpp>
 #include <algorithm>
+#include <cmath>
 #include <memory>
 
 SpriteSelection::SpriteSelection(std::shared_ptr<Map> map,
@@ -61,6 +63,14 @@ void SpriteSelection::onPress(sf::Vector2i pos) {
         }
       }
       state_ = SelectionState::DRAGING;
+      pivotPos_ = findPivot();
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)) {
+        state_ = SelectionState::ROTATING;
+        initAngle_ = atan2(pos.y - pivotPos_.y, pos.x - pivotPos_.x);
+
+      } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) {
+        state_ = SelectionState::RESIZING;
+      }
     } else {
       if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
         selected_.clear();
@@ -82,6 +92,21 @@ void SpriteSelection::onDrag(sf::Vector2i pos) {
     if (state_ == SelectionState::DRAGING) {
       for (uint id : selected_) {
         spritelayer->shiftSprite(id, delta);
+      }
+    }
+
+    else if (state_ == SelectionState::ROTATING) {
+
+    } else if (state_ == SelectionState::RESIZING) {
+      sf::Vector2f delta =
+          sf::Vector2f((pos.x - lastPos_.x), (pos.y - lastPos_.y));
+      float sensitivity = 0.01f;
+      float scaleFactor = 1.0f + (delta.x + delta.y) * sensitivity;
+
+      if (scaleFactor > 0.001) {
+        for (uint id : selected_) {
+          spritelayer->resizeSprite(id, scaleFactor, pivotPos_);
+        }
       }
     }
     lastPos_ = pos;
@@ -137,7 +162,7 @@ void SpriteSelection::onRelease() {
   state_ = SelectionState::NONE;
 }
 
-sf::Vector2f SpriteSelection::findCenter() {
+sf::Vector2f SpriteSelection::findPivot() {
   sf::Vector2f res = sf::Vector2f(0, 0);
   std::vector<SpriteObject> sprites;
 
@@ -155,13 +180,4 @@ sf::Vector2f SpriteSelection::findCenter() {
   res.y /= selected_.size();
 
   return res;
-}
-void SpriteSelection::rotateSprite(uint spriteId, float angle,
-                                   sf::Vector2f pivot) {
-  
-}
-
-void SpriteSelection::resizeSprite(uint spriteId, float delta,
-                                   sf::Vector2f pivot) {
-
 }

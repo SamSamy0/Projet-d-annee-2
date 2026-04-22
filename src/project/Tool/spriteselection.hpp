@@ -14,9 +14,11 @@ class SpriteSelection : public Tool {
   std::vector<uint> selected_;
   SelectionState state_ = SelectionState::NONE;
   sf::Vector2i startSelectionPos_;
+  sf::Vector2f pivotPos_;
+  float initAngle_;
 
   bool isSelected(uint) const;
-  sf::Vector2f findCenter();
+  sf::Vector2f findPivot();
 
 public:
   SpriteSelection(std::shared_ptr<Map> map, ClientNetworkManager &manager);
@@ -27,6 +29,4 @@ public:
   void onPress(sf::Vector2i pos) override;
   void onDrag(sf::Vector2i pos) override;
   void onRelease() override;
-  void rotateSprite(uint spriteId, float angle, sf::Vector2f pivot);
-  void resizeSprite(uint spriteId, float delta, sf::Vector2f pivot);
 };
