@@ -89,34 +89,14 @@ void SpriteSelection::onDrag(sf::Vector2i pos) {
     sf::Vector2i delta = sf::Vector2i(pos.x - lastPos_.x, pos.y - lastPos_.y);
 
     if (state_ == SelectionState::DRAGING) {
-      for (uint id : selected_) {
-        spritelayer->shiftSprite(id, delta);
-      }
+      shift(pos);
     }
 
     else if (state_ == SelectionState::ROTATING) {
-      sf::Vector2f delta =
-          sf::Vector2f((pos.x - lastPos_.x), (pos.y - lastPos_.y));
-      float sensitivity = 0.01f;
-      float scaled_dist = (delta.x - delta.y) * sensitivity;
-
-      if (scaled_dist != 0.0f) {
-        for (uint id : selected_) {
-          spritelayer->rotateSprite(id, scaled_dist, pivotPos_);
-        }
-      }
+      rotate(pos);
 
     } else if (state_ == SelectionState::RESIZING) {
-      sf::Vector2f delta =
-          sf::Vector2f((pos.x - lastPos_.x), (pos.y - lastPos_.y));
-      float sensitivity = 0.01f;
-      float scaleFactor = 1.0f + (delta.x - delta.y) * sensitivity;
-
-      if (scaleFactor > 0.001) {
-        for (uint id : selected_) {
-          spritelayer->resizeSprite(id, scaleFactor, pivotPos_);
-        }
-      }
+      resize(pos);
     }
     lastPos_ = pos;
   }
@@ -189,4 +169,80 @@ sf::Vector2f SpriteSelection::findPivot() {
   res.y /= selected_.size();
 
   return res;
+}
+
+void SpriteSelection::rotate(sf::Vector2i pos) {
+
+  std::shared_ptr<Layer> layer = map_->getCurrentLayer();
+  if (layer->getType() == SPRITELAYER) {
+    std::shared_ptr<SpriteLayer> spritelayer =
+        static_pointer_cast<SpriteLayer>(layer);
+    pos -= spritelayer->getOffset();
+    sf::Vector2f delta =
+        sf::Vector2f((pos.x - lastPos_.x), (pos.y - lastPos_.y));
+
+    float sensitivity = 0.01f;
+    float scaled_dist = (delta.x - delta.y) * sensitivity;
+
+    if (scaled_dist != 0.0f) {
+      for (uint id : selected_) {
+
+        for (SpriteObject &sprite : spritelayer->getSprites()) {
+          if (sprite.id == id) {
+            sf::Vector2f pos = sprite.sprite.getPosition();
+            sf::Vector2f dist = pos - pivotPos_;
+
+            float cosA = std::cos(scaled_dist);
+            float sinA = std::sin(scaled_dist);
+
+            // Rotation Matrix
+            float newX = dist.x * cosA - dist.y * sinA;
+            float newY = dist.x * sinA + dist.y * cosA;
+            spritelayer->rotateSprite(sprite, scaled_dist, pivotPos_,
+                                      sf::Vector2f(newX, newY));
+          }
+        }
+      }
+    }
+  }
+}
+
+void SpriteSelection::resize(sf::Vector2i pos) {
+
+  std::shared_ptr<Layer> layer = map_->getCurrentLayer();
+  if (layer->getType() == SPRITELAYER) {
+    std::shared_ptr<SpriteLayer> spritelayer =
+        static_pointer_cast<SpriteLayer>(layer);
+    pos -= spritelayer->getOffset();
+    sf::Vector2f delta =
+        sf::Vector2f((pos.x - lastPos_.x), (pos.y - lastPos_.y));
+
+    float sensitivity = 0.01f;
+    float scaleFactor = 1.0f + (delta.x - delta.y) * sensitivity;
+
+    if (scaleFactor > 0.001) {
+      for (uint id : selected_) {
+        for (SpriteObject &sprite : spritelayer->getSprites()) {
+          if (sprite.id == id) {
+            sf::Vector2f pos = sprite.sprite.getPosition();
+            sf::Vector2f dist = pos - pivotPos_;
+            spritelayer->resizeSprite(sprite, scaleFactor, pivotPos_, dist);
+          }
+        }
+      }
+    }
+  }
+}
+void SpriteSelection::shift(sf::Vector2i pos) {
+
+  std::shared_ptr<Layer> layer = map_->getCurrentLayer();
+  if (layer->getType() == SPRITELAYER) {
+    std::shared_ptr<SpriteLayer> spritelayer =
+        static_pointer_cast<SpriteLayer>(layer);
+    pos -= spritelayer->getOffset();
+    sf::Vector2i delta = sf::Vector2i(pos.x - lastPos_.x, pos.y - lastPos_.y);
+
+    for (uint id : selected_)
+      spritelayer->shiftSprite(id, delta);
+  }
 }

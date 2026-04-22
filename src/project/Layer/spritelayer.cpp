@@ -13,9 +13,7 @@ SpriteObject::SpriteObject(const sf::Sprite &sprite, uint id)
 
 sf::Vector2i SpriteLayer::getOffset() const { return offset_; }
 
-const std::vector<SpriteObject> &SpriteLayer::getSprites() const {
-  return sprites_;
-}
+std::vector<SpriteObject> &SpriteLayer::getSprites() { return sprites_; }
 
 void SpriteLayer::draw(const sf::Sprite &s) {
   sprites_.push_back(SpriteObject(s, nextId_));
@@ -54,33 +52,14 @@ void SpriteLayer::drawLayer(sf::RenderTarget &target) {
 
 void SpriteLayer::setNextId(uint nextId) { nextId_ = nextId; }
 
-void SpriteLayer::resizeSprite(uint spriteId, float scale, sf::Vector2f pivot) {
-  for (SpriteObject &sprite : sprites_) {
-    if (sprite.id == spriteId) {
-      sf::Vector2f pos = sprite.sprite.getPosition();
-      sf::Vector2f dist = pos - pivot;
-      sprite.sprite.setPosition(pivot + dist * scale);
-      sprite.sprite.scale(sf::Vector2f(scale, scale));
-    }
-  }
+void SpriteLayer::resizeSprite(SpriteObject &sprite, float scale,
+                               sf::Vector2f pivot, sf::Vector2f dist) {
+  sprite.sprite.setPosition(pivot + dist * scale);
+  sprite.sprite.scale(sf::Vector2f(scale, scale));
 }
 
-void SpriteLayer::rotateSprite(uint spriteId, float angle, sf::Vector2f pivot) {
-  for (SpriteObject &sprite : sprites_) {
-    if (sprite.id == spriteId) {
-
-      sf::Vector2f pos = sprite.sprite.getPosition();
-      sf::Vector2f dist = pos - pivot;
-
-      float cosA = std::cos(angle);
-      float sinA = std::sin(angle);
-
-      // Rotation Matrix
-      float newX = dist.x * cosA - dist.y * sinA;
-      float newY = dist.x * sinA + dist.y * cosA;
-
-      sprite.sprite.setPosition(pivot + sf::Vector2f(newX, newY));
-      sprite.sprite.rotate(sf::radians(angle));
-    }
-  }
+void SpriteLayer::rotateSprite(SpriteObject &sprite, float angle,
+                               sf::Vector2f pivot, sf::Vector2f newPos) {
+  sprite.sprite.setPosition(pivot + sf::Vector2f(newPos.x, newPos.y));
+  sprite.sprite.rotate(sf::radians(angle));
 }

@@ -28,6 +28,7 @@ public:
   void onPress(sf::Vector2i pos) override;
   void onDrag(sf::Vector2i pos) override;
   void onRelease() override;
-  void rotate();
-  void resize();
+  void rotate(sf::Vector2i pos);
+  void resize(sf::Vector2i pos);
+  void shift(sf::Vector2i pos);
 };
