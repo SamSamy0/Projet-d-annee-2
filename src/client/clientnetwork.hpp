@@ -55,5 +55,5 @@ public:
 
   void shiftLayer(uint proj_id, uint layer_id, int delta_x, int delta_y);
 
-  void sendMessageChat();
+  void sendMessageChat(std::string message,int min, int hour, int day, int month,int year);
 };
