@@ -215,9 +215,11 @@ const QJsonArray LiveProject::getChatJson() {
 }
 
 bool LiveProject::addMessageChat(uint userId, const std::shared_ptr<MessageChat> message) {
-        if (!canModify(userId)) {
+    auto cleVal = usersRoles_.find(userId);
+    if (cleVal == usersRoles_.end()) {
         return false;
     }
+    
     chat_.addMessage(message);
     return true;
 }
