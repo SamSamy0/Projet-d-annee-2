@@ -8,6 +8,7 @@
 #include "datamanager/projectsmanager.hpp"
 #include "SpriteLayer.hpp"
 #include "LayerManager.hpp"
+#include "../project/Chat/chat.hpp"
 
 struct LiveProject {
     LiveProject(uint projId);
@@ -27,6 +28,7 @@ struct LiveProject {
     bool addCalque(uint userId, uint8_t type);
     bool removeCalque(uint userId, uint calqueId);
     bool shiftCalque(uint userId, uint calqueId, uint deltaX, uint deltaY);
+    bool renameCalque(uint userId, uint calqueId, std::string newName);
 
     bool addSprite(uint userId, uint calqueId, std::string asset_id, uint x, uint y, float taille);
     bool removeSprite(uint userId, uint calqueId, uint spriteId);
@@ -38,6 +40,10 @@ struct LiveProject {
     uint getScale();
     const std::unordered_map<uint, SpriteLayer>& getSpritesMap();
     const std::unordered_map<uint, QImage>& getImageMap();
+    const std::vector<uint> getLayerOrder();
+
+    const QJsonArray getChatJson();
+    bool addMessageChat(uint userId, const std::shared_ptr<MessageChat> message);
 
     private :
     std::vector<uint> connectedID_;
@@ -48,6 +54,7 @@ struct LiveProject {
     uint height_;
     uint width_;
     LayerManager layers_;
+    Chat chat_;
 
     
     bool canModify(uint userId);

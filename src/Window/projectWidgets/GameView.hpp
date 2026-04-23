@@ -38,7 +38,6 @@ class GameView : public View {
   void initSpriteBrushOptions();
   void initMinimap();
   void drawMinimap();
-  void refreshChat();
   void refreshLayerList();
 
   void displayMemberList();
@@ -65,4 +64,5 @@ public:
   void setAllUsers(std::vector<MemberEntry> users);
   void updateMemberRole(uint targetId, int8_t role);
   void clearMemberList();
+  void refreshChat();
 };

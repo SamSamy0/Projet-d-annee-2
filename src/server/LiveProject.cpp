@@ -16,6 +16,7 @@ LiveProject::LiveProject(uint projId) {
     name_ = json_["name"].toString().toStdString();
 
     layers_ = LayerManager(layers, projId,  json_["nextLayerId"].toInt(), height_, width_, scale_);
+    chat_ = Chat(prjManager.loadChat(projId));
 }
 
 LiveProject::LiveProject(uint id, const std::string &projectName, uint width, uint height, uint scale) 
@@ -195,4 +196,30 @@ bool LiveProject::removeSprite(uint userId, uint calqueId, uint spriteId) {
     }
 
     return layers_.removeSprite(calqueId, spriteId);
+}
+
+const std::vector<uint> LiveProject::getLayerOrder() {
+    return layers_.getLayerOrder();
+}
+
+bool LiveProject::renameCalque(uint userId, uint calqueId, std::string newName) {
+    if (!canModify(userId)) {
+        return false;
+    }
+
+    return layers_.renameCalque(calqueId, newName);
+}
+
+const QJsonArray LiveProject::getChatJson() {
+    return chat_.toJson();
+}
+
+bool LiveProject::addMessageChat(uint userId, const std::shared_ptr<MessageChat> message) {
+    auto cleVal = usersRoles_.find(userId);
+    if (cleVal == usersRoles_.end()) {
+        return false;
+    }
+    
+    chat_.addMessage(message);
+    return true;
 }

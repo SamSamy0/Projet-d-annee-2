@@ -9,6 +9,7 @@ struct Layer {
     uint id;
     int x;
     int y;
+    std::string name;
 };
 
 class LayerManager {
@@ -44,12 +45,15 @@ class LayerManager {
     bool moveCalqueUp(uint calqueId);
     bool moveCalqueDown(uint calqueId);
     bool shiftCalque(uint calqueId, uint deltaX, uint deltaY);
+    bool renameCalque(uint calqueId, std::string newName);
 
     const std::unordered_map<uint, SpriteLayer>& getSpritesMap();
     const std::unordered_map<uint, QImage>& getImageMap();
 
     const QJsonArray getJson();
     uint getNextLayerId();
+
+    const std::vector<uint> getLayerOrder();
 
 
 };

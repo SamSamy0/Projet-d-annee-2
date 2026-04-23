@@ -11,4 +11,5 @@ struct Client{
     std::atomic<uint> id = 0;
     std::shared_ptr<sf::TcpSocket> sock;
     sf::IpAddress getAddress();
+    std::string pseudo = "adam";
 };

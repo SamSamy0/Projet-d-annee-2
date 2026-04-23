@@ -20,6 +20,7 @@ LayerManager::LayerManager(const QJsonArray& origin, uint projectId, uint lastUs
             layer.id = id;
             layer.x = layerObj["x"].toInt();
             layer.y = layerObj["y"].toInt();
+            layer.name = layerObj["name"].toString().toStdString();
 
             if (layerObj["type"].toInt() == 0){
                 layersImage_[id] = prjManager.loadImage(projectId, id);
@@ -50,7 +51,7 @@ LayerManager::LayerManager(uint height, uint width, uint scale) {
     width_ = width;
     scale_ = scale;
 
-    Layer layer{0,0,0,0};
+    Layer layer{0,0,0,0, "Couche Pixel (1)"};
     layers_.push_back(std::move(layer));
     auto it = std::prev(layers_.end());
     mapId_[it->id] = it;
@@ -206,7 +207,7 @@ const std::unordered_map<uint, QImage>& LayerManager::getImageMap() {
 }
 
 bool LayerManager::addCalquePixel() {
-    Layer newLayer{0, lastLayerId_, 0, 0};
+    Layer newLayer{0, lastLayerId_, 0, 0, "Couche Pixel (" + std::to_string(lastLayerId_ + 1) + ")"};
 
     layers_.push_back(newLayer);
     auto it = std::prev(layers_.end());
@@ -223,7 +224,7 @@ bool LayerManager::addCalquePixel() {
 }
 
 bool LayerManager::addCalqueSprite() {
-    Layer newLayer{1, lastLayerId_, 0, 0};
+    Layer newLayer{1, lastLayerId_, 0, 0, "Couche Sprite (" + std::to_string(lastLayerId_ + 1) + ")"};
 
     layers_.push_back(newLayer);
     auto it = std::prev(layers_.end());
@@ -312,6 +313,7 @@ const QJsonArray LayerManager::getJson() {
         object["x"] = static_cast<int>(layer.x);
         object["y"] = static_cast<int>(layer.y);
         object["type"] = static_cast<int>(layer.type);
+        object["name"] = QString::fromStdString(layer.name);
         array.append(object);
     }
 
@@ -331,4 +333,22 @@ bool LayerManager::shiftCalque(uint calqueId, uint deltaX, uint deltaY) {
 
 uint LayerManager::getNextLayerId() {
     return lastLayerId_;
+}
+
+const std::vector<uint> LayerManager::getLayerOrder() {
+    std::vector<uint> order;
+    for (const auto& layer : layers_) {
+        order.push_back(layer.id);
+    }
+    return order;
+}
+
+bool LayerManager::renameCalque(uint calqueId, std::string newName) {
+    auto it = mapId_.find(calqueId);
+    
+    if (it != mapId_.end()) {
+        it->second->name = newName;
+        return true;
+    }
+    return false;
 }

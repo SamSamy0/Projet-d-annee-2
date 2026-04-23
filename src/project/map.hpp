@@ -56,4 +56,5 @@ public:
   void zooming(sf::Event::MouseWheelScrolled const *event);
   void detectZooming(sf::Event event);
   void setId(uint newId);
+  void setNextLayerId(uint id);
 };

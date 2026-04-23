@@ -373,6 +373,7 @@ void ClientNetworkManager::eraseSprite(uint proj_id, uint layer_id,
               << std::endl;
 }
 
+
 void ClientNetworkManager::moveSprite(uint proj_id, uint layer_id,
                                       uint sprite_id, sf::Vector2i v) {
   sf::Packet packet;
@@ -408,6 +409,16 @@ void ClientNetworkManager::rotateSprite(uint proj_id, uint layer_id,
   packet << static_cast<uint8_t>(msg);
   packet << proj_id << layer_id << sprite_id << angle << pos.x << pos.y;
 
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+void ClientNetworkManager::sendMessageChat(std::string message){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::CHAT_MESSAGE_REQ;
+
+  packet << static_cast<uint8_t>(msg) << message;
+  
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;

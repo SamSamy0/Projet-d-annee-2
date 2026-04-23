@@ -18,6 +18,9 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
     if (!dir.exists(rootPath_)) {
         dir.mkpath(rootPath_);
     }
+    if(!dir.exists(rootPath_ + "/chats")){
+        dir.mkpath(rootPath_ + "/chats");
+    }
 }
 
 /*bool ProjectsManager::createProjectJson(uint id, const QString &projectName, uint width, uint height, uint scale) {
@@ -311,4 +314,47 @@ bool ProjectsManager::deleteProject(uint id) {
     }
     qCritical() << "Erreur de suppression de projet pour l'ID:" << id;
     return false;
+}
+
+bool ProjectsManager::saveChat(uint projectId, QJsonArray& chat) {
+
+    QString destPath = rootPath_ + "/chats/chat_" + QString::number(projectId) + ".json";
+    
+    QSaveFile file(destPath);
+    if (file.open(QIODevice::WriteOnly)) {
+        QJsonDocument doc(chat);
+        file.write(doc.toJson(QJsonDocument::Indented));
+        return file.commit();
+    }
+
+    qCritical() << "Impossible d'écrire le chat pour le projet" << projectId;
+    return false;
+}
+
+QJsonArray ProjectsManager::loadChat(uint projectId) {
+    QString filePath = rootPath_ + "/chats/chat_" + QString::number(projectId) + ".json";
+    QFile file(filePath);
+
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Impossible d'ouvrir le fichier de chat pour l'ID" << projectId << ":" << filePath;
+        return QJsonArray();
+    }
+
+    QByteArray rawData = file.readAll();
+    file.close();
+
+    QJsonParseError error;
+    QJsonDocument doc = QJsonDocument::fromJson(rawData, &error);
+
+    if (error.error != QJsonParseError::NoError) {
+        qCritical() << "Erreur de parsing JSON pour le chat du projet" << projectId << ":" << error.errorString();
+        return QJsonArray();
+    }
+
+    if (!doc.isArray()) {
+        qCritical() << "Le contenu du fichier n'est pas un tableau JSON valide pour le chat du projet" << projectId;
+        return QJsonArray();
+    }
+
+    return doc.array();
 }

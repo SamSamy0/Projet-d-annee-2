@@ -3,10 +3,7 @@
 #include "../datamanager/memberentry.hpp"
 #include "../datamanager/projectentry.hpp"
 #include "../message/message.hpp"
-#include <QFile>
-#include <SFML/Network.hpp>
-#include <utility>
-#include <vector>
+#include "../SpriteLayer.hpp"
 
 class ServerNetworkManager;
 
@@ -59,8 +56,13 @@ struct ReponseGetMember : ReponseSolo {
 };
 
 struct ReponseProjectData : ReponseSolo {
-  ReponseProjectData(uint userId, QByteArray &jsonData);
+    ReponseProjectData(uint userId, const QJsonObject& jsonDoc, 
+                   const std::vector<uint>& layerOrder, 
+                   const std::unordered_map<uint, QImage>& imageMap, 
+                   const std::unordered_map<uint, SpriteLayer>& spriteMap);
+    static QByteArray imageToBytes(const QImage& image);
 };
+
 
 struct ReponseUsersProjects : ReponseSolo {
   ReponseUsersProjects(uint userId, std::vector<ProjectEntry> &projects);
@@ -163,4 +165,8 @@ struct ReponseRotateSprite : ReponseGroupe{
 
 struct ReponseMoveLayer : ReponseGroupe {
   ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage &mess);
+};
+
+struct ReponseChat : ReponseGroupe {
+  ReponseChat(std::vector<uint> usersId,ChatMessage& mess);
 };

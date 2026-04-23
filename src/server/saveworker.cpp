@@ -12,10 +12,6 @@ void SaveWorker::run() {
     while (mRunning_) {
         task = saveQueue_.pop();
         std::cout << "tentative de sauvgarde" << std::endl;
-        std::ofstream testFile("test_thread.txt");
-        testFile << "Le thread écrit bien !";
-        testFile.close();
-
         task->execute(this->projManagerLocal_);
     }
 }

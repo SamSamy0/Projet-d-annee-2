@@ -1,6 +1,10 @@
 #include "reponse.hpp"
 #include "../../common/protocol.hpp"
 #include "../servernetwork.hpp"
+#include <QJsonDocument>
+#include <QBuffer>
+#include <QImage>
+
 
 ReponseSolo::ReponseSolo(uint id) : userId_(id) {}
 
@@ -24,38 +28,6 @@ ReponseAuth::ReponseAuth(std::shared_ptr<Client> client, uint id)
   }
 }
 
-
-ReponseRenameProject::ReponseRenameProject(uint userId, uint projectId,
-                                           std::string newName, bool success)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(
-      MsgProtocole::LOB_RENAME_PROJECT_REP);
-  dataPacket_ << static_cast<std::uint8_t>(success ? 1 : 0);
-  dataPacket_ << static_cast<std::uint32_t>(projectId);
-  dataPacket_ << newName;
-  ;
-}
-
-ReponseDuplicateProject::ReponseDuplicateProject(uint userId, uint projectId,
-                                                 std::string newName)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(
-      MsgProtocole::LOB_DUPLICATE_PROJECT_REP);
-  dataPacket_ << static_cast<std::uint32_t>(projectId);
-  dataPacket_ << newName;
-}
-
-ReponseGenerateToken::ReponseGenerateToken(uint userId, std::string token)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_SHARE_PROJECT_REP);
-  dataPacket_ << token;
-}
-ReponseJoinProject::ReponseJoinProject(uint userId, bool success)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_JOIN_PROJECT_REP);
-  dataPacket_ << static_cast<std::uint8_t>(success ? 1 : 0);
-}
-
 ReponseGetMember::ReponseGetMember(uint userId,
                                    std::vector<MemberEntry> memberList)
     : ReponseSolo(userId) {
@@ -67,28 +39,6 @@ ReponseGetMember::ReponseGetMember(uint userId,
   }
 }
 
-ReponseProjectData::ReponseProjectData(uint userId, QByteArray &jsonData)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(
-      MsgProtocole::LOB_GET_PROJECT_DATA_REP);
-
-  QByteArray jsonCompresse = qCompress(jsonData, 9);
-  dataPacket_ << static_cast<std::uint32_t>(jsonCompresse.size());
-  dataPacket_.append(jsonCompresse.constData(), jsonCompresse.size());
-}
-
-ReponseUsersProjects::ReponseUsersProjects(uint userId,
-                                           std::vector<ProjectEntry> &projects)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_PROJECT_LIST_REP);
-
-  dataPacket_ << static_cast<std::uint32_t>(projects.size());
-
-  for (const auto &entry : projects) {
-    dataPacket_ << static_cast<uint32_t>(entry.projectId) << entry.name
-                << entry.role;
-  }
-}
 
 ReponseCreateProject::ReponseCreateProject(uint userId, uint projectId)
     : ReponseSolo(userId) {
@@ -115,6 +65,80 @@ ReponseDeconnection::ReponseDeconnection(uint id) : ReponseSolo(id) {}
 void ReponseDeconnection::envoyer(ServerNetworkManager& servManager) {
     servManager.mapUser_Socket_.erase(userId_);
 
+}
+
+ReponseRenameProject::ReponseRenameProject(uint userId, uint projectId, std::string newName, bool success): ReponseSolo(userId){
+    dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_RENAME_PROJECT_REP);
+    dataPacket_ << static_cast<std::uint8_t>(success ?1:0);
+    dataPacket_ <<static_cast<std::uint32_t>(projectId);
+    dataPacket_<<newName;;
+}
+
+ReponseDuplicateProject::ReponseDuplicateProject(uint userId, uint projectId, std::string newName) : ReponseSolo(userId){
+    dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_DUPLICATE_PROJECT_REP);
+    dataPacket_ <<static_cast<std::uint32_t>(projectId);
+    dataPacket_<<newName;
+}
+
+ReponseGenerateToken::ReponseGenerateToken(uint userId, std::string token): ReponseSolo(userId){
+    dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_SHARE_PROJECT_REP);
+    dataPacket_ <<token;
+    std::cout <<"TOKen in reponse: " <<token<<std::endl;
+}
+ReponseJoinProject::ReponseJoinProject(uint userId, bool success): ReponseSolo(userId){
+    dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_JOIN_PROJECT_REP);
+    dataPacket_ << static_cast<std::uint8_t>(success ?1:0);
+}
+
+
+ReponseProjectData::ReponseProjectData(uint userId, const QJsonObject& jsonDoc, 
+                   const std::vector<uint>& layerOrder, 
+                   const std::unordered_map<uint, QImage>& imageMap, 
+                   const std::unordered_map<uint, SpriteLayer>& spriteMap) : ReponseSolo(userId) {
+    dataPacket_<<static_cast<std::uint8_t> (MsgProtocole::LOB_GET_PROJECT_DATA_REP);
+    
+    QJsonDocument doc(jsonDoc);
+    QByteArray jsonData = doc.toJson(QJsonDocument::Indented);
+    QByteArray jsonCompresse = qCompress(jsonData, 9);
+    dataPacket_ << static_cast<std::uint32_t>(jsonCompresse.size());
+    dataPacket_.append(jsonCompresse.constData(), jsonCompresse.size());
+
+    for (uint id : layerOrder) {
+        dataPacket_ << id;
+        if (spriteMap.find(id) != spriteMap.end()) {
+            dataPacket_ << (uint8_t)1;
+            QJsonDocument doc(spriteMap.at(id).load());
+            QByteArray layerData = doc.toJson(QJsonDocument::Indented);
+            QByteArray layerCompress = qCompress(layerData);
+            dataPacket_ << static_cast<std::uint32_t>(layerCompress.size());
+            dataPacket_.append(layerCompress.constData(), layerCompress.size());
+        } else if (imageMap.find(id) != imageMap.end()) {
+            dataPacket_ << (uint8_t)0;
+            const QImage& img = imageMap.at(id);
+            QByteArray imageBytes = imageToBytes(img);
+            dataPacket_ << static_cast<std::uint32_t>(imageBytes.size());
+            dataPacket_.append(imageBytes.constData(), imageBytes.size());
+        }
+    }
+}
+
+QByteArray ReponseProjectData::imageToBytes(const QImage& image) {
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "PNG"); // Le format PNG compresse l'image proprement
+    return byteArray;
+}
+
+ReponseUsersProjects::ReponseUsersProjects(uint userId, std::vector<ProjectEntry>& projects) 
+: ReponseSolo(userId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_PROJECT_LIST_REP);
+
+    dataPacket_ << static_cast<std::uint32_t>(projects.size());
+
+    for (const auto& entry : projects) {
+        dataPacket_ << static_cast<uint32_t>(entry.projectId) << entry.name << entry.role;
+    }
 }
 
 
@@ -267,6 +291,11 @@ ReponseMoveLayer::ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage& 
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_MOV_LAYER_REP);
 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.deltaX_ << mess.deltaY_;
+}
+
+ReponseChat::ReponseChat(std::vector<uint> usersId,ChatMessage& mess) : ReponseGroupe(usersId){
+     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::CHAT_MESSAGE_REP);
+     dataPacket_ << mess.pseudo_ << mess.message_ << mess.min_ << mess.hour_ << mess.day_ << mess.month_ <<mess.year_;
 }
 
 
