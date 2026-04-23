@@ -336,6 +336,43 @@ void ClientHandler::process(ServerEvent &event) {
     break;
   }
 
+  case MsgProtocole::MAP_MOV_SPRITE_REP:{
+
+    uint project_id;
+    uint layer_id;
+    uint sprite_id;
+    sf::Vector2i v;
+
+    *(event.data_packet_) >> project_id >> layer_id >>sprite_id>>v.x>>v.y;
+      handleWindow_.moveSprite(layer_id,sprite_id,v);
+      break;
+    }
+  case MsgProtocole::MAP_RESIZE_SPRITE_REP:{
+
+    uint project_id;
+    uint layer_id;
+    uint sprite_id;
+    sf::Vector2f pos;
+    float scale;
+
+    *(event.data_packet_) >> project_id >> layer_id >>sprite_id>>pos.x>>pos.y>>scale;
+      handleWindow_.resizeSprite(layer_id,sprite_id,pos,scale);
+      break;
+    }
+
+  case MsgProtocole::MAP_ROTATE_SPRITE_REP:{
+
+    uint project_id;
+    uint layer_id;
+    uint sprite_id;
+    float angle;
+    sf::Vector2f pos;
+
+    *(event.data_packet_) >> project_id >> layer_id >>sprite_id>>angle>>pos.x>>pos.y;
+      handleWindow_.rotateSprite(layer_id,sprite_id,angle,pos);
+      break;
+    }
+
   case MsgProtocole::MAP_MOV_LAYER_REP: {
     uint project_id;
     uint layer_id;

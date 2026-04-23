@@ -154,31 +154,35 @@ void SpriteSelection::onRelease() {
 
 sf::Vector2f SpriteSelection::findPivot() {
   sf::Vector2f res = sf::Vector2f(0, 0);
-  std::vector<SpriteObject> sprites;
+  int count = 0;
+  std::shared_ptr<Layer> layer = map_->getCurrentLayer();
 
-  if (map_->getCurrentLayer()->getType() == SPRITELAYER)
-    sprites =
-        static_pointer_cast<SpriteLayer>(map_->getCurrentLayer())->getSprites();
+  if (layer->getType() == SPRITELAYER) {
+    const std::vector<SpriteObject> &sprites =
+        static_pointer_cast<SpriteLayer>(layer)->getSprites();
 
-  for (SpriteObject &sprite : sprites) {
-    for (uint id : selected_) {
-      if (sprite.id == id)
+    for (const SpriteObject &sprite : sprites) {
+      if (isSelected(sprite.id)) {
         res += sprite.sprite.getPosition();
+        count++;
+      }
     }
   }
-  res.x /= selected_.size();
-  res.y /= selected_.size();
+
+  if (count > 0) {
+    res.x /= count;
+    res.y /= count;
+  }
 
   return res;
 }
 
 void SpriteSelection::rotate(sf::Vector2i pos) {
-
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
   if (layer->getType() == SPRITELAYER) {
     std::shared_ptr<SpriteLayer> spritelayer =
         static_pointer_cast<SpriteLayer>(layer);
-    pos -= spritelayer->getOffset();
+
     sf::Vector2f delta =
         sf::Vector2f((pos.x - lastPos_.x), (pos.y - lastPos_.y));
 
@@ -187,11 +191,10 @@ void SpriteSelection::rotate(sf::Vector2i pos) {
 
     if (scaled_dist != 0.0f) {
       for (uint id : selected_) {
-
         for (SpriteObject &sprite : spritelayer->getSprites()) {
           if (sprite.id == id) {
-            sf::Vector2f pos = sprite.sprite.getPosition();
-            sf::Vector2f dist = pos - pivotPos_;
+            sf::Vector2f spritePos = sprite.sprite.getPosition();
+            sf::Vector2f dist = spritePos - pivotPos_;
 
             float cosA = std::cos(scaled_dist);
             float sinA = std::sin(scaled_dist);
@@ -199,9 +202,13 @@ void SpriteSelection::rotate(sf::Vector2i pos) {
             // Rotation Matrix
             float newX = dist.x * cosA - dist.y * sinA;
             float newY = dist.x * sinA + dist.y * cosA;
-            spritelayer->rotateSprite(
-                sprite, scaled_dist,
-                sf::Vector2f(newX + pivotPos_.x, newY + pivotPos_.y));
+            sf::Vector2f newPos =
+                sf::Vector2f(newX + pivotPos_.x, newY + pivotPos_.y);
+            spritelayer->rotateSprite(id, scaled_dist, newPos);
+            manager_.rotateSprite(map_->getId(),
+                                  map_->getCurrentLayer()->getId(), id,
+                                  scaled_dist, newPos);
+            break;
           }
         }
       }
@@ -210,12 +217,11 @@ void SpriteSelection::rotate(sf::Vector2i pos) {
 }
 
 void SpriteSelection::resize(sf::Vector2i pos) {
-
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
   if (layer->getType() == SPRITELAYER) {
     std::shared_ptr<SpriteLayer> spritelayer =
         static_pointer_cast<SpriteLayer>(layer);
-    pos -= spritelayer->getOffset();
+
     sf::Vector2f delta =
         sf::Vector2f((pos.x - lastPos_.x), (pos.y - lastPos_.y));
 
@@ -226,10 +232,14 @@ void SpriteSelection::resize(sf::Vector2i pos) {
       for (uint id : selected_) {
         for (SpriteObject &sprite : spritelayer->getSprites()) {
           if (sprite.id == id) {
-            sf::Vector2f pos = sprite.sprite.getPosition();
-            sf::Vector2f dist = pos - pivotPos_;
-            spritelayer->resizeSprite(sprite, pivotPos_ + dist * scaleFactor,
-                                      sf::Vector2f(scaleFactor, scaleFactor));
+            sf::Vector2f spritePos = sprite.sprite.getPosition();
+            sf::Vector2f dist = spritePos - pivotPos_;
+            sf::Vector2f newPos = pivotPos_ + dist * scaleFactor;
+            spritelayer->resizeSprite(id, newPos, scaleFactor);
+            manager_.resizeSprite(map_->getId(),
+                                  map_->getCurrentLayer()->getId(), id, newPos,
+                                  scaleFactor);
+            break;
           }
         }
       }
@@ -237,15 +247,17 @@ void SpriteSelection::resize(sf::Vector2i pos) {
   }
 }
 void SpriteSelection::shift(sf::Vector2i pos) {
-
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
   if (layer->getType() == SPRITELAYER) {
     std::shared_ptr<SpriteLayer> spritelayer =
         static_pointer_cast<SpriteLayer>(layer);
-    pos -= spritelayer->getOffset();
+
     sf::Vector2i delta = sf::Vector2i(pos.x - lastPos_.x, pos.y - lastPos_.y);
 
-    for (uint id : selected_)
+    for (uint id : selected_) {
       spritelayer->shiftSprite(id, delta);
+      manager_.moveSprite(map_->getId(), map_->getCurrentLayer()->getId(), id,
+                          delta);
+    }
   }
 }

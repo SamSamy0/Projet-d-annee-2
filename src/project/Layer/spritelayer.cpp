@@ -31,14 +31,6 @@ void SpriteLayer::erase(uint id) {
 
 void SpriteLayer::shift(sf::Vector2i v) { offset_ += v; }
 
-void SpriteLayer::shiftSprite(uint id, sf::Vector2i v) {
-  for (int i = sprites_.size() - 1; i >= 0;
-       i--) { // WARNING: FAIRE GAF A LA CONDITION
-    if (sprites_[i].id == id)
-      sprites_[i].sprite.move(sf::Vector2f(v.x, v.y));
-  }
-}
-
 void SpriteLayer::drawLayer(sf::RenderTarget &target) {
   if (!masked_) {
     sf::RenderStates state;
@@ -52,14 +44,36 @@ void SpriteLayer::drawLayer(sf::RenderTarget &target) {
 
 void SpriteLayer::setNextId(uint nextId) { nextId_ = nextId; }
 
-void SpriteLayer::resizeSprite(SpriteObject &sprite, sf::Vector2f pos,
-                               sf::Vector2f scale) {
-  sprite.sprite.setPosition(pos);
-  sprite.sprite.scale(scale);
+void SpriteLayer::resizeSprite(uint spriteId, sf::Vector2f pos,
+                               float scale) {
+  for (int i = sprites_.size() - 1; i >= 0;i--) {
+    if (sprites_[i].id == spriteId){
+      sprites_[i].sprite.setPosition(pos);
+      sprites_[i].sprite.scale(sf::Vector2f(scale, scale));
+      break;
+
+    }
+  }
 }
 
-void SpriteLayer::rotateSprite(SpriteObject &sprite, float angle,
+void SpriteLayer::rotateSprite(uint spriteId, float angle,
                                sf::Vector2f pos) {
-  sprite.sprite.setPosition(pos);
-  sprite.sprite.rotate(sf::radians(angle));
+
+  for (int i = sprites_.size() - 1; i >= 0;i--) {
+    if (sprites_[i].id == spriteId){
+      sprites_[i].sprite.setPosition(pos);
+      sprites_[i].sprite.rotate(sf::radians(angle));
+      break;
+
+    }
+  }
+}
+
+void SpriteLayer::shiftSprite(uint id, sf::Vector2i v) {
+  for (int i = sprites_.size() - 1; i >= 0; i--) {
+    if (sprites_[i].id == id) {
+      sprites_[i].sprite.move(sf::Vector2f(v.x, v.y));
+      break;
+    }
+  }
 }

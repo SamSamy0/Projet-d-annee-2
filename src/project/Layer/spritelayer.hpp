@@ -24,6 +24,6 @@ public:
   void shiftSprite(uint id, sf::Vector2i v);
   void drawLayer(sf::RenderTarget &target) override;
 
-  void resizeSprite(SpriteObject &sprite, sf::Vector2f pos, sf::Vector2f scale);
-  void rotateSprite(SpriteObject &sprite, float angle, sf::Vector2f pos);
+  void resizeSprite(uint id, sf::Vector2f pos, float scale);
+  void rotateSprite(uint id, float angle, sf::Vector2f pos);
 };

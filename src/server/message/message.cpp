@@ -489,6 +489,69 @@ void EraseSpriteMessage::process(Worker &worker){
 }
 
 
+MoveSpriteMessage::MoveSpriteMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client) {
+  userId_ = client->id;
+  data_packet >> projectId_ >> calqueId_ >> sprite_id_ >> x_ >> y_;
+}
+
+void MoveSpriteMessage::process(Worker &worker) {
+  auto liveProj = worker.mapProjet_.find(projectId_);
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+  // if (liveProj->second.moveSprite(userId_, calqueId_,sprite_id_,x_,y_)){
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+
+    rps = std::make_unique<ReponseMoveSprite>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  // }
+}
+
+
+
+ResizeSpriteMessage::ResizeSpriteMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client) {
+  userId_ = client->id;
+  data_packet >> projectId_ >> calqueId_ >> sprite_id_ >> x_ >> y_>>scale_;
+}
+
+void ResizeSpriteMessage::process(Worker &worker) {
+  auto liveProj = worker.mapProjet_.find(projectId_);
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+  // if (liveProj->second.resizeSprite(userId_, calqueId_,sprite_id_,x_,y_,scale_)){
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+
+    rps = std::make_unique<ReponseResizeSprite>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  // }
+}
+
+
+
+RotateSpriteMessage::RotateSpriteMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client) {
+  userId_ = client->id;
+  data_packet >> projectId_ >> calqueId_ >> sprite_id_ >> angle_ >> x_ >> y_;
+}
+
+void RotateSpriteMessage::process(Worker &worker) {
+  auto liveProj = worker.mapProjet_.find(projectId_);
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+  // if (liveProj->second.resizeSprite(userId_, calqueId_,sprite_id_,angle_,x_,y_)){
+    std::vector<uint> usersId = this->getUserLists(worker);
+    std::unique_ptr<Reponse> rps;
+
+    rps = std::make_unique<ReponseRotateSprite>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  // }
+}
+
+
+
 MoveLayerMessage::MoveLayerMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client) {
   userId_ = client->id;
   data_packet >> projectId_ >> calqueId_ >> deltaX_ >> deltaY_;
@@ -634,6 +697,15 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
 
   case MsgProtocole::MAP_ERASE_PIXELS_DIAM_REQ:
     return std::make_unique<ErasePixelsDiamondMessage>(data_packet, c);
+
+  case MsgProtocole::MAP_MOV_SPRITE_REQ:
+    return std::make_unique<MoveSpriteMessage>(data_packet,c);
+
+  case MsgProtocole::MAP_RESIZE_SPRITE_REQ:
+    return std::make_unique<ResizeSpriteMessage>(data_packet,c);
+
+  case MsgProtocole::MAP_ROTATE_SPRITE_REQ:
+    return std::make_unique<RotateSpriteMessage>(data_packet,c);
 
   case MsgProtocole::MAP_MOV_LAYER_REQ:
     return std::make_unique<MoveLayerMessage>(data_packet, c);

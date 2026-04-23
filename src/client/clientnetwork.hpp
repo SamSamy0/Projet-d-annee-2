@@ -29,7 +29,7 @@ public:
   void delProject(uint project_id);
   void getProjectData(uint project_id);
   void joinProject(std::string project_code);
-  void createLayer(uint proj_id,LayerType type);
+  void createLayer(uint proj_id, LayerType type);
   void deleteLayer(uint proj_id, uint current_layer_id);
   void renameLayer(uint proj_id, uint layer_id, std::string name);
   void layerUp(uint proj_id, uint current_layer_id);
@@ -37,21 +37,18 @@ public:
   void leaveProject(uint project_id);
   void changeRole(uint userId, uint projectId, int8_t role);
 
-  void drawSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size,
-                  uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-  void drawCircle(uint proj_id, uint layer_id, int pos_x, int pos_y, float size,
-                  uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-  void drawDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y,
-                   float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b,
-                   uint8_t a);
-  void eraseSquare(uint proj_id, uint layer_id, int pos_x, int pos_y,
-                   float size);
-  void eraseCircle(uint proj_id, uint layer_id, int pos_x, int pos_y,
-                   float size);
-  void eraseDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y,
-                    float size_x, float size_y);
+  void drawSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+  void drawCircle(uint proj_id, uint layer_id, int pos_x, int pos_y, float size, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+  void drawDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y, float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b,uint8_t a);
+  void eraseSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size);
+  void eraseCircle(uint proj_id, uint layer_id, int pos_x, int pos_y, float size);
+  void eraseDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y, float size_x, float size_y);
   void drawSprite(uint proj_id, uint layer_id, std::string asset_id, int pos_x, int pos_y, float size_x);
   void eraseSprite(uint proj_id, uint layer_id, uint sprite_id);
+
+  void moveSprite(uint proj_id, uint layer_id, uint sprite_id, sf::Vector2i v);
+  void resizeSprite(uint proj_id, uint layer_id, uint sprite_id, sf::Vector2f pos, float scale);
+  void rotateSprite(uint proj_id, uint layer_id, uint sprite_id, float angle, sf::Vector2f pos);
 
   void shiftLayer(uint proj_id, uint layer_id, int delta_x, int delta_y);
 

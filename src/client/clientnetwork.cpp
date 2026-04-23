@@ -63,9 +63,6 @@ void ClientNetworkManager::askRegister(std::string pseudo,
               << std::endl;
 }
 
-
-
-
 void ClientNetworkManager::createProject(std::string nomProjet,
                                          sf::Vector2u size, uint scale) {
   sf::Packet packet;
@@ -169,7 +166,7 @@ void ClientNetworkManager::joinProject(std::string project_code) {
               << std::endl;
 }
 
-void ClientNetworkManager::createLayer(uint proj_id,LayerType type){
+void ClientNetworkManager::createLayer(uint proj_id, LayerType type) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_CREATE_LAYER_REQ;
 
@@ -192,9 +189,7 @@ void ClientNetworkManager::leaveProject(uint projectId) {
               << std::endl;
 }
 
-
-
-void ClientNetworkManager::deleteLayer(uint proj_id, uint layer_id){
+void ClientNetworkManager::deleteLayer(uint proj_id, uint layer_id) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_REMOVE_LAYER_REQ;
 
@@ -206,7 +201,8 @@ void ClientNetworkManager::deleteLayer(uint proj_id, uint layer_id){
               << std::endl;
 }
 
-void ClientNetworkManager::renameLayer(uint proj_id, uint layer_id, std::string name){
+void ClientNetworkManager::renameLayer(uint proj_id, uint layer_id,
+                                       std::string name) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_RENAME_LAYER_REQ;
 
@@ -218,9 +214,7 @@ void ClientNetworkManager::renameLayer(uint proj_id, uint layer_id, std::string 
               << std::endl;
 }
 
-
-
-void ClientNetworkManager::layerUp(uint proj_id, uint layer_id){
+void ClientNetworkManager::layerUp(uint proj_id, uint layer_id) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ORGANIZE_LAYER_UP_REQ;
 
@@ -232,7 +226,7 @@ void ClientNetworkManager::layerUp(uint proj_id, uint layer_id){
               << std::endl;
 }
 
-void ClientNetworkManager::layerDown(uint proj_id, uint layer_id){
+void ClientNetworkManager::layerDown(uint proj_id, uint layer_id) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ORGANIZE_LAYER_DOWN_REQ;
 
@@ -270,8 +264,6 @@ void ClientNetworkManager::drawSquare(uint proj_id, uint layer_id, int pos_x,
               << std::endl;
 }
 
-
-
 void ClientNetworkManager::drawCircle(uint proj_id, uint layer_id, int pos_x,
                                       int pos_y, float size, uint8_t r,
                                       uint8_t g, uint8_t b, uint8_t a) {
@@ -294,8 +286,8 @@ void ClientNetworkManager::drawDiamond(uint proj_id, uint layer_id, int pos_x,
   MsgProtocole msg = MsgProtocole::MAP_PUT_PIXELS_DIAM_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << pos_x << pos_y << size_y << size_x
-        << r << g << b << a;
+  packet << proj_id << layer_id << pos_x << pos_y << size_y << size_x << r << g
+         << b << a;
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
@@ -368,16 +360,55 @@ void ClientNetworkManager::drawSprite(uint proj_id, uint layer_id,
               << std::endl;
 }
 
-void ClientNetworkManager::eraseSprite(uint proj_id, uint layer_id, uint sprite_id) {
+void ClientNetworkManager::eraseSprite(uint proj_id, uint layer_id,
+                                       uint sprite_id) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ERASE_SPRITE_REQ;
 
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << sprite_id ;
-
+  packet << proj_id << layer_id << sprite_id;
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;
 }
 
+void ClientNetworkManager::moveSprite(uint proj_id, uint layer_id,
+                                      uint sprite_id, sf::Vector2i v) {
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_MOV_SPRITE_REQ;
+  packet << static_cast<uint8_t>(msg);
+  packet << proj_id << layer_id << sprite_id << v.x << v.y;
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
+void ClientNetworkManager::resizeSprite(uint proj_id, uint layer_id,
+                                        uint sprite_id, sf::Vector2f pos,
+                                        float scale) {
+
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_RESIZE_SPRITE_REQ;
+  packet << static_cast<uint8_t>(msg);
+  packet << proj_id << layer_id << sprite_id << pos.x << pos.y << scale;
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
+void ClientNetworkManager::rotateSprite(uint proj_id, uint layer_id,
+                                        uint sprite_id, float angle,
+                                        sf::Vector2f pos) {
+
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_ROTATE_SPRITE_REQ;
+  packet << static_cast<uint8_t>(msg);
+  packet << proj_id << layer_id << sprite_id << angle << pos.x << pos.y;
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}

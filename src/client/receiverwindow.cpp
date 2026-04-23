@@ -160,11 +160,26 @@ void ReceiverInWindow::shiftLayer(uint layer_id, int delta_x, int delta_y) {
 }
 
 
-  void ReceiverInWindow::eraseSprite(uint layer_id, uint sprite_id){
-    shared_ptr<Layer> layer = app_->getProject()->getMap()->getLayer(layer_id);
-    if(layer->getType() == SPRITELAYER)
-    static_pointer_cast<SpriteLayer>(layer)->erase(sprite_id);
+void ReceiverInWindow::eraseSprite(uint layer_id, uint sprite_id){
+  shared_ptr<Layer> layer = app_->getProject()->getMap()->getLayer(layer_id);
+  if(layer->getType() == SPRITELAYER)
+  static_pointer_cast<SpriteLayer>(layer)->erase(sprite_id);
 }
+
+
+void ReceiverInWindow::moveSprite(uint layer_id,uint sprite_id,sf::Vector2i v){
+  static_pointer_cast<SpriteLayer>(app_->getProject()->getMap()->getLayer(layer_id))->shiftSprite(sprite_id,v);
+
+}
+void ReceiverInWindow::resizeSprite(uint layer_id,uint sprite_id,sf::Vector2f pos, float scale){
+  static_pointer_cast<SpriteLayer>(app_->getProject()->getMap()->getLayer(layer_id))->resizeSprite(sprite_id,pos,scale);
+}
+void ReceiverInWindow::rotateSprite(uint layer_id,uint sprite_id,float angle, sf::Vector2f pos){
+  static_pointer_cast<SpriteLayer>(app_->getProject()->getMap()->getLayer(layer_id))->rotateSprite(sprite_id,angle,pos);
+}
+
+
+
 
 void ReceiverInWindow::setMemberList(std::vector<MemberEntry> memberList) {
   if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
