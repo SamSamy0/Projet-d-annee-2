@@ -52,14 +52,14 @@ void SpriteLayer::drawLayer(sf::RenderTarget &target) {
 
 void SpriteLayer::setNextId(uint nextId) { nextId_ = nextId; }
 
-void SpriteLayer::resizeSprite(SpriteObject &sprite, float scale,
-                               sf::Vector2f pivot, sf::Vector2f dist) {
-  sprite.sprite.setPosition(pivot + dist * scale);
-  sprite.sprite.scale(sf::Vector2f(scale, scale));
+void SpriteLayer::resizeSprite(SpriteObject &sprite, sf::Vector2f pos,
+                               sf::Vector2f scale) {
+  sprite.sprite.setPosition(pos);
+  sprite.sprite.scale(scale);
 }
 
 void SpriteLayer::rotateSprite(SpriteObject &sprite, float angle,
-                               sf::Vector2f pivot, sf::Vector2f newPos) {
-  sprite.sprite.setPosition(pivot + sf::Vector2f(newPos.x, newPos.y));
+                               sf::Vector2f pos) {
+  sprite.sprite.setPosition(pos);
   sprite.sprite.rotate(sf::radians(angle));
 }

@@ -2,6 +2,7 @@
 #include "../Layer/layer.hpp"
 #include "../Layer/spritelayer.hpp"
 #include "../map.hpp"
+#include "SFML/System/Vector2.hpp"
 #include <SFML/Window/Keyboard.hpp>
 #include <algorithm>
 #include <cmath>
@@ -198,8 +199,9 @@ void SpriteSelection::rotate(sf::Vector2i pos) {
             // Rotation Matrix
             float newX = dist.x * cosA - dist.y * sinA;
             float newY = dist.x * sinA + dist.y * cosA;
-            spritelayer->rotateSprite(sprite, scaled_dist, pivotPos_,
-                                      sf::Vector2f(newX, newY));
+            spritelayer->rotateSprite(
+                sprite, scaled_dist,
+                sf::Vector2f(newX + pivotPos_.x, newY + pivotPos_.y));
           }
         }
       }
@@ -226,7 +228,8 @@ void SpriteSelection::resize(sf::Vector2i pos) {
           if (sprite.id == id) {
             sf::Vector2f pos = sprite.sprite.getPosition();
             sf::Vector2f dist = pos - pivotPos_;
-            spritelayer->resizeSprite(sprite, scaleFactor, pivotPos_, dist);
+            spritelayer->resizeSprite(sprite, pivotPos_ + dist * scaleFactor,
+                                      sf::Vector2f(scaleFactor, scaleFactor));
           }
         }
       }
