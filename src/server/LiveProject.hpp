@@ -43,6 +43,7 @@ struct LiveProject {
     const std::vector<uint> getLayerOrder();
 
     const QJsonArray getChatJson();
+    bool addMessageChat(uint userId, const std::shared_ptr<MessageChat> message);
 
     private :
     std::vector<uint> connectedID_;

@@ -3,6 +3,7 @@
 #include "../reponse/reponse.hpp"
 #include "../worker.hpp"
 #include <memory>
+#include "../../project/Chat/userMessage.hpp"
 
 
 
@@ -20,7 +21,9 @@ LoginMessage::LoginMessage(sf::Packet& dataPacket, std::shared_ptr<Client> clien
 
 void LoginMessage::process(Worker& worker){
     uint id = worker.verifyLogin(this->pseudo_, this->password_);
-
+    if (id != -1) {
+        client_->pseudo = this->pseudo_;
+    }
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseAuth>(std::move(client_), id);
   worker.pushNetwork(std::move(rps));
@@ -34,7 +37,9 @@ RegisterMessage::RegisterMessage(sf::Packet& dataPacket, std::shared_ptr<Client>
 
 void RegisterMessage::process(Worker& worker) {
     uint id = worker.addUser(this->pseudo_, this->password_);
-
+    if (id != -1) {
+        client_->pseudo = this->pseudo_;
+    }
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseAuth>(std::move(client_), id);
   worker.pushNetwork(std::move(rps));
@@ -574,13 +579,22 @@ void ChatMessage::process(Worker& worker){
   if (itProject == worker.mapProjet_.end()) {
       return; 
   }
-  
-  std::vector<uint> usersId = itProject->second.getConnected();
+  std::shared_ptr<MessageChat> messageChat = std::make_shared<UserMessage>(pseudo_, userId_, message_);
 
-  std::unique_ptr<Reponse> rps;
+  Date date = messageChat->getDate();
+  if (itProject->second.addMessageChat(userId_, messageChat)) {
+    std::vector<uint> usersId = itProject->second.getConnected();
+    std::unique_ptr<Reponse> rps;
 
-  rps = std::make_unique<ReponseChat>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+    min_ = date.min_;
+    hour_ = date.hour_;
+    day_ = date.day_;
+    month_ = date.month_;
+    year_ = date.year_;
+    rps = std::make_unique<ReponseChat>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+
+  }
 }
 
 

@@ -213,3 +213,11 @@ bool LiveProject::renameCalque(uint userId, uint calqueId, std::string newName) 
 const QJsonArray LiveProject::getChatJson() {
     return chat_.toJson();
 }
+
+bool LiveProject::addMessageChat(uint userId, const std::shared_ptr<MessageChat> message) {
+        if (!canModify(userId)) {
+        return false;
+    }
+    chat_.addMessage(message);
+    return true;
+}
