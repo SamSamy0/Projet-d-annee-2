@@ -14,6 +14,7 @@ enum class typeNotification {
 class SystemNotification : public MessageChat {
     typeNotification typeNotif_;
     public :
+        SystemNotification(const string &pseudo, const uint userId, const typeNotification &notif);
         string getTexte() const;
         string getJsonTexte() const;
         SystemNotification(const User& user, const Date& date, const std::string& message);

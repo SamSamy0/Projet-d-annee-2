@@ -11,6 +11,12 @@ User MessageChat::getAuthor() const { return author_; }
 Date MessageChat::getDate() const { return date_; }
 MessageType MessageChat::getType() const { return type_; }
 
+Date MessageChat::currentDate() {
+  time_t t = time(nullptr);
+  tm *now = localtime(&t);
+  return Date(now->tm_min, now->tm_hour, now->tm_mday, now->tm_mon + 1, now->tm_year - 100);
+}
+
 void Chat::addMessage(shared_ptr<MessageChat> message) {
     messages_.push_back(message);
 }

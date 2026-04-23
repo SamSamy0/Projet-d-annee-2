@@ -19,6 +19,8 @@ protected:
   Date date_;
   MessageType type_;
 
+    static Date currentDate();
+
 public:
   MessageChat() = default;
   MessageChat(const User &author, const Date &date, MessageType type);

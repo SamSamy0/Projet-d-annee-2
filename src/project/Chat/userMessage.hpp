@@ -5,7 +5,6 @@
 
 class UserMessage : public MessageChat {
   string message_;
-  static Date currentDate();
 
 public:
   UserMessage(const string &pseudo, const uint id, const string &message);
