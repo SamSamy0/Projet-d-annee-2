@@ -148,6 +148,21 @@ struct ReponseEraseSprite : ReponseGroupe {
     ReponseEraseSprite(std::vector<uint> usersId, EraseSpriteMessage& mess);
 };
 
+struct ReponseMoveSprite : ReponseGroupe{
+    ReponseMoveSprite(std::vector<uint> usersId, MoveSpriteMessage& mess);
+};
+
+
+struct ReponseResizeSprite : ReponseGroupe{
+    ReponseResizeSprite(std::vector<uint> usersId, ResizeSpriteMessage& mess);
+};
+
+
+struct ReponseRotateSprite : ReponseGroupe{
+    ReponseRotateSprite(std::vector<uint> usersId, RotateSpriteMessage& mess);
+};
+
+
 struct ReponseMoveLayer : ReponseGroupe {
   ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage &mess);
 };
