@@ -57,7 +57,7 @@ public:
                        uint id);
   void loadProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                        uint id, uint nextLayerId,
-                       const std::vector<LayerLoadData>& layers);
+                       const std::vector<LayerLoadData>& layers, Chat chat);
   // Getters
   sf::RenderWindow &getWindow();
   tgui::Gui &getGui();

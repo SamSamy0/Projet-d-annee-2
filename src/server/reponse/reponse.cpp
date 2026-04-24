@@ -103,7 +103,7 @@ ReponseProjectData::ReponseProjectData(uint userId, const QJsonObject& jsonDoc,
     dataPacket_ << static_cast<std::uint32_t>(jsonCompresse.size());
     dataPacket_.append(jsonCompresse.constData(), jsonCompresse.size());
     
-    QJsonDocument doc(chat);
+    doc = QJsonDocument(chat);
     QByteArray chatData = doc.toJson(QJsonDocument::Indented);
     QByteArray chatCompress = qCompress(chatData, 9);
     dataPacket_ << static_cast<std::uint32_t>(chatCompress.size());

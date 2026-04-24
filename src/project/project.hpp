@@ -42,6 +42,7 @@ public:
   std::shared_ptr<Map> getMap();
   ToolBar &getToolBar();
   Chat &getChat();
+  void setChat(const Chat chat);
   void display();
   void displayScale();
   void displayToolBar();
