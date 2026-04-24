@@ -71,6 +71,8 @@ void ClientHandler::process(ServerEvent &event) {
     }
     QJsonObject entete = QJsonDocument::fromJson(jsonBytes).object();
 
+    
+
     // 2. Index { layer_id -> {x, y} } pour retrouver les décalages sauvegardés
     struct LayerMeta { int x, y; std::string name; };
     std::unordered_map<uint, LayerMeta> layerMeta;
@@ -108,6 +110,8 @@ void ClientHandler::process(ServerEvent &event) {
 
       layers.push_back(std::move(ld));
     }
+
+    
 
     // 4. Reconstruction du projet avec tous ses layers (pas de layer par défaut)
     sf::Vector2u vec{ static_cast<uint>(entete["width"].toInt()),

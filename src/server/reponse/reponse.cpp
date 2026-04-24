@@ -94,7 +94,7 @@ ReponseJoinProject::ReponseJoinProject(uint userId, bool success): ReponseSolo(u
 ReponseProjectData::ReponseProjectData(uint userId, const QJsonObject& jsonDoc, 
                    const std::vector<uint>& layerOrder, 
                    const std::unordered_map<uint, QImage>& imageMap, 
-                   const std::unordered_map<uint, SpriteLayer>& spriteMap) : ReponseSolo(userId) {
+                   const std::unordered_map<uint, SpriteLayer>& spriteMap, const QJsonArray& chat) : ReponseSolo(userId) {
     dataPacket_<<static_cast<std::uint8_t> (MsgProtocole::LOB_GET_PROJECT_DATA_REP);
     
     QJsonDocument doc(jsonDoc);
@@ -102,6 +102,12 @@ ReponseProjectData::ReponseProjectData(uint userId, const QJsonObject& jsonDoc,
     QByteArray jsonCompresse = qCompress(jsonData, 9);
     dataPacket_ << static_cast<std::uint32_t>(jsonCompresse.size());
     dataPacket_.append(jsonCompresse.constData(), jsonCompresse.size());
+    
+    QJsonDocument doc(chat);
+    QByteArray chatData = doc.toJson(QJsonDocument::Indented);
+    QByteArray chatCompress = qCompress(chatData, 9);
+    dataPacket_ << static_cast<std::uint32_t>(chatCompress.size());
+    dataPacket_.append(chatCompress.constData(), chatCompress.size());
 
     for (uint id : layerOrder) {
         dataPacket_ << id;
@@ -120,6 +126,7 @@ ReponseProjectData::ReponseProjectData(uint userId, const QJsonObject& jsonDoc,
             dataPacket_.append(imageBytes.constData(), imageBytes.size());
         }
     }
+
 }
 
 QByteArray ReponseProjectData::imageToBytes(const QImage& image) {

@@ -170,7 +170,7 @@ void GetProjectDataMessage::process(Worker& worker) {
 
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseProjectData>(userId_, liveProj.getJson() , std::move(liveProj.getLayerOrder()), 
-  liveProj.getImageMap(), liveProj.getSpritesMap());
+  liveProj.getImageMap(), liveProj.getSpritesMap(), liveProj.getChatJson());
   worker.pushNetwork(std::move(rps));
 }
 
