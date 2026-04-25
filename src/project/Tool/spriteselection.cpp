@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cmath>
 #include <memory>
+#include <vector>
 
 SpriteSelection::SpriteSelection(std::shared_ptr<Map> map,
                                  ClientNetworkManager &manager)
@@ -38,11 +39,11 @@ void SpriteSelection::onPress(sf::Vector2i pos) {
 
     bool hit = false;
     uint hitedId;
-    const std::vector<SpriteObject> &sprites = spritelayer->getSprites();
-    for (int i = sprites.size() - 1; i >= 0; i--) {
-      if (sprites[i].sprite.getGlobalBounds().contains(
+    const std::unordered_map<uint, SpriteObject> &sprites = spritelayer->getSprites();
+    for (const auto &[id, spriteObj] : sprites) {
+      if (spriteObj.sprite.getGlobalBounds().contains(
               sf::Vector2f(pos.x, pos.y))) {
-        hitedId = sprites[i].id;
+        hitedId = spriteObj.id;
         hit = true;
         break;
       }
@@ -119,28 +120,28 @@ void SpriteSelection::onRelease() {
       selectionRect.position.x = std::min(startSelectionPos_.x, lastPos_.x);
       selectionRect.position.y = std::min(startSelectionPos_.y, lastPos_.y);
 
-      const std::vector<SpriteObject> &sprites = spritelayer->getSprites();
+      const std::unordered_map<uint, SpriteObject> &sprites = spritelayer->getSprites();
 
       bool isCtrl = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl);
 
       if (!isCtrl) {
         selected_.clear();
       }
-      for (const auto &sprite : sprites) {
-        if (selectionRect.findIntersection(sprite.sprite.getGlobalBounds())) {
+      for (const auto &[id, spriteObj] : sprites) {
+        if (selectionRect.findIntersection(spriteObj.sprite.getGlobalBounds())) {
           if (isCtrl) {
-            if (!isSelected(sprite.id))
+            if (!isSelected(spriteObj.id))
               selected_.push_back(
-                  sprite
+                  spriteObj
                       .id); // WARNING: ATTENTION AU COMPORTEMENT SI ON PRESSE
                             // CTRL ON CLICK PUIS ON LE RELACHE AVANT ON RELEASE
             else {
               selected_.erase(
-                  std::remove(selected_.begin(), selected_.end(), sprite.id),
+                  std::remove(selected_.begin(), selected_.end(), spriteObj.id),
                   selected_.end());
             }
           } else
-            selected_.push_back(sprite.id);
+            selected_.push_back(spriteObj.id);
         }
       }
     }
@@ -154,26 +155,30 @@ void SpriteSelection::onRelease() {
 
 sf::Vector2f SpriteSelection::findPivot() {
   sf::Vector2f res = sf::Vector2f(0, 0);
-  int count = 0;
-  std::shared_ptr<Layer> layer = map_->getCurrentLayer();
+  int size = selected_.size();
+  if(size == 0)
+    return res;
+  const std::shared_ptr<Layer> layer = map_->getCurrentLayer();
 
-  if (layer->getType() == SPRITELAYER) {
-    const std::vector<SpriteObject> &sprites =
-        static_pointer_cast<SpriteLayer>(layer)->getSprites();
-
-    for (const SpriteObject &sprite : sprites) {
-      if (isSelected(sprite.id)) {
-        res += sprite.sprite.getPosition();
-        count++;
-      }
+  // if (layer->getType() == SPRITELAYER) {
+  //   const std::vector<SpriteObject> &sprites =
+  //       static_pointer_cast<SpriteLayer>(layer)->getSprites();
+  //
+  //   for (const SpriteObject &sprite : sprites) {
+  //     if (isSelected(sprite.id)) {
+  //       res += sprite.sprite.getPosition();
+  //       count++;
+  //     }
+  //   }
+  // }
+  if(layer->getType() == SPRITELAYER){
+    const std::shared_ptr<SpriteLayer> spritelayer = static_pointer_cast<SpriteLayer>(layer);
+    for(const uint id : selected_){
+      res+= spritelayer->getSprite(id).sprite.getPosition();
     }
   }
-
-  if (count > 0) {
-    res.x /= count;
-    res.y /= count;
-  }
-
+  res.x /= size;
+  res.y /= size;
   return res;
 }
 
@@ -191,9 +196,8 @@ void SpriteSelection::rotate(sf::Vector2i pos) {
 
     if (scaled_dist != 0.0f) {
       for (uint id : selected_) {
-        for (SpriteObject &sprite : spritelayer->getSprites()) {
-          if (sprite.id == id) {
-            sf::Vector2f spritePos = sprite.sprite.getPosition();
+            sf::Sprite sprite = spritelayer->getSprite(id).sprite;
+            sf::Vector2f spritePos = sprite.getPosition();
             sf::Vector2f dist = spritePos - pivotPos_;
 
             float cosA = std::cos(scaled_dist);
@@ -208,13 +212,11 @@ void SpriteSelection::rotate(sf::Vector2i pos) {
             manager_.rotateSprite(map_->getId(),
                                   map_->getCurrentLayer()->getId(), id,
                                   scaled_dist, newPos);
-            break;
+            // break;
           }
         }
       }
     }
-  }
-}
 
 void SpriteSelection::resize(sf::Vector2i pos) {
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
@@ -230,22 +232,18 @@ void SpriteSelection::resize(sf::Vector2i pos) {
 
     if (scaleFactor > 0.001) {
       for (uint id : selected_) {
-        for (SpriteObject &sprite : spritelayer->getSprites()) {
-          if (sprite.id == id) {
-            sf::Vector2f spritePos = sprite.sprite.getPosition();
+            sf::Sprite sprite = spritelayer->getSprite(id).sprite;
+            sf::Vector2f spritePos = sprite.getPosition();
             sf::Vector2f dist = spritePos - pivotPos_;
             sf::Vector2f newPos = pivotPos_ + dist * scaleFactor;
             spritelayer->resizeSprite(id, newPos, scaleFactor);
             manager_.resizeSprite(map_->getId(),
                                   map_->getCurrentLayer()->getId(), id, newPos,
                                   scaleFactor);
-            break;
           }
         }
       }
     }
-  }
-}
 void SpriteSelection::shift(sf::Vector2i pos) {
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
   if (layer->getType() == SPRITELAYER) {

@@ -1,6 +1,7 @@
 #pragma once
 #include "layer.hpp"
 #include <cstdint>
+#include <unordered_map>
 
 struct SpriteObject {
   sf::Sprite sprite;
@@ -9,14 +10,16 @@ struct SpriteObject {
 };
 
 class SpriteLayer : public Layer {
-  std::vector<SpriteObject> sprites_;
+  // std::vector<SpriteObject> sprites_;
+  std::unordered_map<uint, SpriteObject> sprites_;
   sf::Vector2i offset_;
   uint nextId_;
 
 public:
   SpriteLayer(uint id, std::string name, sf::Vector2u size);
   void setNextId(uint);
-  std::vector<SpriteObject> &getSprites();
+  const std::unordered_map<uint, SpriteObject>& getSprites() const;
+  SpriteObject& getSprite(uint id);
   sf::Vector2i getOffset() const override;
   void draw(const sf::Sprite &s);
   void erase(uint id);
