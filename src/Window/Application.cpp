@@ -132,11 +132,12 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
 
 void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                   std::string name, uint id, uint nextLayerId,
-                                  const std::vector<LayerLoadData>& layers) {
+                                  const std::vector<LayerLoadData>& layers, Chat chat) {
   // Constructeur avec vecteur vide → aucun layer par défaut créé
   project = std::make_unique<Project>(scale, size, name, id, mainWindow, gui,
                                       manager, std::vector<std::shared_ptr<Layer>>{}, currentProjRole);
   auto map = project->getMap();
+  project->setChat(chat);
 
   for (const auto& ld : layers) {;
     if (ld.type == 0) {

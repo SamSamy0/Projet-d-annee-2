@@ -63,6 +63,13 @@ void ClientHandler::process(ServerEvent &event) {
     const char*  rawBuf    = (const char*)(*(event.data_packet_)).getData();
     const size_t totalSize = event.data_packet_->getDataSize();
 
+    auto readU32BE = [](const char* buf, size_t p) -> uint32_t {
+      return (static_cast<uint32_t>(static_cast<uint8_t>(buf[p]))     << 24)
+           | (static_cast<uint32_t>(static_cast<uint8_t>(buf[p + 1])) << 16)
+           | (static_cast<uint32_t>(static_cast<uint8_t>(buf[p + 2])) <<  8)
+           |  static_cast<uint32_t>(static_cast<uint8_t>(buf[p + 3]));
+    };
+
     // 1. Décompression et parsing du JSON d'en-tête
     QByteArray jsonBytes = qUncompress(QByteArray(rawBuf + headerOffset, jsonSize));
     if (jsonBytes.isEmpty()) {
@@ -70,6 +77,8 @@ void ClientHandler::process(ServerEvent &event) {
       break;
     }
     QJsonObject entete = QJsonDocument::fromJson(jsonBytes).object();
+
+    
 
     // 2. Index { layer_id -> {x, y} } pour retrouver les décalages sauvegardés
     struct LayerMeta { int x, y; std::string name; };
@@ -81,16 +90,27 @@ void ClientHandler::process(ServerEvent &event) {
       layerMeta[lid] = { lo["x"].toInt(), lo["y"].toInt(), lo["name"].toString().toStdString() };
     }
 
-    // 3. Lecture big-endian des données binaires de chaque layer
-    auto readU32BE = [](const char* buf, size_t p) -> uint32_t {
-      return (static_cast<uint32_t>(static_cast<uint8_t>(buf[p]))     << 24)
-           | (static_cast<uint32_t>(static_cast<uint8_t>(buf[p + 1])) << 16)
-           | (static_cast<uint32_t>(static_cast<uint8_t>(buf[p + 2])) <<  8)
-           |  static_cast<uint32_t>(static_cast<uint8_t>(buf[p + 3]));
-    };
-
-    std::vector<LayerLoadData> layers;
     size_t pos = headerOffset + jsonSize;
+
+    Chat chat;
+    if (pos + 4 <= totalSize) {
+        uint32_t jsonSize2 = readU32BE(rawBuf, pos);
+        pos += 4; // On avance de 4 octets après avoir lu la taille
+        if (pos + jsonSize2 <= totalSize) {
+            QByteArray jsonBytes2 = qUncompress(QByteArray(rawBuf + pos, jsonSize2));
+            if (!jsonBytes2.isEmpty()) {
+                QJsonArray chatArray = QJsonDocument::fromJson(jsonBytes2).array();
+                chat = Chat(chatArray);
+                
+            } else {
+                std::cerr << "Erreur : décompression du JSON chat échouée." << std::endl;
+            }
+            pos += jsonSize2; 
+        }
+    }
+
+    // 3. Lecture big-endian des données binaires de chaque layer
+    std::vector<LayerLoadData> layers;
     while (pos + 9 <= totalSize) {       // min 4 (id) + 1 (type) + 4 (taille)
       LayerLoadData ld;
       ld.id   = readU32BE(rawBuf, pos); pos += 4;
@@ -109,6 +129,8 @@ void ClientHandler::process(ServerEvent &event) {
       layers.push_back(std::move(ld));
     }
 
+    
+
     // 4. Reconstruction du projet avec tous ses layers (pas de layer par défaut)
     sf::Vector2u vec{ static_cast<uint>(entete["width"].toInt()),
                       static_cast<uint>(entete["height"].toInt()) };
@@ -117,7 +139,7 @@ void ClientHandler::process(ServerEvent &event) {
         entete["name"].toString().toStdString(),
         entete["id"].toInt(),
         static_cast<uint>(entete["nextLayerId"].toInt()),
-        layers);
+        layers, chat);
     break;
   }
 

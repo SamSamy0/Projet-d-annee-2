@@ -59,7 +59,7 @@ struct ReponseProjectData : ReponseSolo {
     ReponseProjectData(uint userId, const QJsonObject& jsonDoc, 
                    const std::vector<uint>& layerOrder, 
                    const std::unordered_map<uint, QImage>& imageMap, 
-                   const std::unordered_map<uint, SpriteLayer>& spriteMap);
+                   const std::unordered_map<uint, SpriteLayer>& spriteMap, const QJsonArray& chat);
     static QByteArray imageToBytes(const QImage& image);
 };
 

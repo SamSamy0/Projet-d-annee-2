@@ -170,7 +170,7 @@ void GetProjectDataMessage::process(Worker& worker) {
 
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseProjectData>(userId_, liveProj.getJson() , std::move(liveProj.getLayerOrder()), 
-  liveProj.getImageMap(), liveProj.getSpritesMap());
+  liveProj.getImageMap(), liveProj.getSpritesMap(), liveProj.getChatJson());
   worker.pushNetwork(std::move(rps));
 }
 
@@ -335,13 +335,13 @@ void PutPixelsSquareMessage::process(Worker &worker) {
     return;
   }
   
-  // if (liveProj->second.drawPixelRect(userId_, calqueId_, pos_.x, pos_.y, taille_, red_, green_, blue_, opa_)) {
+  if (liveProj->second.drawPixelRect(userId_, calqueId_, pos_.x, pos_.y, taille_, red_, green_, blue_, opa_)) {
     std::cout<<"creation de la reponse"<<std::endl;
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponsePutPixelsSquare>(usersId, *this);
     worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 PutPixelsCircleMessage::PutPixelsCircleMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
@@ -356,12 +356,12 @@ void PutPixelsCircleMessage::process(Worker& worker) {
     return;
   }
   
-  // if (liveProj->second.drawPixelCircle(userId_, calqueId_, pos_.x, pos_.y, taille_, red_, green_, blue_, opa_)) {
+  if (liveProj->second.drawPixelCircle(userId_, calqueId_, pos_.x, pos_.y, taille_, red_, green_, blue_, opa_)) {
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponsePutPixelsCircle>(usersId, *this);
     worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 PutPixelsDiamondMessage::PutPixelsDiamondMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
@@ -376,12 +376,12 @@ void PutPixelsDiamondMessage::process(Worker& worker) {
     return;
   }
   
-  // if (liveProj->second.drawPixelDiam(userId_, calqueId_, pos_.x, pos_.y, hauteur_, largeur_, red_, green_, blue_, opa_)) {
+  if (liveProj->second.drawPixelDiam(userId_, calqueId_, pos_.x, pos_.y, hauteur_, largeur_, red_, green_, blue_, opa_)) {
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponsePutPixelsDiamond>(usersId, *this);
     worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 ErasePixelsSquareMessage::ErasePixelsSquareMessage(sf::Packet &data_packet,
@@ -397,12 +397,12 @@ void ErasePixelsSquareMessage::process(Worker &worker) {
     return;
   }
   
-  // if (liveProj->second.erasePixelRect(userId_, calqueId_, pos_.x, pos_.y, taille_)) {
+  if (liveProj->second.erasePixelRect(userId_, calqueId_, pos_.x, pos_.y, taille_)) {
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseErasePixelsSquare>(usersId, *this);
     worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 ErasePixelsCircleMessage::ErasePixelsCircleMessage(sf::Packet& data_packet, std::shared_ptr<Client>& client) {
