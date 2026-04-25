@@ -374,40 +374,52 @@ void ClientNetworkManager::eraseSprite(uint proj_id, uint layer_id,
 }
 
 
-void ClientNetworkManager::moveSprite(uint proj_id, uint layer_id,
-                                      uint sprite_id, sf::Vector2i v) {
+void ClientNetworkManager::moveSprites(uint proj_id, uint layer_id,
+                                       const std::vector<uint>& sprite_ids, sf::Vector2i v) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_MOV_SPRITE_REQ;
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << sprite_id << v.x << v.y;
+  packet << proj_id << layer_id << static_cast<uint32_t>(sprite_ids.size());
+  packet << v.x << v.y; // Paramètres communs
+  for (uint id : sprite_ids) {
+    packet << id;
+  }
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;
 }
 
-void ClientNetworkManager::resizeSprite(uint proj_id, uint layer_id,
-                                        uint sprite_id, sf::Vector2f pos,
+void ClientNetworkManager::resizeSprites(uint proj_id, uint layer_id,
+                                        const std::vector<uint>& sprite_ids,
+                                        const std::vector<sf::Vector2f>& positions,
                                         float scale) {
-
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_RESIZE_SPRITE_REQ;
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << sprite_id << pos.x << pos.y << scale;
+  packet << proj_id << layer_id << static_cast<uint32_t>(sprite_ids.size());
+  packet << scale; // Paramètre commun
+  for (size_t i = 0; i < sprite_ids.size(); ++i) {
+    packet << sprite_ids[i] << positions[i].x << positions[i].y;
+  }
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;
 }
 
-void ClientNetworkManager::rotateSprite(uint proj_id, uint layer_id,
-                                        uint sprite_id, float angle,
-                                        sf::Vector2f pos) {
-
+void ClientNetworkManager::rotateSprites(uint proj_id, uint layer_id,
+                                        const std::vector<uint>& sprite_ids,
+                                        float angle,
+                                        const std::vector<sf::Vector2f>& positions) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ROTATE_SPRITE_REQ;
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << sprite_id << angle << pos.x << pos.y;
+  packet << proj_id << layer_id << static_cast<uint32_t>(sprite_ids.size());
+  packet << angle; // Paramètre commun
+  for (size_t i = 0; i < sprite_ids.size(); ++i) {
+    packet << sprite_ids[i] << positions[i].x << positions[i].y;
+  }
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)

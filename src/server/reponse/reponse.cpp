@@ -274,14 +274,22 @@ ReponseEraseSprite::ReponseEraseSprite(std::vector<uint> usersId, EraseSpriteMes
 ReponseMoveSprite::ReponseMoveSprite(std::vector<uint> usersId, MoveSpriteMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_MOV_SPRITE_REP);
 
-    dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.sprite_id_<<mess.x_<<mess.y_;
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << static_cast<uint32_t>(mess.sprite_ids_.size());
+    dataPacket_ << mess.x_ << mess.y_;
+    for (uint id : mess.sprite_ids_) {
+        dataPacket_ << id;
+    }
 }
 
 
 ReponseResizeSprite::ReponseResizeSprite(std::vector<uint> usersId, ResizeSpriteMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_RESIZE_SPRITE_REP);
 
-    dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.sprite_id_<<mess.x_<<mess.y_<<mess.scale_;
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << static_cast<uint32_t>(mess.sprite_ids_.size());
+    dataPacket_ << mess.scale_;
+    for (size_t i = 0; i < mess.sprite_ids_.size(); ++i) {
+        dataPacket_ << mess.sprite_ids_[i] << mess.x_[i] << mess.y_[i];
+    }
 }
 
 
@@ -289,7 +297,11 @@ ReponseResizeSprite::ReponseResizeSprite(std::vector<uint> usersId, ResizeSprite
 ReponseRotateSprite::ReponseRotateSprite(std::vector<uint> usersId, RotateSpriteMessage& mess) : ReponseGroupe(usersId){
     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ROTATE_SPRITE_REP);
 
-    dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.sprite_id_<<mess.angle_<<mess.x_<<mess.y_;
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << static_cast<uint32_t>(mess.sprite_ids_.size());
+    dataPacket_ << mess.angle_;
+    for (size_t i = 0; i < mess.sprite_ids_.size(); ++i) {
+        dataPacket_ << mess.sprite_ids_[i] << mess.x_[i] << mess.y_[i];
+    }
 }
 
 

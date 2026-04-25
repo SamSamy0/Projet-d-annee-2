@@ -46,9 +46,9 @@ public:
   void drawSprite(uint proj_id, uint layer_id, std::string asset_id, int pos_x, int pos_y, float size_x);
   void eraseSprite(uint proj_id, uint layer_id, uint sprite_id);
 
-  void moveSprite(uint proj_id, uint layer_id, uint sprite_id, sf::Vector2i v);
-  void resizeSprite(uint proj_id, uint layer_id, uint sprite_id, sf::Vector2f pos, float scale);
-  void rotateSprite(uint proj_id, uint layer_id, uint sprite_id, float angle, sf::Vector2f pos);
+  void moveSprites(uint proj_id, uint layer_id, const std::vector<uint>& sprite_ids, sf::Vector2i v);
+  void resizeSprites(uint proj_id, uint layer_id, const std::vector<uint>& sprite_ids, const std::vector<sf::Vector2f>& positions, float scale);
+  void rotateSprites(uint proj_id, uint layer_id, const std::vector<uint>& sprite_ids, float angle, const std::vector<sf::Vector2f>& positions);
 
   void shiftLayer(uint proj_id, uint layer_id, int delta_x, int delta_y);
 

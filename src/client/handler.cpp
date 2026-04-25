@@ -390,41 +390,51 @@ void ClientHandler::process(ServerEvent &event) {
   }
 
   case MsgProtocole::MAP_MOV_SPRITE_REP:{
-
     uint project_id;
     uint layer_id;
-    uint sprite_id;
+    uint32_t count;
     sf::Vector2i v;
 
-    *(event.data_packet_) >> project_id >> layer_id >>sprite_id>>v.x>>v.y;
-      handleWindow_.moveSprite(layer_id,sprite_id,v);
-      break;
+    *(event.data_packet_) >> project_id >> layer_id >> count >> v.x >> v.y;
+    for (uint32_t i = 0; i < count; ++i) {
+      uint sprite_id;
+      *(event.data_packet_) >> sprite_id;
+      handleWindow_.moveSprite(layer_id, sprite_id, v);
     }
-  case MsgProtocole::MAP_RESIZE_SPRITE_REP:{
+    break;
+  }
 
+  case MsgProtocole::MAP_RESIZE_SPRITE_REP:{
     uint project_id;
     uint layer_id;
-    uint sprite_id;
-    sf::Vector2f pos;
+    uint32_t count;
     float scale;
 
-    *(event.data_packet_) >> project_id >> layer_id >>sprite_id>>pos.x>>pos.y>>scale;
-      handleWindow_.resizeSprite(layer_id,sprite_id,pos,scale);
-      break;
+    *(event.data_packet_) >> project_id >> layer_id >> count >> scale;
+    for (uint32_t i = 0; i < count; ++i) {
+      uint sprite_id;
+      sf::Vector2f pos;
+      *(event.data_packet_) >> sprite_id >> pos.x >> pos.y;
+      handleWindow_.resizeSprite(layer_id, sprite_id, pos, scale);
     }
+    break;
+  }
 
   case MsgProtocole::MAP_ROTATE_SPRITE_REP:{
-
     uint project_id;
     uint layer_id;
-    uint sprite_id;
+    uint32_t count;
     float angle;
-    sf::Vector2f pos;
 
-    *(event.data_packet_) >> project_id >> layer_id >>sprite_id>>angle>>pos.x>>pos.y;
-      handleWindow_.rotateSprite(layer_id,sprite_id,angle,pos);
-      break;
+    *(event.data_packet_) >> project_id >> layer_id >> count >> angle;
+    for (uint32_t i = 0; i < count; ++i) {
+      uint sprite_id;
+      sf::Vector2f pos;
+      *(event.data_packet_) >> sprite_id >> pos.x >> pos.y;
+      handleWindow_.rotateSprite(layer_id, sprite_id, angle, pos);
     }
+    break;
+  }
 
   case MsgProtocole::MAP_MOV_LAYER_REP: {
     uint project_id;

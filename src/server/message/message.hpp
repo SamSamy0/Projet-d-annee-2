@@ -217,28 +217,28 @@ struct EraseSpriteMessage : ModifProjetMessage{
 };
 
 struct MoveSpriteMessage : ModifProjetMessage{
-  uint sprite_id_;
-  unsigned int x_;
-  unsigned int y_;
+  std::vector<uint> sprite_ids_;
+  int x_;
+  int y_;
   MoveSpriteMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };
 
 
 struct ResizeSpriteMessage : ModifProjetMessage{
-  uint sprite_id_;
-  float x_;
-  float y_;
+  std::vector<uint> sprite_ids_;
+  std::vector<float> x_;
+  std::vector<float> y_;
   float scale_;
   ResizeSpriteMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };
 
 struct RotateSpriteMessage : ModifProjetMessage{
-  uint sprite_id_;
+  std::vector<uint> sprite_ids_;
   float angle_;
-  float x_;
-  float y_;
+  std::vector<float> x_;
+  std::vector<float> y_;
   RotateSpriteMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };
