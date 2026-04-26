@@ -230,6 +230,7 @@ void ClientHandler::process(ServerEvent &event) {
       uint projectId;
       *(event.data_packet_) >> targetId >> projectId;
       handleWindow_.kickUser(targetId);
+        // manager_.getProjectList();
     }
     break;
   }

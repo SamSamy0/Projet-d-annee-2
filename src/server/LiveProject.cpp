@@ -223,3 +223,4 @@ bool LiveProject::addMessageChat(uint userId, const std::shared_ptr<MessageChat>
     chat_.addMessage(message);
     return true;
 }
+

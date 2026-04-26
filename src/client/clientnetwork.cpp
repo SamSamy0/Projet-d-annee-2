@@ -172,6 +172,11 @@ void ClientNetworkManager::kickUser(uint targetId, uint projectId) {
   packet << static_cast<uint8_t>(msg);
   packet << static_cast<uint32_t>(targetId);
   packet << static_cast<uint32_t>(projectId);
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+  
+}
 void ClientNetworkManager::createLayer(uint proj_id, LayerType type) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_CREATE_LAYER_REQ;

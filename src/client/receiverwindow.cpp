@@ -216,6 +216,7 @@ void ReceiverInWindow::kickUser(uint targetId) {
     app_->getNetwork().getUsersProjects(app_->getProject()->getId());
   }
   // TODO: Afficher une fenetre d'info qu'on a été kick
+}
 
 void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,int min,int hour,int day,int month,int year){
   Date date(min,hour,day,month,year);
