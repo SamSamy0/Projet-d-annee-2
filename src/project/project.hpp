@@ -51,4 +51,5 @@ public:
   sf::View &getView();
   int8_t getRole();
   void setRole(int8_t newRole);
+  void exportToPng();
 };

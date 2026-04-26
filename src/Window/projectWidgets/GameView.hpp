@@ -43,6 +43,7 @@ class GameView : public View {
   void displayMemberList();
   void getAllUsers();
   void showUserManagment(tgui::Button::Ptr toHover, int place);
+  void exportToPng();
 
   // Detection in map
   void toolOnClick();

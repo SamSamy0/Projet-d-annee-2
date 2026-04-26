@@ -4,6 +4,7 @@
 bin
 build/*
 !build/CMakeLists.txt
+png/*
 
 
 #Fichier qui enlève les erreurs liée à QT dans nvim

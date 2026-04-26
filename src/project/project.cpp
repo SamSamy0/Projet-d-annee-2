@@ -1,4 +1,5 @@
 #include "project.hpp"
+#include "Layer/layer.hpp"
 #include "map.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -58,6 +59,36 @@ void Project::displayScale() {
   window_.draw(scaleText);
 }
 
+void Project::exportToPng() {
+  // Size of the wanted zone
+  sf::Vector2f viewSize = viewMap_.getSize();
+
+  sf::RenderTexture exportTexture({static_cast<unsigned int>(viewSize.x),
+                                   static_cast<unsigned int>(viewSize.y)});
+
+  // Setting export texture like its recording viewMap(the blue square)
+  exportTexture.setView(viewMap_);
+  exportTexture.clear(sf::Color::Transparent);
+
+  // Transforming the whole map into Sprite in order to draw it on the png
+  sf::Sprite mapSprite(map_->getRenderTexture().getTexture());
+
+  // Drawing the big map into the png
+  // Thanks to setView(), we only draw the blue square
+  exportTexture.draw(mapSprite);
+
+  // Actually drawing on the png
+  exportTexture.display();
+
+  sf::Image finalImage = exportTexture.getTexture().copyToImage();
+  std::string filepath = "../png/" + name_ + ".png";
+
+  if (finalImage.saveToFile(filepath)) {
+    std::cout << "Succès: zone de base exporté vers " << filepath << std::endl;
+  } else {
+    std::cerr << "Erreur lors de l'exportation vers " << filepath << std::endl;
+  }
+}
 void Project::displayBackground() {
   sf::RectangleShape top;
 
