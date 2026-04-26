@@ -212,6 +212,10 @@ void ReceiverInWindow::kickUser(uint targetId) {
             dynamic_cast<GameView *>(app_->getCurrentView().get())) {
       gameView->popupKicked();
     }
+    else{
+      app_->getNetwork().getProjectList();
+      
+    }
   } else {
     app_->getNetwork().getUsersProjects(app_->getProject()->getId());
   }

@@ -149,7 +149,10 @@ void KickUserMessage::process(Worker &worker) {
   if (it != worker.mapProjet_.end()) {
     usersId = it->second.getConnected();
   }
-
+  if (std::find(usersId.begin(), usersId.end(), targetId_) == usersId.end()) {
+    std::cout << "l'utilisateur n'était pas connecté au projet" << std::endl;
+    usersId.push_back(targetId_);
+  }
   // Building the group response
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseKickUserProject>(usersId, targetId_, projectId_,

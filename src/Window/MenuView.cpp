@@ -71,7 +71,11 @@ void MenuView::init() {
     rightPanel->add(displayToken());
   }
 }
-void MenuView::clearProjList() { projectList.clear(); }
+void MenuView::clearProjList() {
+  projectList.clear();
+  init();
+}
+
 void MenuView::handleEvents(const sf::Event &event) {
   auto &gui = app_.getGui();
   if (const auto *mouseClick = event.getIf<sf::Event::MouseButtonPressed>()) {
