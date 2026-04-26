@@ -48,6 +48,7 @@ class GameView : public View {
   void toolOnClick();
   void toolOnRelease();
   void checkTypeTool(LayerType previous_type);
+  void popupKicked();
 
 public:
   GameView(Application &app);

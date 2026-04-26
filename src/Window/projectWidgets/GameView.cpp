@@ -31,7 +31,6 @@ void GameView::displayMemberList() {
   if (gui.get("memberListPopup")) {
     gui.remove(gui.get("memberListPopup"));
   }
-
   auto parent = tgui::Panel::create();
   parent->setSize("40%", "60%");
   parent->setPosition("30%", "20%");
@@ -314,4 +313,50 @@ void GameView::setAllUsers(std::vector<MemberEntry> users) {
   allUsers_ = users;
   displayMemberList();
   Transferring = false;
+}
+
+void GameView::popupKicked() {
+  auto &gui = app_.getGui();
+  auto back = tgui::Panel::create();
+  back->setSize("100%", "100%");
+  back->getRenderer()->setBackgroundColor({0, 0, 0, 160});
+  gui.add(back, "back");
+
+  auto popup = tgui::Panel::create();
+  popup->setSize("30%", "20%");
+  popup->setPosition("35%", "40%");
+  popup->getRenderer()->setBackgroundColor(tgui::Color(28, 28, 36));
+  popup->getRenderer()->setBorders(1);
+  popup->getRenderer()->setBorderColor(tgui::Color(200, 60, 60));
+  popup->getRenderer()->setRoundedBorderRadius(12);
+  back->add(popup);
+
+  auto icon = tgui::Label::create("⚠");
+  icon->setPosition("50%", "10%");
+  icon->getRenderer()->setTextSize(40);
+  icon->getRenderer()->setTextColor(tgui::Color(200, 60, 60));
+  popup->add(icon);
+
+  auto msg = tgui::Label::create("Vous avez été expulsé du projet");
+  msg->setPosition("5%", "45%");
+  msg->setTextSize(15);
+  msg->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+  msg->getRenderer()->setTextColor(tgui::Color(220, 220, 235));
+  popup->add(msg);
+
+  auto okBtn = tgui::Button::create("OK");
+  okBtn->setSize("40%", "20%");
+  okBtn->setPosition("30%", "72%");
+  okBtn->getRenderer()->setBackgroundColor(tgui::Color(99, 102, 241));
+  okBtn->getRenderer()->setBackgroundColorHover(tgui::Color(118, 120, 255));
+  okBtn->getRenderer()->setTextColor(tgui::Color::White);
+  okBtn->getRenderer()->setBorders(0);
+  okBtn->getRenderer()->setRoundedBorderRadius(8);
+  popup->add(okBtn);
+
+  okBtn->onPress([this, &gui]() {
+    gui.remove(gui.get("back"));
+    app_.getNetwork().getProjectList();
+    app_.changeView(std::make_unique<MenuView>(app_));
+  });
 }
