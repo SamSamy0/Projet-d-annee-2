@@ -2,8 +2,8 @@
 #include <iostream>
 #include <random>
 
-Worker::Worker(MutexQueue<IMessage> &demQueue, MutexQueue<Reponse> &repQueue)
-    : demQueue_(demQueue), repQueue_(repQueue), mRunning_(true) {}
+Worker::Worker(MutexQueue<IMessage>& demQueue, MutexQueue<Reponse>& repQueue, MutexQueue<SaveTask>& saveQueue) 
+    : demQueue_(demQueue), repQueue_(repQueue), mRunning_(true), saveQueue_(saveQueue) {}
 
 void Worker::run() {
   std::cout << "[Worker] Démarré et en attente de messages..." << std::endl;
@@ -31,9 +31,13 @@ void Worker::pushNetwork(std::unique_ptr<Reponse> rps) {
   repQueue_.push(std::move(rps));
 }
 
-uint Worker::verifyLogin(const std::string &pseudo,
-                         const std::string &password) {
-  return dbManager_.verifyLogin(pseudo, password);
+void Worker::pushSave(std::unique_ptr<SaveTask> save) {
+    saveQueue_.push(std::move(save));
+}
+
+
+uint Worker::verifyLogin(const std::string& pseudo, const std::string& password) {
+    return dbManager_.verifyLogin(pseudo, password);
 }
 
 uint Worker::addUser(const std::string &pseudo, const std::string &password) {
@@ -118,21 +122,9 @@ uint Worker::duplicateProject(uint oldId, const std::string &newName,
     return -2;
   return newId;
 }
-
-bool Worker::createProjectJson(uint projectId, const std::string &projectName,
-                               uint width, uint height, uint scale) {
-  return projManager_.createProjectJson(
-      projectId, QString::fromStdString(projectName), width, height, scale);
-}
-
+    
 QJsonObject Worker::loadProjectJson(uint projectId) {
   return projManager_.loadProjectJson(projectId);
-}
-
-bool Worker::saveImage(uint projectId, const std::string &fileName,
-                       const QByteArray &data) {
-  return projManager_.saveImage(projectId, QString::fromStdString(fileName),
-                                data);
 }
 
 bool Worker::deleteProject(uint projectId) {
@@ -146,10 +138,6 @@ bool Worker::removeLink(const uint userId, const uint projectId) {
   return dbManager_.removeLink(userId, projectId);
 }
 
-QByteArray Worker::getByteJson(uint projectId) {
-  return projManager_.getByteJson(projectId);
-}
-
-bool Worker::writeProjetJson(QJsonObject &jsonObject, uint id) {
-  return projManager_.writeProjetJson(jsonObject, id);
+bool Worker::writeProjetJson(QJsonObject& jsonObject, uint id) {
+    return projManager_.writeProjetJson(jsonObject, id);
 }

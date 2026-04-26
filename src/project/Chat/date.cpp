@@ -1,3 +1,4 @@
 #include "date.hpp"
 
-Date::Date(int d, int m, int y) : day_{d}, month_{m}, year_{y} {}
+Date::Date(int min, int hour, int day, int month, int year) : 
+min_{min}, hour_{hour}, day_{day}, month_{month}, year_{year} {}

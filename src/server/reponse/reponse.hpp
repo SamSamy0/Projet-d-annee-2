@@ -3,10 +3,7 @@
 #include "../datamanager/memberentry.hpp"
 #include "../datamanager/projectentry.hpp"
 #include "../message/message.hpp"
-#include <QFile>
-#include <SFML/Network.hpp>
-#include <utility>
-#include <vector>
+#include "../SpriteLayer.hpp"
 
 class ServerNetworkManager;
 
@@ -32,10 +29,16 @@ struct ReponseAuth : ReponseSolo {
   virtual void envoyer(ServerNetworkManager &servManager) override;
 };
 
-struct ReponseRenameProject : ReponseSolo {
-  ReponseRenameProject(uint userID_, uint projectId_, std::string newName,
-                       bool success);
-  // virtual void envoyer(ServerNetworkManager& servManager) override;
+struct ReponseDeconnection : ReponseSolo {
+
+    ReponseDeconnection(uint userId);
+    virtual void envoyer(ServerNetworkManager& servManager) override;
+};
+
+struct ReponseRenameProject: ReponseSolo{
+
+    ReponseRenameProject(uint userID_, uint projectId_, std::string newName, bool success);
+    // virtual void envoyer(ServerNetworkManager& servManager) override;
 };
 
 struct ReponseDuplicateProject : ReponseSolo {
@@ -53,8 +56,13 @@ struct ReponseGetMember : ReponseSolo {
 };
 
 struct ReponseProjectData : ReponseSolo {
-  ReponseProjectData(uint userId, QByteArray &jsonData);
+    ReponseProjectData(uint userId, const QJsonObject& jsonDoc, 
+                   const std::vector<uint>& layerOrder, 
+                   const std::unordered_map<uint, QImage>& imageMap, 
+                   const std::unordered_map<uint, SpriteLayer>& spriteMap, const QJsonArray& chat);
+    static QByteArray imageToBytes(const QImage& image);
 };
+
 
 struct ReponseUsersProjects : ReponseSolo {
   ReponseUsersProjects(uint userId, std::vector<ProjectEntry> &projects);
@@ -74,6 +82,30 @@ protected:
 struct ReponseKickUserProject : ReponseGroupe {
   ReponseKickUserProject(std::vector<uint> usersId, uint targetId,
                          uint projectId, bool success);
+};
+
+
+struct ReponseCreateLayer : ReponseGroupe{
+   ReponseCreateLayer(std::vector<uint> usersId, CreateLayerMessage& mess);
+};
+
+
+struct ReponseDeleteLayer : ReponseGroupe{
+   ReponseDeleteLayer(std::vector<uint> usersId, DeleteLayerMessage& mess);
+};
+
+
+struct ReponseRenameLayer : ReponseGroupe{
+   ReponseRenameLayer(std::vector<uint> usersId, RenameLayerMessage& mess);
+};
+
+
+struct ReponseOrganizeLayerUp : ReponseGroupe{
+    ReponseOrganizeLayerUp(std::vector<uint> usersId, OrganizeLayerUpMessage& mess);
+};
+
+struct ReponseOrganizeLayerDown : ReponseGroupe{
+    ReponseOrganizeLayerDown(std::vector<uint> usersId, OrganizeLayerDownMessage& mess);
 };
 
 struct ReponseChangeRole : ReponseGroupe {
@@ -115,20 +147,30 @@ struct ReponsePutSprite : ReponseGroupe {
   ReponsePutSprite(std::vector<uint> usersId, PutSpriteMessage &mess);
 };
 
-struct ReponseEraseSpriteSquare : ReponseGroupe {
-  ReponseEraseSpriteSquare(std::vector<uint> usersId,
-                           EraseSpriteSquareMessage &mess);
+struct ReponseEraseSprite : ReponseGroupe {
+
+    ReponseEraseSprite(std::vector<uint> usersId, EraseSpriteMessage& mess);
 };
 
-struct ReponseEraseSpriteCircle : ReponseGroupe {
-  ReponseEraseSpriteCircle(std::vector<uint> usersId,
-                           EraseSpriteCircleMessage &mess);
+struct ReponseMoveSprite : ReponseGroupe{
+    ReponseMoveSprite(std::vector<uint> usersId, MoveSpriteMessage& mess);
 };
-struct ReponseEraseSpriteDiamond : ReponseGroupe {
-  ReponseEraseSpriteDiamond(std::vector<uint> usersId,
-                            EraseSpriteDiamondMessage &mess);
+
+
+struct ReponseResizeSprite : ReponseGroupe{
+    ReponseResizeSprite(std::vector<uint> usersId, ResizeSpriteMessage& mess);
 };
+
+
+struct ReponseRotateSprite : ReponseGroupe{
+    ReponseRotateSprite(std::vector<uint> usersId, RotateSpriteMessage& mess);
+};
+
 
 struct ReponseMoveLayer : ReponseGroupe {
   ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage &mess);
+};
+
+struct ReponseChat : ReponseGroupe {
+  ReponseChat(std::vector<uint> usersId,ChatMessage& mess);
 };

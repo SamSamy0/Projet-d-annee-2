@@ -1,14 +1,18 @@
 #include "reponse.hpp"
 #include "../../common/protocol.hpp"
 #include "../servernetwork.hpp"
+#include <QJsonDocument>
+#include <QBuffer>
+#include <QImage>
+
 
 ReponseSolo::ReponseSolo(uint id) : userId_(id) {}
 
-void ReponseSolo::envoyer(ServerNetworkManager &servManage) {
-  auto client = servManage.map_.find(userId_);
-  if (client != servManage.map_.end()) {
-    client->second->sock->send(dataPacket_);
-  }
+void ReponseSolo::envoyer(ServerNetworkManager& servManage) {
+    auto client = servManage.mapUser_Socket_.find(userId_);
+    if (client != servManage.mapUser_Socket_.end()) {
+        client->second->sock->send(dataPacket_);
+    }
 }
 
 ReponseAuth::ReponseAuth(std::shared_ptr<Client> client, uint id)
@@ -24,45 +28,6 @@ ReponseAuth::ReponseAuth(std::shared_ptr<Client> client, uint id)
   }
 }
 
-void ReponseAuth::envoyer(ServerNetworkManager &servManage) {
-  client_->sock->send(dataPacket_);
-
-  if (userId_ != 0) {
-    servManage.map_[userId_] = std::move(client_);
-  }
-}
-
-ReponseRenameProject::ReponseRenameProject(uint userId, uint projectId,
-                                           std::string newName, bool success)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(
-      MsgProtocole::LOB_RENAME_PROJECT_REP);
-  dataPacket_ << static_cast<std::uint8_t>(success ? 1 : 0);
-  dataPacket_ << static_cast<std::uint32_t>(projectId);
-  dataPacket_ << newName;
-  ;
-}
-
-ReponseDuplicateProject::ReponseDuplicateProject(uint userId, uint projectId,
-                                                 std::string newName)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(
-      MsgProtocole::LOB_DUPLICATE_PROJECT_REP);
-  dataPacket_ << static_cast<std::uint32_t>(projectId);
-  dataPacket_ << newName;
-}
-
-ReponseGenerateToken::ReponseGenerateToken(uint userId, std::string token)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_SHARE_PROJECT_REP);
-  dataPacket_ << token;
-}
-ReponseJoinProject::ReponseJoinProject(uint userId, bool success)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_JOIN_PROJECT_REP);
-  dataPacket_ << static_cast<std::uint8_t>(success ? 1 : 0);
-}
-
 ReponseGetMember::ReponseGetMember(uint userId,
                                    std::vector<MemberEntry> memberList)
     : ReponseSolo(userId) {
@@ -74,28 +39,6 @@ ReponseGetMember::ReponseGetMember(uint userId,
   }
 }
 
-ReponseProjectData::ReponseProjectData(uint userId, QByteArray &jsonData)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(
-      MsgProtocole::LOB_GET_PROJECT_DATA_REP);
-
-  QByteArray jsonCompresse = qCompress(jsonData, 9);
-  dataPacket_ << static_cast<std::uint32_t>(jsonCompresse.size());
-  dataPacket_.append(jsonCompresse.constData(), jsonCompresse.size());
-}
-
-ReponseUsersProjects::ReponseUsersProjects(uint userId,
-                                           std::vector<ProjectEntry> &projects)
-    : ReponseSolo(userId) {
-  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_PROJECT_LIST_REP);
-
-  dataPacket_ << static_cast<std::uint32_t>(projects.size());
-
-  for (const auto &entry : projects) {
-    dataPacket_ << static_cast<uint32_t>(entry.projectId) << entry.name
-                << entry.role;
-  }
-}
 
 ReponseCreateProject::ReponseCreateProject(uint userId, uint projectId)
     : ReponseSolo(userId) {
@@ -108,13 +51,13 @@ ReponseCreateProject::ReponseCreateProject(uint userId, uint projectId)
 ReponseGroupe::ReponseGroupe(std::vector<uint> usersId)
     : usersId_(std::move(usersId)) {}
 
-void ReponseGroupe::envoyer(ServerNetworkManager &servManager) {
-  for (auto Id : usersId_) {
-    auto client = servManager.map_.find(Id);
-    if (client != servManager.map_.end()) {
-      client->second->sock->send(dataPacket_);
+
+void ReponseAuth::envoyer(ServerNetworkManager& servManage) {
+    client_->sock->send(dataPacket_);
+    
+    if (userId_ != 0 and userId_ != -1) {
+        servManage.mapUser_Socket_[userId_] = std::move(client_);
     }
-  }
 }
 ReponseKickUserProject::ReponseKickUserProject(std::vector<uint> usersId,
                                                uint targetId, uint projectId,
@@ -125,6 +68,95 @@ ReponseKickUserProject::ReponseKickUserProject(std::vector<uint> usersId,
   dataPacket_ << static_cast<std::uint32_t>(targetId);
   dataPacket_ << static_cast<std::uint32_t>(projectId);
 }
+
+ReponseDeconnection::ReponseDeconnection(uint id) : ReponseSolo(id) {}
+
+void ReponseDeconnection::envoyer(ServerNetworkManager& servManager) {
+    servManager.mapUser_Socket_.erase(userId_);
+
+}
+
+ReponseRenameProject::ReponseRenameProject(uint userId, uint projectId, std::string newName, bool success): ReponseSolo(userId){
+    dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_RENAME_PROJECT_REP);
+    dataPacket_ << static_cast<std::uint8_t>(success ?1:0);
+    dataPacket_ <<static_cast<std::uint32_t>(projectId);
+    dataPacket_<<newName;;
+}
+
+ReponseDuplicateProject::ReponseDuplicateProject(uint userId, uint projectId, std::string newName) : ReponseSolo(userId){
+    dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_DUPLICATE_PROJECT_REP);
+    dataPacket_ <<static_cast<std::uint32_t>(projectId);
+    dataPacket_<<newName;
+}
+
+ReponseGenerateToken::ReponseGenerateToken(uint userId, std::string token): ReponseSolo(userId){
+    dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_SHARE_PROJECT_REP);
+    dataPacket_ <<token;
+    std::cout <<"TOKen in reponse: " <<token<<std::endl;
+}
+ReponseJoinProject::ReponseJoinProject(uint userId, bool success): ReponseSolo(userId){
+    dataPacket_ <<static_cast<std::uint8_t> (MsgProtocole::LOB_JOIN_PROJECT_REP);
+    dataPacket_ << static_cast<std::uint8_t>(success ?1:0);
+}
+
+
+ReponseProjectData::ReponseProjectData(uint userId, const QJsonObject& jsonDoc, 
+                   const std::vector<uint>& layerOrder, 
+                   const std::unordered_map<uint, QImage>& imageMap, 
+                   const std::unordered_map<uint, SpriteLayer>& spriteMap, const QJsonArray& chat) : ReponseSolo(userId) {
+    dataPacket_<<static_cast<std::uint8_t> (MsgProtocole::LOB_GET_PROJECT_DATA_REP);
+    
+    QJsonDocument doc(jsonDoc);
+    QByteArray jsonData = doc.toJson(QJsonDocument::Indented);
+    QByteArray jsonCompresse = qCompress(jsonData, 9);
+    dataPacket_ << static_cast<std::uint32_t>(jsonCompresse.size());
+    dataPacket_.append(jsonCompresse.constData(), jsonCompresse.size());
+    
+    doc = QJsonDocument(chat);
+    QByteArray chatData = doc.toJson(QJsonDocument::Indented);
+    QByteArray chatCompress = qCompress(chatData, 9);
+    dataPacket_ << static_cast<std::uint32_t>(chatCompress.size());
+    dataPacket_.append(chatCompress.constData(), chatCompress.size());
+
+    for (uint id : layerOrder) {
+        dataPacket_ << id;
+        if (spriteMap.find(id) != spriteMap.end()) {
+            dataPacket_ << (uint8_t)1;
+            QJsonDocument doc(spriteMap.at(id).load());
+            QByteArray layerData = doc.toJson(QJsonDocument::Indented);
+            QByteArray layerCompress = qCompress(layerData);
+            dataPacket_ << static_cast<std::uint32_t>(layerCompress.size());
+            dataPacket_.append(layerCompress.constData(), layerCompress.size());
+        } else if (imageMap.find(id) != imageMap.end()) {
+            dataPacket_ << (uint8_t)0;
+            const QImage& img = imageMap.at(id);
+            QByteArray imageBytes = imageToBytes(img);
+            dataPacket_ << static_cast<std::uint32_t>(imageBytes.size());
+            dataPacket_.append(imageBytes.constData(), imageBytes.size());
+        }
+    }
+
+}
+
+QByteArray ReponseProjectData::imageToBytes(const QImage& image) {
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "PNG"); // Le format PNG compresse l'image proprement
+    return byteArray;
+}
+
+ReponseUsersProjects::ReponseUsersProjects(uint userId, std::vector<ProjectEntry>& projects) 
+: ReponseSolo(userId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::LOB_PROJECT_LIST_REP);
+
+    dataPacket_ << static_cast<std::uint32_t>(projects.size());
+
+    for (const auto& entry : projects) {
+        dataPacket_ << static_cast<uint32_t>(entry.projectId) << entry.name << entry.role;
+    }
+}
+
 
 ReponseChangeRole::ReponseChangeRole(std::vector<uint> usersId, uint target,
                                      uint projectId, int8_t role, bool success)
@@ -139,16 +171,15 @@ ReponseChangeRole::ReponseChangeRole(std::vector<uint> usersId, uint target,
   }
 }
 
-ReponsePutPixelsCircle::ReponsePutPixelsCircle(std::vector<uint> usersId,
-                                               PutPixelsCircleMessage &mess)
-    : ReponseGroupe(usersId) {
-  dataPacket_ << static_cast<std::uint8_t>(
-      MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP);
 
-  dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.pos_.x
-              << mess.pos_.y;
-  dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_
-              << mess.taille_;
+
+void ReponseGroupe::envoyer(ServerNetworkManager& servManager) {
+    for (auto Id : usersId_) {
+        auto client = servManager.mapUser_Socket_.find(Id);
+        if (client != servManager.mapUser_Socket_.end()) {
+            client->second->sock->send(dataPacket_);
+        }
+    } 
 }
 
 ReponsePutPixelsSquare::ReponsePutPixelsSquare(std::vector<uint> usersId,
@@ -156,11 +187,42 @@ ReponsePutPixelsSquare::ReponsePutPixelsSquare(std::vector<uint> usersId,
     : ReponseGroupe(usersId) {
   dataPacket_ << static_cast<std::uint8_t>(
       MsgProtocole::MAP_PUT_PIXELS_SQUARE_REP);
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.taille_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ ;
+}
 
-  dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.pos_.x
-              << mess.pos_.y;
-  dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_
-              << mess.taille_;
+ReponseCreateLayer::ReponseCreateLayer(std::vector<uint> usersId, CreateLayerMessage& mess) : ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_CREATE_LAYER_REP);
+    dataPacket_ << mess.projectId_ << mess.type_;
+}
+
+ReponseDeleteLayer::ReponseDeleteLayer(std::vector<uint> usersId, DeleteLayerMessage& mess): ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_REMOVE_LAYER_REP);
+    dataPacket_ << mess.projectId_ << mess.calqueId_;
+}
+
+
+ReponseRenameLayer::ReponseRenameLayer(std::vector<uint> usersId, RenameLayerMessage& mess): ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_RENAME_LAYER_REP);
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.name_;
+}
+
+
+ReponseOrganizeLayerUp::ReponseOrganizeLayerUp(std::vector<uint> usersId, OrganizeLayerUpMessage& mess) :ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ORGANIZE_LAYER_UP_REP);
+    dataPacket_ << mess.projectId_ << mess.calqueId_;
+}
+
+ReponseOrganizeLayerDown::ReponseOrganizeLayerDown(std::vector<uint> usersId, OrganizeLayerDownMessage& mess) :ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ORGANIZE_LAYER_DOWN_REP);
+    dataPacket_ << mess.projectId_ << mess.calqueId_;
+}
+
+ReponsePutPixelsCircle::ReponsePutPixelsCircle(std::vector<uint> usersId, PutPixelsCircleMessage& mess) : ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_PIXELS_CIRCLE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.taille_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_ ;
 }
 
 ReponsePutPixelsDiamond::ReponsePutPixelsDiamond(std::vector<uint> usersId,
@@ -168,33 +230,24 @@ ReponsePutPixelsDiamond::ReponsePutPixelsDiamond(std::vector<uint> usersId,
     : ReponseGroupe(usersId) {
   dataPacket_ << static_cast<std::uint8_t>(
       MsgProtocole::MAP_PUT_PIXELS_DIAM_REP);
-
-  dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.pos_.x
-              << mess.pos_.y;
-  dataPacket_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_
-              << mess.hauteur_ << mess.largeur_;
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_  << mess.hauteur_ << mess.largeur_ << mess.red_ << mess.green_ << mess.blue_ << mess.opa_;
 }
 
-ReponseErasePixelsCircle::ReponseErasePixelsCircle(
-    std::vector<uint> usersId, ErasePixelsCircleMessage &mess)
-    : ReponseGroupe(usersId) {
-  dataPacket_ << static_cast<std::uint8_t>(
-      MsgProtocole::MAP_ERASE_PIXELS_CIRCLE_REP);
-
-  dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.pos_.x
-              << mess.pos_.y;
-  dataPacket_ << mess.taille_;
-}
 
 ReponseErasePixelsSquare::ReponseErasePixelsSquare(
     std::vector<uint> usersId, ErasePixelsSquareMessage &mess)
     : ReponseGroupe(usersId) {
   dataPacket_ << static_cast<std::uint8_t>(
       MsgProtocole::MAP_ERASE_PIXELS_SQUARE_REP);
+dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.pos_.x
+            << mess.pos_.y;
+dataPacket_ << mess.taille_;}
 
-  dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.pos_.x
-              << mess.pos_.y;
-  dataPacket_ << mess.taille_;
+ReponseErasePixelsCircle::ReponseErasePixelsCircle(std::vector<uint> usersId, ErasePixelsCircleMessage& mess) : ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASE_PIXELS_CIRCLE_REP);
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.pos_.x << mess.pos_.y; 
+    dataPacket_ << mess.taille_;
 }
 
 ReponseErasePixelsDiamond::ReponseErasePixelsDiamond(
@@ -213,49 +266,64 @@ ReponsePutSprite::ReponsePutSprite(std::vector<uint> usersId,
     : ReponseGroupe(usersId) {
   dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_PUT_SPRITE_REP);
 
-  dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.asset_id
+  dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.asset_id_
               << mess.pos_.x << mess.pos_.y;
   dataPacket_ << mess.taille_;
 }
 
-ReponseEraseSpriteSquare::ReponseEraseSpriteSquare(
-    std::vector<uint> usersId, EraseSpriteSquareMessage &mess)
-    : ReponseGroupe(usersId) {
-  dataPacket_ << static_cast<std::uint8_t>(
-      MsgProtocole::MAP_ERASE_SPRITE_SQUARE_REP);
 
-  dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.pos_.x
-              << mess.pos_.y;
-  dataPacket_ << mess.taille_;
+
+ReponseEraseSprite::ReponseEraseSprite(std::vector<uint> usersId, EraseSpriteMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ERASE_SPRITE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.sprite_id_;
 }
 
-ReponseEraseSpriteCircle::ReponseEraseSpriteCircle(
-    std::vector<uint> usersId, EraseSpriteCircleMessage &mess)
-    : ReponseGroupe(usersId) {
-  dataPacket_ << static_cast<std::uint8_t>(
-      MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REP);
 
-  dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.pos_.x
-              << mess.pos_.y;
-  dataPacket_ << mess.taille_;
+ReponseMoveSprite::ReponseMoveSprite(std::vector<uint> usersId, MoveSpriteMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_MOV_SPRITE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << static_cast<uint>(mess.sprite_ids_.size());
+    dataPacket_ << mess.x_ << mess.y_;
+    for (uint id : mess.sprite_ids_) {
+        dataPacket_ << id;
+    }
 }
 
-ReponseEraseSpriteDiamond::ReponseEraseSpriteDiamond(
-    std::vector<uint> usersId, EraseSpriteDiamondMessage &mess)
-    : ReponseGroupe(usersId) {
-  dataPacket_ << static_cast<std::uint8_t>(
-      MsgProtocole::MAP_ERASE_SPRITE_CIRCLE_REP);
 
-  dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.pos_.x
-              << mess.pos_.y;
-  dataPacket_ << mess.hauteur_ << mess.largeur_;
+ReponseResizeSprite::ReponseResizeSprite(std::vector<uint> usersId, ResizeSpriteMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_RESIZE_SPRITE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << static_cast<uint>(mess.sprite_ids_.size());
+    dataPacket_ << mess.scale_;
+    for (size_t i = 0; i < mess.sprite_ids_.size(); ++i) {
+        dataPacket_ << mess.sprite_ids_[i] << mess.x_[i] << mess.y_[i];
+    }
 }
 
-ReponseMoveLayer::ReponseMoveLayer(std::vector<uint> usersId,
-                                   MoveLayerMessage &mess)
-    : ReponseGroupe(usersId) {
-  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_MOV_LAYER_REP);
 
-  dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.deltaX_
-              << mess.deltaY_;
+
+ReponseRotateSprite::ReponseRotateSprite(std::vector<uint> usersId, RotateSpriteMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ROTATE_SPRITE_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << static_cast<uint>(mess.sprite_ids_.size());
+    dataPacket_ << mess.angle_;
+    for (size_t i = 0; i < mess.sprite_ids_.size(); ++i) {
+        dataPacket_ << mess.sprite_ids_[i] << mess.x_[i] << mess.y_[i];
+    }
 }
+
+
+
+ReponseMoveLayer::ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage& mess) : ReponseGroupe(usersId) {
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_MOV_LAYER_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.deltaX_ << mess.deltaY_;
+}
+
+ReponseChat::ReponseChat(std::vector<uint> usersId,ChatMessage& mess) : ReponseGroupe(usersId){
+     dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::CHAT_MESSAGE_REP);
+     dataPacket_ << mess.pseudo_ << mess.message_ << mess.min_ << mess.hour_ << mess.day_ << mess.month_ <<mess.year_;
+}
+
+

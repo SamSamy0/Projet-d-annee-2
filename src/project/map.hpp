@@ -37,20 +37,24 @@ public:
   vector<shared_ptr<Layer>> &getLayers();
   shared_ptr<Layer> getCurrentLayer();
   unsigned int getLayerSelected() const;
+  shared_ptr<Layer> getLayer(uint id);
   uint getId();
   void selectLayer(unsigned int i);
   void selectLayerId(uint id);
   bool hasLayer() const;
   const sf::RenderTexture& getRenderTexture() const { return render_texture_; }
-  void insertLayer(shared_ptr<Layer> layer);
   void createPixelLayer();
   void createSpriteLayer();
+  void renameLayer(uint layer_id, std::string name);
+  void layerUp(uint layerId);
+  void layerDown(uint layerId);
+  void deleteLayer();
+  void deleteLayer(uint layer_id);
   void displayMap(sf::RenderWindow &window, sf::View &viewMap);
   void closeWindowManager(sf::RenderWindow &window, const sf::Event &ev);
   void detectMovement();
   void zooming(sf::Event::MouseWheelScrolled const *event);
-  // bool isInside(sf::Vector2i pos)const; //WARNING: ne sert à rien pour
-  // l'instant
   void detectZooming(sf::Event event);
   void setId(uint newId);
+  void setNextLayerId(uint id);
 };

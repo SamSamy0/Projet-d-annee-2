@@ -4,23 +4,24 @@
 #include <QDir>
 #include <QJsonObject>
 #include <QString>
+#include "../sprite.hpp"
 
 class ProjectsManager {
 public:
-  explicit ProjectsManager(const std::string &rootPath = "BigData");
-  bool createProjectJson(uint id, const QString &projectName, uint width,
-                         uint height, uint scale);
+  explicit ProjectsManager(const std::string &rootPath = "projectsFolder");
   QJsonObject loadProjectJson(uint id);
-  bool saveImage(uint id, const QString &fileName, const QByteArray &data);
+  bool saveImage(uint id, uint imageId, const QImage &data);
+  QImage loadImage(uint projectId, uint layerId);
   bool updateProjectName(uint id, const QString &newName);
   bool copyProjectFolder(uint oldId, uint newId);
   bool copyRecursively(const QString &srcPath, const QString& destinationPath);
   bool updateJsonDup(uint newId, const QString& newName);
   bool deleteProject(uint id);
-  void addCalque(uint projetId, uint largeur, uint hauteur, uint calqueId);
-  QByteArray getByteJson(uint projetId);
-  QByteArray getByteImages(uint projetId);
   bool writeProjetJson(QJsonObject& jsonObject, uint id);
+  bool saveSprite(uint id, uint imageId, QJsonObject& sprite);
+  QJsonObject loadSprite(uint id, uint layerId);
+  bool saveChat(uint projectId, QJsonArray& chat);
+  QJsonArray loadChat(uint projectId);
 
 private:
   QString getProjectPath(uint id) const;

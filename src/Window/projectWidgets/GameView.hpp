@@ -38,7 +38,6 @@ class GameView : public View {
   void initSpriteBrushOptions();
   void initMinimap();
   void drawMinimap();
-  void refreshChat();
   void refreshLayerList();
 
   void displayMemberList();
@@ -49,6 +48,7 @@ class GameView : public View {
   void toolOnClick();
   void toolOnRelease();
   void checkTypeTool(LayerType previous_type);
+  void popupKicked();
 
 public:
   GameView(Application &app);
@@ -56,8 +56,15 @@ public:
   void init() override;
   void render();
   void handleEvents(const sf::Event &events) override;
+
+  void createLayer(LayerType);
+  void deleteLayer(uint layer_id);
+  void layerUp(uint layer_id);
+  void layerDown(uint layer_id);
+  void renameLayer(uint layer_id, std::string name);
   void setAllUsers(std::vector<MemberEntry> users);
   void updateMemberRole(uint targetId, int8_t role);
   void clearMemberList();
   void popupKicked();
+  void refreshChat();
 };

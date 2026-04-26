@@ -50,48 +50,37 @@ bool SpriteEraser::checkColision(sf::Vector2i pos, sf::FloatRect r) {
   }
 }
 
-void SpriteEraser::paint(sf::Vector2i pos) {
+int SpriteEraser::paint(sf::Vector2i pos) {
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
   if (layer->getType() != SPRITELAYER)
-    return;
+    return -1;
 
   std::shared_ptr<SpriteLayer> spritelayer =
       static_pointer_cast<SpriteLayer>(layer);
 
   if (!spritelayer)
-    return;
+    return -1;
 
   /*I had two choices : use the id or the index of the sprite
    * i chosed to use the id because its cleaner more logical even if complexity
    * is higher */
-  const std::vector<SpriteObject> &sprites = spritelayer->getSprites();
+  const std::unordered_map<uint, SpriteObject> &sprites = spritelayer->getSprites();
   pos -= spritelayer->getOffset();
 
-  for (int i = sprites.size() - 1; i >= 0; i--) {
-    if (checkColision(pos, sprites[i].sprite.getGlobalBounds())) {
-      spritelayer->erase(sprites[i].id);
-      break;
+  for (const auto &[id, spriteObj] : sprites) {
+    if (checkColision(pos, spriteObj.sprite.getGlobalBounds())) {
+      uint spriteId = spriteObj.id;
+      std::cout << spriteId << " id du sprite effacé" << std::endl;
+      spritelayer->erase(spriteId);
+      return spriteId;
     }
   }
+  return -1;
 }
 
 void SpriteEraser::paintSender(sf::Vector2i pos) {
-  paint(pos);
-  switch (shape_) {
-  case SQUARE: {
-    manager_.eraseSpriteSquare(map_->getId(), map_->getCurrentLayer()->getId(),
-                               pos.x, pos.y, getSize().x);
-    break;
-  }
-  case CIRCLE: {
-    manager_.eraseSpriteCircle(map_->getId(), map_->getCurrentLayer()->getId(),
-                               pos.x, pos.y, getSize().x);
-    break;
-  }
-  case DIAMOND: {
-    manager_.eraseSpriteDiamond(map_->getId(), map_->getCurrentLayer()->getId(),
-                               pos.x, pos.y, getSize().x, getSize().y);
-    break;
-  }
-  }
+  int id = paint(pos);
+  if(id != -1){
+    manager_.eraseSprite(map_->getId(), map_->getCurrentLayer()->getId(),id);
+}
 }

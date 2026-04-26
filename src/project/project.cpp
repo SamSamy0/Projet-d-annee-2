@@ -33,6 +33,8 @@ ToolBar &Project::getToolBar() { return toolbar_; }
 
 Chat &Project::getChat() { return chat_; }
 
+void Project::setChat(const Chat chat) { chat_ = chat; }
+
 std::shared_ptr<Map> Project::getMap() { return map_; }
 
 sf::View &Project::getView() { return viewMap_; }

@@ -61,6 +61,7 @@ void GameView::initToolbar() {
     auto brushButton = tgui::Button::create();
     auto shiftButton = tgui::Button::create();
     auto spriteBrushButton = tgui::Button::create();
+    auto selectionButton = tgui::Button::create();
 
     // Options pour le crayon
     penButton->setSize(height * 0.035, height * 0.035);
@@ -70,7 +71,7 @@ void GameView::initToolbar() {
     penButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
     penButton->getRenderer()->setOpacity(0.4);
     penButton->onPress(
-        [this, penButton, brushButton, shiftButton, spriteBrushButton]() {
+        [this, penButton, brushButton, shiftButton, spriteBrushButton, selectionButton]() {
           LayerType layerType = project->getMap()->getCurrentLayer()->getType();
           if (layerType == SPRITELAYER) {
             project->getToolBar().selectTool(SPRITEBRUSH);
@@ -84,6 +85,7 @@ void GameView::initToolbar() {
           brushButton->getRenderer()->setOpacity(0.4);
           shiftButton->getRenderer()->setOpacity(0.4);
           spriteBrushButton->getRenderer()->setOpacity(0.4);
+          selectionButton->getRenderer()->setOpacity(0.4);
           if (layerType == SPRITELAYER) {
             if (penOptionsPanel_)
               penOptionsPanel_->setVisible(false);
@@ -119,7 +121,7 @@ void GameView::initToolbar() {
     brushButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
     brushButton->getRenderer()->setOpacity(0.4);
     brushButton->onPress(
-        [this, penButton, brushButton, shiftButton, spriteBrushButton]() {
+        [this, penButton, brushButton, shiftButton, spriteBrushButton, selectionButton]() {
           LayerType layerType = project->getMap()->getCurrentLayer()->getType();
           if (layerType == SPRITELAYER) {
             project->getToolBar().selectTool(SPRITEERASER);
@@ -133,6 +135,7 @@ void GameView::initToolbar() {
           brushButton->getRenderer()->setOpacity(1.0);
           shiftButton->getRenderer()->setOpacity(0.4);
           spriteBrushButton->getRenderer()->setOpacity(0.4);
+          selectionButton->getRenderer()->setOpacity(0.4);
           if (penOptionsPanel_)
             penOptionsPanel_->setVisible(false);
           if (penSpriteOptionsPanel_)
@@ -169,7 +172,7 @@ void GameView::initToolbar() {
     shiftButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
     shiftButton->getRenderer()->setOpacity(0.4);
     shiftButton->onPress(
-        [this, penButton, brushButton, shiftButton, spriteBrushButton]() {
+        [this, penButton, brushButton, shiftButton, spriteBrushButton, selectionButton]() {
           LayerType layerType = project->getMap()->getCurrentLayer()->getType();
           if (layerType == SPRITELAYER) {
             project->getToolBar().selectTool(SPRITESHIFT);
@@ -180,6 +183,7 @@ void GameView::initToolbar() {
           brushButton->getRenderer()->setOpacity(0.4);
           shiftButton->getRenderer()->setOpacity(1.0);
           spriteBrushButton->getRenderer()->setOpacity(0.4);
+          selectionButton->getRenderer()->setOpacity(0.4);
           if (penOptionsPanel_)
             penOptionsPanel_->setVisible(false);
           if (penSpriteOptionsPanel_)
@@ -203,12 +207,13 @@ void GameView::initToolbar() {
         tgui::Color::Transparent);
     spriteBrushButton->getRenderer()->setOpacity(0.4);
     spriteBrushButton->onPress(
-        [this, penButton, brushButton, shiftButton, spriteBrushButton]() {
+        [this, penButton, brushButton, shiftButton, spriteBrushButton, selectionButton]() {
           project->getToolBar().selectTool(SPRITEBRUSH);
           penButton->getRenderer()->setOpacity(0.4);
           brushButton->getRenderer()->setOpacity(0.4);
           shiftButton->getRenderer()->setOpacity(0.4);
           spriteBrushButton->getRenderer()->setOpacity(1.0);
+          selectionButton->getRenderer()->setOpacity(0.4);
           if (penOptionsPanel_)
             penOptionsPanel_->setVisible(false);
           if (penSpriteOptionsPanel_)
@@ -222,30 +227,35 @@ void GameView::initToolbar() {
                 !spriteBrushOptionsPanel_->isVisible());
         });
     toolbar->add(spriteBrushButton);
+
+    // Options pour le bouton de sélection
+    selectionButton->setSize(height * 0.035, height * 0.035);
+    selectionButton->setPosition(width * 0.65, height * 0.007);
+    selectionButton->getRenderer()->setTexture("../res/images/selection.png");
+    selectionButton->getRenderer()->setBorders({0});
+    selectionButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+    selectionButton->getRenderer()->setOpacity(0.4);
+    selectionButton->onPress(
+        [this, penButton, brushButton, shiftButton, spriteBrushButton, selectionButton]() {
+          project->getToolBar().selectTool(SPRITESELECTION);
+          penButton->getRenderer()->setOpacity(0.4);
+          brushButton->getRenderer()->setOpacity(0.4);
+          shiftButton->getRenderer()->setOpacity(0.4);
+          spriteBrushButton->getRenderer()->setOpacity(0.4);
+          selectionButton->getRenderer()->setOpacity(1.0);
+          if (penOptionsPanel_)
+            penOptionsPanel_->setVisible(false);
+          if (penSpriteOptionsPanel_)
+            penSpriteOptionsPanel_->setVisible(false);
+          if (eraserOptionsPanel_)
+            eraserOptionsPanel_->setVisible(false);
+          if (eraserSpriteOptionsPanel_)
+            eraserSpriteOptionsPanel_->setVisible(false);
+          if (spriteBrushOptionsPanel_)
+            spriteBrushOptionsPanel_->setVisible(false);
+        });
+    toolbar->add(selectionButton);
   }
-  auto leaveProjectButton = tgui::Button::create();
-  leaveProjectButton->setSize(height * 0.035, height * 0.040);
-  leaveProjectButton->setPosition(width * 0.85, height * 0.007);
-  leaveProjectButton->getRenderer()->setTexture("../res/images/logout.png");
-  leaveProjectButton->getRenderer()->setBorders({0});
-  leaveProjectButton->getRenderer()->setBackgroundColor(
-      tgui::Color::Transparent);
-  leaveProjectButton->getRenderer()->setOpacity(0.4);
-  leaveProjectButton->getRenderer()->setTextureHover(
-      "../res/images/logout.png");
-  leaveProjectButton->onPress([this, &manager]() {
-    if (project->getRole() == 2) {
-      Transferring = true;
-      manager.getUsersProjects(project->getId());
-
-    } else {
-      app_.getNetwork().delProject(project->getId());
-      app_.getNetwork().getProjectList();
-      app_.changeView(std::make_unique<MenuView>(app_));
-    }
-  });
-
-  toolbar->add(leaveProjectButton);
 
   auto memberButton = tgui::Button::create();
   memberButton->setSize(height * 0.035, height * 0.040);
@@ -258,4 +268,25 @@ void GameView::initToolbar() {
   memberButton->onPress(
       [this, &manager]() { manager.getUsersProjects(project->getId()); });
   toolbar->add(memberButton);
+
+  auto leaveProjectButton = tgui::Button::create();
+  leaveProjectButton->setSize(height * 0.035, height * 0.040);
+  leaveProjectButton->setPosition(width * 0.85, height * 0.007);
+  leaveProjectButton->getRenderer()->setTexture("../res/images/logout.png");
+  leaveProjectButton->getRenderer()->setBorders({0});
+  leaveProjectButton->getRenderer()->setBackgroundColor(
+      tgui::Color::Transparent);
+  leaveProjectButton->getRenderer()->setOpacity(0.4);
+  leaveProjectButton->getRenderer()->setTextureHover("../res/images/logout.png");
+  leaveProjectButton->onPress([this, &manager]() {
+    if (project->getRole() == 2) {
+      Transferring = true;
+      manager.getUsersProjects(project->getId());
+    } else {
+      app_.getNetwork().delProject(project->getId());
+      app_.getNetwork().getProjectList();
+      app_.changeView(std::make_unique<MenuView>(app_));
+    }
+  });
+  toolbar->add(leaveProjectButton);
 }

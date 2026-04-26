@@ -125,6 +125,7 @@ void GameView::initLayerPanel() {
       unsigned int selectedLayer = project->getMap()->getLayerSelected();
       std::string newName = newLayerNameInput->getText().toStdString();
       if (!newName.empty()) layers[selectedLayer]->setName(newName);
+      app_.getNetwork().renameLayer(project->getId(),project->getMap()->getCurrentLayer()->getId(),newName);
       refreshLayerList();
       gui.remove(popup);
     });
@@ -144,12 +145,11 @@ void GameView::initLayerPanel() {
   goUpLayer->getRenderer()->setBorders({0});
   goUpLayer->getRenderer()->setRoundedBorderRadius(8);
   goUpLayer->onClick([this]() {
-    auto& layers = project->getMap()->getLayers();
-    unsigned int selectedLayer = project->getMap()->getLayerSelected();
-    if (selectedLayer == layers.size() - 1) return;
-    std::swap(layers[selectedLayer], layers[selectedLayer + 1]);
-    project->getMap()->selectLayer(selectedLayer + 1);
+    uint layer_id = project->getMap()->getCurrentLayer()->getId();
+    project->getMap()->layerDown(project->getMap()->getCurrentLayer()->getId());
+    app_.getNetwork().layerDown(project->getId(),layer_id); 
     refreshLayerList();
+
   });
   layerPanel_->add(goUpLayer);
 
@@ -163,11 +163,9 @@ void GameView::initLayerPanel() {
   goDownLayer->getRenderer()->setBorders({0});
   goDownLayer->getRenderer()->setRoundedBorderRadius(8);
   goDownLayer->onClick([this]() {
-    auto& layers = project->getMap()->getLayers();
-    unsigned int selectedLayer = project->getMap()->getLayerSelected();
-    if (selectedLayer == 0) return;
-    std::swap(layers[selectedLayer], layers[selectedLayer - 1]);
-    project->getMap()->selectLayer(selectedLayer - 1);
+    uint layer_id = project->getMap()->getCurrentLayer()->getId();
+    project->getMap()->layerUp(project->getMap()->getCurrentLayer()->getId());
+    app_.getNetwork().layerUp(project->getId(),layer_id); 
     refreshLayerList();
   });
   layerPanel_->add(goDownLayer);
@@ -239,20 +237,17 @@ void GameView::initLayerPanel() {
 
     createPixelLayerButton->onClick([this, popup]() {
       auto& gui = app_.getGui();
-      LayerType type = project->getMap()->getCurrentLayer()->getType();
-      project->getMap()->createPixelLayer();
-      checkTypeTool(type);
-      refreshLayerList();
       gui.remove(popup);
+      createLayer(PIXELLAYER);
+      app_.getNetwork().createLayer(project->getId(),PIXELLAYER);
+      
     });
 
     createSpriteLayerButton->onClick([this, popup]() {
       auto& gui = app_.getGui();
-      LayerType type = project->getMap()->getCurrentLayer()->getType();
-      project->getMap()->createSpriteLayer();
-      checkTypeTool(type);
-      refreshLayerList();
       gui.remove(popup);
+      createLayer(SPRITELAYER);
+      app_.getNetwork().createLayer(project->getId(),SPRITELAYER);
     });
   });
   layerPanel_->add(addLayerButton);
@@ -268,15 +263,12 @@ void GameView::initLayerPanel() {
   removeLayerButton->getRenderer()->setBorders({0});
   removeLayerButton->getRenderer()->setRoundedBorderRadius(8);
   removeLayerButton->onClick([this]() {
-    vector<shared_ptr<Layer>> &layers = project->getMap()->getLayers();
-    if (layers.size() <= 1) return;
     LayerType type = project->getMap()->getCurrentLayer()->getType();
-    unsigned int selected = project->getMap()->getLayerSelected();
-    layers.erase(layers.begin() + selected);
-    unsigned int newSelected = (selected > 0) ? selected - 1 : 0;
-    project->getMap()->selectLayer(newSelected);
+    uint layer_id = project->getMap()->getCurrentLayer()->getId();
+    project->getMap()->deleteLayer();
     checkTypeTool(type);
     refreshLayerList();
+    app_.getNetwork().deleteLayer(project->getId(),layer_id); 
   });
   layerPanel_->add(removeLayerButton);
   removeLayerButton->setTextSize(15);
@@ -371,6 +363,42 @@ void GameView::refreshLayerList() {
         if (eraserOptionsPanel_) eraserOptionsPanel_->setVisible(true);
       }
       break;
+    case SPRITESELECTION:{
+        toolbar.selectTool(NONETOOL);
+        break;
+      }
     }
   }
+}
+
+
+  void GameView::createLayer(LayerType t){
+      LayerType type = project->getMap()->getCurrentLayer()->getType();
+      if(t == SPRITELAYER)
+      project->getMap()->createSpriteLayer();
+      else if(t==PIXELLAYER)
+      project->getMap()->createPixelLayer();
+      checkTypeTool(type);
+      refreshLayerList();
+}
+
+  void GameView::deleteLayer(uint layer_id){
+    LayerType type = project->getMap()->getCurrentLayer()->getType();
+    project->getMap()->deleteLayer(layer_id);
+    checkTypeTool(type);
+    refreshLayerList();
+}
+
+void GameView::renameLayer(uint layer_id,std::string name){
+project->getMap()->renameLayer(layer_id,name);
+refreshLayerList();
+}
+
+void GameView::layerUp(uint layer_id){
+  project->getMap()->layerUp(layer_id);
+  refreshLayerList();
+}
+void GameView::layerDown(uint layer_id){
+  project->getMap()->layerDown(layer_id);
+  refreshLayerList();
 }

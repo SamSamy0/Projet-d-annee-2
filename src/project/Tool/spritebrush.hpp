@@ -12,7 +12,7 @@ class SpriteBrush : public Brush {
 public:
   SpriteBrush(std::shared_ptr<Map> map, ClientNetworkManager &manager);
   Asset *getAsset();
-  void paint(sf::Vector2i pos) override;
+  void paint(sf::Vector2i pos) ;
   void paint(sf::Vector2i pos,Asset* asset);
   void setOffset(float offset);
   void setShape(Shape s);

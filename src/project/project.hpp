@@ -1,13 +1,14 @@
 #pragma once
 #include "../client/clientnetwork.hpp"
-#include "Chat/chat.hpp"
 #include "toolbar.hpp"
 #include <SFML/Graphics.hpp>
+#undef emit
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 #include <memory>
 #include <string>
 #include <vector>
+#include "Chat/chat.hpp"
 
 class Tool;
 class Map;
@@ -41,6 +42,7 @@ public:
   std::shared_ptr<Map> getMap();
   ToolBar &getToolBar();
   Chat &getChat();
+  void setChat(const Chat chat);
   void display();
   void displayScale();
   void displayToolBar();
