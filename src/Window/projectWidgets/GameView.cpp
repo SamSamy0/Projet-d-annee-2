@@ -357,11 +357,11 @@ void GameView::popupKicked() {
 
   auto icon = tgui::Label::create("⚠");
   icon->setPosition("50%", "10%");
-  icon->setTextSize(40);
+  icon->getRenderer()->setTextSize(40);
   icon->getRenderer()->setTextColor(tgui::Color(200, 60, 60));
   popup->add(icon);
 
-  auto msg = tgui::Label::create("Vous avez été expulsé du projet.");
+  auto msg = tgui::Label::create("Vous avez été expulsé du projet");
   msg->setPosition("5%", "45%");
   msg->setTextSize(15);
   msg->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
