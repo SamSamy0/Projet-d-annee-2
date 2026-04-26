@@ -379,8 +379,8 @@ void ClientNetworkManager::moveSprites(uint proj_id, uint layer_id,
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_MOV_SPRITE_REQ;
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << static_cast<uint32_t>(sprite_ids.size());
-  packet << v.x << v.y; // Paramètres communs
+  packet << proj_id << layer_id << static_cast<uint>(sprite_ids.size());
+  packet << v.x << v.y; // Common Parameters 
   for (uint id : sprite_ids) {
     packet << id;
   }
@@ -397,8 +397,8 @@ void ClientNetworkManager::resizeSprites(uint proj_id, uint layer_id,
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_RESIZE_SPRITE_REQ;
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << static_cast<uint32_t>(sprite_ids.size());
-  packet << scale; // Paramètre commun
+  packet << proj_id << layer_id << static_cast<uint>(sprite_ids.size());
+  packet << scale; // Common Parameters
   for (size_t i = 0; i < sprite_ids.size(); ++i) {
     packet << sprite_ids[i] << positions[i].x << positions[i].y;
   }
@@ -415,8 +415,8 @@ void ClientNetworkManager::rotateSprites(uint proj_id, uint layer_id,
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ROTATE_SPRITE_REQ;
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << static_cast<uint32_t>(sprite_ids.size());
-  packet << angle; // Paramètre commun
+  packet << proj_id << layer_id << static_cast<uint>(sprite_ids.size());
+  packet << angle; // Common Parameters
   for (size_t i = 0; i < sprite_ids.size(); ++i) {
     packet << sprite_ids[i] << positions[i].x << positions[i].y;
   }

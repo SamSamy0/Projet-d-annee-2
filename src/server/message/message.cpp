@@ -495,10 +495,10 @@ void EraseSpriteMessage::process(Worker &worker){
 
 MoveSpriteMessage::MoveSpriteMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client) {
   userId_ = client->id;
-  uint32_t count;
+  uint count;
   data_packet >> projectId_ >> calqueId_ >> count >> x_ >> y_;
   sprite_ids_.resize(count);
-  for (uint32_t i = 0; i < count; ++i) {
+  for (uint i = 0; i < count; ++i) {
     data_packet >> sprite_ids_[i];
   }
 }
@@ -521,12 +521,12 @@ void MoveSpriteMessage::process(Worker &worker) {
 
 ResizeSpriteMessage::ResizeSpriteMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client) {
   userId_ = client->id;
-  uint32_t count;
+  uint count;
   data_packet >> projectId_ >> calqueId_ >> count >> scale_;
   sprite_ids_.resize(count);
   x_.resize(count);
   y_.resize(count);
-  for (uint32_t i = 0; i < count; ++i) {
+  for (uint i = 0; i < count; ++i) {
     data_packet >> sprite_ids_[i] >> x_[i] >> y_[i];
   }
 }
@@ -549,12 +549,12 @@ void ResizeSpriteMessage::process(Worker &worker) {
 
 RotateSpriteMessage::RotateSpriteMessage(sf::Packet &data_packet, std::shared_ptr<Client>& client) {
   userId_ = client->id;
-  uint32_t count;
+  uint count;
   data_packet >> projectId_ >> calqueId_ >> count >> angle_;
   sprite_ids_.resize(count);
   x_.resize(count);
   y_.resize(count);
-  for (uint32_t i = 0; i < count; ++i) {
+  for (uint i = 0; i < count; ++i) {
     data_packet >> sprite_ids_[i] >> x_[i] >> y_[i];
   }
 }
