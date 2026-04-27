@@ -42,6 +42,14 @@ void SpriteLayer::drawLayer(sf::RenderTarget &target) {
   }
 }
 
+
+void SpriteLayer::draw(std::shared_ptr<SpriteLayer> layer){
+  std::vector<SpriteObject> vector = layer->sprites_;
+  for(int i = 0 ; i < vector.size();i++){
+    draw(vector[i].sprite);
+  }
+}
+
 void SpriteLayer::setNextId(uint nextId) { nextId_ = nextId; }
 
 void SpriteLayer::resizeSprite(uint spriteId, sf::Vector2f pos,

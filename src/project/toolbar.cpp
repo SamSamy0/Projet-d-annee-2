@@ -19,7 +19,7 @@ ToolBar::ToolBar(std::shared_ptr<Map> map, ClientNetworkManager &manager): selec
   tools_.push_back(std::make_shared<SpriteEraser>(map, manager));
   tools_.push_back(std::make_shared<SpriteShift>(map, manager));
   tools_.push_back(std::make_shared<SpriteSelection>(map,manager));
-  tools_.push_back(std::make_shared<Autofill>(map,manager));
+  tools_.push_back(std::make_shared<AutoFill>(map,manager));
 }
 
 void ToolBar::selectTool(ToolType outil) {

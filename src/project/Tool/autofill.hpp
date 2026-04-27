@@ -8,7 +8,6 @@ class AutoFill : public Tool{
 
   std::vector<Asset *> assets_;
   sf::Vector2i startPos_;
-  sf::Vector2i endPos_;
   float spacing_ = 1.0f;
   float rotation_ = 0.0f; // Angle in degree
   float size_ = 1.0f;
