@@ -142,21 +142,33 @@ void Project::exportToNative() {
   // Filling zip with 0
   mz_zip_writer_init_file(&zip_archive, zipPath.c_str(), 0);
 
-  // Writing in zipFile
+  // Writing in zipFile png
   // BUG: Quand un projet est créer et on essaye d'exporter, ça ne fonctionne
   // pas car on ne sauvegarde en local qu'au moment où on ferme l'appli
-  for (const auto &entry :
-       std::filesystem::recursive_directory_iterator(originalImagesPath)) {
-    std::string fullPathOnDisk = entry.path().string();
+  try {
+    for (const auto &entry :
+         std::filesystem::recursive_directory_iterator(originalImagesPath)) {
+      std::string fullPathOnDisk = entry.path().string();
 
-    std::string relativePath =
-        std::filesystem::relative(entry.path(), originalImagesPath).string();
-    std::string FileInZipPath = destImagePath + relativePath;
+      std::string relativePath =
+          std::filesystem::relative(entry.path(), originalImagesPath).string();
+      std::string FileInZipPath = destImagePath + relativePath;
 
-    mz_zip_writer_add_file(&zip_archive, FileInZipPath.c_str(),
-                           fullPathOnDisk.c_str(), NULL, 0,
-                           MZ_BEST_COMPRESSION);
+      mz_zip_writer_add_file(&zip_archive, FileInZipPath.c_str(),
+                             fullPathOnDisk.c_str(), NULL, 0,
+                             MZ_BEST_COMPRESSION);
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "Erreur système le dossier n'a pas pu être atteint : "
+              << e.what() << std::endl;
   }
+  // Writing donnees.json
+  std::string originDonneePath =
+      "../bin/projectsFolder/project_" + to_string(id_) + "/donnees.json";
+  std::string destDonneePath = "project_" + to_string(id_) + "/donnes.json";
+  mz_zip_writer_add_file(&zip_archive, destDonneePath.c_str(),
+                         originDonneePath.c_str(), NULL, 0,
+                         MZ_BEST_COMPRESSION);
 
   // Finalisation et nettoyage
   mz_zip_writer_finalize_archive(&zip_archive);
