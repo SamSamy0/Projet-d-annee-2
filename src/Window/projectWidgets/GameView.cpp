@@ -229,20 +229,27 @@ void GameView::handleEvents(const sf::Event &event) {
   if (const auto *mousePressed = event.getIf<sf::Event::MouseButtonPressed>()) {
     // On menu
     auto popup = gui.get("popup");
+    auto exportPopup = gui.get("exportPopup");
     // If popup exists
     if (popup) {
       // Gets position of where menu pops
       sf::Vector2f clickPos(mousePressed->position.x, mousePressed->position.y);
       // If click outside the menu, then remove it
       if (!popup->isMouseOnWidget(clickPos)) {
-        auto &gui = app_.getGui();
-        auto popup = gui.get("popup");
         gui.remove(popup);
         if (activeMoreButton) {
           activeMoreButton->getRenderer()->setBackgroundColor(
               tgui::Color::Transparent);
           activeMoreButton = nullptr;
         }
+      }
+    }
+    if (exportPopup) {
+      // Gets position of where menu pops
+      sf::Vector2f clickPos(mousePressed->position.x, mousePressed->position.y);
+      // If click outside the menu, then remove it
+      if (!exportPopup->isMouseOnWidget(clickPos)) {
+        gui.remove(exportPopup);
       }
     }
 
@@ -339,7 +346,7 @@ void GameView::setAllUsers(std::vector<MemberEntry> users) {
   Transferring = false;
 }
 
-void GameView::popupKicked() {
+void GameView::popupWarning(std::string motif) {
   auto &gui = app_.getGui();
   auto back = tgui::Panel::create();
   back->setSize("100%", "100%");
@@ -361,7 +368,12 @@ void GameView::popupKicked() {
   icon->getRenderer()->setTextColor(tgui::Color(200, 60, 60));
   popup->add(icon);
 
-  auto msg = tgui::Label::create("Vous avez été expulsé du projet");
+  tgui::Label::Ptr msg;
+  if (motif == "kick") {
+    auto msg = tgui::Label::create("Vous avez été expulsé du projet");
+  } else if (motif == "export") {
+    auto msg = tgui::Label::create("Vous devez d'abord sauvegarder le projet");
+  }
   msg->setPosition("5%", "45%");
   msg->setTextSize(15);
   msg->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
