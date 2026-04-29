@@ -278,7 +278,7 @@ void GameView::initToolbar() {
   exportButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   exportButton->getRenderer()->setOpacity(0.4);
   exportButton->getRenderer()->setTextureHover("../res/images/share.png");
-  exportButton->onPress([this, &manager]() { project->exportToPng(); });
+  exportButton->onPress([this, &manager]() { project->exportToNative(); });
   toolbar->add(exportButton);
 
   auto leaveProjectButton = tgui::Button::create();

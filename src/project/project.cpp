@@ -1,13 +1,18 @@
 #include "project.hpp"
 #include "Layer/layer.hpp"
 #include "map.hpp"
+#include "miniz.h"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
+#include <filesystem>
 #include <memory>
 #include <string>
 
 const string FONT_PATH{"../res/police/ARIAL.TTF"};
+
+using recursive_directory_iterator =
+    std::filesystem::recursive_directory_iterator;
 
 // Constructors
 Project::Project(unsigned int scale, sf::Vector2u size, std::string name,
@@ -124,3 +129,38 @@ void Project::setId(uint newId) {
 
 int8_t Project::getRole() { return role_; }
 void Project::setRole(int8_t newRole) { role_ = newRole; }
+void Project::exportToNative() {
+  // Path
+  std::string zipPath = "../nativExport/" + name_ + ".zip";
+  std::string originalImagesPath =
+      "../bin/projectsFolder/project_" + to_string(id_) + "/images/";
+  std::string destImagePath = "project_" + to_string(id_) + "/images/";
+
+  // Creating zip file
+  mz_zip_archive zip_archive;
+  mz_zip_zero_struct(&zip_archive);
+  // Filling zip with 0
+  mz_zip_writer_init_file(&zip_archive, zipPath.c_str(), 0);
+
+  // Writing in zipFile
+  // BUG: Quand un projet est créer et on essaye d'exporter, ça ne fonctionne
+  // pas car on ne sauvegarde en local qu'au moment où on ferme l'appli
+  for (const auto &entry :
+       std::filesystem::recursive_directory_iterator(originalImagesPath)) {
+    std::string fullPathOnDisk = entry.path().string();
+
+    std::string relativePath =
+        std::filesystem::relative(entry.path(), originalImagesPath).string();
+    std::string FileInZipPath = destImagePath + relativePath;
+
+    mz_zip_writer_add_file(&zip_archive, FileInZipPath.c_str(),
+                           fullPathOnDisk.c_str(), NULL, 0,
+                           MZ_BEST_COMPRESSION);
+  }
+
+  // Finalisation et nettoyage
+  mz_zip_writer_finalize_archive(&zip_archive);
+  mz_zip_writer_end(&zip_archive);
+
+  std::cout << "fin de la compression " << std::endl;
+}

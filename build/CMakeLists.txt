@@ -79,6 +79,7 @@ set(SOURCES
     ../src/client/clientnetwork.cpp
     ../src/client/handler.cpp
     ../src/client/receiverwindow.cpp
+    ../src/project/miniz.c
     ../src/project/map.cpp
     ../src/project/move.cpp
     ../src/project/project.cpp
