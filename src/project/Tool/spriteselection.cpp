@@ -185,6 +185,7 @@ void SpriteSelection::rotate(sf::Vector2i pos) {
 if (scaled_dist != 0.0f) {
   std::vector<sf::Vector2f> newPositions;
   newPositions.reserve(selected_.size());
+  std::vector<uint> toErase;
   for (uint id : selected_) {
     sf::Sprite sprite = spritelayer->getSprite(id).sprite;
     sf::Vector2f spritePos = sprite.getPosition();
@@ -199,9 +200,24 @@ if (scaled_dist != 0.0f) {
     sf::Vector2f newPos =
         sf::Vector2f(newX + pivotPos_.x, newY + pivotPos_.y);
     spritelayer->rotateSprite(id, scaled_dist, newPos);
-    newPositions.push_back(newPos);
+    
+    sf::FloatRect bounds = spritelayer->getSprite(id).sprite.getGlobalBounds();
+    if (bounds.position.x < 0 || bounds.position.y < 0 ||
+        bounds.position.x + bounds.size.x > map_->getSize().x ||
+        bounds.position.y + bounds.size.y > map_->getSize().y) {
+      toErase.push_back(id);
+    } else {
+      newPositions.push_back(newPos);
+    }
   }
-  if (!selected_.empty()) {
+
+  for (uint id : toErase) {
+    spritelayer->erase(id);
+    manager_.eraseSprite(map_->getId(), map_->getCurrentLayer()->getId(), id);
+    selected_.erase(std::remove(selected_.begin(), selected_.end(), id), selected_.end());
+  }
+
+  if (!selected_.empty() && !newPositions.empty()) {
     manager_.rotateSprites(map_->getId(), map_->getCurrentLayer()->getId(),
                            selected_, scaled_dist, newPositions);
   }
@@ -224,15 +240,31 @@ void SpriteSelection::resize(sf::Vector2i pos) {
     if (scaleFactor > 0.001) {
       std::vector<sf::Vector2f> newPositions;
       newPositions.reserve(selected_.size());
+      std::vector<uint> toErase;
       for (uint id : selected_) {
         sf::Sprite sprite = spritelayer->getSprite(id).sprite;
         sf::Vector2f spritePos = sprite.getPosition();
         sf::Vector2f dist = spritePos - pivotPos_;
         sf::Vector2f newPos = pivotPos_ + dist * scaleFactor;
         spritelayer->resizeSprite(id, newPos, scaleFactor);
-        newPositions.push_back(newPos);
+        
+        sf::FloatRect bounds = spritelayer->getSprite(id).sprite.getGlobalBounds();
+        if (bounds.position.x < 0 || bounds.position.y < 0 ||
+            bounds.position.x + bounds.size.x > map_->getSize().x ||
+            bounds.position.y + bounds.size.y > map_->getSize().y) {
+          toErase.push_back(id);
+        } else {
+          newPositions.push_back(newPos);
+        }
       }
-      if (!selected_.empty()) {
+
+      for (uint id : toErase) {
+        spritelayer->erase(id);
+        manager_.eraseSprite(map_->getId(), map_->getCurrentLayer()->getId(), id);
+        selected_.erase(std::remove(selected_.begin(), selected_.end(), id), selected_.end());
+      }
+
+      if (!selected_.empty() && !newPositions.empty()) {
         manager_.resizeSprites(map_->getId(), map_->getCurrentLayer()->getId(),
                                selected_, newPositions, scaleFactor);
       }
