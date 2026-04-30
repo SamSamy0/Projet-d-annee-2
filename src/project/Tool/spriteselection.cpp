@@ -160,17 +160,6 @@ sf::Vector2f SpriteSelection::findPivot() {
     return res;
   const std::shared_ptr<Layer> layer = map_->getCurrentLayer();
 
-  // if (layer->getType() == SPRITELAYER) {
-  //   const std::vector<SpriteObject> &sprites =
-  //       static_pointer_cast<SpriteLayer>(layer)->getSprites();
-  //
-  //   for (const SpriteObject &sprite : sprites) {
-  //     if (isSelected(sprite.id)) {
-  //       res += sprite.sprite.getPosition();
-  //       count++;
-  //     }
-  //   }
-  // }
   if(layer->getType() == SPRITELAYER){
     const std::shared_ptr<SpriteLayer> spritelayer = static_pointer_cast<SpriteLayer>(layer);
     for(const uint id : selected_){
@@ -264,6 +253,21 @@ void SpriteSelection::shift(sf::Vector2i pos) {
     if (!selected_.empty()) {
       manager_.moveSprites(map_->getId(), map_->getCurrentLayer()->getId(),
                            selected_, delta);
+    }
+  }
+}
+
+
+void SpriteSelection::erase(){
+
+  std::shared_ptr<Layer> layer = map_->getCurrentLayer();
+  if (layer->getType() == SPRITELAYER) {
+    std::shared_ptr<SpriteLayer> spritelayer = static_pointer_cast<SpriteLayer>(layer);
+  
+
+    for(uint id : selected_){
+      spritelayer->erase(id);
+      manager_.eraseSprite(map_->getId(), map_->getCurrentLayer()->getId(),id);
     }
   }
 }
