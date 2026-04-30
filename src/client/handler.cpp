@@ -9,6 +9,7 @@
 #include <SFML/Network.hpp>
 #include <iostream>
 #include <unordered_map>
+#include <QFile>
 
 ClientHandler::ClientHandler(ClientNetworkManager &client_manager,
                              ReceiverInWindow &w)
@@ -51,6 +52,36 @@ void ClientHandler::process(ServerEvent &event) {
       handleWindow_.addProjectToList(projet);
     }
 
+    break;
+  }
+
+  case MsgProtocole::LOB_EXPORT_NATIVE_PROJECT_REP: {
+
+    std::cout << "Réception de la réponse d'exportation du projet..." << std::endl;
+    uint32_t zipSize;
+
+    *(event.data_packet_) >> zipSize;
+
+    const size_t headerOffset = sizeof(std::uint8_t) + sizeof(std::uint32_t);
+    
+    const char *rawBuf = (const char *)(*(event.data_packet_)).getData();
+    const size_t totalSize = event.data_packet_->getDataSize();
+
+    QByteArray zipBytes(rawBuf + headerOffset, zipSize);
+
+    QString destPath = QString("export/project_.natif");
+    QFile zipFile(destPath);
+
+    if (zipFile.open(QIODevice::WriteOnly)) {
+      zipFile.write(zipBytes);
+      zipFile.close();
+      std::cout << "Succès : fichier ZIP sauvegardé sous " << destPath.toStdString() << std::endl;
+    } else {
+      std::cerr << "Erreur : impossible d'écrire le fichier ZIP sur le disque (" 
+                << destPath.toStdString() << ")." << std::endl;
+    }
+
+    //TODO : affichage du projet exporté ? nom adresse ?
     break;
   }
 

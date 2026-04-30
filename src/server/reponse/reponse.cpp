@@ -326,4 +326,10 @@ ReponseChat::ReponseChat(std::vector<uint> usersId,ChatMessage& mess) : ReponseG
      dataPacket_ << mess.pseudo_ << mess.message_ << mess.min_ << mess.hour_ << mess.day_ << mess.month_ <<mess.year_;
 }
 
-
+ReponseExport::ReponseExport(uint userId, QByteArray data) : ReponseSolo(userId) {
+    dataPacket_<< static_cast<std::uint32_t>(MsgProtocole::LOB_EXPORT_NATIVE_PROJECT_REP);
+    QByteArray dataCompress = qCompress(data, 9);
+    dataPacket_ << static_cast<std::uint32_t>(dataCompress.size());
+    dataPacket_.append(dataCompress.constData(), dataCompress.size());
+    std::cout << "Taille du projet compressé dans la réponse : " << dataCompress.size() << " octets" << std::endl;
+}

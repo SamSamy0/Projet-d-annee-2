@@ -1,4 +1,5 @@
 #include "projectsmanager.hpp"
+#include <string>
 #include <QBuffer>
 #include <QColor>
 #include <QDebug>
@@ -9,6 +10,7 @@
 #include <QJsonDocument>
 #include <QSaveFile>
 #include <iostream>
+#include "miniz.h"
 
 ProjectsManager::ProjectsManager(const std::string &rootPath)
     : rootPath_(QString::fromStdString(rootPath)) {
@@ -19,6 +21,10 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
   if (!dir.exists(rootPath_ + "/chats")) {
     dir.mkpath(rootPath_ + "/chats");
   }
+  if (!dir.exists(rootPath_+ "/projectZipped")) {
+    dir.mkpath(rootPath_+ "/projectZipped");
+  }
+
 }
 
 /*bool ProjectsManager::createProjectJson(uint id, const QString &projectName,
@@ -374,4 +380,65 @@ QJsonArray ProjectsManager::loadChat(uint projectId) {
   }
 
   return doc.array();
+}
+
+
+QByteArray ProjectsManager::Zip(uint projectId) {
+  // Path
+  std::string zipPath = rootPath_.toStdString() + "/projectZipped/project_" + std::to_string(projectId) + ".natif";
+  std::string originalImagesPath = rootPath_.toStdString()+ "/project_" + std::to_string(projectId) + "/images/";
+  std::string destImagePath = "project_" + std::to_string(projectId) + "/images/";
+
+  // Creating zip file
+  mz_zip_archive zip_archive;
+  mz_zip_zero_struct(&zip_archive);
+  // Filling zip with 0
+  mz_zip_writer_init_file(&zip_archive, zipPath.c_str(), 0);
+
+  // Writing in zipFile png
+  // BUG: Quand un projet est créer et on essaye d'exporter, ça ne fonctionne
+  // pas car on ne sauvegarde en local qu'au moment où on ferme l'appli
+  try {
+    for (const auto &entry :
+         std::filesystem::recursive_directory_iterator(originalImagesPath)) {
+      std::string fullPathOnDisk = entry.path().string();
+
+      std::string relativePath =
+          std::filesystem::relative(entry.path(), originalImagesPath).string();
+      std::string FileInZipPath = destImagePath + relativePath;
+
+      mz_zip_writer_add_file(&zip_archive, FileInZipPath.c_str(),
+                             fullPathOnDisk.c_str(), NULL, 0,
+                             MZ_BEST_COMPRESSION);
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "Erreur système le dossier n'a pas pu être atteint : "
+              << e.what() << std::endl;
+  }
+  // Writing donnees.json
+  std::string originDonneePath =
+      "../bin/projectsFolder/project_" + std::to_string(projectId) + "/donnees.json";
+  std::string destDonneePath = "project_" + std::to_string(projectId) + "/donnes.json";
+  mz_zip_writer_add_file(&zip_archive, destDonneePath.c_str(),
+                         originDonneePath.c_str(), NULL, 0,
+                         MZ_BEST_COMPRESSION);
+
+  // Finalisation et nettoyage
+  mz_zip_writer_finalize_archive(&zip_archive);
+  mz_zip_writer_end(&zip_archive);
+  std::cout << "fin de la compression " << std::endl;
+
+
+  QString Qpath = QString::fromStdString(zipPath);
+  QFile fileZip(Qpath);
+
+  if (!fileZip.open(QIODevice::ReadOnly)) {
+    qWarning() << "Impossible d'ouvrir le fichier projet pour l'ID" << projectId << ":" << Qpath;
+    return QByteArray();
+  };
+
+  QByteArray rawData = fileZip.readAll();
+  fileZip.close();
+
+  return rawData;
 }

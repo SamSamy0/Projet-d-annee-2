@@ -79,7 +79,6 @@ set(SOURCES
     ../src/client/clientnetwork.cpp
     ../src/client/handler.cpp
     ../src/client/receiverwindow.cpp
-    ../src/project/miniz.c
     ../src/project/map.cpp
     ../src/project/move.cpp
     ../src/project/project.cpp
@@ -146,6 +145,7 @@ set(SERVER_SOURCES
     ../src/project/Chat/userMessage.cpp
     ../src/project/Chat/systemNotification.cpp
     ../src/project/Chat/date.cpp
+    ../src/server/datamanager/miniz.c
 )
 
 add_executable(server ${SERVER_SOURCES})
