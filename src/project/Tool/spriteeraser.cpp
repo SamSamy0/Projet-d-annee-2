@@ -48,6 +48,7 @@ bool SpriteEraser::checkColision(sf::Vector2i pos, sf::FloatRect r) {
     break;
   }
   }
+  return false;
 }
 
 int SpriteEraser::paint(sf::Vector2i pos) {

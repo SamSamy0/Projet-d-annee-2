@@ -95,6 +95,7 @@ set(SOURCES
     ../src/project/Tool/spriteshift.cpp
     ../src/project/Tool/spriteeraser.cpp
     ../src/project/Tool/spriteselection.cpp
+    ../src/project/Tool/autofill.cpp
     ../src/project/Layer/layer.cpp
     ../src/project/Layer/pixellayer.cpp
     ../src/project/Layer/spritelayer.cpp
