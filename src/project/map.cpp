@@ -18,6 +18,7 @@ Map::Map(uint id, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer
         std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;} 
 
     createSpriteLayer();
+    layers_[0]->setTemp();
     sprite_.setTexture(render_texture_.getTexture(),true);
     //WARNING: il manque peut etre la selection de la bonne couche
     // hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
@@ -31,6 +32,7 @@ Map::Map(uint id, sf::Vector2u size , unsigned int scale) :
     } 
     sprite_.setTexture(render_texture_.getTexture(),true);
     createSpriteLayer();
+    layers_[0]->setTemp();
     createPixelLayer();
     selectLayerId(1);
     // hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
@@ -144,7 +146,7 @@ void Map::layerUp(uint layerId){
 void Map::deleteLayer(uint layer_id){
     if(layer_id == 0)
         return;
-    if (layers_.size() <= 1) return;
+    if (layers_.size() <= 2 || layers_[selected_]->getId() == 0) return;
     int j = -1;
 
     for(int i = 0; i<layers_.size(); i++){
@@ -167,7 +169,7 @@ void Map::deleteLayer(uint layer_id){
 }
 
 void Map::deleteLayer(){
-    if (layers_.size() <= 1 || layers_[selected_]->getId() == 0) return;
+    if (layers_.size() <= 2 || layers_[selected_]->getId() == 0) return;
     layers_.erase(layers_.begin() + selected_);
     selected_ = (selected_ > 0) ? selected_ - 1 : 0;
 }
