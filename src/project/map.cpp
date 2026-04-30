@@ -15,19 +15,28 @@ using namespace std;
 Map::Map(uint id, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) :
      id_{id},size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
     if (!render_texture_.resize(size)){
-        std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;
-    } //TODO: gérer l'erreur
+        std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;} 
+
+    createSpriteLayer();
+    layers_[0]->setTemp();
     sprite_.setTexture(render_texture_.getTexture(),true);
-    hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
+    //WARNING: il manque peut etre la selection de la bonne couche
+    // hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
 }
 
 Map::Map(uint id, sf::Vector2u size , unsigned int scale) :
-     id_{id},size_{size},
+    id_{id},size_{size},
     scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
-    if (!render_texture_.resize(size)){} //TODO: gérer l'erreur
+    if (!render_texture_.resize(size)){
+        std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;
+    } 
     sprite_.setTexture(render_texture_.getTexture(),true);
-    hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
+    createSpriteLayer();
+    layers_[0]->setTemp();
     createPixelLayer();
+    selectLayerId(1);
+    // hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
+
 }
 
 Zoom& Map::getZoom() { return zoom_; }
@@ -66,18 +75,22 @@ shared_ptr<Layer> Map::getLayer(uint id){
 void Map::createPixelLayer(){
     std::string name = "Couche Pixel (" + std::to_string(nextLayerId_ + 1) + ")";
     shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(nextLayerId_,name, size_);
-    nextLayerId_ +=1;
     layers_.push_back(pixellayer);
-    layers_.size() == 1 ? selected_ = 0 : selected_ += 1; // évite d'avoir des numéros de couche négative
+    if(layers_.size() >1 && layers_[layers_.size() - 2]->getId() == 0)
+        swap(layers_[layers_.size()-1],layers_[layers_.size()-2]);
+    // layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
+    nextLayerId_ +=1;
 }
 
 
 void Map::createSpriteLayer(){
     std::string name = "Couche Sprite (" + std::to_string(nextLayerId_ + 1) + ")";
     shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(nextLayerId_,name,size_); 
-    nextLayerId_ +=1;
     layers_.push_back(spritelayer);
-    layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
+    if(layers_.size() >1 && layers_[layers_.size() - 2]->getId() == 0)
+        swap(layers_[layers_.size()-1],layers_[layers_.size()-2]);
+    // layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
+    nextLayerId_ +=1;
 }
 
 void Map::renameLayer(uint layer_id, std::string name){
@@ -104,7 +117,7 @@ void Map::layerDown(uint layerId){
             break;
         }
     }
-    if(j >= 0 && j < layers_.size()-1){
+    if(j >= 0 && j < layers_.size()-1 && (layers_[j+1]->getId()!=0 && layers_[j]->getId() != 0)){
         std::swap(layers_[j],layers_[j+1]);
         if(selected_ == j) selected_ +=1;
         else if(selected_ == j+1) selected_ -= 1;
@@ -121,19 +134,19 @@ void Map::layerUp(uint layerId){
             break;
         }
     }
-    if(j > 0){
+    if(j > 0 && j <= layers_.size()-1 && (layers_[j-1]->getId()!=0 && layers_[j]->getId() != 0)){
         std::swap(layers_[j],layers_[j-1]);
         if(selected_ == j) selected_ -=1;
         else if(selected_ == j-1) selected_ += 1;
     }
-
-
 }
 
 
 
 void Map::deleteLayer(uint layer_id){
-    if (layers_.size() <= 1) return;
+    if(layer_id == 0)
+        return;
+    if (layers_.size() <= 2 || layers_[selected_]->getId() == 0) return;
     int j = -1;
 
     for(int i = 0; i<layers_.size(); i++){
@@ -156,7 +169,7 @@ void Map::deleteLayer(uint layer_id){
 }
 
 void Map::deleteLayer(){
-    if (layers_.size() <= 1) return;
+    if (layers_.size() <= 2 || layers_[selected_]->getId() == 0) return;
     layers_.erase(layers_.begin() + selected_);
     selected_ = (selected_ > 0) ? selected_ - 1 : 0;
 }

@@ -22,6 +22,7 @@ public:
   SpriteObject& getSprite(uint id);
   sf::Vector2i getOffset() const override;
   void draw(const sf::Sprite &s);
+  void draw(std::shared_ptr<SpriteLayer> layer);
   void erase(uint id);
   void shift(sf::Vector2i v) override;
   void shiftSprite(uint id, sf::Vector2i v);

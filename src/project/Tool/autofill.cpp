@@ -1,0 +1,100 @@
+#include "autofill.hpp"
+#include "../map.hpp"
+#include <algorithm>
+
+
+
+
+AutoFill::AutoFill(std::shared_ptr<Map> map, ClientNetworkManager &manager) : Tool(map,manager){ 
+  type_ = AUTOFILL;
+  temporaryLayer_ = dynamic_pointer_cast<SpriteLayer>(map_->getLayer(0));
+}
+
+
+
+
+
+void AutoFill::onPress(sf::Vector2i pos){
+  startPos_ = pos;
+  lastPos_ = pos;
+}
+
+void AutoFill::onDrag(sf::Vector2i pos){
+  lastPos_ = pos;
+}
+
+void AutoFill::onRelease(){
+  generateSprites();
+}
+
+void AutoFill::generateSprites(){ 
+  clear(); 
+  if(assets_.empty()) 
+    return; 
+  int minX = std::min(startPos_.x, lastPos_.x); 
+  int maxX = std::max(startPos_.x, lastPos_.x); 
+  int minY = std::min(startPos_.y, lastPos_.y); 
+  int maxY = std::max(startPos_.y, lastPos_.y);
+  srand(seed_);
+
+  for(float j = minY;j <= maxY; j+= spacing_){
+    for(float i = minX; i<= maxX; i+= spacing_){
+      Asset* asset = assets_.at(rand()%assets_.size());
+      sf::Sprite sprite = sf::Sprite(*(asset->texture));
+      sprite.rotate(sf::degrees(rotation_));
+      float scaleFactor = size_/asset->size_m_horizontal;
+      sprite.scale(sf::Vector2f(scaleFactor,scaleFactor));
+      sprite.setPosition(sf::Vector2f(i,j));
+      sf::FloatRect bounds = sprite.getGlobalBounds();
+      sprite.setOrigin(sf::Vector2f(bounds.size.x/2.0f,bounds.size.y/2.0f));
+      temporaryLayer_->draw(sprite);
+    }
+  }
+  srand(time(NULL));
+}
+
+
+void AutoFill::setSpacing(float spacing){
+  spacing_ = spacing * getScale();
+  generateSprites();
+}
+void AutoFill::setRotation(float rotation){
+  rotation_ = rotation;
+  generateSprites();
+}
+void AutoFill::setSize(float size){
+  size_ = size;
+  generateSprites();
+}
+void AutoFill::setSeed(uint seed){
+  seed_ = seed;
+  generateSprites();
+}
+
+
+void AutoFill::addAsset(const std::string &id){
+  Asset *asset = map_->getAssetManager().getAsset(id);
+  if (asset != nullptr)
+    assets_.push_back(asset);
+}
+
+void AutoFill::removeAsset(const std::string &id){
+  Asset *asset = map_->getAssetManager().getAsset(id);
+  auto iterator = std::find(assets_.begin(), assets_.end(), asset);
+  if (iterator != assets_.end())
+    assets_.erase(iterator);
+}
+
+void AutoFill::clearAsset(){assets_.clear();}
+
+
+
+
+
+void AutoFill::apply(){
+  if(map_->getCurrentLayer()->getType() == SPRITELAYER)
+    static_pointer_cast<SpriteLayer>(map_->getCurrentLayer())->draw(temporaryLayer_);
+  clear();
+}
+
+void AutoFill::clear(){temporaryLayer_->getSprites().clear();}
