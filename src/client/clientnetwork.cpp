@@ -423,3 +423,14 @@ void ClientNetworkManager::sendMessageChat(std::string message){
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;
 }
+
+void ClientNetworkManager::goHome(){
+   sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::LOB_HOME_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}

@@ -30,7 +30,7 @@ void GameView::initToolbar() {
   homeButton->getRenderer()->setBorders({0});
   homeButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   homeButton->onPress([this]() {
-    app_.getNetwork().getProjectList();
+    app_.getNetwork().goHome();
     app_.changeView(std::make_unique<MenuView>(app_));
   });
   toolbar->add(homeButton);

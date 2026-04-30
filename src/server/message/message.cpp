@@ -661,6 +661,14 @@ void ChatMessage::process(Worker& worker){
 }
 
 
+HomeMessage::HomeMessage(std::shared_ptr<Client>& client) {
+    userId_ = client->id;
+    projectId_ = client->projectId;
+}
+
+void HomeMessage::process(Worker& worker){
+ //TO DO : faut retirer le type du projet tt ca tt ca je crois
+}
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client>& c) {
     uint8_t typeRaw;

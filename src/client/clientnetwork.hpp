@@ -51,6 +51,7 @@ public:
   void rotateSprite(uint proj_id, uint layer_id, uint sprite_id, float angle, sf::Vector2f pos);
 
   void shiftLayer(uint proj_id, uint layer_id, int delta_x, int delta_y);
+  void goHome();
 
   void sendMessageChat(std::string message);
 };

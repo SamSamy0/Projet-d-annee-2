@@ -289,5 +289,14 @@ struct ChatMessage : IMessage {
   void process(Worker &worker) override;
 };
 
+struct HomeMessage : IMessage {
+  uint userId_;
+  uint projectId_;
+
+  HomeMessage(std::shared_ptr<Client>& client);
+  void process(Worker &worker) override;
+  
+};
+
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client>& client);
