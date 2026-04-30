@@ -7,8 +7,7 @@
 
 AutoFill::AutoFill(std::shared_ptr<Map> map, ClientNetworkManager &manager) : Tool(map,manager){ 
   type_ = AUTOFILL;
-  temporaryLayer_ = make_shared<SpriteLayer>(0,"Preview",map_->getSize()); //DESSINER CA JSP COMMENT
-  
+  temporaryLayer_ = dynamic_pointer_cast<SpriteLayer>(map_->getLayer(0));
 }
 
 
