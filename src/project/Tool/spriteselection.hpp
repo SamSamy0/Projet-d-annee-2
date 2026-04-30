@@ -31,4 +31,5 @@ public:
   void rotate(sf::Vector2i pos);
   void resize(sf::Vector2i pos);
   void shift(sf::Vector2i pos);
+  void erase();
 };

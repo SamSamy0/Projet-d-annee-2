@@ -2,6 +2,7 @@
 #include "../../project/Chat/userMessage.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
 #include "../../project/Tool/pixelshift.hpp"
+#include "../../project/Tool/spriteselection.hpp"
 #include "../MenuView.hpp"
 #include <qnamespace.h>
 
@@ -315,6 +316,12 @@ void GameView::handleEvents(const sf::Event &event) {
         project->getMap()->zooming(wheelEvent); // ZOOM
     }
   }
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Delete)){
+    std::shared_ptr<Tool> tool = project->getToolBar().getSelectedTool();
+    if(tool->getType() == SPRITESELECTION)
+      static_pointer_cast<SpriteSelection>(tool)->erase();
+  }
+
 }
 
 void GameView::updateMemberRole(uint targetId, int8_t newRole) {
