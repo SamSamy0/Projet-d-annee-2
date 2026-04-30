@@ -261,6 +261,18 @@ void ClientNetworkManager::changeRole(uint userId, uint projectId,
               << std::endl;
 }
 
+void ClientNetworkManager::exportToNative(uint projectId){
+  sf::Packet packet;
+  
+  MsgProtocole msg = MsgProtocole::LOB_EXPORT_NATIVE_PROJECT_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << projectId;
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
 void ClientNetworkManager::drawSquare(uint proj_id, uint layer_id, int pos_x,
                                       int pos_y, float size, uint8_t r,
                                       uint8_t g, uint8_t b, uint8_t a) {

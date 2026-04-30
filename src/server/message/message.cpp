@@ -60,6 +60,23 @@ void CreateProjectMessage::process(Worker &worker) {
     worker.pushNetwork(std::move(rps));
   }
 }
+ExportNativeMessage::ExportNativeMessage(sf::Packet& data_packet, std::shared_ptr<Client> client){
+  data_packet >> projectId_;
+  userId_ = client->id;
+}
+
+void ExportNativeMessage::process(Worker& worker){
+  if (userId_ > 0){
+    //Server saves project 
+    std::unique_ptr<SaveTask> savetsk;
+    savetsk = std::make_unique<SaveTask>(worker.mapProjet_.at(projectId_),
+                                         projectId_);
+    worker.pushSave(std::move(savetsk));
+    
+    
+  }
+  
+}
 
 RenameProjectMessage::RenameProjectMessage(sf::Packet &dataPacket,
                                            std::shared_ptr<Client> &client) {
@@ -746,6 +763,9 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::LOB_JOIN_PROJECT_REQ:
     return std::make_unique<CheckTokenMessage>(data_packet, c);
+
+  case MsgProtocole::LOB_EXPORT_NATIVE_PROJECT_REQ:
+      return std::make_unique<ExportNativeMessage>(data_packet, c);
 
   case MsgProtocole::MAP_CREATE_LAYER_REQ:
     return std::make_unique<CreateLayerMessage>(data_packet, c);

@@ -29,8 +29,8 @@ void GameView::initToolbar() {
   homeButton->getRenderer()->setTexture("../res/images/accueil.png");
   homeButton->getRenderer()->setBorders({0});
   homeButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-  homeButton->onPress([this]() {
-    app_.getNetwork().getProjectList();
+  homeButton->onPress([this, &manager]() {
+    manager.getProjectList();
     app_.changeView(std::make_unique<MenuView>(app_));
   });
   toolbar->add(homeButton);
@@ -270,6 +270,8 @@ void GameView::initToolbar() {
       [this, &manager]() { manager.getUsersProjects(project->getId()); });
   toolbar->add(memberButton);
 
+  //Made by IA for better Design 
+  //(based on a dropdown menu that I've already made (showProjectMenu in MenuView))
   auto exportButton = tgui::Button::create();
   exportButton->setSize(height * 0.035, height * 0.040);
   exportButton->setPosition(width * 0.85, height * 0.007);
@@ -278,7 +280,52 @@ void GameView::initToolbar() {
   exportButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   exportButton->getRenderer()->setOpacity(0.4);
   exportButton->getRenderer()->setTextureHover("../res/images/share.png");
-  exportButton->onPress([this, &manager]() { project->exportToNative(); });
+  exportButton->onPress([this,&manager, exportButton, height]() {
+    auto &gui = app_.getGui();
+ 
+    //Toggle
+    if (gui.get("exportPopup")) {
+      exportButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+      gui.remove(gui.get("exportPopup"));
+      return;
+    }
+ 
+    exportButton->getRenderer()->setBackgroundColor(sf::Color(55, 55, 70));
+ 
+    sf::Vector2f btnPos = exportButton->getAbsolutePosition();
+ 
+    auto menu = tgui::ListBox::create();
+    menu->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+    menu->getRenderer()->setTextSize(20);
+    menu->getRenderer()->setBorders(2);
+    menu->getRenderer()->setBorderColor(sf::Color::White);
+    menu->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
+    menu->getRenderer()->setTextColor(tgui::Color::White);
+    menu->addItem("Exporter en PNG");
+    menu->addItem("Format natif");
+ 
+    float menuHeight = menu->getItemCount() * 45;
+    menu->setSize(180, menuHeight);
+    menu->setItemHeight(45);
+    menu->setTextSize(20);
+    menu->setPosition(btnPos.x + exportButton->getSize().x - 180,
+                      btnPos.y + exportButton->getSize().y);
+ 
+    gui.add(menu, "exportPopup");
+ 
+    menu->onItemSelect([this, &manager, menu, exportButton](const tgui::String &item) {
+      auto &gui = app_.getGui();
+ 
+      if (item == "Exporter en PNG") {
+        project->exportToPng();
+      } else if (item == "Format natif") {
+        manager.exportToNative(project->getId());
+      }
+ 
+      exportButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+      gui.remove(menu);
+    });
+  });
   toolbar->add(exportButton);
 
   auto leaveProjectButton = tgui::Button::create();
@@ -296,8 +343,8 @@ void GameView::initToolbar() {
       Transferring = true;
       manager.getUsersProjects(project->getId());
     } else {
-      app_.getNetwork().delProject(project->getId());
-      app_.getNetwork().getProjectList();
+      manager.delProject(project->getId());
+      manager.getProjectList();
       app_.changeView(std::make_unique<MenuView>(app_));
     }
   });
