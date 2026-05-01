@@ -1,5 +1,5 @@
 #include "projectsmanager.hpp"
-#include <string>
+#include "miniz.h"
 #include <QBuffer>
 #include <QColor>
 #include <QDebug>
@@ -10,7 +10,7 @@
 #include <QJsonDocument>
 #include <QSaveFile>
 #include <iostream>
-#include "miniz.h"
+#include <string>
 
 ProjectsManager::ProjectsManager(const std::string &rootPath)
     : rootPath_(QString::fromStdString(rootPath)) {
@@ -21,13 +21,15 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
   if (!dir.exists(rootPath_ + "/chats")) {
     dir.mkpath(rootPath_ + "/chats");
   }
-  if (!dir.exists(rootPath_+ "/projectZipped")) {
-    dir.mkpath(rootPath_+ "/projectZipped");
+  if (!dir.exists(rootPath_ + "/projectZipped")) {
+    dir.mkpath(rootPath_ + "/projectZipped");
   }
-  if (!dir.exists("../export")){
+  if (!dir.exists("../export")) {
     dir.mkpath("../export");
   }
-
+  if (!dir.exists("../import")) {
+    dir.mkpath("../import");
+  }
 }
 
 /*bool ProjectsManager::createProjectJson(uint id, const QString &projectName,
@@ -385,12 +387,13 @@ QJsonArray ProjectsManager::loadChat(uint projectId) {
   return doc.array();
 }
 
-
 QByteArray ProjectsManager::Zip(uint projectId) {
   // Path
-  std::string zipPath = rootPath_.toStdString() + "/projectZipped/project_" + std::to_string(projectId) + ".natif";
-  std::string originalImagesPath = rootPath_.toStdString()+ "/project_" + std::to_string(projectId) + "/images/";
-  std::string destImagePath = "project_" + std::to_string(projectId) + "/images/";
+  std::string zipPath = rootPath_.toStdString() + "/projectZipped/project_" +
+                        std::to_string(projectId) + ".natif";
+  std::string originalImagesPath = rootPath_.toStdString() + "/project_" +
+                                   std::to_string(projectId) + "/images/";
+  std::string destImagePath = "images/";
 
   // Creating zip file
   mz_zip_archive zip_archive;
@@ -417,9 +420,9 @@ QByteArray ProjectsManager::Zip(uint projectId) {
               << e.what() << std::endl;
   }
   // Writing donnees.json
-  std::string originDonneePath =
-      "../bin/projectsFolder/project_" + std::to_string(projectId) + "/donnees.json";
-  std::string destDonneePath = "project_" + std::to_string(projectId) + "/donnes.json";
+  std::string originDonneePath = "../bin/projectsFolder/project_" +
+                                 std::to_string(projectId) + "/donnees.json";
+  std::string destDonneePath = "donnees.json";
   mz_zip_writer_add_file(&zip_archive, destDonneePath.c_str(),
                          originDonneePath.c_str(), NULL, 0,
                          MZ_BEST_COMPRESSION);
@@ -429,12 +432,12 @@ QByteArray ProjectsManager::Zip(uint projectId) {
   mz_zip_writer_end(&zip_archive);
   std::cout << "fin de la compression " << std::endl;
 
-
   QString Qpath = QString::fromStdString(zipPath);
   QFile fileZip(Qpath);
 
   if (!fileZip.open(QIODevice::ReadOnly)) {
-    qWarning() << "Impossible d'ouvrir le fichier projet pour l'ID" << projectId << ":" << Qpath;
+    qWarning() << "Impossible d'ouvrir le fichier projet pour l'ID" << projectId
+               << ":" << Qpath;
     return QByteArray();
   };
 

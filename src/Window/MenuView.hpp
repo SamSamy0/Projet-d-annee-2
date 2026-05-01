@@ -10,6 +10,7 @@ class MenuView : public View {
 
   void shareProj();
   void joinProj(tgui::Panel::Ptr panel);
+  void importProj(tgui::Panel::Ptr panel);
   void displayProjList(tgui::Panel::Ptr parent);
   void showProjectMenu(ProjectData p, tgui::Button::Ptr toHover);
   void initInputWidget(focusPopup focus, ProjectData project = ProjectData{});

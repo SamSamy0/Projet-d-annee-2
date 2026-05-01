@@ -1,5 +1,7 @@
 #include "clientnetwork.hpp"
 #include <iostream>
+#include <QFile>
+#include <QByteArray>
 
 std::deque<ServerEvent> &ClientNetworkManager::getQueuEvent() {
   return reponse_;
@@ -457,4 +459,31 @@ void ClientNetworkManager::sendMessageChat(std::string message){
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;
+}
+
+void ClientNetworkManager::importProj(std::string path, std::string name){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::LOB_IMPORT_PROJECT_REQ;
+  packet <<static_cast<uint8_t>(msg);
+
+  //Reading .natif file
+  QString Qpath = QString::fromStdString(path);
+    QFile fileZip(Qpath);
+    if (!fileZip.open(QIODevice::ReadOnly)) {
+        std::cerr << "ERREUR CLIENT : Impossible d'ouvrir le fichier " << path << std::endl;
+        return; // On annule l'envoi si le fichier ne s'ouvre pas
+    }
+  QByteArray rawData = fileZip.readAll();
+
+  // Compressing zipFile
+  QByteArray dataCompress = qCompress(rawData, 9);
+  packet << static_cast<std::uint32_t>(dataCompress.size());
+  packet << (name);
+  packet.append(dataCompress.constData(), dataCompress.size());
+  fileZip.close();
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "../client.hpp"
 #include <SFML/Network.hpp>
+#include <QByteArray>
 #include <iostream>
 #include <memory>
 
@@ -59,6 +60,15 @@ struct RenameProjectMessage : IMessage {
     RenameProjectMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
     
+};
+
+struct ImportProjectMessage: IMessage{
+  uint userId_;
+  std::string projName_;
+  QByteArray file_;
+
+  ImportProjectMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
+  void process(Worker& worker)override;
 };
 
 struct DuplicateProjectMessage: IMessage{

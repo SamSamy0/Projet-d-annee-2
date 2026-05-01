@@ -6,6 +6,7 @@ build/*
 !build/CMakeLists.txt
 png/*
 export/
+import/
 
 
 
