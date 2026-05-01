@@ -60,6 +60,28 @@ void CreateProjectMessage::process(Worker &worker) {
     worker.pushNetwork(std::move(rps));
   }
 }
+ExportNativeMessage::ExportNativeMessage(sf::Packet &data_packet,
+                                         std::shared_ptr<Client> client) {
+  data_packet >> projectId_;
+  userId_ = client->id;
+}
+
+void ExportNativeMessage::process(Worker &worker) {
+  auto itProject = worker.mapProjet_.find(projectId_);
+
+  if (itProject == worker.mapProjet_.end()) {
+    return;
+  }
+
+  if (userId_ > 0) {
+    // Server saves project
+    std::unique_ptr<ExportDemand> savetsk;
+    savetsk = std::make_unique<ExportDemand>(worker.mapProjet_.at(projectId_),
+                                             projectId_, userId_);
+    std::cout << "pushing to handler" << std::endl;
+    worker.pushSave(std::move(savetsk));
+  }
+}
 
 RenameProjectMessage::RenameProjectMessage(sf::Packet &dataPacket,
                                            std::shared_ptr<Client> &client) {
@@ -149,7 +171,10 @@ void KickUserMessage::process(Worker &worker) {
   if (it != worker.mapProjet_.end()) {
     usersId = it->second.getConnected();
   }
-
+  if (std::find(usersId.begin(), usersId.end(), targetId_) == usersId.end()) {
+    std::cout << "l'utilisateur n'était pas connecté au projet" << std::endl;
+    usersId.push_back(targetId_);
+  }
   // Building the group response
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseKickUserProject>(usersId, targetId_, projectId_,
@@ -743,6 +768,9 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::LOB_JOIN_PROJECT_REQ:
     return std::make_unique<CheckTokenMessage>(data_packet, c);
+
+  case MsgProtocole::LOB_EXPORT_NATIVE_PROJECT_REQ:
+    return std::make_unique<ExportNativeMessage>(data_packet, c);
 
   case MsgProtocole::MAP_CREATE_LAYER_REQ:
     return std::make_unique<CreateLayerMessage>(data_packet, c);

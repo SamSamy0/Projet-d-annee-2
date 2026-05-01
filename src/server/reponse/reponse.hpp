@@ -174,3 +174,11 @@ struct ReponseMoveLayer : ReponseGroupe {
 struct ReponseChat : ReponseGroupe {
   ReponseChat(std::vector<uint> usersId,ChatMessage& mess);
 };
+
+struct ReponseExport : ReponseSolo {
+  ReponseExport(uint userId,std::string projectName,  QByteArray data);
+  void envoyer(ServerNetworkManager& servManager) override {
+    ReponseSolo::envoyer(servManager);
+    std::cout << "Export envoyé" << std::endl;
+  };
+};

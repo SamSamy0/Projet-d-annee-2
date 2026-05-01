@@ -37,19 +37,33 @@ public:
   void layerDown(uint proj_id, uint current_layer_id);
   void leaveProject(uint project_id);
   void changeRole(uint userId, uint projectId, int8_t role);
+  void exportToNative(uint projectId);
 
-  void drawSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-  void drawCircle(uint proj_id, uint layer_id, int pos_x, int pos_y, float size, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-  void drawDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y, float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b,uint8_t a);
-  void eraseSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size);
-  void eraseCircle(uint proj_id, uint layer_id, int pos_x, int pos_y, float size);
-  void eraseDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y, float size_x, float size_y);
-  void drawSprite(uint proj_id, uint layer_id, std::string asset_id, int pos_x, int pos_y, float size_x);
+  void drawSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size,
+                  uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+  void drawCircle(uint proj_id, uint layer_id, int pos_x, int pos_y, float size,
+                  uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+  void drawDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y,
+                   float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b,
+                   uint8_t a);
+  void eraseSquare(uint proj_id, uint layer_id, int pos_x, int pos_y,
+                   float size);
+  void eraseCircle(uint proj_id, uint layer_id, int pos_x, int pos_y,
+                   float size);
+  void eraseDiamond(uint proj_id, uint layer_id, int pos_x, int pos_y,
+                    float size_x, float size_y);
+  void drawSprite(uint proj_id, uint layer_id, std::string asset_id, int pos_x,
+                  int pos_y, float size_x);
   void eraseSprite(uint proj_id, uint layer_id, uint sprite_id);
 
-  void moveSprites(uint proj_id, uint layer_id, const std::vector<uint>& sprite_ids, sf::Vector2i v);
-  void resizeSprites(uint proj_id, uint layer_id, const std::vector<uint>& sprite_ids, const std::vector<sf::Vector2f>& positions, float scale);
-  void rotateSprites(uint proj_id, uint layer_id, const std::vector<uint>& sprite_ids, float angle, const std::vector<sf::Vector2f>& positions);
+  void moveSprites(uint proj_id, uint layer_id,
+                   const std::vector<uint> &sprite_ids, sf::Vector2i v);
+  void resizeSprites(uint proj_id, uint layer_id,
+                     const std::vector<uint> &sprite_ids,
+                     const std::vector<sf::Vector2f> &positions, float scale);
+  void rotateSprites(uint proj_id, uint layer_id,
+                     const std::vector<uint> &sprite_ids, float angle,
+                     const std::vector<sf::Vector2f> &positions);
 
   void shiftLayer(uint proj_id, uint layer_id, int delta_x, int delta_y);
 

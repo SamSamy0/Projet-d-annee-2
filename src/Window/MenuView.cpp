@@ -71,7 +71,11 @@ void MenuView::init() {
     rightPanel->add(displayToken());
   }
 }
-void MenuView::clearProjList() { projectList.clear(); }
+void MenuView::clearProjList() {
+  projectList.clear();
+  init();
+}
+
 void MenuView::handleEvents(const sf::Event &event) {
   auto &gui = app_.getGui();
   if (const auto *mouseClick = event.getIf<sf::Event::MouseButtonPressed>()) {
@@ -216,7 +220,6 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   menu->setTextSize(20);
   int8_t projectRole = project.role;
   app_.setCurrentProjRole(projectRole);
-  // menu->onUnfocus([this, menu]() { gui.remove(menu); });
   menu->onItemSelect([this, menu, id, toHover, project, projectRole, &manager,
                       &gui](const tgui::String &item) {
     // Delete Action
