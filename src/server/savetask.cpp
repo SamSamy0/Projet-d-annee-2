@@ -37,9 +37,9 @@ void ExportDemand::execute(SaveWorker& worker) {
     ProjectsManager prjManager = worker.getPrjMngr();
 
     QByteArray data = prjManager.Zip(projetId_);
-
+    std::string projectName = json_["name"].toString().toStdString();
     std::unique_ptr<Reponse> rps;
-    rps = std::make_unique<ReponseExport>(userId_, data);
+    rps = std::make_unique<ReponseExport>(userId_, projectName,data);
 
     std::cout << "export envoyé " << std::endl;
     worker.addReponse(std::move(rps));

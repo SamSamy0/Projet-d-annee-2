@@ -24,6 +24,9 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
   if (!dir.exists(rootPath_+ "/projectZipped")) {
     dir.mkpath(rootPath_+ "/projectZipped");
   }
+  if (!dir.exists("../export")){
+    dir.mkpath("../export");
+  }
 
 }
 
@@ -396,8 +399,6 @@ QByteArray ProjectsManager::Zip(uint projectId) {
   mz_zip_writer_init_file(&zip_archive, zipPath.c_str(), 0);
 
   // Writing in zipFile png
-  // BUG: Quand un projet est créer et on essaye d'exporter, ça ne fonctionne
-  // pas car on ne sauvegarde en local qu'au moment où on ferme l'appli
   try {
     for (const auto &entry :
          std::filesystem::recursive_directory_iterator(originalImagesPath)) {

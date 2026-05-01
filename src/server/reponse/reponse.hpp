@@ -176,7 +176,7 @@ struct ReponseChat : ReponseGroupe {
 };
 
 struct ReponseExport : ReponseSolo {
-  ReponseExport(uint userId, QByteArray data);
+  ReponseExport(uint userId,std::string projectName,  QByteArray data);
   void envoyer(ServerNetworkManager& servManager) override {
     ReponseSolo::envoyer(servManager);
     std::cout << "Export envoyé" << std::endl;

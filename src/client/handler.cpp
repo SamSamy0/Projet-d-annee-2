@@ -3,13 +3,14 @@
 #include "clientnetwork.hpp"
 #include <QByteArray>
 #include <QDebug>
+#include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <SFML/Network.hpp>
 #include <iostream>
+#include <qstringview.h>
 #include <unordered_map>
-#include <QFile>
 
 ClientHandler::ClientHandler(ClientNetworkManager &client_manager,
                              ReceiverInWindow &w)
@@ -56,34 +57,78 @@ void ClientHandler::process(ServerEvent &event) {
   }
 
   case MsgProtocole::LOB_EXPORT_NATIVE_PROJECT_REP: {
-
-    std::cout << "Réception de la réponse d'exportation du projet..." << std::endl;
+    std::cout << "Réception de la réponse d'exportation du projet..."
+              << std::endl;
     uint32_t zipSize;
+    std::string projName;
 
-    *(event.data_packet_) >> zipSize;
+    *(event.data_packet_) >> zipSize >> projName;
 
-    const size_t headerOffset = sizeof(std::uint8_t) + sizeof(std::uint32_t);
-    
+      // Offset of what preceeds zipBytes
+    const size_t headerOffset =
+        sizeof(uint8_t) + sizeof(uint32_t) + sizeof(uint32_t) + projName.size();
+
+      // size of element in packet
     const char *rawBuf = (const char *)(*(event.data_packet_)).getData();
-    const size_t totalSize = event.data_packet_->getDataSize();
 
-    QByteArray zipBytes(rawBuf + headerOffset, zipSize);
+      // Getting zipBytes compressed by QT
+    QByteArray compressedBytes(rawBuf + headerOffset, zipSize);
+      // Uncompressing zipBytes from QT
+    QByteArray zipBytes = qUncompress(compressedBytes);
+    std::string stringPath = "../export/" + projName + ".natif";
 
-    QString destPath = QString("export/project_.natif");
+    QString destPath = QString::fromStdString(stringPath);
     QFile zipFile(destPath);
 
+      // Writing in file with QT
     if (zipFile.open(QIODevice::WriteOnly)) {
       zipFile.write(zipBytes);
       zipFile.close();
-      std::cout << "Succès : fichier ZIP sauvegardé sous " << destPath.toStdString() << std::endl;
-    } else {
-      std::cerr << "Erreur : impossible d'écrire le fichier ZIP sur le disque (" 
-                << destPath.toStdString() << ")." << std::endl;
-    }
-
-    //TODO : affichage du projet exporté ? nom adresse ?
+    } 
+    // TODO : affichage du projet exporté ?
     break;
   }
+    // case MsgProtocole::LOB_EXPORT_NATIVE_PROJECT_REP: {
+    //   uint32_t zipSize;
+    //   std::string projectName;
+    //
+    //   *(event.data_packet_) >> projectName >> zipSize;
+    //   std::cout << "name " << projectName << std::endl;
+    //
+    //   const size_t headerOffset = sizeof(std::uint8_t)
+    //                             + sizeof(std::uint32_t) +
+    //                             projectName.size()
+    //                             + sizeof(std::uint32_t);
+    //
+    //   const char *rawBuf = (const char *)(*(event.data_packet_)).getData();
+    //
+    //   QByteArray compressedBytes(rawBuf + headerOffset, zipSize);
+    //   QByteArray zipBytes = qUncompress(compressedBytes);
+    //
+    //   if (zipBytes.isEmpty()) {
+    //       std::cerr << "Erreur : décompression de l'archive échouée." <<
+    //       std::endl; break;
+    //   }
+    //
+    //   QString safeName = QString::fromStdString(projectName).replace(" ",
+    //   "_"); QString destPath = safeName + ".natif";
+    //
+    //   QFile zipFile(destPath);
+    //
+    //   if (zipFile.open(QIODevice::WriteOnly)) {
+    //     zipFile.write(zipBytes);
+    //     zipFile.close();
+    //     std::cout << "Succès VRAI : fichier natif sauvegardé sous " <<
+    //     destPath.toStdString() << std::endl;
+    //   } else {
+    //     std::cerr << "Erreur : impossible d'écrire le fichier natif sur le
+    //     disque ("
+    //               << destPath.toStdString() << ")." << std::endl;
+    //   }
+    //
+    //   // TODO : affichage du projet exporté ? nom adresse ?
+    //   break;
+    // }
 
   case MsgProtocole::LOB_GET_PROJECT_DATA_REP: {
     std::uint32_t jsonSize;
