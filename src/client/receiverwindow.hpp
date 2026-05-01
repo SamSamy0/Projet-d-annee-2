@@ -33,6 +33,7 @@ public:
   void resizeSprite(uint layer_id,uint sprite_id,sf::Vector2f pos, float scale);
   void rotateSprite(uint layer_id,uint sprite_id,float angle, sf::Vector2f pos);
   void shiftLayer(uint layer_id, int delta_x, int delta_y);
+  void autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size);
   void updateShareToken(std::string newTok);
   void clearProjList();
   void clearMemberList();

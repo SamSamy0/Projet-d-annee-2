@@ -47,7 +47,7 @@ void AutoFill::generateSprites(){
       sprite.setPosition(sf::Vector2f(i,j));
       sf::FloatRect bounds = sprite.getGlobalBounds();
       sprite.setOrigin(sf::Vector2f(bounds.size.x/2.0f,bounds.size.y/2.0f));
-      temporaryLayer_->draw(sprite);
+      temporaryLayer_->draw(sprite, asset->id);
     }
   }
   srand(time(NULL));
@@ -92,9 +92,19 @@ void AutoFill::clearAsset(){assets_.clear();}
 
 
 void AutoFill::apply(){
-  if(map_->getCurrentLayer()->getType() == SPRITELAYER)
+  if(map_->getCurrentLayer()->getType() == SPRITELAYER){
+    std::vector<sf::Vector2f> positions;
+    std::vector<std::string> asset_ids;
+
+    for(const auto& [id,spriteObj] : temporaryLayer_->getSprites()){
+      positions.push_back(spriteObj.sprite.getPosition());
+      asset_ids.push_back(spriteObj.assetId);
+    }
+    
+    manager_.autofill(map_->getId(),map_->getCurrentLayer()->getId(),asset_ids,positions,rotation_,size_);
     static_pointer_cast<SpriteLayer>(map_->getCurrentLayer())->draw(temporaryLayer_);
-  clear();
+    clear();
+  }
 }
 
 void AutoFill::clear(){temporaryLayer_->getSprites().clear();}

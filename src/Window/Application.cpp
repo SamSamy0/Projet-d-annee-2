@@ -177,7 +177,7 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
             float spriteScale = spriteSize * static_cast<float>(map->getScale()) / bounds.size.x;
             sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
             sprite.setPosition(sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
-            layer->draw(sprite);
+            layer->draw(sprite, nameId);
           }
         }
       }

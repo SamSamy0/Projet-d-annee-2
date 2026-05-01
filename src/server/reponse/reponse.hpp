@@ -171,6 +171,10 @@ struct ReponseMoveLayer : ReponseGroupe {
   ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage &mess);
 };
 
+struct ReponseAutoFill : ReponseGroupe{
+  ReponseAutoFill(std::vector<uint> usersId, AutoFillMessage& mess);
+};
+
 struct ReponseChat : ReponseGroupe {
   ReponseChat(std::vector<uint> usersId,ChatMessage& mess);
 };

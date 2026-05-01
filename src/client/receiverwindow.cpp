@@ -189,6 +189,25 @@ void ReceiverInWindow::rotateSprite(uint layer_id,uint sprite_id,float angle, sf
 
 
 
+void ReceiverInWindow::autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size){
+
+  std::shared_ptr<Layer> layer = app_->getProject()->getMap()->getLayer(layer_id);
+  if(layer->getType() == SPRITELAYER){
+    std::shared_ptr<SpriteLayer> spritelayer = static_pointer_cast<SpriteLayer>(layer);
+    AssetManager& assetManager = app_->getProject()->getMap()->getAssetManager();
+    for(int i = 0; i< asset_id.size(); i++){
+      std::string id = asset_id[i];
+      sf::Sprite sprite = sf::Sprite(*(assetManager.getAsset(id)->texture));
+      sprite.setPosition(pos[i]);
+      sprite.setRotation(sf::degrees(rotatation));
+      sprite.setScale(sf::Vector2f(size,size));
+
+      spritelayer->draw(sprite,id);
+    }
+  }
+
+}
+
 
 void ReceiverInWindow::setMemberList(std::vector<MemberEntry> memberList) {
   if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {

@@ -68,7 +68,7 @@ void SpriteBrush::paint(sf::Vector2i pos,Asset* asset){
     sprite.setPosition(sf::Vector2f(static_cast<float>(pos.x) - offset.x,
                                     static_cast<float>(pos.y) - offset.y));
 
-    spritelayer->draw(sprite);
+    spritelayer->draw(sprite, asset->id);
   }
 }
 

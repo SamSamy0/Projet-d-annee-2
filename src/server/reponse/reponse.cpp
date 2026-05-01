@@ -321,6 +321,20 @@ ReponseMoveLayer::ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage& 
     dataPacket_ << mess.projectId_ << mess.calqueId_ <<  mess.deltaX_ << mess.deltaY_;
 }
 
+
+
+ReponseAutoFill::ReponseAutoFill(std::vector<uint> usersId, AutoFillMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_AUTOFILL_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.count_ << mess.rotation_ << mess.size_;
+    for(std::string id : mess.asset_ids_){
+        dataPacket_ << id;
+    }
+    for(sf::Vector2f pos : mess.positions_){
+        dataPacket_ << pos.x << pos.y;
+    }
+}
+
 ReponseChat::ReponseChat(std::vector<uint> usersId,ChatMessage& mess) : ReponseGroupe(usersId){
      dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::CHAT_MESSAGE_REP);
      dataPacket_ << mess.pseudo_ << mess.message_ << mess.min_ << mess.hour_ << mess.day_ << mess.month_ <<mess.year_;

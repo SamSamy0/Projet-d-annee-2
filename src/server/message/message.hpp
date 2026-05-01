@@ -255,7 +255,18 @@ struct MoveLayerMessage : ModifProjetMessage {
   int deltaY_;
 
   MoveLayerMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
-    void process(Worker& worker) override;
+  void process(Worker& worker) override;
+};
+
+struct AutoFillMessage : ModifProjetMessage{
+  uint count_;
+  float rotation_;
+  float size_;
+  std::vector<std::string> asset_ids_;
+  std::vector<sf::Vector2f> positions_;
+
+  AutoFillMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
+  void process(Worker& worker) override;
 };
 
 struct DisconnectMessage : IMessage {

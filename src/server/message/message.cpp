@@ -618,6 +618,47 @@ void MoveLayerMessage::process(Worker &worker) {
   }
 }
 
+
+
+
+
+AutoFillMessage::AutoFillMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client){
+
+  userId_ = client->id;
+  dataPacket >> projectId_>>calqueId_ >> count_ >> rotation_ >> size_;
+
+  for(int i = 0; i<count_; i++){
+    std::string id;
+    dataPacket>> id;
+    asset_ids_.push_back(id);
+  }
+
+  for(int i = 0; i<count_; i++){
+    sf::Vector2f pos;
+    dataPacket>> pos.x >> pos.y;
+    positions_.push_back(pos);
+  }
+
+}
+void AutoFillMessage::process(Worker& worker){
+
+  auto liveProj = worker.mapProjet_.find(projectId_);
+  if (liveProj == worker.mapProjet_.end()) {
+    return;
+  }
+  // if (liveProj->second.resizeSprite(userId_,
+  // calqueId_,sprite_id_,angle_,x_,y_)){
+  std::vector<uint> usersId = this->getUserLists(worker);
+  std::unique_ptr<Reponse> rps;
+
+  rps = std::make_unique<ReponseAutoFill>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+  // }
+}
+
+
+
+
 GenerateTokenMessage::GenerateTokenMessage(sf::Packet &dataPacket,
                                            std::shared_ptr<Client> &client) {
   dataPacket >> role >> projectId_;
@@ -794,6 +835,9 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::MAP_ERASE_SPRITE_REQ:
     return std::make_unique<EraseSpriteMessage>(data_packet, c);
+
+  case MsgProtocole::MAP_AUTOFILL_REQ:
+    return std::make_unique<AutoFillMessage>(data_packet,c);
 
   case MsgProtocole::PROJ_CHANGE_ROLE_REQ:
     return std::make_unique<ChangeRoleMessage>(data_packet, c->id);
