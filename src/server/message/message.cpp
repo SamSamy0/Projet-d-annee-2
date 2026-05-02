@@ -1,9 +1,9 @@
 #include "message.hpp"
 #include "../../common/protocol.hpp"
 #include "../../project/Chat/userMessage.hpp"
+#include "../datamanager/miniz.h"
 #include "../reponse/reponse.hpp"
 #include "../worker.hpp"
-#include "../datamanager/miniz.h"
 #include <filesystem>
 #include <memory>
 
@@ -101,71 +101,95 @@ void RenameProjectMessage::process(Worker &worker) {
   worker.pushNetwork(std::move(rps));
 }
 
-ImportProjectMessage::ImportProjectMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client){
+ImportProjectMessage::ImportProjectMessage(sf::Packet &dataPacket,
+                                           std::shared_ptr<Client> &client) {
   userId_ = client->id;
   uint32_t dataSize;
   dataPacket >> dataSize >> projName_;
   // Same as in the handler for exportation
-  const void* rawBuf = static_cast<const char*>(dataPacket.getData()) + dataPacket.getReadPosition();
-  file_ = QByteArray(static_cast<const char*>(rawBuf) , dataSize);
-
+  const void *rawBuf = static_cast<const char *>(dataPacket.getData()) +
+                       dataPacket.getReadPosition();
+  file_ = QByteArray(static_cast<const char *>(rawBuf), dataSize);
 }
-// help of AI for this use of miniz.c because lack of documentation
-bool exportNativeFromMemory(const QByteArray& zipData, const std::string& destPath) {
-    mz_zip_archive zip_archive;
-    memset(&zip_archive, 0, sizeof(zip_archive));
+/* Read raw data from zip in RAM without creating temporary files
+ * In order to extract it in servers'RAM
+ */
+// Got help from AI for this use of miniz.c because lack of documentation
+bool exportNativeFromMemory(const QByteArray &zipData,
+                            const std::string &destPath) {
+  // Creating empty zipFile (destination file)
+  mz_zip_archive zip_archive;
+  memset(&zip_archive, 0, sizeof(zip_archive));
 
-    if (!mz_zip_reader_init_mem(&zip_archive, zipData.constData(), zipData.size(), 0)) {
-        std::cerr << "Erreur : Impossible de lire l'archive ZIP depuis la mémoire." << std::endl;
-        return false;
+  // Miniz reads raw data from RAM
+  if (!mz_zip_reader_init_mem(&zip_archive, zipData.constData(), zipData.size(),
+                              0)) {
+    std::cerr << "Erreur : Impossible de lire l'archive ZIP depuis la mémoire."
+              << std::endl;
+    return false;
+  }
+
+  // Ensures Directories in destination Folder exists
+  fs::create_directories(destPath);
+
+  int nbFiles = mz_zip_reader_get_num_files(&zip_archive);
+
+  // Iterating over every element in zip
+  for (int i = 0; i < nbFiles; i++) {
+    mz_zip_archive_file_stat infoFichier;
+    // Fetch information of the file i (name, size, ...)
+    if (!mz_zip_reader_file_stat(&zip_archive, i, &infoFichier))
+      continue;
+
+    // aboslute path (server's side)
+    fs::path finalPath = fs::path(destPath) / infoFichier.m_filename;
+
+    if (mz_zip_reader_is_file_a_directory(&zip_archive, i)) {
+      fs::create_directories(finalPath);
+      continue;
     }
 
-    fs::create_directories(destPath);
+    fs::create_directories(finalPath.parent_path());
 
-    int nbFiles = mz_zip_reader_get_num_files(&zip_archive);
-    
-    for (int i = 0; i < nbFiles; i++) {
-        mz_zip_archive_file_stat infoFichier;
-        if (!mz_zip_reader_file_stat(&zip_archive, i, &infoFichier)) continue;
-    
-        fs::path finalPath = fs::path(destPath) / infoFichier.m_filename;
-    
-        if (mz_zip_reader_is_file_a_directory(&zip_archive, i)) {
-            fs::create_directories(finalPath);
-            continue;
-        }
-
-        fs::create_directories(finalPath.parent_path());
-
-        if (!mz_zip_reader_extract_to_file(&zip_archive, i, finalPath.string().c_str(), 0)) {
-            std::cerr << "Erreur lors de l'extraction de : " << infoFichier.m_filename << std::endl;
-        }
+    // Extracting file to server's file
+    if (!mz_zip_reader_extract_to_file(&zip_archive, i,
+                                       finalPath.string().c_str(), 0)) {
+      std::cerr << "Erreur lors de l'extraction de : " << infoFichier.m_filename
+                << std::endl;
     }
-    mz_zip_reader_end(&zip_archive);
-    return true;
+  }
+  mz_zip_reader_end(&zip_archive);
+  return true;
 }
-void ImportProjectMessage::process(Worker& worker) {
-    uint newId = worker.addProjectSQL(projName_, userId_);
-    
-    QByteArray zipBytes = qUncompress(file_);
+/*
+ * Importing file from client to server
+ * */
+void ImportProjectMessage::process(Worker &worker) {
+  uint newId = worker.addProjectSQL(projName_, userId_);
 
-    std::string dossierDestination = "projectsFolder/project_" + to_string(newId);
+  QByteArray zipBytes = qUncompress(file_);
 
-    bool success = exportNativeFromMemory(zipBytes, dossierDestination);
+  std::string dossierDestination = "projectsFolder/project_" + to_string(newId);
 
-    if (success) {
-        worker.getProjMngr().updateJsonDup(newId, QString::fromStdString(projName_));
-        
-        LiveProject liveProj = LiveProject(newId);
-        liveProj.addConnection(userId_, 2); 
-        worker.mapProjet_.emplace(newId, std::move(liveProj));
-        // Updating user's project list 
-        std::vector<ProjectEntry> projects = worker.getUserProjects(userId_);
-        std::unique_ptr<Reponse> rps = std::make_unique<ReponseUsersProjects>(userId_, projects);
-        worker.pushNetwork(std::move(rps));
-    } else {
-        std::cerr << "L'extraction du projet importé a échoué." << std::endl;
-    }
+  bool success = exportNativeFromMemory(zipBytes, dossierDestination);
+
+  if (success) {
+    // Updating imported project's name
+    worker.getProjMngr().updateJsonDup(newId,
+                                       QString::fromStdString(projName_));
+
+    LiveProject liveProj = LiveProject(newId);
+    // Adding user as owner
+    liveProj.addConnection(userId_, 2);
+    worker.mapProjet_.emplace(newId, std::move(liveProj));
+    // Updating user's project list
+    std::vector<ProjectEntry> projects = worker.getUserProjects(userId_);
+    std::unique_ptr<Reponse> rps =
+        std::make_unique<ReponseUsersProjects>(userId_, projects);
+    worker.pushNetwork(std::move(rps));
+  } else {
+    std::cerr << "L'extraction du projet importé a échoué." << std::endl;
+  }
 }
 DuplicateProjectMessage::DuplicateProjectMessage(
     sf::Packet &dataPacket, std::shared_ptr<Client> &client) {
