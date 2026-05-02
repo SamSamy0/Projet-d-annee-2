@@ -46,7 +46,6 @@ public:
   void display();
   void displayScale();
   void displayToolBar();
-  void displayBackground();
   void setId(uint newId);
   sf::View &getView();
   int8_t getRole();

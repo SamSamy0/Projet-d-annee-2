@@ -9,10 +9,10 @@ void GameView::drawMinimap() {
     auto map = project->getMap();
     auto& texture = map->getRenderTexture().getTexture();
     sf::Vector2u mapSize = map->getSize();
-    float scale = ((200 / mapSize.x) < (150 / mapSize.y)) ? (200 / mapSize.x) : (150 / mapSize.y);
+    float scale = ((200.0 / mapSize.x) < (150.0 / mapSize.y)) ? (200.0 / mapSize.x) : (150.0 / mapSize.y);
 
     sf::RectangleShape minimapBackground({mapSize.x * scale, mapSize.y * scale});
-    minimapBackground.setPosition({static_cast<float>(mainWindow.getSize().x) * 0.87f, static_cast<float>(mainWindow.getSize().y) * 0.80f});
+    minimapBackground.setPosition({static_cast<float>(mainWindow.getSize().x) - mapSize.x * scale - 10.f, static_cast<float>(mainWindow.getSize().y) - mapSize.y * scale - 10.f});
     minimapBackground.setFillColor(sf::Color(36, 40, 47));
     minimapBackground.setOutlineColor(sf::Color(90, 95, 105));
     minimapBackground.setOutlineThickness(1);

@@ -9,23 +9,18 @@
 
 void GameView::initToolbar() {
   auto &manager = app_.getNetwork();
-  auto &mainWindow = app_.getWindow();
   auto &gui = app_.getGui();
-  float width = mainWindow.getSize().x;
-  float height = mainWindow.getSize().y;
 
-  // Création du panel (box) qui reprends tout les outils
   auto toolbar = tgui::Panel::create();
-  toolbar->setSize(width, height * 0.05);
-  toolbar->setPosition(width * 0.0, height * 0.0);
+  toolbar->setSize("100%", "5%");
+  toolbar->setPosition("0%", "0%");
   toolbar->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
   toolbar->getRenderer()->setBorders({0});
   gui.add(toolbar, "toolbar");
 
-  // Création du bouton home (retour au menu)
   auto homeButton = tgui::Button::create();
-  homeButton->setSize(height * 0.035, height * 0.035);
-  homeButton->setPosition(width * 0.008, height * 0.007);
+  homeButton->setSize("2%", "70%");
+  homeButton->setPosition("0.8%", "15%");
   homeButton->getRenderer()->setTexture("../res/images/accueil.png");
   homeButton->getRenderer()->setBorders({0});
   homeButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -35,20 +30,18 @@ void GameView::initToolbar() {
   });
   toolbar->add(homeButton);
 
-  // Création du bouton de zoom avant
   auto zoomInButton = tgui::Button::create();
-  zoomInButton->setSize(height * 0.035, height * 0.035);
-  zoomInButton->setPosition(width * 0.07, height * 0.007);
+  zoomInButton->setSize("2%", "70%");
+  zoomInButton->setPosition("7%", "15%");
   zoomInButton->getRenderer()->setTexture("../res/images/zoom-avant.png");
   zoomInButton->getRenderer()->setBorders({0});
   zoomInButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   zoomInButton->onPress([this]() { project->getMap()->getZoom().zoomIn(); });
   toolbar->add(zoomInButton);
 
-  // Création du bouton de zoom arrière
   auto zoomOutButton = tgui::Button::create();
-  zoomOutButton->setSize(height * 0.035, height * 0.035);
-  zoomOutButton->setPosition(width * 0.12, height * 0.007);
+  zoomOutButton->setSize("2%", "70%");
+  zoomOutButton->setPosition("12%", "15%");
   zoomOutButton->getRenderer()->setTexture("../res/images/zoom-arriere.png");
   zoomOutButton->getRenderer()->setBorders({0});
   zoomOutButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -56,16 +49,15 @@ void GameView::initToolbar() {
   toolbar->add(zoomOutButton);
 
   if (project->getRole() != 0) {
-    // Création des boutons pour les outils pixels
     auto penButton = tgui::Button::create();
     auto brushButton = tgui::Button::create();
     auto shiftButton = tgui::Button::create();
     auto spriteBrushButton = tgui::Button::create();
     auto selectionButton = tgui::Button::create();
+    auto fillerButton = tgui::Button::create();
 
-    // Options pour le crayon
-    penButton->setSize(height * 0.035, height * 0.035);
-    penButton->setPosition(width * 0.25, height * 0.007);
+    penButton->setSize("2%", "70%");
+    penButton->setPosition("25%", "15%");
     penButton->getRenderer()->setTexture("../res/images/crayon.png");
     penButton->getRenderer()->setBorders({0});
     penButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -113,9 +105,8 @@ void GameView::initToolbar() {
         });
     toolbar->add(penButton);
 
-    // Options pour la gomme
-    brushButton->setSize(height * 0.035, height * 0.035);
-    brushButton->setPosition(width * 0.35, height * 0.007);
+    brushButton->setSize("2%", "70%");
+    brushButton->setPosition("34%", "15%");
     brushButton->getRenderer()->setTexture("../res/images/la-gomme.png");
     brushButton->getRenderer()->setBorders({0});
     brushButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -164,9 +155,8 @@ void GameView::initToolbar() {
         });
     toolbar->add(brushButton);
 
-    // Options pour le shift pixel
-    shiftButton->setSize(height * 0.035, height * 0.035);
-    shiftButton->setPosition(width * 0.45, height * 0.007);
+    shiftButton->setSize("2%", "70%");
+    shiftButton->setPosition("43%", "15%");
     shiftButton->getRenderer()->setTexture("../res/images/couche.png");
     shiftButton->getRenderer()->setBorders({0});
     shiftButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -197,9 +187,8 @@ void GameView::initToolbar() {
         });
     toolbar->add(shiftButton);
 
-    // Options pour le bouton sprite brush
-    spriteBrushButton->setSize(height * 0.035, height * 0.035);
-    spriteBrushButton->setPosition(width * 0.55, height * 0.007);
+    spriteBrushButton->setSize("2%", "70%");
+    spriteBrushButton->setPosition("52%", "15%");
     spriteBrushButton->getRenderer()->setTexture(
         "../res/images/sprite-brush.png");
     spriteBrushButton->getRenderer()->setBorders({0});
@@ -228,9 +217,8 @@ void GameView::initToolbar() {
         });
     toolbar->add(spriteBrushButton);
 
-    // Options pour le bouton de sélection
-    selectionButton->setSize(height * 0.035, height * 0.035);
-    selectionButton->setPosition(width * 0.65, height * 0.007);
+    selectionButton->setSize("2%", "70%");
+    selectionButton->setPosition("61%", "15%");
     selectionButton->getRenderer()->setTexture("../res/images/selection.png");
     selectionButton->getRenderer()->setBorders({0});
     selectionButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -255,11 +243,20 @@ void GameView::initToolbar() {
             spriteBrushOptionsPanel_->setVisible(false);
         });
     toolbar->add(selectionButton);
+
+    fillerButton->setSize("2%", "70%");
+    fillerButton->setPosition("70%", "15%");
+    fillerButton->getRenderer()->setTexture("../res/images/remplissage.png");
+    fillerButton->getRenderer()->setBorders({0});
+    fillerButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+    fillerButton->getRenderer()->setOpacity(0.4);
+    fillerButton->onPress([this]() {}); // TODO : completer le bouton
+    toolbar->add(fillerButton);
   }
 
   auto memberButton = tgui::Button::create();
-  memberButton->setSize(height * 0.035, height * 0.040);
-  memberButton->setPosition(width * 0.75, height * 0.007);
+  memberButton->setSize("2%", "80%");
+  memberButton->setPosition("79%", "10%");
   memberButton->getRenderer()->setTexture("../res/images/group_users.png");
   memberButton->getRenderer()->setBorders({0});
   memberButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -270,8 +267,8 @@ void GameView::initToolbar() {
   toolbar->add(memberButton);
 
   auto leaveProjectButton = tgui::Button::create();
-  leaveProjectButton->setSize(height * 0.035, height * 0.040);
-  leaveProjectButton->setPosition(width * 0.85, height * 0.007);
+  leaveProjectButton->setSize("2%", "80%");
+  leaveProjectButton->setPosition("87%", "10%");
   leaveProjectButton->getRenderer()->setTexture("../res/images/logout.png");
   leaveProjectButton->getRenderer()->setBorders({0});
   leaveProjectButton->getRenderer()->setBackgroundColor(

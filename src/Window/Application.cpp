@@ -23,6 +23,7 @@ Application::Application(ClientNetworkManager &manager)
 
   mainWindow.setPosition(sf::Vector2i((desktop.size.x - windowWidth) / 2,
                                       (desktop.size.y - windowHeight) / 2));
+  mainWindow.setMinimumSize(sf::Vector2u(1000, 600));
   // ------------------------------
 
   updateTextSize();

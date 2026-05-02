@@ -49,40 +49,24 @@ void Project::displayScale() {
   sf::Text scaleText(police);
 
   scaleText.setString("1 m = " + to_string(getScale()) + " px");
-  scaleText.setCharacterSize(17);
+  scaleText.setCharacterSize(static_cast<unsigned int>(window_.getSize().y * 0.02f));
   scaleText.setFillColor(sf::Color::White);
   scaleText.setPosition(sf::Vector2f(
-      window_.getSize().x - scaleText.getLocalBounds().size.x - 10.f, 10.f));
+      window_.getSize().x - scaleText.getLocalBounds().size.x - 10.f,
+      window_.getSize().y * 0.01f));
 
   window_.setView(window_.getDefaultView());
   window_.draw(scaleText);
 }
 
-void Project::displayBackground() {
-  sf::RectangleShape top;
-
-  top.setSize(sf::Vector2f(window_.getSize().x, window_.getSize().y * 0.07));
-  top.setFillColor(sf::Color(36, 40, 47));
-
-  sf::RectangleShape left;
-
-  left.setPosition(sf::Vector2f(0, window_.getSize().y * 0.05));
-  left.setSize(
-      sf::Vector2f(window_.getSize().x * 0.18, window_.getSize().y * 1.5));
-  left.setFillColor(sf::Color(36, 40, 47));
-
-  window_.draw(top);
-  window_.draw(left);
-}
-
 void Project::display() {
-  window_.clear(sf::Color(200, 200, 200));
+  window_.clear(sf::Color(36, 40, 47));
   // ------ [ afficher la carte ] -----
+  viewMap_.setViewport(sf::FloatRect{{0.21f, 0.05f}, {0.79f, 0.95f}});
   window_.setView(viewMap_);
   map_->displayMap(window_, viewMap_);
-  window_.setView(viewUI_);
+  window_.setView(window_.getDefaultView());
 
-  displayBackground();
   displayScale();
 }
 
