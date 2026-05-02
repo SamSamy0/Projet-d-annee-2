@@ -388,12 +388,12 @@ QJsonArray ProjectsManager::loadChat(uint projectId) {
 }
 
 QByteArray ProjectsManager::Zip(uint projectId) {
-  // Path
+  std::string projectIdStr = std::to_string(projectId);
+
+  std::string projectBasePath =
+      rootPath_.toStdString() + "/project_" + projectIdStr;
   std::string zipPath = rootPath_.toStdString() + "/projectZipped/project_" +
-                        std::to_string(projectId) + ".natif";
-  std::string originalImagesPath = rootPath_.toStdString() + "/project_" +
-                                   std::to_string(projectId) + "/images/";
-  std::string destImagePath = "images/";
+                        projectIdStr + ".natif";
 
   // Creating zip file
   mz_zip_archive zip_archive;
@@ -404,30 +404,42 @@ QByteArray ProjectsManager::Zip(uint projectId) {
   // Writing in zipFile png
   try {
     for (const auto &entry :
-         std::filesystem::recursive_directory_iterator(originalImagesPath)) {
+         std::filesystem::directory_iterator(projectBasePath)) {
+      std::string entryName = entry.path().filename().string();
       std::string fullPathOnDisk = entry.path().string();
 
-      std::string relativePath =
-          std::filesystem::relative(entry.path(), originalImagesPath).string();
-      std::string FileInZipPath = destImagePath + relativePath;
+      // Parsing files
+      if (entry.is_directory()) {
+        if (entryName == "images") {
+          for (const auto &subEntry :
+               std::filesystem::recursive_directory_iterator(entry.path())) {
+            // les fichiers
+            std::string subFullPath = subEntry.path().string();
 
-      mz_zip_writer_add_file(&zip_archive, FileInZipPath.c_str(),
-                             fullPathOnDisk.c_str(), NULL, 0,
-                             MZ_BEST_COMPRESSION);
+            // Creating relative path for zip (ex: "images/0.png")
+            std::string relativePath =
+                std::filesystem::relative(subEntry.path(), projectBasePath)
+                    .string();
+
+            mz_zip_writer_add_file(&zip_archive, relativePath.c_str(),
+                                   subFullPath.c_str(), NULL, 0,
+                                   MZ_BEST_COMPRESSION);
+          }
+        }
+      } else if (entry.is_regular_file()) {
+        if (entryName == "donnees.json") {
+          mz_zip_writer_add_file(&zip_archive, entryName.c_str(),
+                                 fullPathOnDisk.c_str(), NULL, 0,
+                                 MZ_BEST_COMPRESSION);
+        }
+      }
     }
   } catch (const std::exception &e) {
-    std::cerr << "Erreur système le dossier n'a pas pu être atteint : "
-              << e.what() << std::endl;
+    std::cerr << "Erreur système lors du parcours du dossier : " << e.what()
+              << std::endl;
   }
-  // Writing donnees.json
-  std::string originDonneePath = "../bin/projectsFolder/project_" +
-                                 std::to_string(projectId) + "/donnees.json";
-  std::string destDonneePath = "donnees.json";
-  mz_zip_writer_add_file(&zip_archive, destDonneePath.c_str(),
-                         originDonneePath.c_str(), NULL, 0,
-                         MZ_BEST_COMPRESSION);
 
-  // Finalisation et nettoyage
+  // Cleaning and closing zip
   mz_zip_writer_finalize_archive(&zip_archive);
   mz_zip_writer_end(&zip_archive);
   std::cout << "fin de la compression " << std::endl;
@@ -439,10 +451,11 @@ QByteArray ProjectsManager::Zip(uint projectId) {
     qWarning() << "Impossible d'ouvrir le fichier projet pour l'ID" << projectId
                << ":" << Qpath;
     return QByteArray();
-  };
+  }
 
   QByteArray rawData = fileZip.readAll();
   fileZip.close();
 
+  // Sending Bytes to client
   return rawData;
 }
