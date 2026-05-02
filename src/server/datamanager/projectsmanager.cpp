@@ -30,6 +30,9 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
   if (!dir.exists("../import")) {
     dir.mkpath("../import");
   }
+  if (!dir.exists("../export_image")) {
+    dir.mkpath("../export_image");
+  }
 }
 
 /*bool ProjectsManager::createProjectJson(uint id, const QString &projectName,

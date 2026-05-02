@@ -270,7 +270,7 @@ void GameView::initToolbar() {
       [this, &manager]() { manager.getUsersProjects(project->getId()); });
   toolbar->add(memberButton);
 
-  //Made by IA for better Design 
+  //Help of AI for better Design 
   //(based on a dropdown menu that I've already made (showProjectMenu in MenuView))
   auto exportButton = tgui::Button::create();
   exportButton->setSize(height * 0.035, height * 0.040);
@@ -280,50 +280,108 @@ void GameView::initToolbar() {
   exportButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   exportButton->getRenderer()->setOpacity(0.4);
   exportButton->getRenderer()->setTextureHover("../res/images/share.png");
-  exportButton->onPress([this,&manager, exportButton, height]() {
+  exportButton->onPress([this, exportButton, &manager]() {
     auto &gui = app_.getGui();
  
     //Toggle
     if (gui.get("exportPopup")) {
       exportButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
       gui.remove(gui.get("exportPopup"));
+      if (gui.get("exportSubPopup"))
+        gui.remove(gui.get("exportSubPopup"));
       return;
     }
+    //Toggle
+    if (gui.get("exportSubPopup"))
+      gui.remove(gui.get("exportSubPopup"));
  
     exportButton->getRenderer()->setBackgroundColor(sf::Color(55, 55, 70));
  
     sf::Vector2f btnPos = exportButton->getAbsolutePosition();
  
     auto menu = tgui::ListBox::create();
+    
     menu->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
-    menu->getRenderer()->setTextSize(20);
+    menu->getRenderer()->setTextSize(15);
     menu->getRenderer()->setBorders(2);
     menu->getRenderer()->setBorderColor(sf::Color::White);
     menu->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
     menu->getRenderer()->setTextColor(tgui::Color::White);
-    menu->addItem("Exporter en PNG");
+    menu->addItem("Export de la carte");
     menu->addItem("Format natif");
  
     float menuHeight = menu->getItemCount() * 45;
-    menu->setSize(180, menuHeight);
+    menu->setSize(190, menuHeight);
     menu->setItemHeight(45);
     menu->setTextSize(20);
-    menu->setPosition(btnPos.x + exportButton->getSize().x - 180,
+    menu->setPosition(btnPos.x + exportButton->getSize().x - 190,
                       btnPos.y + exportButton->getSize().y);
  
     gui.add(menu, "exportPopup");
  
-    menu->onItemSelect([this, &manager, menu, exportButton](const tgui::String &item) {
+    menu->onItemSelect([this, menu, exportButton, &manager](const tgui::String &item) {
       auto &gui = app_.getGui();
  
-      if (item == "Exporter en PNG") {
-        project->exportToPng();
+      if (item == "Export de la carte") {
+      //Toggle
+        if (gui.get("exportSubPopup")) {
+          gui.remove(gui.get("exportSubPopup"));
+          menu->deselectItem();
+          return;
+        }
+ 
+        sf::Vector2f menuPos = menu->getAbsolutePosition();
+ 
+        auto subMenu = tgui::ListBox::create();
+        subMenu->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+        subMenu->getRenderer()->setTextSize(30);
+        subMenu->getRenderer()->setBorders(2);
+        subMenu->getRenderer()->setBorderColor(sf::Color::White);
+        subMenu->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
+        subMenu->getRenderer()->setTextColor(tgui::Color::White);
+        subMenu->addItem("PNG");
+        subMenu->addItem("JPG");
+        subMenu->addItem("BMP");
+ 
+        float subMenuHeight = subMenu->getItemCount() * 45;
+        subMenu->setSize(120, subMenuHeight);
+        subMenu->setItemHeight(45);
+        subMenu->setTextSize(20);
+        subMenu->setPosition(menuPos.x - 120, menuPos.y);
+ 
+        gui.add(subMenu, "exportSubPopup");
+ 
+        subMenu->onItemSelect([this, menu, subMenu,
+                               exportButton, &manager](const tgui::String &format) {
+          auto &gui = app_.getGui();
+ 
+          std::string extension = format.toStdString();
+          std::transform(extension.begin(), extension.end(), extension.begin(),
+                         ::tolower);
+ 
+          bool res = project->exportToPng(extension);
+          if (res){
+          popupWarning("exportPngOK");
+          }else{
+          popupWarning("exportPngKO");
+          }
+ 
+          exportButton->getRenderer()->setBackgroundColor(
+              tgui::Color::Transparent);
+          gui.remove(subMenu);
+          gui.remove(menu);
+        });
+ 
+        menu->deselectItem();
+ 
       } else if (item == "Format natif") {
         manager.exportToNative(project->getId());
+        exportButton->getRenderer()->setBackgroundColor(
+            tgui::Color::Transparent);
+        if (gui.get("exportSubPopup"))
+          gui.remove(gui.get("exportSubPopup"));
+        gui.remove(menu);
       }
- 
-      exportButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-      gui.remove(menu);
     });
   });
   toolbar->add(exportButton);
