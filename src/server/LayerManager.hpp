@@ -47,6 +47,13 @@ class LayerManager {
     bool shiftCalque(uint calqueId, uint deltaX, uint deltaY);
     bool renameCalque(uint calqueId, std::string newName);
 
+    struct LayerInfo {
+    uint id;
+    uint8_t type;
+    int x, y;
+};
+    std::vector<LayerManager::LayerInfo> getLayersInfo()const;
+
     const std::unordered_map<uint, SpriteLayer>& getSpritesMap();
     const std::unordered_map<uint, QImage>& getImageMap();
 

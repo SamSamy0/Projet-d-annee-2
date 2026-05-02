@@ -28,8 +28,9 @@ class Map {
   AssetManager assetmanager_;
 
 public:
-  Map(uint id,sf::Vector2u size, unsigned int scale);
-  Map(uint id,sf::Vector2u size, unsigned int scale,vector<shared_ptr<Layer>> layers);
+  Map(uint id, sf::Vector2u size, unsigned int scale);
+  Map(uint id, sf::Vector2u size, unsigned int scale,
+      vector<shared_ptr<Layer>> layers);
   sf::Vector2u getSize() const;
   unsigned int getScale() const;
   Zoom &getZoom();
@@ -42,7 +43,7 @@ public:
   void selectLayer(unsigned int i);
   void selectLayerId(uint id);
   bool hasLayer() const;
-  const sf::RenderTexture& getRenderTexture() const { return render_texture_; }
+  const sf::RenderTexture &getRenderTexture() const { return render_texture_; }
   void createPixelLayer();
   void createSpriteLayer();
   void renameLayer(uint layer_id, std::string name);

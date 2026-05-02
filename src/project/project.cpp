@@ -1,12 +1,17 @@
 #include "project.hpp"
+#include "Layer/layer.hpp"
 #include "map.hpp"
 #include <SFML/Graphics.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <TGUI/TGUI.hpp>
+#include <filesystem>
 #include <memory>
 #include <string>
 
 const string FONT_PATH{"../res/police/ARIAL.TTF"};
+
+using recursive_directory_iterator =
+    std::filesystem::recursive_directory_iterator;
 
 // Constructors
 Project::Project(unsigned int scale, sf::Vector2u size, std::string name,
@@ -59,6 +64,40 @@ void Project::displayScale() {
   window_.draw(scaleText);
 }
 
+<<<<<<< HEAD
+=======
+bool Project::exportToPng(const std::string &extension) {
+  const sf::Texture &mapTexture = map_->getRenderTexture().getTexture();
+  sf::Image finalImage = mapTexture.copyToImage();
+  std::string filepath = "../export_image/" + name_ + "." + extension;
+
+  if (finalImage.saveToFile(filepath)) {
+    std::cout << "Succès: carte complète exportée vers " << filepath
+              << std::endl;
+    return true;
+  } else {
+    std::cerr << "Erreur lors de l'exportation vers " << filepath << std::endl;
+    return false;
+  }
+}
+void Project::displayBackground() {
+  sf::RectangleShape top;
+
+  top.setSize(sf::Vector2f(window_.getSize().x, window_.getSize().y * 0.07));
+  top.setFillColor(sf::Color(36, 40, 47));
+
+  sf::RectangleShape left;
+
+  left.setPosition(sf::Vector2f(0, window_.getSize().y * 0.05));
+  left.setSize(
+      sf::Vector2f(window_.getSize().x * 0.18, window_.getSize().y * 1.5));
+  left.setFillColor(sf::Color(36, 40, 47));
+
+  window_.draw(top);
+  window_.draw(left);
+}
+
+>>>>>>> main
 void Project::display() {
   window_.clear(sf::Color(36, 40, 47));
   // ------ [ afficher la carte ] -----

@@ -45,6 +45,13 @@ void LayerManager::setupLayerSprite(uint LayerId, const QJsonObject& sprites){
         layersSprite_[LayerId] = SpriteLayer(sprites);
     }
 }
+std::vector<LayerManager::LayerInfo> LayerManager::getLayersInfo() const {
+    std::vector<LayerInfo> result;
+    for (const auto& layer : layers_) {
+        result.push_back({layer.id, layer.type, layer.x, layer.y});
+    }
+    return result;
+}
 
 LayerManager::LayerManager(uint height, uint width, uint scale) {
     height_ = height;
