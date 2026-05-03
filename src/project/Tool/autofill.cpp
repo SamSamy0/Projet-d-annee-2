@@ -37,18 +37,33 @@ void AutoFill::generateSprites(){
   int maxY = std::max(startPos_.y, lastPos_.y);
   srand(seed_);
 
-  for(float j = minY;j <= maxY; j+= spacing_){
-    for(float i = minX; i<= maxX; i+= spacing_){
+  float currentStepY = size_;
+
+  for(float j = minY;j <= maxY; j+= spacing_ + currentStepY){
+    float maxRowHeight = 0;
+    for(float i = minX; i<= maxX;){
       Asset* asset = assets_.at(rand()%assets_.size());
       sf::Sprite sprite = sf::Sprite(*(asset->texture));
-      sprite.rotate(sf::degrees(rotation_));
-      float scaleFactor = size_/asset->size_m_horizontal;
-      sprite.scale(sf::Vector2f(scaleFactor,scaleFactor));
-      sprite.setPosition(sf::Vector2f(i,j));
-      sf::FloatRect bounds = sprite.getGlobalBounds();
+
+      sf::FloatRect bounds = sprite.getLocalBounds();
       sprite.setOrigin(sf::Vector2f(bounds.size.x/2.0f,bounds.size.y/2.0f));
+
+      float spriteSizeX = size_*asset->size_m_horizontal;
+      float scaleFactor = spriteSizeX/bounds.size.x;
+      sprite.scale(sf::Vector2f(scaleFactor,scaleFactor));
+
+      sprite.setRotation(sf::degrees(rotation_));
+      sprite.setPosition(sf::Vector2f(i+spriteSizeX/2.0f,j));
       temporaryLayer_->draw(sprite, asset->id);
+
+
+      i+= spriteSizeX + spacing_;
+      float spriteSizeY = bounds.size.y * scaleFactor;
+      if(spriteSizeY > maxRowHeight) 
+        maxRowHeight = spriteSizeY;
     }
+    currentStepY = (maxRowHeight > 0) ? maxRowHeight : size_;
+
   }
   srand(time(NULL));
 }
@@ -63,14 +78,17 @@ void AutoFill::setRotation(float rotation){
   generateSprites();
 }
 void AutoFill::setSize(float size){
-  size_ = size;
+  unsigned int mapScale = map_->getScale();
+  size_ = size*mapScale;
+  // if(size_ > std::abs(lastPos_ - startPos_)){
+  //   size_ = 
+  // }
   generateSprites();
 }
 void AutoFill::setSeed(uint seed){
   seed_ = seed;
   generateSprites();
 }
-
 
 void AutoFill::addAsset(const std::string &id){
   Asset *asset = map_->getAssetManager().getAsset(id);

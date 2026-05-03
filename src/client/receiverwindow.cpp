@@ -197,10 +197,17 @@ void ReceiverInWindow::autoFill(uint layer_id,std::vector<std::string> asset_id,
     AssetManager& assetManager = app_->getProject()->getMap()->getAssetManager();
     for(int i = 0; i< asset_id.size(); i++){
       std::string id = asset_id[i];
-      sf::Sprite sprite = sf::Sprite(*(assetManager.getAsset(id)->texture));
+      Asset* asset = assetManager.getAsset(id);
+      sf::Sprite sprite = sf::Sprite(*(asset->texture));
+      
+      sf::FloatRect bounds = sprite.getLocalBounds();
+      sprite.setOrigin(sf::Vector2f(bounds.size.x / 2.0f, bounds.size.y / 2.0f));
+
+      float scaleFactor = (size * asset->size_m_horizontal) / bounds.size.x;
+      sprite.setScale(sf::Vector2f(scaleFactor, scaleFactor));
+      
       sprite.setPosition(pos[i]);
       sprite.setRotation(sf::degrees(rotatation));
-      sprite.setScale(sf::Vector2f(size,size));
 
       spritelayer->draw(sprite,id);
     }
