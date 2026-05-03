@@ -4,15 +4,12 @@
 #include "../GameView.hpp"
 
 void GameView::initEraserOptions() {
-  auto& mainWindow = app_.getWindow();
   auto& gui = app_.getGui();
-  float width = mainWindow.getSize().x;
-  float height = mainWindow.getSize().y;
 
   // Création de la barre avec toutes les infos pour la gomme
   eraserOptionsPanel_ = tgui::Panel::create();
-  eraserOptionsPanel_->setSize(width * 0.35, height * 0.062);
-  eraserOptionsPanel_->setPosition(width * 0.35, height * 0.05);
+  eraserOptionsPanel_->setSize("35%", "6.2%");
+  eraserOptionsPanel_->setPosition("34%", "5%");
   eraserOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
   eraserOptionsPanel_->getRenderer()->setBorders({1});
   eraserOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
@@ -21,8 +18,8 @@ void GameView::initEraserOptions() {
   gui.add(eraserOptionsPanel_);
 
   auto widthInput = tgui::EditBox::create();
-  widthInput->setSize(width * 0.04, height * 0.04);
-  widthInput->setPosition(width * 0.008, height * 0.011);
+  widthInput->setSize("11.4%", "64%");
+  widthInput->setPosition("2.3%", "18%");
   widthInput->setDefaultText("L");
   widthInput->setInputValidator("[0-9]+\\.?[0-9]*");
   widthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
@@ -33,8 +30,8 @@ void GameView::initEraserOptions() {
   eraserOptionsPanel_->add(widthInput);
 
   auto heightInput = tgui::EditBox::create();
-  heightInput->setSize(width * 0.04, height * 0.04);
-  heightInput->setPosition(width * 0.052, height * 0.011);
+  heightInput->setSize("11.4%", "64%");
+  heightInput->setPosition("15%", "18%");
   heightInput->setDefaultText("l");
   heightInput->setInputValidator("[0-9]+\\.?[0-9]*");
   heightInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
@@ -48,7 +45,7 @@ void GameView::initEraserOptions() {
   widthInput->onTextChange([this, widthInput, heightInput]() {
     // regarde s'il y a aucune valeur
     if (widthInput->getText().empty()) return;
-    
+
     // Ici il regarde que la taille de la longueur (x) et largeur (y) du pinceau soit au moins égale à 1, et si y pas de valeur on prend la valeur de x
     unsigned int sizeX = static_cast<unsigned int>(std::stoi(widthInput->getText().toStdString()));
     if (sizeX < 1) sizeX = 1;
@@ -62,13 +59,13 @@ void GameView::initEraserOptions() {
   heightInput->onTextChange([this, widthInput, heightInput]() {
     // regarde s'il y a aucune valeur
     if (heightInput->getText().empty()) return;
-    
+
     // Ici il regarde que la taille de la longueur (x) et largeur (y) du pinceau soit au moins égale à 1, et si y pas de valeur on prend la valeur de x
     unsigned int sizeX = widthInput->getText().empty() ? 1 : static_cast<unsigned int>(std::stoi(widthInput->getText().toStdString()));
     if (sizeX < 1) sizeX = 1;
     unsigned int sizeY = static_cast<unsigned int>(std::stoi(heightInput->getText().toStdString()));
     if (sizeY < 1) sizeY = 1;
-    
+
     // On applique la nouvelle taille
     auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
     if (brush) brush->setSize(sizeX, sizeY);
@@ -80,8 +77,8 @@ void GameView::initEraserOptions() {
   auto circleButton = tgui::Button::create("Cercle");
 
   // Carré
-  squareButton->setSize(width * 0.065, height * 0.04);
-  squareButton->setPosition(width * 0.1, height * 0.011);
+  squareButton->setSize("18.6%", "64%");
+  squareButton->setPosition("29%", "18%");
   squareButton->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
   squareButton->getRenderer()->setTextColor(tgui::Color::White);
   squareButton->getRenderer()->setBorders({0});
@@ -95,11 +92,11 @@ void GameView::initEraserOptions() {
     heightInput->setVisible(false);
   });
   eraserOptionsPanel_->add(squareButton);
-  squareButton->setTextSize(12);
+  squareButton->setTextSize(0);
 
   // Diamant (losange)
-  diamondButton->setSize(width * 0.065, height * 0.04);
-  diamondButton->setPosition(width * 0.172, height * 0.011);
+  diamondButton->setSize("18.6%", "64%");
+  diamondButton->setPosition("49%", "18%");
   diamondButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   diamondButton->getRenderer()->setTextColor(tgui::Color::White);
   diamondButton->getRenderer()->setBorders({0});
@@ -113,11 +110,11 @@ void GameView::initEraserOptions() {
     heightInput->setVisible(true);
   });
   eraserOptionsPanel_->add(diamondButton);
-  diamondButton->setTextSize(12);
+  diamondButton->setTextSize(0);
 
   // Cercle
-  circleButton->setSize(width * 0.065, height * 0.04);
-  circleButton->setPosition(width * 0.244, height * 0.011);
+  circleButton->setSize("18.6%", "64%");
+  circleButton->setPosition("70%", "18%");
   circleButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   circleButton->getRenderer()->setTextColor(tgui::Color::White);
   circleButton->getRenderer()->setBorders({0});
@@ -131,5 +128,5 @@ void GameView::initEraserOptions() {
     heightInput->setVisible(false);
   });
   eraserOptionsPanel_->add(circleButton);
-  circleButton->setTextSize(12);
+  circleButton->setTextSize(0);
 }

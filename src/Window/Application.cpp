@@ -1,9 +1,9 @@
 #include "Application.hpp"
+#include "../project/Layer/pixellayer.hpp"
+#include "../project/Layer/spritelayer.hpp"
 #include "LoginView.hpp"
 #include "MenuView.hpp"
 #include "projectWidgets/GameView.hpp"
-#include "../project/Layer/pixellayer.hpp"
-#include "../project/Layer/spritelayer.hpp"
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -23,6 +23,7 @@ Application::Application(ClientNetworkManager &manager)
 
   mainWindow.setPosition(sf::Vector2i((desktop.size.x - windowWidth) / 2,
                                       (desktop.size.y - windowHeight) / 2));
+  mainWindow.setMinimumSize(sf::Vector2u(1000, 600));
   // ------------------------------
 
   updateTextSize();
@@ -64,6 +65,9 @@ void Application::processEvents() {
     if (const auto *keyPressed = event->getIf<sf::Event::KeyPressed>()) {
       if (keyPressed->code == sf::Keyboard::Key::Escape)
         mainWindow.close();
+      if (keyPressed->code == sf::Keyboard::Key::C && keyPressed->control) {
+        mainWindow.close();
+      }
     }
 
     currentView->handleEvents(*event);
@@ -132,14 +136,17 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
 
 void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                   std::string name, uint id, uint nextLayerId,
-                                  const std::vector<LayerLoadData>& layers, Chat chat) {
+                                  const std::vector<LayerLoadData> &layers,
+                                  Chat chat) {
   // Constructeur avec vecteur vide → aucun layer par défaut créé
-  project = std::make_unique<Project>(scale, size, name, id, mainWindow, gui,
-                                      manager, std::vector<std::shared_ptr<Layer>>{}, currentProjRole);
+  project = std::make_unique<Project>(
+      scale, size, name, id, mainWindow, gui, manager,
+      std::vector<std::shared_ptr<Layer>>{}, currentProjRole);
   auto map = project->getMap();
   project->setChat(chat);
 
-  for (const auto& ld : layers) {;
+  for (const auto &ld : layers) {
+    ;
     if (ld.type == 0) {
       // --- PixelLayer : données = PNG brut ---
       auto layer = std::make_shared<PixelLayer>(ld.id, ld.name, size);
@@ -162,21 +169,25 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
         layer->setNextId(static_cast<uint>(spriteJson["nextId"].toInt()));
 
         QJsonArray sprites = spriteJson["sprites"].toArray();
-        for (const auto& sv : sprites) {
+        for (const auto &sv : sprites) {
           QJsonObject s = sv.toObject();
           std::string nameId = s["nameId"].toString().toStdString();
           int sx = s["x"].toInt();
           int sy = s["y"].toInt();
           float spriteSize = static_cast<float>(s["size"].toDouble());
 
-          Asset* asset = map->getAssetManager().getAsset(nameId);
+          Asset *asset = map->getAssetManager().getAsset(nameId);
           if (asset && asset->texture) {
             sf::Sprite sprite(*(asset->texture));
             sf::FloatRect bounds = sprite.getLocalBounds();
-            sprite.setOrigin(sf::Vector2f(bounds.size.x / 2.0f, bounds.size.y / 2.0f));
-            float spriteScale = spriteSize * static_cast<float>(map->getScale()) / bounds.size.x;
+            sprite.setOrigin(
+                sf::Vector2f(bounds.size.x / 2.0f, bounds.size.y / 2.0f));
+            float spriteScale = spriteSize *
+                                static_cast<float>(map->getScale()) /
+                                bounds.size.x;
             sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
-            sprite.setPosition(sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
+            sprite.setPosition(
+                sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
             layer->draw(sprite);
           }
         }

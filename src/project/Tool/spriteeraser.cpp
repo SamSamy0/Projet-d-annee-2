@@ -64,16 +64,15 @@ int SpriteEraser::paint(sf::Vector2i pos) {
   /*I had two choices : use the id or the index of the sprite
    * i chosed to use the id because its cleaner more logical even if complexity
    * is higher */
-  const std::vector<SpriteObject> &sprites = spritelayer->getSprites();
+  const std::unordered_map<uint, SpriteObject> &sprites = spritelayer->getSprites();
   pos -= spritelayer->getOffset();
 
-  for (int i = sprites.size() - 1; i >= 0; i--) {
-    if (checkColision(pos, sprites[i].sprite.getGlobalBounds())) {
-      uint id = sprites[i].id;
-      std::cout << id << " id du sprite effacé" << std::endl;
-      spritelayer->erase(sprites[i].id);
-      return id;
-      break;
+  for (const auto &[id, spriteObj] : sprites) {
+    if (checkColision(pos, spriteObj.sprite.getGlobalBounds())) {
+      uint spriteId = spriteObj.id;
+      std::cout << spriteId << " id du sprite effacé" << std::endl;
+      spritelayer->erase(spriteId);
+      return spriteId;
     }
   }
   return -1;

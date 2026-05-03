@@ -1,7 +1,9 @@
 #pragma once
 #include "../client.hpp"
 #include <SFML/Network.hpp>
+#include <QByteArray>
 #include <iostream>
+#include <memory>
 
 class Worker;
 
@@ -42,6 +44,14 @@ struct CreateProjectMessage : IMessage{
     void process(Worker& worker) override;
 };
 
+struct ExportNativeMessage: IMessage{
+  uint userId_;
+  uint projectId_;
+  
+  ExportNativeMessage(sf::Packet& dataPacket, std::shared_ptr<Client> client );
+  void process(Worker& worker) override;
+};
+
 struct RenameProjectMessage : IMessage {
   uint userID_;
   uint projectId_;
@@ -50,6 +60,15 @@ struct RenameProjectMessage : IMessage {
     RenameProjectMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
     
+};
+
+struct ImportProjectMessage: IMessage{
+  uint userId_;
+  std::string projName_;
+  QByteArray file_;
+
+  ImportProjectMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
+  void process(Worker& worker)override;
 };
 
 struct DuplicateProjectMessage: IMessage{
@@ -143,6 +162,13 @@ struct ChangeRoleMessage : ModifProjetMessage {
   ChangeRoleMessage(sf::Packet &dataPacket, uint userId);
   void process(Worker &worker) override;
 };
+struct KickUserMessage : ModifProjetMessage {
+  // std::vector<uint> usersId_;
+  uint targetId_;
+  uint projectId_;
+  KickUserMessage(sf::Packet &dataPacket, uint userId);
+  void process(Worker &worker) override;
+};
 
 struct PutPixelsMessage : ModifProjetMessage {
   sf::Vector2u pos_;
@@ -217,28 +243,28 @@ struct EraseSpriteMessage : ModifProjetMessage{
 };
 
 struct MoveSpriteMessage : ModifProjetMessage{
-  uint sprite_id_;
-  unsigned int x_;
-  unsigned int y_;
+  std::vector<uint> sprite_ids_;
+  int x_;
+  int y_;
   MoveSpriteMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };
 
 
 struct ResizeSpriteMessage : ModifProjetMessage{
-  uint sprite_id_;
-  float x_;
-  float y_;
+  std::vector<uint> sprite_ids_;
+  std::vector<float> x_;
+  std::vector<float> y_;
   float scale_;
   ResizeSpriteMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };
 
 struct RotateSpriteMessage : ModifProjetMessage{
-  uint sprite_id_;
+  std::vector<uint> sprite_ids_;
   float angle_;
-  float x_;
-  float y_;
+  std::vector<float> x_;
+  std::vector<float> y_;
   RotateSpriteMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };

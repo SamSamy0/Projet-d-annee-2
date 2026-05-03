@@ -1,6 +1,7 @@
 #include "MenuView.hpp"
 #include "Application.hpp"
 #include "projectWidgets/GameView.hpp"
+#include <QFile>
 
 MenuView::MenuView(Application &app) : View(app) {};
 
@@ -67,24 +68,118 @@ void MenuView::init() {
   joinProjB->onPress(&MenuView::joinProj, this, rightPanel);
   rightPanel->add(joinProjB);
 
-  // auto shareProjB = tgui::Button::create("Partager un projet");
-  // shareProjB->setPosition("10%", "20%");
-  // shareProjB->setSize("80%", "6%");
-  // shareProjB->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
-  // shareProjB->getRenderer()->setBackgroundColorHover(sf::Color(55, 55, 70));
-  // shareProjB->getRenderer()->setTextColor(sf::Color(180, 180, 200));
-  // shareProjB->getRenderer()->setBorders(1);
-  // shareProjB->getRenderer()->setBorderColor(sf::Color(60, 60, 80));
-  // shareProjB->getRenderer()->setRoundedBorderRadius(8);
-  // shareProjB->onPress(&MenuView::shareProj, this);
-  // rightPanel->add(shareProjB);
-  // std::cout <<"now token " <<shareToken <<std::endl;
+  auto importProjB = tgui::Button::create("Importer un projet");
+  importProjB->setPosition("10%", "30%");
+  importProjB->setSize("80%", "6%");
+  importProjB->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
+  importProjB->getRenderer()->setBackgroundColorHover(sf::Color(118, 120, 255));
+  importProjB->getRenderer()->setTextColor(sf::Color::White);
+  importProjB->getRenderer()->setBorders(1);
+  importProjB->getRenderer()->setBorderColor(sf::Color(60, 60, 80));
+  importProjB->getRenderer()->setRoundedBorderRadius(8);
+  importProjB->onPress(&MenuView::importProj, this, rightPanel);
+  rightPanel->add(importProjB, "importProj");
+
   if (shareToken != "FFFFF") {
-    std::cout << "yes siiiir" << shareToken << std::endl;
     rightPanel->add(displayToken());
   }
 }
-void MenuView::clearProjList() { projectList.clear(); }
+
+void MenuView::importProj(tgui::Panel::Ptr panel) {
+  auto &gui = app_.getGui();
+  auto &manager = app_.getNetwork();
+
+  // Toggle
+  if (panel->get("joinPanel"))
+    panel->remove(panel->get("joinPanel"));
+  if (panel->get("importPanel")) {
+    panel->remove(panel->get("importPanel"));
+    return;
+  } else {
+    auto importPanel = tgui::Panel::create();
+    importPanel->setSize("80%", "45%");
+    importPanel->setPosition("10%", "40%");
+    importPanel->getRenderer()->setBackgroundColor(sf::Color(35, 35, 40));
+    importPanel->getRenderer()->setRoundedBorderRadius(8);
+    panel->add(importPanel, "importPanel");
+
+    auto infoLabel = tgui::Label::create(
+        "⚠ Mettre le projet .natif à importer dans le dossier import");
+    infoLabel->setPosition("5%", "5%");
+    infoLabel->getRenderer()->setTextColor(sf::Color(180, 180, 200));
+    infoLabel->getRenderer()->setTextSize(24);
+    importPanel->add(infoLabel);
+
+    auto separator = tgui::Panel::create();
+    separator->setSize("80%", "1");
+    separator->setPosition("10%", "15%");
+    separator->getRenderer()->setBackgroundColor(tgui::Color(55, 55, 70));
+    importPanel->add(separator);
+
+    auto fileLabel = tgui::Label::create("Entrez le nom du fichier (sans .natif) :");
+    fileLabel->setPosition("5%", "22%");
+    fileLabel->getRenderer()->setTextColor(sf::Color(180, 180, 200));
+    fileLabel->getRenderer()->setTextSize(30);
+    importPanel->add(fileLabel);
+
+    auto fileName = tgui::EditBox::create();
+    fileName->setDefaultText("Fichier...");
+    fileName->getRenderer()->setTextSize(40);
+    fileName->getRenderer()->setRoundedBorderRadius(8);
+    fileName->setSize("90%", "12%");
+    fileName->setPosition("5%", "32%");
+    importPanel->add(fileName);
+
+    auto projLabel = tgui::Label::create("Entrez le nom du futur Projet :");
+    projLabel->setPosition("5%", "52%");
+    projLabel->getRenderer()->setTextColor(sf::Color(180, 180, 200));
+    projLabel->getRenderer()->setTextSize(30);
+    importPanel->add(projLabel);
+
+    auto projName = tgui::EditBox::create();
+    projName->setDefaultText("Nouveau projet...");
+    projName->getRenderer()->setTextSize(40);
+    projName->getRenderer()->setRoundedBorderRadius(8);
+    projName->setSize("90%", "12%");
+    projName->setPosition("5%", "62%");
+    importPanel->add(projName);
+
+    auto valid = tgui::Button::create("Valider");
+    valid->setSize("40%", "12%");
+    valid->setPosition("30%", "82%");
+    valid->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
+    valid->getRenderer()->setBackgroundColorHover(sf::Color::Cyan);
+    valid->getRenderer()->setTextColor(sf::Color::White);
+    valid->getRenderer()->setBorders(0);
+    valid->getRenderer()->setRoundedBorderRadius(8);
+    importPanel->add(valid);
+
+    valid->onPress([this, panel, importPanel, fileName, projName, &manager]() {
+      if (!fileName->getText().empty() && !projName->getText().empty()) {
+        std::string path =
+            "../import/" + static_cast<std::string>(fileName->getText()) + ".natif";
+        std::cout << "Importation de " << fileName->getText() << " vers "
+                  << projName->getText() << std::endl;
+
+        manager.importProj(path, static_cast<std::string>(projName->getText()));
+
+        panel->remove(importPanel);
+
+      } else {
+        if (fileName->getText().empty())
+          boxError(fileName);
+        if (projName->getText().empty())
+          boxError(projName);
+      }
+    });
+  }
+}
+
+void MenuView::clearProjList() {
+  projectList.clear();
+  init();
+}
+
 void MenuView::handleEvents(const sf::Event &event) {
   auto &gui = app_.getGui();
   if (const auto *mouseClick = event.getIf<sf::Event::MouseButtonPressed>()) {
@@ -107,55 +202,63 @@ void MenuView::handleEvents(const sf::Event &event) {
   }
 }
 void MenuView::joinProj(tgui::Panel::Ptr panel) {
-  auto &manager = app_.getNetwork();
-  auto joinPanel = tgui::Panel::create();
-  joinPanel->setSize("80%", "30%");
-  joinPanel->setPosition("10%", "40%");
-  joinPanel->getRenderer()->setBackgroundColor(sf::Color(35, 35, 40));
-  joinPanel->getRenderer()->setRoundedBorderRadius(8);
-  panel->add(joinPanel, "joinPanel");
+  // Toggle
+  if (panel->get("importPanel"))
+    panel->remove(panel->get("importPanel"));
+  if (panel->get("joinPanel")) {
+    panel->remove(panel->get("joinPanel"));
+    return;
+  } else {
+    auto &manager = app_.getNetwork();
+    auto joinPanel = tgui::Panel::create();
+    joinPanel->setSize("80%", "30%");
+    joinPanel->setPosition("10%", "40%");
+    joinPanel->getRenderer()->setBackgroundColor(sf::Color(35, 35, 40));
+    joinPanel->getRenderer()->setRoundedBorderRadius(8);
+    panel->add(joinPanel, "joinPanel");
 
-  // Title
-  auto title = tgui::Label::create("Rejoindre un Projet");
-  title->setPosition("25%", "3%");
-  // title->setTextSize(10);
-  title->getRenderer()->setTextColor(sf::Color(180, 180, 200));
-  joinPanel->add(title);
+    // Title
+    auto title = tgui::Label::create("Rejoindre un Projet");
+    title->setPosition("25%", "3%");
+    // title->setTextSize(10);
+    title->getRenderer()->setTextColor(sf::Color(180, 180, 200));
+    joinPanel->add(title);
 
-  // Enter Token
-  auto enterTok = tgui::Label::create("Entrez un token");
-  enterTok->setPosition("2.5%", "30%");
-  enterTok->getRenderer()->setTextSize(40);
-  enterTok->getRenderer()->setTextColor(sf::Color(180, 180, 200));
-  joinPanel->add(enterTok);
+    // Enter Token
+    auto enterTok = tgui::Label::create("Entrez un token");
+    enterTok->setPosition("2.5%", "30%");
+    enterTok->getRenderer()->setTextSize(40);
+    enterTok->getRenderer()->setTextColor(sf::Color(180, 180, 200));
+    joinPanel->add(enterTok);
 
-  // TokenBox
-  auto token = tgui::EditBox::create();
-  token->setDefaultText("Token");
-  token->getRenderer()->setTextSize(40);
-  token->getRenderer()->setRoundedBorderRadius(8);
-  token->setSize("80%", "15%");
-  token->setPosition("2.5%", "45%");
-  joinPanel->add(token);
+    // TokenBox
+    auto token = tgui::EditBox::create();
+    token->setDefaultText("Token");
+    token->getRenderer()->setTextSize(40);
+    token->getRenderer()->setRoundedBorderRadius(8);
+    token->setSize("80%", "15%");
+    token->setPosition("2.5%", "45%");
+    joinPanel->add(token);
 
-  // Valid Button
-  auto valid = tgui::Button::create("Valider");
-  valid->setSize("40%", "12%");
-  valid->setPosition("30%", "75%");
-  valid->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
-  valid->getRenderer()->setBackgroundColorHover(sf::Color::Cyan);
-  valid->getRenderer()->setTextColor(sf::Color::White);
-  valid->getRenderer()->setBorders(0);
-  valid->getRenderer()->setRoundedBorderRadius(8);
-  joinPanel->add(valid);
-  valid->onPress([this, panel, joinPanel, token, &manager]() {
-    // NOTE: need to add verification from server
-    if (!token->getText().empty()) {
-      manager.joinProject(token->getText().toStdString());
-      panel->remove(joinPanel);
-    } else
-      boxError(token);
-  });
+    // Valid Button
+    auto valid = tgui::Button::create("Valider");
+    valid->setSize("40%", "12%");
+    valid->setPosition("30%", "75%");
+    valid->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
+    valid->getRenderer()->setBackgroundColorHover(sf::Color::Cyan);
+    valid->getRenderer()->setTextColor(sf::Color::White);
+    valid->getRenderer()->setBorders(0);
+    valid->getRenderer()->setRoundedBorderRadius(8);
+    joinPanel->add(valid);
+    valid->onPress([this, panel, joinPanel, token, &manager]() {
+      // NOTE: need to add verification from server
+      if (!token->getText().empty()) {
+        manager.joinProject(token->getText().toStdString());
+        panel->remove(joinPanel);
+      } else
+        boxError(token);
+    });
+  }
 }
 void MenuView::shareProj() {}
 void MenuView::displayProjList(tgui::Panel::Ptr parent) {
@@ -210,14 +313,15 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   menu->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
   menu->getRenderer()->setTextColor(tgui::Color::White);
   menu->addItem("Ouvrir");
-  menu->addItem("Supprimer");
-  // If Editor or Owner
-  // if (project.role == 0 || project.role == 1) {
-  menu->addItem("Renommer");
-  // }
   menu->addItem("Dupliquer");
   menu->addItem("Partager");
-  // menu->addItem("Quitter");
+  if (project.role >= 1) {
+    // On désactive les deux derniers items (index 3 et 4)
+    menu->addItem("Renommer");
+  }
+  if (project.role == 2) {
+    menu->addItem("Supprimer");
+  }
   float menuHeight = menu->getItemCount() * 45;
   menu->setSize(150, menuHeight);
   menu->setItemHeight(45);
@@ -228,7 +332,6 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   menu->setTextSize(20);
   int8_t projectRole = project.role;
   app_.setCurrentProjRole(projectRole);
-  // menu->onUnfocus([this, menu]() { gui.remove(menu); });
   menu->onItemSelect([this, menu, id, toHover, project, projectRole, &manager,
                       &gui](const tgui::String &item) {
     // Delete Action
@@ -345,12 +448,11 @@ void MenuView::popupRename(tgui::Panel::Ptr renameBackground,
   renamePanel->add(rvalid);
   // Exit Button
   auto exitB = tgui::Button::create("✕");
-  exitB->setSize("10%", "10%");
-  exitB->setPosition("0%", "0%");
-  exitB->getRenderer()->setBackgroundColor(sf::Color(102, 178, 255));
-  exitB->getRenderer()->setBackgroundColorHover(sf::Color::White);
-  exitB->getRenderer()->setTextColor(sf::Color::Black);
-  exitB->getRenderer()->setBorders(0);
+  exitB->setSize(30, 30);
+  exitB->setPosition("100% - 35", "5");
+  exitB->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+  exitB->getRenderer()->setTextColor(sf::Color::White);
+  exitB->getRenderer()->setBackgroundColorHover(sf::Color(255, 100, 100));
   renamePanel->add(exitB);
   exitB->onPress([this, renameBackground]() { exitAction(renameBackground); });
 
@@ -474,12 +576,11 @@ void MenuView::popupCreate(tgui::Panel::Ptr background) {
 
   // Exit Button
   auto exitB = tgui::Button::create("✕");
-  exitB->setSize("10%", "10%");
-  exitB->setPosition("0%", "0%");
-  exitB->getRenderer()->setBackgroundColor(sf::Color::Red);
-  exitB->getRenderer()->setBackgroundColorHover(sf::Color::White);
-  exitB->getRenderer()->setTextColor(sf::Color::Black);
-  exitB->getRenderer()->setBorders(0);
+  exitB->setSize(30, 30);
+  exitB->setPosition("100% - 35", "5");
+  exitB->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+  exitB->getRenderer()->setTextColor(sf::Color::White);
+  exitB->getRenderer()->setBackgroundColorHover(sf::Color(255, 100, 100));
   data->add(exitB);
   exitB->onPress([this, background]() { exitAction(background); });
 
@@ -691,7 +792,9 @@ void MenuView::popupCreateToken(tgui::Panel::Ptr background,
   comboBox->setSize("80%", "13%");
   comboBox->setPosition("10%", "44%");
   comboBox->addItem("Spectateur");
-  comboBox->addItem("Editeur");
+  if (project.role > 0) {
+    comboBox->addItem("Editeur");
+  }
   comboBox->setSelectedItem("Spectateur");
   comboBox->getRenderer()->setBackgroundColor(tgui::Color(40, 40, 52));
   // comboBox->getRenderer()->setBackgroundColorHover(tgui::Color(50, 50, 65));

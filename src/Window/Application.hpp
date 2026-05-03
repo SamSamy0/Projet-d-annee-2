@@ -16,9 +16,9 @@
 
 // Données brutes d'un layer reçu du serveur (avant reconstruction SFML)
 struct LayerLoadData {
-  uint     id;
-  int      x, y;   // décalage accumulé (layer shift)
-  uint8_t  type;  
+  uint id;
+  int x, y; // décalage accumulé (layer shift)
+  uint8_t type;
   QByteArray data;
   std::string name;
 };
@@ -57,7 +57,7 @@ public:
                        uint id);
   void loadProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                        uint id, uint nextLayerId,
-                       const std::vector<LayerLoadData>& layers, Chat chat);
+                       const std::vector<LayerLoadData> &layers, Chat chat);
   // Getters
   sf::RenderWindow &getWindow();
   tgui::Gui &getGui();

@@ -5,6 +5,7 @@
 #include <QJsonObject>
 #include <QString>
 #include "../sprite.hpp"
+#include <QFile>
 
 class ProjectsManager {
 public:
@@ -22,6 +23,8 @@ public:
   QJsonObject loadSprite(uint id, uint layerId);
   bool saveChat(uint projectId, QJsonArray& chat);
   QJsonArray loadChat(uint projectId);
+
+  QByteArray Zip(uint projectId);
 
 private:
   QString getProjectPath(uint id) const;

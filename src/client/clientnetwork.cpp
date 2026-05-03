@@ -1,5 +1,7 @@
 #include "clientnetwork.hpp"
 #include <iostream>
+#include <QFile>
+#include <QByteArray>
 
 std::deque<ServerEvent> &ClientNetworkManager::getQueuEvent() {
   return reponse_;
@@ -166,6 +168,17 @@ void ClientNetworkManager::joinProject(std::string project_code) {
               << std::endl;
 }
 
+void ClientNetworkManager::kickUser(uint targetId, uint projectId) {
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::PROJ_KICK_USER_REQ;
+  packet << static_cast<uint8_t>(msg);
+  packet << static_cast<uint32_t>(targetId);
+  packet << static_cast<uint32_t>(projectId);
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+  
+}
 void ClientNetworkManager::createLayer(uint proj_id, LayerType type) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_CREATE_LAYER_REQ;
@@ -245,6 +258,18 @@ void ClientNetworkManager::changeRole(uint userId, uint projectId,
 
   packet << static_cast<uint8_t>(msg);
   packet << userId << projectId << role;
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
+void ClientNetworkManager::exportToNative(uint projectId){
+  sf::Packet packet;
+  
+  MsgProtocole msg = MsgProtocole::LOB_EXPORT_NATIVE_PROJECT_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << projectId;
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;
@@ -374,40 +399,52 @@ void ClientNetworkManager::eraseSprite(uint proj_id, uint layer_id,
 }
 
 
-void ClientNetworkManager::moveSprite(uint proj_id, uint layer_id,
-                                      uint sprite_id, sf::Vector2i v) {
+void ClientNetworkManager::moveSprites(uint proj_id, uint layer_id,
+                                       const std::vector<uint>& sprite_ids, sf::Vector2i v) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_MOV_SPRITE_REQ;
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << sprite_id << v.x << v.y;
+  packet << proj_id << layer_id << static_cast<uint>(sprite_ids.size());
+  packet << v.x << v.y; // Common Parameters 
+  for (uint id : sprite_ids) {
+    packet << id;
+  }
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;
 }
 
-void ClientNetworkManager::resizeSprite(uint proj_id, uint layer_id,
-                                        uint sprite_id, sf::Vector2f pos,
+void ClientNetworkManager::resizeSprites(uint proj_id, uint layer_id,
+                                        const std::vector<uint>& sprite_ids,
+                                        const std::vector<sf::Vector2f>& positions,
                                         float scale) {
-
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_RESIZE_SPRITE_REQ;
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << sprite_id << pos.x << pos.y << scale;
+  packet << proj_id << layer_id << static_cast<uint>(sprite_ids.size());
+  packet << scale; // Common Parameters
+  for (size_t i = 0; i < sprite_ids.size(); ++i) {
+    packet << sprite_ids[i] << positions[i].x << positions[i].y;
+  }
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;
 }
 
-void ClientNetworkManager::rotateSprite(uint proj_id, uint layer_id,
-                                        uint sprite_id, float angle,
-                                        sf::Vector2f pos) {
-
+void ClientNetworkManager::rotateSprites(uint proj_id, uint layer_id,
+                                        const std::vector<uint>& sprite_ids,
+                                        float angle,
+                                        const std::vector<sf::Vector2f>& positions) {
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::MAP_ROTATE_SPRITE_REQ;
   packet << static_cast<uint8_t>(msg);
-  packet << proj_id << layer_id << sprite_id << angle << pos.x << pos.y;
+  packet << proj_id << layer_id << static_cast<uint>(sprite_ids.size());
+  packet << angle; // Common Parameters
+  for (size_t i = 0; i < sprite_ids.size(); ++i) {
+    packet << sprite_ids[i] << positions[i].x << positions[i].y;
+  }
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
@@ -422,6 +459,33 @@ void ClientNetworkManager::sendMessageChat(std::string message){
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;
+}
+
+void ClientNetworkManager::importProj(std::string path, std::string name){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::LOB_IMPORT_PROJECT_REQ;
+  packet <<static_cast<uint8_t>(msg);
+
+  //Reading .natif file
+  QString Qpath = QString::fromStdString(path);
+    QFile fileZip(Qpath);
+    if (!fileZip.open(QIODevice::ReadOnly)) {
+        std::cerr << "ERREUR CLIENT : Impossible d'ouvrir le fichier " << path << std::endl;
+        return; // On annule l'envoi si le fichier ne s'ouvre pas
+    }
+  QByteArray rawData = fileZip.readAll();
+
+  // Compressing zipFile
+  QByteArray dataCompress = qCompress(rawData, 9);
+  packet << static_cast<std::uint32_t>(dataCompress.size());
+  packet << (name);
+  packet.append(dataCompress.constData(), dataCompress.size());
+  fileZip.close();
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+
 }
 
 void ClientNetworkManager::goHome(){
