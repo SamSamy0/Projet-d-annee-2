@@ -14,6 +14,7 @@ protected:
   uint id_;
   sf::Vector2u size_;
   bool masked_ = false;
+  bool temp_ = false;
   LayerType type_;
   //std::unique_ptr<Lock> lock_ = nullptr;
 

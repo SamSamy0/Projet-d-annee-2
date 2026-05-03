@@ -270,8 +270,8 @@ void GameView::initToolbar() {
   //Help of AI for better Design 
   //(based on a dropdown menu that I've already made (showProjectMenu in MenuView))
   auto exportButton = tgui::Button::create();
-  exportButton->setSize(height * 0.035, height * 0.040);
-  exportButton->setPosition(width * 0.85, height * 0.007);
+  exportButton->setSize("2%", "80%");
+  exportButton->setPosition("83%", "10%");
   exportButton->getRenderer()->setTexture("../res/images/share.png");
   exportButton->getRenderer()->setBorders({0});
   exportButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -384,13 +384,8 @@ void GameView::initToolbar() {
   toolbar->add(exportButton);
 
   auto leaveProjectButton = tgui::Button::create();
-<<<<<<< HEAD
   leaveProjectButton->setSize("2%", "80%");
   leaveProjectButton->setPosition("87%", "10%");
-=======
-  leaveProjectButton->setSize(height * 0.035, height * 0.040);
-  leaveProjectButton->setPosition(width * 0.925, height * 0.007);
->>>>>>> main
   leaveProjectButton->getRenderer()->setTexture("../res/images/logout.png");
   leaveProjectButton->getRenderer()->setBorders({0});
   leaveProjectButton->getRenderer()->setBackgroundColor(
