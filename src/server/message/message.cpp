@@ -667,7 +667,20 @@ HomeMessage::HomeMessage(std::shared_ptr<Client>& client) {
 }
 
 void HomeMessage::process(Worker& worker){
- //TO DO : faut retirer le type du projet tt ca tt ca je crois
+  auto itProject = worker.mapProjet_.find(projectId_);
+    
+    if (itProject == worker.mapProjet_.end()) {
+        return; 
+    }
+    
+    if (itProject->second.removeConnection(userId_)) {
+        std::unique_ptr<SaveTask> savetsk;
+        savetsk = std::make_unique<SaveTask>(worker.mapProjet_.at(projectId_), projectId_);
+        worker.pushSave(std::move(savetsk));
+        //Message de sauvegarde de projet
+        worker.mapProjet_.erase(projectId_);
+    }
+
 }
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client>& c) {
@@ -764,9 +777,13 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_pt
 
   case MsgProtocole::PROJ_LEAVE_PROJ_REQ:
     return std::make_unique<LeaveProjectMessage>(data_packet, c->id);
+
   case MsgProtocole::CHAT_MESSAGE_REQ:
     return std::make_unique<ChatMessage>(data_packet, c);
 
+  case MsgProtocole::LOB_HOME_REQ:
+    return std::make_unique<HomeMessage>(c);
+    
   default:
     std::cout << "pas de message" << std::endl;
     return nullptr;
