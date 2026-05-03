@@ -2,7 +2,7 @@
 #include <string>
 #include "chat.hpp"
 
-enum class typeNotification {
+enum class typeNotification: uint8_t{
     CONNEXION,
     DECONNEXION,
     LOCK,

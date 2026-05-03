@@ -551,9 +551,22 @@ void ClientHandler::process(ServerEvent &event) {
     int day;
     int month;
     int year;
-    *(event.data_packet_) >> pseudo >> message >> min >> hour >> day >> month >>
-        year;
+    *(event.data_packet_) >> pseudo >> message >> min >> hour >> day >> month >> year;
     handleWindow_.addChatMess(pseudo, message, min, hour, day, month, year);
+
+    break;
+  }
+
+  case MsgProtocole::CHAT_SYSTEME_REP: {
+    std::string pseudo;
+    uint8_t type;
+    int min;
+    int hour;
+    int day;
+    int month;
+    int year;
+    *(event.data_packet_) >> pseudo >> type >> min >> hour >> day >> month >> year;
+    handleWindow_.addChatSyst(pseudo, type, min, hour, day, month, year);
 
     break;
   }
