@@ -3,13 +3,13 @@
 string SystemNotification::getTexte() const {
     switch (typeNotif_) {
         case typeNotification::CONNEXION:
-            return author_.getUser() + " s'est connecté à la carte à " + getDateTexte() + ".";
+            return author_.getUser() + " s'est connecté à la carte le " + getDateTexte() + ".";
         case typeNotification::DECONNEXION:
-            return author_.getUser() + " s'est déconnecté de la carte à " + getDateTexte() + ".";
+            return author_.getUser() + " s'est déconnecté de la carte le " + getDateTexte() + ".";
         case typeNotification::LOCK:
-            return author_.getUser() + " a verrouillé une couche.";
+            return author_.getUser() + " a verrouillé une couche le " + getDateTexte() + ".";
         case typeNotification::UNLOCK:
-            return author_.getUser() + " a déverrouillé une couche.";
+            return author_.getUser() + " a déverrouillé une couche le " + getDateTexte() + ".";
     }
     return 0;
 }
