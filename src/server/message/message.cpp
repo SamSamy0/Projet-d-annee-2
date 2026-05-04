@@ -1,10 +1,14 @@
 #include "message.hpp"
 #include "../../common/protocol.hpp"
 #include "../../project/Chat/userMessage.hpp"
+#include "../../project/Chat/systemNotification.hpp"
+#include "../datamanager/miniz.h"
 #include "../reponse/reponse.hpp"
 #include "../worker.hpp"
+#include <filesystem>
 #include <memory>
 
+namespace fs = std::filesystem;
 ConnectUserMessage::ConnectUserMessage(sf::Packet &dataPacket,
                                        std::shared_ptr<Client> client) {
   dataPacket >> pseudo_ >> password_;
@@ -58,6 +62,29 @@ void CreateProjectMessage::process(Worker &worker) {
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseCreateProject>(userId_, idProj);
     worker.pushNetwork(std::move(rps));
+
+    createSystemNotification(worker, idProj, client_->pseudo, userId_, typeNotification::CONNEXION);
+  }
+}
+ExportNativeMessage::ExportNativeMessage(sf::Packet &data_packet,
+                                         std::shared_ptr<Client> client) {
+  data_packet >> projectId_;
+  userId_ = client->id;
+}
+
+void ExportNativeMessage::process(Worker &worker) {
+  auto itProject = worker.mapProjet_.find(projectId_);
+
+  if (itProject == worker.mapProjet_.end()) {
+    return;
+  }
+
+  if (userId_ > 0) {
+    // Server saves project
+    std::unique_ptr<ExportDemand> savetsk;
+    savetsk = std::make_unique<ExportDemand>(worker.mapProjet_.at(projectId_),
+                                             projectId_, userId_);
+    worker.pushSave(std::move(savetsk));
   }
 }
 
@@ -76,6 +103,96 @@ void RenameProjectMessage::process(Worker &worker) {
   worker.pushNetwork(std::move(rps));
 }
 
+ImportProjectMessage::ImportProjectMessage(sf::Packet &dataPacket,
+                                           std::shared_ptr<Client> &client) {
+  userId_ = client->id;
+  uint32_t dataSize;
+  dataPacket >> dataSize >> projName_;
+  // Same as in the handler for exportation
+  const void *rawBuf = static_cast<const char *>(dataPacket.getData()) +
+                       dataPacket.getReadPosition();
+  file_ = QByteArray(static_cast<const char *>(rawBuf), dataSize);
+}
+/* Read raw data from zip in RAM without creating temporary files
+ * In order to extract it in servers'RAM
+ */
+// Got help from AI for this use of miniz.c because lack of documentation
+bool exportNativeFromMemory(const QByteArray &zipData,
+                            const std::string &destPath) {
+  // Creating empty zipFile (destination file)
+  mz_zip_archive zip_archive;
+  memset(&zip_archive, 0, sizeof(zip_archive));
+
+  // Miniz reads raw data from RAM
+  if (!mz_zip_reader_init_mem(&zip_archive, zipData.constData(), zipData.size(),
+                              0)) {
+    std::cerr << "Erreur : Impossible de lire l'archive ZIP depuis la mémoire."
+              << std::endl;
+    return false;
+  }
+
+  // Ensures Directories in destination Folder exists
+  fs::create_directories(destPath);
+
+  int nbFiles = mz_zip_reader_get_num_files(&zip_archive);
+
+  // Iterating over every element in zip
+  for (int i = 0; i < nbFiles; i++) {
+    mz_zip_archive_file_stat infoFichier;
+    // Fetch information of the file i (name, size, ...)
+    if (!mz_zip_reader_file_stat(&zip_archive, i, &infoFichier))
+      continue;
+
+    // aboslute path (server's side)
+    fs::path finalPath = fs::path(destPath) / infoFichier.m_filename;
+
+    if (mz_zip_reader_is_file_a_directory(&zip_archive, i)) {
+      fs::create_directories(finalPath);
+      continue;
+    }
+
+    fs::create_directories(finalPath.parent_path());
+
+    // Extracting file to server's file
+    if (!mz_zip_reader_extract_to_file(&zip_archive, i,
+                                       finalPath.string().c_str(), 0)) {
+      std::cerr << "Erreur lors de l'extraction de : " << infoFichier.m_filename
+                << std::endl;
+    }
+  }
+  mz_zip_reader_end(&zip_archive);
+  return true;
+}
+/*
+ * Importing file from client to server
+ * */
+void ImportProjectMessage::process(Worker &worker) {
+  uint newId = worker.addProjectSQL(projName_, userId_);
+
+  QByteArray zipBytes = qUncompress(file_);
+
+  std::string dossierDestination = "projectsFolder/project_" + to_string(newId);
+
+  bool success = exportNativeFromMemory(zipBytes, dossierDestination);
+
+  if (success) {
+    // Updating imported project's name
+    worker.getProjMngr().updateJsonDup(newId,
+                                       QString::fromStdString(projName_));
+
+    LiveProject liveProj = LiveProject(newId);
+    // Adding user as owner
+    liveProj.addConnection(userId_, 2);
+    worker.mapProjet_.emplace(newId, std::move(liveProj));
+    // Updating user's project list
+    std::vector<ProjectEntry> projects = worker.getUserProjects(userId_);
+    std::unique_ptr<Reponse> rps =
+        std::make_unique<ReponseUsersProjects>(userId_, projects);
+    worker.pushNetwork(std::move(rps));
+  } else {
+    std::cerr << "L'extraction du projet importé a échoué." << std::endl;
+  }
+}
 DuplicateProjectMessage::DuplicateProjectMessage(
     sf::Packet &dataPacket, std::shared_ptr<Client> &client) {
   dataPacket >> projectId_ >> newName;
@@ -127,6 +244,7 @@ GetProjectDataMessage::GetProjectDataMessage(sf::Packet &data_packet,
   userId_ = client->id;
   data_packet >> projectId_;
   client->projectId = projectId_;
+  pseudo_ = client->pseudo;
 }
 
 LeaveProjectMessage::LeaveProjectMessage(sf::Packet &data_packet, uint userId) {
@@ -149,7 +267,10 @@ void KickUserMessage::process(Worker &worker) {
   if (it != worker.mapProjet_.end()) {
     usersId = it->second.getConnected();
   }
-
+  if (std::find(usersId.begin(), usersId.end(), targetId_) == usersId.end()) {
+    std::cout << "l'utilisateur n'était pas connecté au projet" << std::endl;
+    usersId.push_back(targetId_);
+  }
   // Building the group response
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseKickUserProject>(usersId, targetId_, projectId_,
@@ -173,23 +294,23 @@ void GetMemberMessage::process(Worker &worker) {
 }
 
 void GetProjectDataMessage::process(Worker &worker) {
-  if (worker.mapProjet_.find(projectId_) == worker.mapProjet_.end()) {
-    LiveProject liveProj = LiveProject(projectId_);
-    liveProj.addConnection(
-        userId_,
-        worker.getRole(userId_, projectId_)); // WARNING: LE 1 EST FORCE CODER
-    worker.mapProjet_.emplace(projectId_, std::move(liveProj));
-  }
-  LiveProject &liveProj = worker.mapProjet_.at(projectId_);
-  liveProj.addConnection(
-      userId_,
-      worker.getRole(userId_, projectId_)); // WARNING: LE 1 EST FORCE CODER
+  int8_t role = worker.getRole(userId_, projectId_);
+  if (role != -1) {
+    if (worker.mapProjet_.find(projectId_) == worker.mapProjet_.end()) {
+      LiveProject liveProj = LiveProject(projectId_);
+      worker.mapProjet_.emplace(projectId_, std::move(liveProj));
+    }
+    LiveProject &liveProj = worker.mapProjet_.at(projectId_);
+    liveProj.addConnection(userId_, role); // WARNING: LE 1 EST FORCE CODER
+    
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseProjectData>(
+        userId_, liveProj.getJson(), std::move(liveProj.getLayerOrder()),
+        liveProj.getImageMap(), liveProj.getSpritesMap(), liveProj.getChatJson());
+    worker.pushNetwork(std::move(rps));
 
-  std::unique_ptr<Reponse> rps;
-  rps = std::make_unique<ReponseProjectData>(
-      userId_, liveProj.getJson(), std::move(liveProj.getLayerOrder()),
-      liveProj.getImageMap(), liveProj.getSpritesMap(), liveProj.getChatJson());
-  worker.pushNetwork(std::move(rps));
+    createSystemNotification(worker, projectId_, pseudo_, userId_, typeNotification::CONNEXION);
+  }
 }
 
 std::vector<uint> ModifProjetMessage::getUserLists(Worker &worker) {
@@ -206,7 +327,6 @@ std::vector<uint> ModifProjetMessage::getUserLists(Worker &worker) {
     *it = usersId.back();
     usersId.pop_back();
   }
-  std::cout << " taille usersID : " << usersId.size() << std::endl;
   return usersId;
 }
 ChangeRoleMessage::ChangeRoleMessage(sf::Packet &data_packet, uint userId) {
@@ -350,7 +470,6 @@ void PutPixelsSquareMessage::process(Worker &worker) {
 
   if (liveProj->second.drawPixelRect(userId_, calqueId_, pos_.x, pos_.y,
                                      taille_, red_, green_, blue_, opa_)) {
-    std::cout << "creation de la reponse" << std::endl;
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponsePutPixelsSquare>(usersId, *this);
@@ -690,6 +809,7 @@ void CheckTokenMessage::process(Worker &worker) {
 DisconnectMessage::DisconnectMessage(std::shared_ptr<Client> &client) {
   userId_ = client->id;
   projectId_ = client->projectId;
+  pseudo_ = client->pseudo;
 }
 
 void DisconnectMessage::process(Worker &worker) {
@@ -704,6 +824,10 @@ void DisconnectMessage::process(Worker &worker) {
   }
 
   if (itProject->second.removeConnection(userId_)) {
+    createSystemNotification(worker, projectId_, pseudo_, userId_, typeNotification::DECONNEXION);
+  }
+
+  if (itProject->second.isEmpty()) {
     std::unique_ptr<SaveTask> savetsk;
     savetsk = std::make_unique<SaveTask>(worker.mapProjet_.at(projectId_),
                                          projectId_);
@@ -745,12 +869,62 @@ void ChatMessage::process(Worker &worker) {
   }
 }
 
+void createSystemNotification(Worker &worker, uint projectId, std::string &pseudo, uint userId, typeNotification type) {
+  auto itProject = worker.mapProjet_.find(projectId);
+
+  if (itProject == worker.mapProjet_.end()) {
+    return;
+    std::cout << "impossible de créer une notification de système" << std::endl;
+  }
+
+  std::shared_ptr<SystemNotification> messageChat =
+      std::make_shared<SystemNotification>(pseudo, userId, type);
+  
+
+  if (itProject->second.addMessageChat(userId, messageChat)) {
+    std::vector<uint> usersId = itProject->second.getConnected();
+
+    std::cout << "création d'une notification de système pour l'utilisateur " << userId << std::endl;
+
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseChatSystem>(usersId, *messageChat);
+    worker.pushNetwork(std::move(rps));
+  }
+}
+
+
+HomeMessage::HomeMessage(std::shared_ptr<Client>& client) {
+    userId_ = client->id;
+    projectId_ = client->projectId;
+    pseudo_ = client->pseudo;
+}
+
+void HomeMessage::process(Worker& worker){
+  auto itProject = worker.mapProjet_.find(projectId_);
+    
+    if (itProject == worker.mapProjet_.end()) {
+        return; 
+    }
+    
+    if (itProject->second.removeConnection(userId_)) {
+        createSystemNotification(worker, projectId_, pseudo_, userId_, typeNotification::DECONNEXION);
+    }
+
+    if (itProject->second.isEmpty()) {
+        std::unique_ptr<SaveTask> savetsk;
+        savetsk = std::make_unique<SaveTask>(worker.mapProjet_.at(projectId_), projectId_);
+        worker.pushSave(std::move(savetsk));
+        //Message de sauvegarde de projet
+        worker.mapProjet_.erase(projectId_);
+    }
+}
+
+
 std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
                                          std::shared_ptr<Client> &c) {
   uint8_t typeRaw;
   if (!(data_packet >> typeRaw))
     return nullptr;
-
   MsgProtocole type = static_cast<MsgProtocole>(typeRaw);
   std::cout << "[From client " << c->id << "]:" << to_string(type) << std::endl;
   switch (type) {
@@ -784,6 +958,12 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::LOB_JOIN_PROJECT_REQ:
     return std::make_unique<CheckTokenMessage>(data_packet, c);
+
+  case MsgProtocole::LOB_EXPORT_NATIVE_PROJECT_REQ:
+    return std::make_unique<ExportNativeMessage>(data_packet, c);
+
+  case MsgProtocole::LOB_IMPORT_PROJECT_REQ:
+    return std::make_unique<ImportProjectMessage>(data_packet, c);
 
   case MsgProtocole::MAP_CREATE_LAYER_REQ:
     return std::make_unique<CreateLayerMessage>(data_packet, c);
@@ -844,9 +1024,13 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::PROJ_LEAVE_PROJ_REQ:
     return std::make_unique<LeaveProjectMessage>(data_packet, c->id);
+
   case MsgProtocole::CHAT_MESSAGE_REQ:
     return std::make_unique<ChatMessage>(data_packet, c);
 
+  case MsgProtocole::LOB_HOME_REQ:
+    return std::make_unique<HomeMessage>(c);
+    
   case MsgProtocole::PROJ_KICK_USER_REQ:
     return std::make_unique<KickUserMessage>(data_packet, c->id);
 

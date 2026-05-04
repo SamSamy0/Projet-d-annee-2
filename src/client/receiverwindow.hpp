@@ -27,11 +27,14 @@ public:
   void drawPixelBrush(uint layer_id, int pos_x, int pos_y, uint8_t r, uint8_t g,
                       uint8_t b, uint8_t a, Shape shape, bool eraser,
                       float size_x, float size_y);
-  void drawSprite(uint layer_id, std::string asset_id, int pos_x, int pos_y, float size);
-  void eraseSprite(uint layer_id,uint sprite_id);
-  void moveSprite(uint layer_id,uint sprite_id,sf::Vector2i v);
-  void resizeSprite(uint layer_id,uint sprite_id,sf::Vector2f pos, float scale);
-  void rotateSprite(uint layer_id,uint sprite_id,float angle, sf::Vector2f pos);
+  void drawSprite(uint layer_id, std::string asset_id, int pos_x, int pos_y,
+                  float size);
+  void eraseSprite(uint layer_id, uint sprite_id);
+  void moveSprite(uint layer_id, uint sprite_id, sf::Vector2i v);
+  void resizeSprite(uint layer_id, uint sprite_id, sf::Vector2f pos,
+                    float scale);
+  void rotateSprite(uint layer_id, uint sprite_id, float angle,
+                    sf::Vector2f pos);
   void shiftLayer(uint layer_id, int delta_x, int delta_y);
   void autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size);
   void updateShareToken(std::string newTok);
@@ -45,6 +48,10 @@ public:
   void kickUser(uint targetId);
   void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                       uint id, uint nextLayerId,
-                      const std::vector<LayerLoadData>& layers, Chat chat);
-  void addChatMess(std::string pseudo, std::string message,int min,int hour,int day,int month,int year);
+                      const std::vector<LayerLoadData> &layers, Chat chat);
+  void addChatMess(std::string pseudo, std::string message, int min, int hour,
+                   int day, int month, int year);
+
+  void addChatSyst(std::string pseudo, uint8_t type,int min, int hour, int day, int month,
+                                   int year);
 };

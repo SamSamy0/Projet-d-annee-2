@@ -4,15 +4,12 @@
 #include "../GameView.hpp"
 
 void GameView::initPenOptions() {
-  auto& mainWindow = app_.getWindow();
   auto& gui = app_.getGui();
-  float width  = mainWindow.getSize().x;
-  float height = mainWindow.getSize().y;
 
   // Création de la barre avec tous les options pour l'outil crayon
   penOptionsPanel_ = tgui::Panel::create();
-  penOptionsPanel_->setSize(width * 0.76, height * 0.062);
-  penOptionsPanel_->setPosition(width * 0.22, height * 0.05);
+  penOptionsPanel_->setSize("76%", "6.2%");
+  penOptionsPanel_->setPosition("22%", "5%");
   penOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
   penOptionsPanel_->getRenderer()->setBorders({1});
   penOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
@@ -22,8 +19,8 @@ void GameView::initPenOptions() {
 
   // Création de la box qui récupère la longueur
   auto lengthInput = tgui::EditBox::create();
-  lengthInput->setSize(width * 0.04, height * 0.04);
-  lengthInput->setPosition(width * 0.008, height * 0.011);
+  lengthInput->setSize("5.3%", "64%");
+  lengthInput->setPosition("1%", "18%");
   lengthInput->setDefaultText("L");
   lengthInput->setInputValidator("[0-9]+\\.?[0-9]*");
   lengthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
@@ -35,8 +32,8 @@ void GameView::initPenOptions() {
 
   // Création de la box qui récupère la largeur
   auto widthInput = tgui::EditBox::create();
-  widthInput->setSize(width * 0.04, height * 0.04);
-  widthInput->setPosition(width * 0.052, height * 0.011);
+  widthInput->setSize("5.3%", "64%");
+  widthInput->setPosition("6.8%", "18%");
   widthInput->setDefaultText("W");
   widthInput->setInputValidator("[0-9]+\\.?[0-9]*");
   widthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
@@ -75,8 +72,8 @@ void GameView::initPenOptions() {
   auto circleButton  = tgui::Button::create("Cercle");
 
   // Carré
-  squareButton->setSize(width * 0.065, height * 0.04);
-  squareButton->setPosition(width * 0.1, height * 0.011);
+  squareButton->setSize("8.6%", "64%");
+  squareButton->setPosition("13%", "18%");
   squareButton->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
   squareButton->getRenderer()->setTextColor(tgui::Color::White);
   squareButton->getRenderer()->setBorders({0});
@@ -92,11 +89,11 @@ void GameView::initPenOptions() {
     widthInput->setVisible(false);
   });
   penOptionsPanel_->add(squareButton);
-  squareButton->setTextSize(12);
+  squareButton->setTextSize(0);
 
   // Diamant
-  diamondButton->setSize(width * 0.065, height * 0.04);
-  diamondButton->setPosition(width * 0.172, height * 0.011);
+  diamondButton->setSize("8.6%", "64%");
+  diamondButton->setPosition("22.6%", "18%");
   diamondButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   diamondButton->getRenderer()->setTextColor(tgui::Color::White);
   diamondButton->getRenderer()->setBorders({0});
@@ -112,11 +109,11 @@ void GameView::initPenOptions() {
     widthInput->setVisible(true);
   });
   penOptionsPanel_->add(diamondButton);
-  diamondButton->setTextSize(12);
+  diamondButton->setTextSize(0);
 
   // Cercle
-  circleButton->setSize(width * 0.065, height * 0.04);
-  circleButton->setPosition(width * 0.244, height * 0.011);
+  circleButton->setSize("8.6%", "64%");
+  circleButton->setPosition("32%", "18%");
   circleButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   circleButton->getRenderer()->setTextColor(tgui::Color::White);
   circleButton->getRenderer()->setBorders({0});
@@ -132,7 +129,7 @@ void GameView::initPenOptions() {
     widthInput->setVisible(false);
   });
   penOptionsPanel_->add(circleButton);
-  circleButton->setTextSize(12);
+  circleButton->setTextSize(0);
 
   // Création des couleurs prédéfinies
   auto blackButton  = tgui::Button::create();
@@ -142,8 +139,8 @@ void GameView::initPenOptions() {
   auto yellowButton = tgui::Button::create();
 
   // Noir
-  blackButton->setSize(width * 0.033, height * 0.04);
-  blackButton->setPosition(width * 0.325, height * 0.011);
+  blackButton->setSize("4.3%", "64%");
+  blackButton->setPosition("43%", "18%");
   blackButton->getRenderer()->setBackgroundColor(tgui::Color(0, 0, 0));
   blackButton->getRenderer()->setBackgroundColorHover(tgui::Color(0, 0, 0));
   blackButton->getRenderer()->setBorders({2});
@@ -164,8 +161,8 @@ void GameView::initPenOptions() {
   penOptionsPanel_->add(blackButton);
 
   // Blanc
-  whiteButton->setSize(width * 0.033, height * 0.04);
-  whiteButton->setPosition(width * 0.363, height * 0.011);
+  whiteButton->setSize("4.3%", "64%");
+  whiteButton->setPosition("48%", "18%");
   whiteButton->getRenderer()->setBackgroundColor(tgui::Color(255, 255, 255));
   whiteButton->getRenderer()->setBackgroundColorHover(tgui::Color(255, 255, 255));
   whiteButton->getRenderer()->setBorders({0});
@@ -185,8 +182,8 @@ void GameView::initPenOptions() {
   penOptionsPanel_->add(whiteButton);
 
   // Vert
-  greenButton->setSize(width * 0.033, height * 0.04);
-  greenButton->setPosition(width * 0.401, height * 0.011);
+  greenButton->setSize("4.3%", "64%");
+  greenButton->setPosition("53%", "18%");
   greenButton->getRenderer()->setBackgroundColor(tgui::Color(50, 200, 80));
   greenButton->getRenderer()->setBackgroundColorHover(tgui::Color(50, 200, 80));
   greenButton->getRenderer()->setBorders({0});
@@ -206,8 +203,8 @@ void GameView::initPenOptions() {
   penOptionsPanel_->add(greenButton);
 
   // Bleu
-  blueButton->setSize(width * 0.033, height * 0.04);
-  blueButton->setPosition(width * 0.439, height * 0.011);
+  blueButton->setSize("4.3%", "64%");
+  blueButton->setPosition("58%", "18%");
   blueButton->getRenderer()->setBackgroundColor(tgui::Color(30, 100, 255));
   blueButton->getRenderer()->setBackgroundColorHover(tgui::Color(30, 100, 255));
   blueButton->getRenderer()->setBorders({0});
@@ -227,8 +224,8 @@ void GameView::initPenOptions() {
   penOptionsPanel_->add(blueButton);
 
   // Yellow
-  yellowButton->setSize(width * 0.033, height * 0.04);
-  yellowButton->setPosition(width * 0.477, height * 0.011);
+  yellowButton->setSize("4.3%", "64%");
+  yellowButton->setPosition("63%", "18%");
   yellowButton->getRenderer()->setBackgroundColor(tgui::Color(255, 220, 0));
   yellowButton->getRenderer()->setBackgroundColorHover(tgui::Color(255, 220, 0));
   yellowButton->getRenderer()->setBorders({0});
@@ -249,8 +246,8 @@ void GameView::initPenOptions() {
 
   // Je crée ici la possibilité de faire une couleur personnalisé
   auto rInput = tgui::EditBox::create();
-  rInput->setSize(width * 0.038, height * 0.04);
-  rInput->setPosition(width * 0.522, height * 0.011);
+  rInput->setSize("5%", "64%");
+  rInput->setPosition("69%", "18%");
   rInput->setDefaultText("R");
   rInput->setInputValidator("[0-9]*");
   rInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
@@ -261,8 +258,8 @@ void GameView::initPenOptions() {
   penOptionsPanel_->add(rInput);
 
   auto gInput = tgui::EditBox::create();
-  gInput->setSize(width * 0.038, height * 0.04);
-  gInput->setPosition(width * 0.564, height * 0.011);
+  gInput->setSize("5%", "64%");
+  gInput->setPosition("74%", "18%");
   gInput->setDefaultText("G");
   gInput->setInputValidator("[0-9]*");
   gInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
@@ -273,8 +270,8 @@ void GameView::initPenOptions() {
   penOptionsPanel_->add(gInput);
 
   auto bInput = tgui::EditBox::create();
-  bInput->setSize(width * 0.038, height * 0.04);
-  bInput->setPosition(width * 0.606, height * 0.011);
+  bInput->setSize("5%", "64%");
+  bInput->setPosition("80%", "18%");
   bInput->setDefaultText("B");
   bInput->setInputValidator("[0-9]*");
   bInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
@@ -285,8 +282,8 @@ void GameView::initPenOptions() {
   penOptionsPanel_->add(bInput);
 
   auto aInput = tgui::EditBox::create();
-  aInput->setSize(width * 0.038, height * 0.04);
-  aInput->setPosition(width * 0.648, height * 0.011);
+  aInput->setSize("5%", "64%");
+  aInput->setPosition("85%", "18%");
   aInput->setDefaultText("A");
   aInput->setInputValidator("[0-9]*");
   aInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
@@ -297,8 +294,8 @@ void GameView::initPenOptions() {
   penOptionsPanel_->add(aInput);
 
   auto applyRGBButton = tgui::Button::create("OK");
-  applyRGBButton->setSize(width * 0.033, height * 0.04);
-  applyRGBButton->setPosition(width * 0.690, height * 0.011);
+  applyRGBButton->setSize("4.3%", "64%");
+  applyRGBButton->setPosition("91%", "18%");
   applyRGBButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
   applyRGBButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
   applyRGBButton->getRenderer()->setTextColor(tgui::Color::White);

@@ -1,5 +1,7 @@
 #include "clientnetwork.hpp"
 #include <iostream>
+#include <QFile>
+#include <QByteArray>
 
 std::deque<ServerEvent> &ClientNetworkManager::getQueuEvent() {
   return reponse_;
@@ -261,6 +263,18 @@ void ClientNetworkManager::changeRole(uint userId, uint projectId,
               << std::endl;
 }
 
+void ClientNetworkManager::exportToNative(uint projectId){
+  sf::Packet packet;
+  
+  MsgProtocole msg = MsgProtocole::LOB_EXPORT_NATIVE_PROJECT_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+  packet << projectId;
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
 void ClientNetworkManager::drawSquare(uint proj_id, uint layer_id, int pos_x,
                                       int pos_y, float size, uint8_t r,
                                       uint8_t g, uint8_t b, uint8_t a) {
@@ -464,6 +478,44 @@ void ClientNetworkManager::sendMessageChat(std::string message){
 
   packet << static_cast<uint8_t>(msg) << message;
   
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+}
+
+void ClientNetworkManager::importProj(std::string path, std::string name){
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::LOB_IMPORT_PROJECT_REQ;
+  packet <<static_cast<uint8_t>(msg);
+
+  //Reading .natif file
+  QString Qpath = QString::fromStdString(path);
+    QFile fileZip(Qpath);
+    if (!fileZip.open(QIODevice::ReadOnly)) {
+        std::cerr << "ERREUR CLIENT : Impossible d'ouvrir le fichier " << path << std::endl;
+        return; // On annule l'envoi si le fichier ne s'ouvre pas
+    }
+  QByteArray rawData = fileZip.readAll();
+
+  // Compressing zipFile
+  QByteArray dataCompress = qCompress(rawData, 9);
+  packet << static_cast<std::uint32_t>(dataCompress.size());
+  packet << (name);
+  packet.append(dataCompress.constData(), dataCompress.size());
+  fileZip.close();
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
+              << std::endl;
+
+}
+
+void ClientNetworkManager::goHome(){
+   sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::LOB_HOME_REQ;
+
+  packet << static_cast<uint8_t>(msg);
+
   if (socket_.send(packet) != sf::Socket::Status::Done)
     std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
               << std::endl;

@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     MutexQueue<SaveTask> saveQ;
     ServerNetworkManager servManager(mesQ, repQ);
     Worker worker(mesQ, repQ, saveQ);
-    SaveWorker saveWorker(saveQ);
+    SaveWorker saveWorker(saveQ, repQ);
 
     if (!servManager.start()) {
         return 0;

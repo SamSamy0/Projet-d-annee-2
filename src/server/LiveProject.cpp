@@ -36,8 +36,13 @@ bool LiveProject::removeConnection(uint userId) {
         
         *it = connectedID_.back(); 
         connectedID_.pop_back();
+        return true;
     }
 
+    return false;
+}
+
+bool LiveProject::isEmpty() {
     return connectedID_.empty();
 }
 
@@ -217,6 +222,7 @@ const QJsonArray LiveProject::getChatJson() {
 bool LiveProject::addMessageChat(uint userId, const std::shared_ptr<MessageChat> message) {
     auto cleVal = usersRoles_.find(userId);
     if (cleVal == usersRoles_.end()) {
+        qDebug() << "User not found in project";
         return false;
     }
     

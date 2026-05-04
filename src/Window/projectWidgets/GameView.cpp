@@ -224,26 +224,34 @@ void GameView::render() {
 void GameView::handleEvents(const sf::Event &event) {
   auto &mainWindow = app_.getWindow();
   auto &gui = app_.getGui();
+
   if (!chatInput_->isFocused())
     project->getMap()->detectMovement();
   // ON PRESS
   if (const auto *mousePressed = event.getIf<sf::Event::MouseButtonPressed>()) {
     // On menu
     auto popup = gui.get("popup");
+    auto exportPopup = gui.get("exportPopup");
     // If popup exists
     if (popup) {
       // Gets position of where menu pops
       sf::Vector2f clickPos(mousePressed->position.x, mousePressed->position.y);
       // If click outside the menu, then remove it
       if (!popup->isMouseOnWidget(clickPos)) {
-        auto &gui = app_.getGui();
-        auto popup = gui.get("popup");
         gui.remove(popup);
         if (activeMoreButton) {
           activeMoreButton->getRenderer()->setBackgroundColor(
               tgui::Color::Transparent);
           activeMoreButton = nullptr;
         }
+      }
+    }
+    if (exportPopup) {
+      // Gets position of where menu pops
+      sf::Vector2f clickPos(mousePressed->position.x, mousePressed->position.y);
+      // If click outside the menu, then remove it
+      if (!exportPopup->isMouseOnWidget(clickPos)) {
+        gui.remove(exportPopup);
       }
     }
 
@@ -309,12 +317,11 @@ void GameView::handleEvents(const sf::Event &event) {
         project->getMap()->zooming(wheelEvent); // ZOOM
     }
   }
-  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Delete)){
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Delete)) {
     std::shared_ptr<Tool> tool = project->getToolBar().getSelectedTool();
-    if(tool->getType() == SPRITESELECTION)
+    if (tool->getType() == SPRITESELECTION)
       static_pointer_cast<SpriteSelection>(tool)->erase();
   }
-
 }
 
 void GameView::updateMemberRole(uint targetId, int8_t newRole) {
@@ -346,7 +353,7 @@ void GameView::setAllUsers(std::vector<MemberEntry> users) {
   Transferring = false;
 }
 
-void GameView::popupKicked() {
+void GameView::popupWarning(std::string motif) {
   auto &gui = app_.getGui();
   auto back = tgui::Panel::create();
   back->setSize("100%", "100%");
@@ -362,18 +369,38 @@ void GameView::popupKicked() {
   popup->getRenderer()->setRoundedBorderRadius(12);
   back->add(popup);
 
-  auto icon = tgui::Label::create("⚠");
-  icon->setPosition("50%", "10%");
-  icon->getRenderer()->setTextSize(40);
-  icon->getRenderer()->setTextColor(tgui::Color(200, 60, 60));
-  popup->add(icon);
-
-  auto msg = tgui::Label::create("Vous avez été expulsé du projet");
+  tgui::Label::Ptr icon;
+  tgui::Label::Ptr msg;
+  if (motif == "kick") {
+    icon = tgui::Label::create("⚠");
+     msg = tgui::Label::create("Vous avez été expulsé du projet");
+  } else if (motif == "exportNatif") {
+    icon = tgui::Label::create("⚠");
+     msg = tgui::Label::create("Vous devez d'abord sauvegarder le projet");
+  } else if (motif == "exportPngOK") {
+    icon = tgui::Label::create("✔");
+     msg = tgui::Label::create(
+        "Votre image à été sauvegardé dans le dossier export_image");
+    popup->getRenderer()->setBorderColor(tgui::Color::Green);
+  } else if (motif == "exportPngKO") {
+    icon = tgui::Label::create("⚠");
+    msg =
+        tgui::Label::create("L'export au format image n'a pas pu aboutir");
+  }
   msg->setPosition("5%", "45%");
-  msg->setTextSize(15);
+  msg->getRenderer()->setTextSize(20);
   msg->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
   msg->getRenderer()->setTextColor(tgui::Color(220, 220, 235));
   popup->add(msg);
+
+    icon->setPosition("50%", "10%");
+  icon->getRenderer()->setTextSize(40);
+  if (motif == "exportPngKO")
+    icon->getRenderer()->setTextColor(tgui::Color(200, 60, 60));
+  else if(motif=="exportPngOK")
+    icon->getRenderer()->setTextColor(tgui::Color::Green);
+  popup->add(icon);
+
 
   auto okBtn = tgui::Button::create("OK");
   okBtn->setSize("40%", "20%");
@@ -385,9 +412,11 @@ void GameView::popupKicked() {
   okBtn->getRenderer()->setRoundedBorderRadius(8);
   popup->add(okBtn);
 
-  okBtn->onPress([this, &gui]() {
+  okBtn->onPress([this, motif,&gui]() {
     gui.remove(gui.get("back"));
-    app_.getNetwork().getProjectList();
-    app_.changeView(std::make_unique<MenuView>(app_));
+    if (motif == "kick"){
+      app_.getNetwork().getProjectList();
+      app_.changeView(std::make_unique<MenuView>(app_));
+    }
   });
 }
