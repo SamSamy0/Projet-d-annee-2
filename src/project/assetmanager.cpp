@@ -11,9 +11,6 @@
 
 AssetManager::AssetManager(){loadFromJson();}
 
-
-
-
 void AssetManager::loadFromJson(){
   std::string spritesPath = "../res/sprites/sprites.json";
 
@@ -64,6 +61,18 @@ void AssetManager::loadFromJson(){
 
 
 
-  Asset* AssetManager::getAsset(const std::string& id){
+Asset* AssetManager::getAsset(const std::string& id){
   return &assets_[id];
+}
+
+void AssetManager::addAsset(uint id, sf::Texture texture) {
+  Asset newAssset;
+  std::string nameAsset = "import_" + std::to_string(id);
+  newAssset.id = nameAsset;
+  newAssset.filename = nameAsset + ".png";
+  newAssset.category = "import";
+  newAssset.name = "Import";
+  newAssset.size_m_horizontal = 1;
+  newAssset.texture = std::make_unique<sf::Texture>(std::move(texture));
+  assets_[newAssset.id] = std::move(newAssset);
 }

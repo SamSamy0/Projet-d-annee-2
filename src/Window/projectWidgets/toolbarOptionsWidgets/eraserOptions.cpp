@@ -9,7 +9,7 @@ void GameView::initEraserOptions() {
   // Création de la barre avec toutes les infos pour la gomme
   eraserOptionsPanel_ = tgui::Panel::create();
   eraserOptionsPanel_->setSize("35%", "6.2%");
-  eraserOptionsPanel_->setPosition("34%", "5%");
+  eraserOptionsPanel_->setPosition("33%", "5%");
   eraserOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
   eraserOptionsPanel_->getRenderer()->setBorders({1});
   eraserOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));

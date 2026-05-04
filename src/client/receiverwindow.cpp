@@ -236,3 +236,7 @@ void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,
     gameView->refreshChat();
   }
 }
+
+void ReceiverWindow::addImportAsset(sf::Texture texture) {
+  
+}
