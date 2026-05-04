@@ -650,15 +650,16 @@ MoveSpriteMessage::MoveSpriteMessage(sf::Packet &data_packet,
 void MoveSpriteMessage::process(Worker &worker) {
   auto liveProj = worker.mapProjet_.find(projectId_);
   if (liveProj == worker.mapProjet_.end()) {
+    std::cout << "Projet non trouvé pour MoveSpriteMessage" << std::endl;
     return;
   }
-  // if (liveProj->second.moveSprite(userId_, calqueId_,sprite_id_,x_,y_)){
+  if (liveProj->second.moveSprite(userId_, calqueId_, std::move(sprite_ids_),x_,y_)){
   std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 
   rps = std::make_unique<ReponseMoveSprite>(usersId, *this);
   worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 ResizeSpriteMessage::ResizeSpriteMessage(sf::Packet &data_packet,
@@ -679,14 +680,13 @@ void ResizeSpriteMessage::process(Worker &worker) {
   if (liveProj == worker.mapProjet_.end()) {
     return;
   }
-  // if (liveProj->second.resizeSprite(userId_,
-  // calqueId_,sprite_id_,x_,y_,scale_)){
+  if (liveProj->second.resizeSprite(userId_, calqueId_, sprite_ids_, scale_, x_,y_)){
   std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 
   rps = std::make_unique<ReponseResizeSprite>(usersId, *this);
   worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 RotateSpriteMessage::RotateSpriteMessage(sf::Packet &data_packet,
@@ -707,14 +707,13 @@ void RotateSpriteMessage::process(Worker &worker) {
   if (liveProj == worker.mapProjet_.end()) {
     return;
   }
-  // if (liveProj->second.resizeSprite(userId_,
-  // calqueId_,sprite_id_,angle_,x_,y_)){
+  if (liveProj->second.rotateSprite(userId_, calqueId_, sprite_ids_, angle_, x_, y_)){
   std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 
   rps = std::make_unique<ReponseRotateSprite>(usersId, *this);
   worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 MoveLayerMessage::MoveLayerMessage(sf::Packet &data_packet,

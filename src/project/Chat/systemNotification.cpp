@@ -17,7 +17,7 @@ string SystemNotification::getTexte() const {
 string SystemNotification::getDateTexte() const {
     Date date = getDate();
     return std::to_string(date.day_) + "/" + std::to_string(date.month_) + "/" +
-           std::to_string(date.year_) + " " + std::to_string(date.hour_) + ":" + std::to_string(date.min_);
+           std::to_string(date.year_) + " à " + std::to_string(date.hour_) + ":" + std::to_string(date.min_);
 }
 
 SystemNotification::SystemNotification(const User& user, const Date& date, const typeNotification &notif) 
