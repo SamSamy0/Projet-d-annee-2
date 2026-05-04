@@ -183,3 +183,7 @@ struct ReponseChatSystem : ReponseGroupe {
 struct ReponseExport : ReponseSolo {
   ReponseExport(uint userId,std::string projectName,  QByteArray data);
 };
+
+struct ReponseAddSprite : ReponseGroupe{
+  ReponseAddSprite(std::vector<uint> usersId, AddSpriteMessage &mess);
+};

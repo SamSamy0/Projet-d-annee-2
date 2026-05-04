@@ -7,6 +7,8 @@
 #include "../worker.hpp"
 #include <filesystem>
 #include <memory>
+#include <SFML/Graphics/Texture.hpp>
+#include "../../common/sfml_overload.hpp"
 
 namespace fs = std::filesystem;
 ConnectUserMessage::ConnectUserMessage(sf::Packet &dataPacket,
@@ -875,6 +877,17 @@ void HomeMessage::process(Worker& worker){
         //Message de sauvegarde de projet
         worker.mapProjet_.erase(projectId_);
     }
+}
+
+AddSpriteMessage::AddSpriteMessage(sf::Packet &dataPacket,std::shared_ptr<Client>& client){
+  userId_ = client->id;
+  projectId_ = client->projectId;
+  pseudo_ = client->pseudo;
+  dataPacket >> sprite_;
+}
+
+void AddSpriteMessage::process(Worker &worker){
+
 }
 
 
