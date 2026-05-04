@@ -1,5 +1,6 @@
 #pragma once
 #include "../client.hpp"
+#include "../../project/Chat/systemNotification.hpp"
 #include <SFML/Network.hpp>
 #include <QByteArray>
 #include <iostream>
@@ -111,13 +112,13 @@ struct LeaveProjectMessage : IMessage {
 struct GetProjectDataMessage : IMessage {
   uint userId_;
   uint projectId_;
+  std::string pseudo_;
 
     GetProjectDataMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
-
-
+void createSystemNotification(Worker &worker, uint projectId, std::string &pseudo, uint userId, typeNotification type);
 
 struct ModifProjetMessage : IMessage {
   uint userId_;
@@ -280,6 +281,7 @@ struct MoveLayerMessage : ModifProjetMessage {
 struct DisconnectMessage : IMessage {
     uint userId_;
     uint projectId_;
+    std::string pseudo_;
 
   DisconnectMessage(std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
@@ -318,6 +320,7 @@ struct ChatMessage : IMessage {
 struct HomeMessage : IMessage {
   uint userId_;
   uint projectId_;
+  std::string pseudo_;
 
   HomeMessage(std::shared_ptr<Client>& client);
   void process(Worker &worker) override;

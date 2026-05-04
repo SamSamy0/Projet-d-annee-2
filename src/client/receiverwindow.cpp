@@ -4,6 +4,7 @@
 #include "../project/Chat/chat.hpp"
 #include "../project/Chat/date.hpp"
 #include "../project/Chat/userMessage.hpp"
+#include "../project/Chat/systemNotification.hpp"
 #include "../project/Layer/spritelayer.hpp"
 #include "../project/Tool/pixelbrush.hpp"
 #include "../project/Tool/pixelshift.hpp"
@@ -235,12 +236,12 @@ void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,int m
   }
 }
 
-void ReceiverInWindow::addChatSyst(std::string pseudo, uint8_t type,int min, int hour, int day, int month,
+ void ReceiverInWindow::addChatSyst(std::string pseudo, uint8_t type,int min, int hour, int day, int month,
                                    int year) {
   Date date(min, hour, day, month, year);
   if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
     if (app_->getProject()) {
-      app_->getProject()->getChat().addMessage(make_shared<UserMessage>(User(pseudo, 0), date, message));
+      app_->getProject()->getChat().addMessage(make_shared<SystemNotification>(User(pseudo, 0), date, static_cast<typeNotification>(type)));
     }
     gameView->refreshChat();
   }

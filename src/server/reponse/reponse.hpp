@@ -1,5 +1,6 @@
 #pragma once
 #include "../client.hpp"
+#include "../../project/Chat/systemNotification.hpp"
 #include "../datamanager/memberentry.hpp"
 #include "../datamanager/projectentry.hpp"
 #include "../message/message.hpp"
@@ -175,10 +176,10 @@ struct ReponseChat : ReponseGroupe {
   ReponseChat(std::vector<uint> usersId,ChatMessage& mess);
 };
 
+struct ReponseChatSystem : ReponseGroupe {
+  ReponseChatSystem(std::vector<uint> usersId, SystemNotification& mess);
+};
+
 struct ReponseExport : ReponseSolo {
   ReponseExport(uint userId,std::string projectName,  QByteArray data);
-  void envoyer(ServerNetworkManager& servManager) override {
-    ReponseSolo::envoyer(servManager);
-    std::cout << "Export envoyé" << std::endl;
-  };
 };

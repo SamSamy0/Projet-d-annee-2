@@ -84,7 +84,8 @@ void GameView::refreshChat() {
       std::string pseudo = msg->getAuthor().getUser();
       std::string authorDate = pseudo + " - " + std::to_string(date.day_) +
                                "/" + std::to_string(date.month_) + "/" +
-                               std::to_string(date.year_);
+                               std::to_string(date.year_) + 
+                               " " + std::to_string(date.hour_) + ":" + std::to_string(date.min_);
 
       auto author = tgui::Label::create();
       author->setText(authorDate);
@@ -101,6 +102,17 @@ void GameView::refreshChat() {
       message->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
       message->setMaximumTextWidth(width * 0.16);
       chatMessages_->add(message);
+      positionY += message->getSize().y + 4.0;
+    }
+
+    else if (msg->getType() == MessageType::SYSTEM) {
+auto message = tgui::Label::create(msg->getTexte());
+      message->setPosition("3%", positionY);
+      message->getRenderer()->setTextColor(tgui::Color::White);
+      message->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+      message->setMaximumTextWidth(width * 0.16);
+      chatMessages_->add(message);
+      message->setTextSize(12); 
       positionY += message->getSize().y + 4.0;
     }
   }

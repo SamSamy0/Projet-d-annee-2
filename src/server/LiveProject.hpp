@@ -14,7 +14,9 @@ struct LiveProject {
     LiveProject(uint projId);
     LiveProject(uint id, const std::string &projectName, uint width, uint height, uint scale);
     void addConnection(uint userId, uint8_t role);
-    bool removeConnection(uint userId); //return true if the project is empty
+    bool removeConnection(uint userId);
+    bool isEmpty();
+
     std::vector<uint>& getConnected();
     QJsonObject getJson();
     bool drawPixelRect(uint userId, uint calqueId, uint x, uint y, float taille, uint8_t r, uint8_t g, uint8_t b, uint8_t op);
