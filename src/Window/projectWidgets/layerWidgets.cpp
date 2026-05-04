@@ -38,18 +38,20 @@ void GameView::initLayerPanel() {
 
   vector<shared_ptr<Layer>> &layers = project->getMap()->getLayers();
   unsigned int selected = project->getMap()->getLayerSelected();
-  for (size_t i = 0; i < layers.size(); i++) {
-    auto layerButton = tgui::Button::create(layers[i]->getName());
-    bool isSelected = (i == selected);
-    layerButton->getRenderer()->setBackgroundColor(isSelected ? tgui::Color(60, 130, 200) : tgui::Color(36, 40, 47));
-    layerButton->getRenderer()->setBackgroundColorHover(isSelected ? tgui::Color(75, 150, 220) : tgui::Color(50, 56, 66));
-    layerButton->getRenderer()->setTextColor(tgui::Color::White);
-    layerButton->getRenderer()->setBorders({1});
-    layerButton->getRenderer()->setBorderColor(tgui::Color(70, 75, 85));
-    layerButton->getRenderer()->setRoundedBorderRadius(6);
-    layerButton->setSize("89%", "18%");
-    layerButton->setPosition("5%", tgui::String(std::to_string(i * 19.76f) + "%"));
-    layerButton->onClick([this, i]() {
+  int displayIndex = 0;
+  for (int i = layers.size()-1; i >= 0; i--) {
+    if(!layers[i]->isTemp()){
+      auto layerButton = tgui::Button::create(layers[i]->getName());
+      bool isSelected = (i == selected);
+      layerButton->getRenderer()->setBackgroundColor(isSelected ? tgui::Color(60, 130, 200) : tgui::Color(36, 40, 47));
+      layerButton->getRenderer()->setBackgroundColorHover(isSelected ? tgui::Color(75, 150, 220) : tgui::Color(50, 56, 66));
+      layerButton->getRenderer()->setTextColor(tgui::Color::White);
+      layerButton->getRenderer()->setBorders({1});
+      layerButton->getRenderer()->setBorderColor(tgui::Color(70, 75, 85));
+      layerButton->getRenderer()->setRoundedBorderRadius(6);
+      layerButton->setSize("89%", "18%");
+      layerButton->setPosition("5%", tgui::String(std::to_string(displayIndex * 19.76f) + "%"));
+      layerButton->onClick([this, i]() {
       LayerType type = project->getMap()->getCurrentLayer()->getType();
       project->getMap()->selectLayer(static_cast<unsigned int>(i));
       checkTypeTool(type);
@@ -57,6 +59,8 @@ void GameView::initLayerPanel() {
     });
     layersList_->add(layerButton);
     layerButton->setTextSize(15);
+    displayIndex++;
+  }
   }
 
   auto renameLayerButton = tgui::Button::create("Renommer");
@@ -257,6 +261,7 @@ void GameView::refreshLayerList() {
   layersList_->removeAllWidgets();
   const vector<shared_ptr<Layer>> &layers = project->getMap()->getLayers();
   unsigned int selected = project->getMap()->getLayerSelected();
+  int displayIndex = 0;
   for (int i = layers.size()-1; i >= 0; i--) {
     if(!layers[i]->isTemp()){
       auto layerButton = tgui::Button::create(layers[i]->getName());
@@ -267,8 +272,8 @@ void GameView::refreshLayerList() {
       layerButton->getRenderer()->setBorders({1});
       layerButton->getRenderer()->setBorderColor(tgui::Color(70, 75, 85));
       layerButton->getRenderer()->setRoundedBorderRadius(6);
-    layerButton->setSize("89%", "18%");
-    layerButton->setPosition("5%", tgui::String(std::to_string(i * 19.76f) + "%"));
+      layerButton->setSize("89%", "18%");
+      layerButton->setPosition("5%", tgui::String(std::to_string(displayIndex * 19.76f) + "%"));
       layerButton->onClick([this, i]() {
         LayerType type = project->getMap()->getCurrentLayer()->getType();
         project->getMap()->selectLayer(static_cast<unsigned int>(i));
@@ -277,6 +282,7 @@ void GameView::refreshLayerList() {
       });
       layersList_->add(layerButton);
       layerButton->setTextSize(15);
+      displayIndex++;
     }
   }
 }
