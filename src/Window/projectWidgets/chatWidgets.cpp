@@ -93,7 +93,7 @@ void GameView::refreshChat() {
       author->getRenderer()->setTextColor(tgui::Color(150, 160, 180));
       author->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
       chatMessages_->add(author);
-      author->setTextSize(15);
+      author->setTextSize(13);
       positionY += authorDataHeight;
 
       auto message = tgui::Label::create(msg->getTexte());
@@ -112,7 +112,7 @@ auto message = tgui::Label::create(msg->getTexte());
       message->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
       message->setMaximumTextWidth(width * 0.16);
       chatMessages_->add(message);
-      message->setTextSize(12); 
+      message->setTextSize(13); 
       positionY += message->getSize().y + 4.0;
     }
   }
