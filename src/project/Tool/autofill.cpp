@@ -7,7 +7,7 @@
 
 AutoFill::AutoFill(std::shared_ptr<Map> map, ClientNetworkManager &manager) : Tool(map,manager){ 
   type_ = AUTOFILL;
-  temporaryLayer_ = dynamic_pointer_cast<SpriteLayer>(map_->getLayer(0));
+  temporaryLayer_ = map->getTempLayer();
 }
 
 

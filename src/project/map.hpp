@@ -9,17 +9,20 @@
 #include <vector>
 
 // TODO: DEFINIR DES VALEURS MAX ET MIN POUR LA SIZE, LA SCALE
+//
+class SpriteLayer;
 
 using namespace std;
 
 class Layer;
 
 class Map {
-  uint nextLayerId_ = 0;
+  uint nextLayerId_ = 1;
   uint id_;
   sf::Vector2u size_;
   unsigned int scale_;
   vector<shared_ptr<Layer>> layers_;
+  shared_ptr<SpriteLayer> tempLayer;
   sf::RenderTexture render_texture_;
   sf::Sprite sprite_;
   Zoom zoom_;
@@ -40,6 +43,7 @@ public:
   unsigned int getLayerSelected() const;
   shared_ptr<Layer> getLayer(uint id);
   uint getId();
+  std::shared_ptr<SpriteLayer> getTempLayer();
   void selectLayer(unsigned int i);
   void selectLayerId(uint id);
   bool hasLayer() const;

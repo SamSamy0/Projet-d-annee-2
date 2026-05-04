@@ -17,11 +17,10 @@ Map::Map(uint id, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer
     if (!render_texture_.resize(size)){
         std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;} 
 
-    createSpriteLayer();
-    layers_[0]->setTemp();
     sprite_.setTexture(render_texture_.getTexture(),true);
-    //WARNING: il manque peut etre la selection de la bonne couche
-    // hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
+
+    tempLayer = make_shared<SpriteLayer>(0,"temporary layer",size_);   
+    // selected_ = layers_.size()-1 ;
 }
 
 Map::Map(uint id, sf::Vector2u size , unsigned int scale) :
@@ -31,12 +30,9 @@ Map::Map(uint id, sf::Vector2u size , unsigned int scale) :
         std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;
     } 
     sprite_.setTexture(render_texture_.getTexture(),true);
-    createSpriteLayer();
-    layers_[0]->setTemp();
+    tempLayer = make_shared<SpriteLayer>(0,"temporary layer",size_);   
     createPixelLayer();
-    selectLayerId(1);
-    // hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
-
+    selected_ = 0 ;
 }
 
 Zoom& Map::getZoom() { return zoom_; }
@@ -72,24 +68,22 @@ shared_ptr<Layer> Map::getLayer(uint id){
     return nullptr;
 }
 
+
+
+std::shared_ptr<SpriteLayer> Map::getTempLayer(){return tempLayer;}
+
 void Map::createPixelLayer(){
-    std::string name = "Couche Pixel (" + std::to_string(nextLayerId_ + 1) + ")";
+    std::string name = "Couche Pixel (" + std::to_string(nextLayerId_) + ")";
     shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(nextLayerId_,name, size_);
     layers_.push_back(pixellayer);
-    if(layers_.size() >1 && layers_[layers_.size() - 2]->getId() == 0)
-        swap(layers_[layers_.size()-1],layers_[layers_.size()-2]);
-    // layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
     nextLayerId_ +=1;
 }
 
 
 void Map::createSpriteLayer(){
-    std::string name = "Couche Sprite (" + std::to_string(nextLayerId_ + 1) + ")";
+    std::string name = "Couche Sprite (" + std::to_string(nextLayerId_) + ")";
     shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(nextLayerId_,name,size_); 
     layers_.push_back(spritelayer);
-    if(layers_.size() >1 && layers_[layers_.size() - 2]->getId() == 0)
-        swap(layers_[layers_.size()-1],layers_[layers_.size()-2]);
-    // layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
     nextLayerId_ +=1;
 }
 
@@ -117,7 +111,7 @@ void Map::layerDown(uint layerId){
             break;
         }
     }
-    if(j >= 0 && j < layers_.size()-1 && (layers_[j+1]->getId()!=0 && layers_[j]->getId() != 0)){
+    if(j >= 0 && j < layers_.size()-1){
         std::swap(layers_[j],layers_[j+1]);
         if(selected_ == j) selected_ +=1;
         else if(selected_ == j+1) selected_ -= 1;
@@ -134,7 +128,7 @@ void Map::layerUp(uint layerId){
             break;
         }
     }
-    if(j > 0 && j <= layers_.size()-1 && (layers_[j-1]->getId()!=0 && layers_[j]->getId() != 0)){
+    if(j > 0 && j <= layers_.size()-1){
         std::swap(layers_[j],layers_[j-1]);
         if(selected_ == j) selected_ -=1;
         else if(selected_ == j-1) selected_ += 1;
@@ -146,9 +140,9 @@ void Map::layerUp(uint layerId){
 void Map::deleteLayer(uint layer_id){
     if(layer_id == 0)
         return;
-    if (layers_.size() <= 2 || layers_[selected_]->getId() == 0) return;
-    int j = -1;
+    if (layers_.size() <= 1) return;
 
+    int j = -1;
     for(int i = 0; i<layers_.size(); i++){
         if(layers_[i]->getId() == layer_id){
             j = i;
@@ -157,19 +151,20 @@ void Map::deleteLayer(uint layer_id){
     }
     if(j != -1){
         layers_.erase(layers_.begin() + j);
+
         if (selected_ == j && selected_ > 0) selected_ -= 1;
         else if (selected_ > j) selected_ -= 1;
 
         if (layers_.empty()) 
-                    selected_ = 0;
+            selected_ = 0;
         else if (selected_ >= layers_.size()) 
-        selected_ = layers_.size() - 1;
+            selected_ = layers_.size() - 1;
                 
     }
 }
 
 void Map::deleteLayer(){
-    if (layers_.size() <= 2 || layers_[selected_]->getId() == 0) return;
+    if (layers_.size() <= 1 ) return;
     layers_.erase(layers_.begin() + selected_);
     selected_ = (selected_ > 0) ? selected_ - 1 : 0;
 }
@@ -215,6 +210,8 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap) {
     for (auto& layer: layers_) {
         // We are drawing all the layers on the texture of the map
         layer->drawLayer(render_texture_);
+        if(layer->getId() == layers_[selected_]->getId())
+            tempLayer->drawLayer(render_texture_);
     }
     // And then we display the texture of the map
     render_texture_.display();
