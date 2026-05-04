@@ -236,7 +236,7 @@ void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,int m
   }
 }
 
- void ReceiverInWindow::addChatSyst(std::string pseudo, uint8_t type,int min, int hour, int day, int month,
+void ReceiverInWindow::addChatSyst(std::string pseudo, uint8_t type,int min, int hour, int day, int month,
                                    int year) {
   Date date(min, hour, day, month, year);
   if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
@@ -245,4 +245,9 @@ void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,int m
     }
     gameView->refreshChat();
   }
+}
+
+
+void ReceiverInWindow::addSprite(uint spriteId, sf::Texture sprite){
+  app_->getProject()->getMap()->getAssetManager().addAsset(spriteId, sprite);
 }
