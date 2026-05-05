@@ -13,7 +13,7 @@ SpriteLayer::SpriteLayer(const QJsonObject& origin) {
         spriteOpt.x = objetSprite["x"].toInt();
         spriteOpt.y = objetSprite["y"].toInt();
         spriteOpt.taille = objetSprite["size"].toDouble();
-
+        spriteOpt.angle = objetSprite["angle"].toDouble();
         sprites_.push_back(std::move(spriteOpt));
 
         auto it = std::prev(sprites_.end());
@@ -35,7 +35,7 @@ void SpriteLayer::addSprite(std::string nameId, float taille, uint x, uint y) {
     spriteOpt.x = x;
     spriteOpt.y = y;
     spriteOpt.taille = taille;
-
+    spriteOpt.angle = 0.0;
     sprites_.push_back(std::move(spriteOpt));
     
     auto it = std::prev(sprites_.end());
@@ -63,9 +63,45 @@ QJsonObject SpriteLayer::load() const {
         objetSprite["x"] = static_cast<int>(sprite.x);
         objetSprite["y"] = static_cast<int>(sprite.y);
         objetSprite["size"] = static_cast<float>(sprite.taille);
+        objetSprite["angle"] = static_cast<float>(sprite.angle);
         sprites.append(objetSprite);
     }
     layer["sprites"] = sprites;
 
     return layer;
+}
+
+void SpriteLayer::moveSprite(std::vector<uint> spriteIds, int deltaX, int deltaY) {
+    for (uint id : spriteIds) {
+        qDebug() << "Moving sprite with ID: " << id << " by (" << deltaX << ", " << deltaY << ")";
+        auto it = mapId_.find(id);
+        if (it != mapId_.end()) {
+            it->second->x += deltaX;
+            it->second->y += deltaY;
+        }
+    }
+}
+
+void SpriteLayer::resizeSprite(std::vector<uint> spriteIds, float scale, std::vector<float> x, std::vector<float> y) {
+    for (size_t i = 0; i < spriteIds.size(); ++i) {
+        uint id = spriteIds[i];
+        auto it = mapId_.find(id);
+        if (it != mapId_.end()) {
+            it->second->taille *= scale;
+            it->second->x = x[i];
+            it->second->y = y[i];
+        }
+    }
+}
+
+void SpriteLayer::rotateSprite(std::vector<uint> spriteIds, float angle, std::vector<float> x, std::vector<float> y) {
+    for (size_t i = 0; i < spriteIds.size(); ++i) {
+        uint id = spriteIds[i];
+        auto it = mapId_.find(id);
+        if (it != mapId_.end()) {
+            it->second->angle += angle;
+            it->second->x = x[i];
+            it->second->y = y[i];
+        }
+    }
 }

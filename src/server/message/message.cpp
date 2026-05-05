@@ -1,6 +1,7 @@
 #include "message.hpp"
 #include "../../common/protocol.hpp"
 #include "../../project/Chat/userMessage.hpp"
+#include "../../project/Chat/systemNotification.hpp"
 #include "../datamanager/miniz.h"
 #include "../reponse/reponse.hpp"
 #include "../worker.hpp"
@@ -61,6 +62,8 @@ void CreateProjectMessage::process(Worker &worker) {
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseCreateProject>(userId_, idProj);
     worker.pushNetwork(std::move(rps));
+
+    createSystemNotification(worker, idProj, client_->pseudo, userId_, typeNotification::CONNEXION);
   }
 }
 ExportNativeMessage::ExportNativeMessage(sf::Packet &data_packet,
@@ -81,7 +84,6 @@ void ExportNativeMessage::process(Worker &worker) {
     std::unique_ptr<ExportDemand> savetsk;
     savetsk = std::make_unique<ExportDemand>(worker.mapProjet_.at(projectId_),
                                              projectId_, userId_);
-    std::cout << "pushing to handler" << std::endl;
     worker.pushSave(std::move(savetsk));
   }
 }
@@ -242,6 +244,7 @@ GetProjectDataMessage::GetProjectDataMessage(sf::Packet &data_packet,
   userId_ = client->id;
   data_packet >> projectId_;
   client->projectId = projectId_;
+  pseudo_ = client->pseudo;
 }
 
 LeaveProjectMessage::LeaveProjectMessage(sf::Packet &data_packet, uint userId) {
@@ -291,23 +294,23 @@ void GetMemberMessage::process(Worker &worker) {
 }
 
 void GetProjectDataMessage::process(Worker &worker) {
-  if (worker.mapProjet_.find(projectId_) == worker.mapProjet_.end()) {
-    LiveProject liveProj = LiveProject(projectId_);
-    liveProj.addConnection(
-        userId_,
-        worker.getRole(userId_, projectId_)); // WARNING: LE 1 EST FORCE CODER
-    worker.mapProjet_.emplace(projectId_, std::move(liveProj));
-  }
-  LiveProject &liveProj = worker.mapProjet_.at(projectId_);
-  liveProj.addConnection(
-      userId_,
-      worker.getRole(userId_, projectId_)); // WARNING: LE 1 EST FORCE CODER
+  int8_t role = worker.getRole(userId_, projectId_);
+  if (role != -1) {
+    if (worker.mapProjet_.find(projectId_) == worker.mapProjet_.end()) {
+      LiveProject liveProj = LiveProject(projectId_);
+      worker.mapProjet_.emplace(projectId_, std::move(liveProj));
+    }
+    LiveProject &liveProj = worker.mapProjet_.at(projectId_);
+    liveProj.addConnection(userId_, role); // WARNING: LE 1 EST FORCE CODER
+    
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseProjectData>(
+        userId_, liveProj.getJson(), std::move(liveProj.getLayerOrder()),
+        liveProj.getImageMap(), liveProj.getSpritesMap(), liveProj.getChatJson());
+    worker.pushNetwork(std::move(rps));
 
-  std::unique_ptr<Reponse> rps;
-  rps = std::make_unique<ReponseProjectData>(
-      userId_, liveProj.getJson(), std::move(liveProj.getLayerOrder()),
-      liveProj.getImageMap(), liveProj.getSpritesMap(), liveProj.getChatJson());
-  worker.pushNetwork(std::move(rps));
+    createSystemNotification(worker, projectId_, pseudo_, userId_, typeNotification::CONNEXION);
+  }
 }
 
 std::vector<uint> ModifProjetMessage::getUserLists(Worker &worker) {
@@ -324,7 +327,6 @@ std::vector<uint> ModifProjetMessage::getUserLists(Worker &worker) {
     *it = usersId.back();
     usersId.pop_back();
   }
-  std::cout << " taille usersID : " << usersId.size() << std::endl;
   return usersId;
 }
 ChangeRoleMessage::ChangeRoleMessage(sf::Packet &data_packet, uint userId) {
@@ -468,7 +470,6 @@ void PutPixelsSquareMessage::process(Worker &worker) {
 
   if (liveProj->second.drawPixelRect(userId_, calqueId_, pos_.x, pos_.y,
                                      taille_, red_, green_, blue_, opa_)) {
-    std::cout << "creation de la reponse" << std::endl;
     std::vector<uint> usersId = this->getUserLists(worker);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponsePutPixelsSquare>(usersId, *this);
@@ -649,15 +650,16 @@ MoveSpriteMessage::MoveSpriteMessage(sf::Packet &data_packet,
 void MoveSpriteMessage::process(Worker &worker) {
   auto liveProj = worker.mapProjet_.find(projectId_);
   if (liveProj == worker.mapProjet_.end()) {
+    std::cout << "Projet non trouvé pour MoveSpriteMessage" << std::endl;
     return;
   }
-  // if (liveProj->second.moveSprite(userId_, calqueId_,sprite_id_,x_,y_)){
+  if (liveProj->second.moveSprite(userId_, calqueId_, std::move(sprite_ids_),x_,y_)){
   std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 
   rps = std::make_unique<ReponseMoveSprite>(usersId, *this);
   worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 ResizeSpriteMessage::ResizeSpriteMessage(sf::Packet &data_packet,
@@ -678,14 +680,13 @@ void ResizeSpriteMessage::process(Worker &worker) {
   if (liveProj == worker.mapProjet_.end()) {
     return;
   }
-  // if (liveProj->second.resizeSprite(userId_,
-  // calqueId_,sprite_id_,x_,y_,scale_)){
+  if (liveProj->second.resizeSprite(userId_, calqueId_, sprite_ids_, scale_, x_,y_)){
   std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 
   rps = std::make_unique<ReponseResizeSprite>(usersId, *this);
   worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 RotateSpriteMessage::RotateSpriteMessage(sf::Packet &data_packet,
@@ -706,14 +707,13 @@ void RotateSpriteMessage::process(Worker &worker) {
   if (liveProj == worker.mapProjet_.end()) {
     return;
   }
-  // if (liveProj->second.resizeSprite(userId_,
-  // calqueId_,sprite_id_,angle_,x_,y_)){
+  if (liveProj->second.rotateSprite(userId_, calqueId_, sprite_ids_, angle_, x_, y_)){
   std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 
   rps = std::make_unique<ReponseRotateSprite>(usersId, *this);
   worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 MoveLayerMessage::MoveLayerMessage(sf::Packet &data_packet,
@@ -767,6 +767,7 @@ void CheckTokenMessage::process(Worker &worker) {
 DisconnectMessage::DisconnectMessage(std::shared_ptr<Client> &client) {
   userId_ = client->id;
   projectId_ = client->projectId;
+  pseudo_ = client->pseudo;
 }
 
 void DisconnectMessage::process(Worker &worker) {
@@ -781,6 +782,10 @@ void DisconnectMessage::process(Worker &worker) {
   }
 
   if (itProject->second.removeConnection(userId_)) {
+    createSystemNotification(worker, projectId_, pseudo_, userId_, typeNotification::DECONNEXION);
+  }
+
+  if (itProject->second.isEmpty()) {
     std::unique_ptr<SaveTask> savetsk;
     savetsk = std::make_unique<SaveTask>(worker.mapProjet_.at(projectId_),
                                          projectId_);
@@ -822,12 +827,62 @@ void ChatMessage::process(Worker &worker) {
   }
 }
 
+void createSystemNotification(Worker &worker, uint projectId, std::string &pseudo, uint userId, typeNotification type) {
+  auto itProject = worker.mapProjet_.find(projectId);
+
+  if (itProject == worker.mapProjet_.end()) {
+    return;
+    std::cout << "impossible de créer une notification de système" << std::endl;
+  }
+
+  std::shared_ptr<SystemNotification> messageChat =
+      std::make_shared<SystemNotification>(pseudo, userId, type);
+  
+
+  if (itProject->second.addMessageChat(userId, messageChat)) {
+    std::vector<uint> usersId = itProject->second.getConnected();
+
+    std::cout << "création d'une notification de système pour l'utilisateur " << userId << std::endl;
+
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseChatSystem>(usersId, *messageChat);
+    worker.pushNetwork(std::move(rps));
+  }
+}
+
+
+HomeMessage::HomeMessage(std::shared_ptr<Client>& client) {
+    userId_ = client->id;
+    projectId_ = client->projectId;
+    pseudo_ = client->pseudo;
+}
+
+void HomeMessage::process(Worker& worker){
+  auto itProject = worker.mapProjet_.find(projectId_);
+    
+    if (itProject == worker.mapProjet_.end()) {
+        return; 
+    }
+    
+    if (itProject->second.removeConnection(userId_)) {
+        createSystemNotification(worker, projectId_, pseudo_, userId_, typeNotification::DECONNEXION);
+    }
+
+    if (itProject->second.isEmpty()) {
+        std::unique_ptr<SaveTask> savetsk;
+        savetsk = std::make_unique<SaveTask>(worker.mapProjet_.at(projectId_), projectId_);
+        worker.pushSave(std::move(savetsk));
+        //Message de sauvegarde de projet
+        worker.mapProjet_.erase(projectId_);
+    }
+}
+
+
 std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
                                          std::shared_ptr<Client> &c) {
   uint8_t typeRaw;
   if (!(data_packet >> typeRaw))
     return nullptr;
-
   MsgProtocole type = static_cast<MsgProtocole>(typeRaw);
   std::cout << "[From client " << c->id << "]:" << to_string(type) << std::endl;
   switch (type) {
@@ -924,9 +979,13 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
 
   case MsgProtocole::PROJ_LEAVE_PROJ_REQ:
     return std::make_unique<LeaveProjectMessage>(data_packet, c->id);
+
   case MsgProtocole::CHAT_MESSAGE_REQ:
     return std::make_unique<ChatMessage>(data_packet, c);
 
+  case MsgProtocole::LOB_HOME_REQ:
+    return std::make_unique<HomeMessage>(c);
+    
   case MsgProtocole::PROJ_KICK_USER_REQ:
     return std::make_unique<KickUserMessage>(data_packet, c->id);
 

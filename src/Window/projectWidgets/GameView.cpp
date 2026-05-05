@@ -224,6 +224,7 @@ void GameView::render() {
 void GameView::handleEvents(const sf::Event &event) {
   auto &mainWindow = app_.getWindow();
   auto &gui = app_.getGui();
+
   if (!chatInput_->isFocused())
     project->getMap()->detectMovement();
   // ON PRESS

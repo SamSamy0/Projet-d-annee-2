@@ -13,8 +13,6 @@ void Worker::run() {
 
     if (request) {
       request->process(*this);
-      std::cout << "Taille map projet :" << static_cast<uint>(mapProjet_.size())
-                << std::endl;
     } else {
       break;
     }

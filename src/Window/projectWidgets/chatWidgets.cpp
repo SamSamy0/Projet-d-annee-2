@@ -4,34 +4,28 @@
 #include "GameView.hpp"
 
 void GameView::initChatWidget() {
-  auto &mainWindow = app_.getWindow();
   auto &gui = app_.getGui();
-  float width = mainWindow.getSize().x;
-  float height = mainWindow.getSize().y;
 
-  // Je crée le groupe de widgets pour le Chat
   chatPanel_ = tgui::Panel::create();
-  chatPanel_->setSize(width * 0.2, height * 0.35);
-  chatPanel_->setPosition(width * 0.01, height * 0.65);
+  chatPanel_->setSize("20%", "35%");
+  chatPanel_->setPosition("1%", "65%");
   chatPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
   chatPanel_->getRenderer()->setBorders({1});
   chatPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
   chatPanel_->getRenderer()->setRoundedBorderRadius(10);
   gui.add(chatPanel_);
 
-  // Création du titre chat
   auto chatTitle = tgui::Label::create("Chat");
-  chatTitle->setSize(width * 0.2, height * 0.045);
-  chatTitle->setPosition(0, 0);
+  chatTitle->setSize("100%", "13%");
+  chatTitle->setPosition("0%", "0%");
   chatTitle->setHorizontalAlignment(tgui::Label::HorizontalAlignment::Center);
   chatTitle->setVerticalAlignment(tgui::Label::VerticalAlignment::Center);
   chatTitle->getRenderer()->setTextColor(tgui::Color::White);
   chatPanel_->add(chatTitle);
 
-  // Je crée la zone de messages, la où ils vont apparaître
   chatMessages_ = tgui::ScrollablePanel::create();
-  chatMessages_->setSize(width * 0.18, height * 0.194);
-  chatMessages_->setPosition(width * 0.01, height * 0.045);
+  chatMessages_->setSize("90%", "55%");
+  chatMessages_->setPosition("5%", "13%");
   chatMessages_->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   chatMessages_->getRenderer()->setBorders({1});
   chatMessages_->getRenderer()->setBorderColor(tgui::Color(70, 75, 85));
@@ -39,10 +33,9 @@ void GameView::initChatWidget() {
   chatMessages_->setVerticalScrollbarPolicy(tgui::Scrollbar::Policy::Never);
   chatPanel_->add(chatMessages_);
 
-  // Création de la box pour écrire un message
   chatInput_ = tgui::EditBox::create();
-  chatInput_->setSize(width * 0.18, height * 0.05);
-  chatInput_->setPosition(width * 0.01, height * 0.247);
+  chatInput_->setSize("90%", "14%");
+  chatInput_->setPosition("5%", "71%");
   chatInput_->setDefaultText("Entrez message");
   chatInput_->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   chatInput_->getRenderer()->setBackgroundColorHover(tgui::Color(36, 40, 47));
@@ -52,10 +45,9 @@ void GameView::initChatWidget() {
   chatInput_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
   chatPanel_->add(chatInput_);
 
-  // Création du bouton envoyer le message
   chatSendButton_ = tgui::Button::create("Envoyer");
-  chatSendButton_->setSize(width * 0.18, height * 0.04);
-  chatSendButton_->setPosition(width * 0.01, height * 0.302);
+  chatSendButton_->setSize("90%", "11%");
+  chatSendButton_->setPosition("5%", "86%");
   chatSendButton_->setTextSize(12);
   chatSendButton_->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
   chatSendButton_->getRenderer()->setBackgroundColorHover(
@@ -78,7 +70,6 @@ void GameView::initChatWidget() {
 
 void GameView::refreshChat() {
   auto &mainWindow = app_.getWindow();
-
   chatMessages_->removeAllWidgets();
 
   float width = mainWindow.getSize().x;
@@ -93,23 +84,35 @@ void GameView::refreshChat() {
       std::string pseudo = msg->getAuthor().getUser();
       std::string authorDate = pseudo + " - " + std::to_string(date.day_) +
                                "/" + std::to_string(date.month_) + "/" +
-                               std::to_string(date.year_);
+                               std::to_string(date.year_) + 
+                               " " + std::to_string(date.hour_) + ":" + std::to_string(date.min_);
 
       auto author = tgui::Label::create();
       author->setText(authorDate);
-      author->setPosition(width * 0.005, positionY);
+      author->setPosition("3%", positionY);
       author->getRenderer()->setTextColor(tgui::Color(150, 160, 180));
       author->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
       chatMessages_->add(author);
-      author->setTextSize(15);
+      author->setTextSize(13);
       positionY += authorDataHeight;
 
       auto message = tgui::Label::create(msg->getTexte());
-      message->setPosition(width * 0.005, positionY);
+      message->setPosition("3%", positionY);
       message->getRenderer()->setTextColor(tgui::Color::White);
       message->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
       message->setMaximumTextWidth(width * 0.16);
       chatMessages_->add(message);
+      positionY += message->getSize().y + 4.0;
+    }
+
+    else if (msg->getType() == MessageType::SYSTEM) {
+auto message = tgui::Label::create(msg->getTexte());
+      message->setPosition("3%", positionY);
+      message->getRenderer()->setTextColor(tgui::Color::White);
+      message->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+      message->setMaximumTextWidth(width * 0.16);
+      chatMessages_->add(message);
+      message->setTextSize(13); 
       positionY += message->getSize().y + 4.0;
     }
   }

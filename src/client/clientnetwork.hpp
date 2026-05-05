@@ -67,6 +67,7 @@ public:
                      const std::vector<sf::Vector2f> &positions);
 
   void shiftLayer(uint proj_id, uint layer_id, int delta_x, int delta_y);
+  void goHome();
 
   void sendMessageChat(std::string message);
 };

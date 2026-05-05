@@ -2,7 +2,7 @@
 #include <string>
 #include "chat.hpp"
 
-enum class typeNotification {
+enum class typeNotification: uint8_t{
     CONNEXION,
     DECONNEXION,
     LOCK,
@@ -17,5 +17,8 @@ class SystemNotification : public MessageChat {
         SystemNotification(const string &pseudo, const uint userId, const typeNotification &notif);
         string getTexte() const;
         string getJsonTexte() const;
+        typeNotification getTypeNotif() const { return typeNotif_; }
         SystemNotification(const User& user, const Date& date, const std::string& message);
+        SystemNotification(const User& user, const Date& date, const typeNotification &notif);
+        string getDateTexte() const;
 };

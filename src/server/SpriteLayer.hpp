@@ -14,4 +14,7 @@ class SpriteLayer {
     QJsonObject load() const ;
     void addSprite(std::string nameId, float taille, uint x, uint y);
     bool eraseSprite(uint idSprite);
+    void moveSprite(std::vector<uint> spriteIds, int deltaX, int deltaY);
+    void resizeSprite(std::vector<uint> spriteIds, float scale, std::vector<float> x, std::vector<float> y);
+    void rotateSprite(std::vector<uint> spriteIds, float angle, std::vector<float> x, std::vector<float> y);
 };

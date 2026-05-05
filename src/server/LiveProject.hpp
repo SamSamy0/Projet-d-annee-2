@@ -14,7 +14,9 @@ struct LiveProject {
     LiveProject(uint projId);
     LiveProject(uint id, const std::string &projectName, uint width, uint height, uint scale);
     void addConnection(uint userId, uint8_t role);
-    bool removeConnection(uint userId); //return true if the project is empty
+    bool removeConnection(uint userId);
+    bool isEmpty();
+
     std::vector<uint>& getConnected();
     QJsonObject getJson();
     bool drawPixelRect(uint userId, uint calqueId, uint x, uint y, float taille, uint8_t r, uint8_t g, uint8_t b, uint8_t op);
@@ -33,7 +35,10 @@ struct LiveProject {
 
     bool addSprite(uint userId, uint calqueId, std::string asset_id, uint x, uint y, float taille);
     bool removeSprite(uint userId, uint calqueId, uint spriteId);
-    
+    bool moveSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, int deltaX, int deltaY);
+    bool resizeSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, float scale, std::vector<float> x, std::vector<float> y);
+    bool rotateSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, float angle, std::vector<float> x, std::vector<float> y);
+
     bool moveCalqueUp(uint userId, uint calqueId);
     bool moveCalqueDown(uint userId, uint calqueId);
 

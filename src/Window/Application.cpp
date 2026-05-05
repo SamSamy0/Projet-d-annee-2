@@ -23,6 +23,7 @@ Application::Application(ClientNetworkManager &manager)
 
   mainWindow.setPosition(sf::Vector2i((desktop.size.x - windowWidth) / 2,
                                       (desktop.size.y - windowHeight) / 2));
+  mainWindow.setMinimumSize(sf::Vector2u(1000, 600));
   // ------------------------------
 
   updateTextSize();
@@ -165,6 +166,7 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
       QByteArray jsonRaw = qUncompress(ld.data);
       if (!jsonRaw.isEmpty()) {
         QJsonObject spriteJson = QJsonDocument::fromJson(jsonRaw).object();
+
         layer->setNextId(static_cast<uint>(spriteJson["nextId"].toInt()));
 
         QJsonArray sprites = spriteJson["sprites"].toArray();
@@ -174,6 +176,7 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
           int sx = s["x"].toInt();
           int sy = s["y"].toInt();
           float spriteSize = static_cast<float>(s["size"].toDouble());
+          float angle = static_cast<float>(s["angle"].toDouble());
 
           Asset *asset = map->getAssetManager().getAsset(nameId);
           if (asset && asset->texture) {
@@ -187,7 +190,8 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
             sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
             sprite.setPosition(
                 sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
-            layer->draw(sprite);
+            sprite.setRotation(sf::radians(angle));
+            layer->addSprite(sprite, static_cast<uint>(s["interId"].toInt()));
           }
         }
       }

@@ -4,6 +4,7 @@
 bin
 build/*
 !build/CMakeLists.txt
+todo.md
 png/*
 export_image/
 export/
