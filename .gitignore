@@ -5,6 +5,7 @@ bin
 build/*
 !build/CMakeLists.txt
 png/*
+export_image/
 export/
 import/
 
