@@ -198,29 +198,7 @@ void ReceiverInWindow::rotateSprite(uint layer_id, uint sprite_id, float angle,
 
 
 void ReceiverInWindow::autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size){
-
-  std::shared_ptr<Layer> layer = app_->getProject()->getMap()->getLayer(layer_id);
-  if(layer->getType() == SPRITELAYER){
-    std::shared_ptr<SpriteLayer> spritelayer = static_pointer_cast<SpriteLayer>(layer);
-    AssetManager& assetManager = app_->getProject()->getMap()->getAssetManager();
-    for(int i = 0; i< asset_id.size(); i++){
-      std::string id = asset_id[i];
-      Asset* asset = assetManager.getAsset(id);
-      sf::Sprite sprite = sf::Sprite(*(asset->texture));
-      
-      sf::FloatRect bounds = sprite.getLocalBounds();
-      sprite.setOrigin(sf::Vector2f(bounds.size.x / 2.0f, bounds.size.y / 2.0f));
-
-      float scaleFactor = (size * asset->size_m_horizontal) / bounds.size.x;
-      sprite.setScale(sf::Vector2f(scaleFactor, scaleFactor));
-      
-      sprite.setPosition(pos[i]);
-      sprite.setRotation(sf::degrees(rotatation));
-
-      spritelayer->draw(sprite,id);
-    }
-  }
-
+  dynamic_cast<GameView *>(app_->getCurrentView().get())->autoFill(layer_id,asset_id,pos,rotatation,size);
 }
 
 
@@ -251,7 +229,6 @@ void ReceiverInWindow::kickUser(uint targetId) {
   } else {
     app_->getNetwork().getUsersProjects(app_->getProject()->getId());
   }
-  // TODO: Afficher une fenetre d'info qu'on a été kick
 }
 
 void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,int min, int hour, int day, int month,

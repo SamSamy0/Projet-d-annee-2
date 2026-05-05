@@ -20,7 +20,7 @@ Map::Map(uint id, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer
     sprite_.setTexture(render_texture_.getTexture(),true);
 
     tempLayer = make_shared<SpriteLayer>(0,"temporary layer",size_);   
-    // selected_ = layers_.size()-1 ;
+    selected_ = 0;
 }
 
 Map::Map(uint id, sf::Vector2u size , unsigned int scale) :
@@ -73,18 +73,42 @@ shared_ptr<Layer> Map::getLayer(uint id){
 std::shared_ptr<SpriteLayer> Map::getTempLayer(){return tempLayer;}
 
 void Map::createPixelLayer(){
+    /*create a pixel layer on the top of the map*/
     std::string name = "Couche Pixel (" + std::to_string(nextLayerId_) + ")";
     shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(nextLayerId_,name, size_);
-    layers_.push_back(pixellayer);
+    layers_.emplace_back(pixellayer);
     nextLayerId_ +=1;
 }
 
 
 void Map::createSpriteLayer(){
+    /*create a sprite layer on the top of the map*/
     std::string name = "Couche Sprite (" + std::to_string(nextLayerId_) + ")";
     shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(nextLayerId_,name,size_); 
-    layers_.push_back(spritelayer);
+    layers_.emplace_back(spritelayer);
     nextLayerId_ +=1;
+}
+
+
+
+void Map::createSpriteLayer(uint layer_id){
+    /*create a sprite layer on top of layer that have as id layer_id*/
+    std::string name = "Couche Sprite (" + std::to_string(nextLayerId_) + ")";
+    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(nextLayerId_,name,size_); 
+    unsigned int idx = 0 ;
+    bool found = false;
+    for(const auto& layer : layers_){
+        if(layer->getId() == layer_id){
+            found = true;
+            break;
+        }
+            
+        idx++;
+    }
+    if(found){
+        layers_.emplace(layers_.begin() + idx + 1,spritelayer);
+        nextLayerId_++;
+    }
 }
 
 void Map::renameLayer(uint layer_id, std::string name){

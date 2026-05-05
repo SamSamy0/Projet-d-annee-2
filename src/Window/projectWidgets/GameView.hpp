@@ -59,6 +59,7 @@ public:
 
   void createLayer(LayerType);
   void deleteLayer(uint layer_id);
+  void autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size);
   void layerUp(uint layer_id);
   void layerDown(uint layer_id);
   void renameLayer(uint layer_id, std::string name);

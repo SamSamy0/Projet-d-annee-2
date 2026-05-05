@@ -1,5 +1,6 @@
 // #include "../Window.hpp"
 #include "../../project/Layer/layer.hpp"
+#include "../../project/Layer/spritelayer.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
 #include "../Application.hpp"
 #include "GameView.hpp"
@@ -375,4 +376,34 @@ void GameView::layerUp(uint layer_id){
 void GameView::layerDown(uint layer_id){
   project->getMap()->layerDown(layer_id);
   refreshLayerList();
+}
+
+
+
+void GameView::autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size){
+
+  shared_ptr<Map> map = project->getMap();
+  map->createSpriteLayer(layer_id);
+  std::shared_ptr<Layer> layer = map->getLayers()[map->getLayerSelected() +1];
+  if(layer->getType() == SPRITELAYER){
+    std::shared_ptr<SpriteLayer> spritelayer = static_pointer_cast<SpriteLayer>(layer);
+    AssetManager& assetManager = project->getMap()->getAssetManager();
+    for(int i = 0; i< asset_id.size(); i++){
+      std::string id = asset_id[i];
+      Asset* asset = assetManager.getAsset(id);
+      sf::Sprite sprite = sf::Sprite(*(asset->texture));
+      
+      sf::FloatRect bounds = sprite.getLocalBounds();
+      sprite.setOrigin(sf::Vector2f(bounds.size.x / 2.0f, bounds.size.y / 2.0f));
+
+      float scaleFactor = size*map->getScale() / bounds.size.x;
+      sprite.setScale(sf::Vector2f(scaleFactor, scaleFactor));
+      
+      sprite.setPosition(pos[i]);
+      sprite.setRotation(sf::degrees(rotatation));
+
+      spritelayer->draw(sprite,id);
+    }
+    refreshLayerList();
+  }
 }

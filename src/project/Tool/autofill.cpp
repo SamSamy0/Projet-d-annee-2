@@ -25,6 +25,7 @@ void AutoFill::onDrag(sf::Vector2i pos){
 
 void AutoFill::onRelease(){
   generateSprites();
+  apply();
 }
 
 void AutoFill::generateSprites() { 
@@ -84,9 +85,6 @@ void AutoFill::setRotation(float rotation){
 }
 void AutoFill::setSize(float size){
   size_ = size;
-  // if(size_ > std::abs(lastPos_ - startPos_)){
-  //   size_ = 
-  // }
   generateSprites();
 }
 void AutoFill::setSeed(uint seed){
@@ -114,7 +112,6 @@ void AutoFill::clearAsset(){assets_.clear();}
 
 
 void AutoFill::apply(){
-  if(map_->getCurrentLayer()->getType() == SPRITELAYER){
     std::vector<sf::Vector2f> positions;
     std::vector<std::string> asset_ids;
 
@@ -122,11 +119,13 @@ void AutoFill::apply(){
       positions.push_back(spriteObj.sprite.getPosition());
       asset_ids.push_back(spriteObj.assetId);
     }
-    
+    // map_->createSpriteLayer(map_->getCurrentLayer()->getId());
+    // std::shared_ptr<Layer> layer = (map_->getLayers()[map_->getLayerSelected() +1]);
+    // if(layer->getType() == SPRITELAYER){
+    // static_pointer_cast<SpriteLayer>(layer)->draw(temporaryLayer_);
     manager_.autofill(map_->getId(),map_->getCurrentLayer()->getId(),asset_ids,positions,rotation_,size_);
-    static_pointer_cast<SpriteLayer>(map_->getCurrentLayer())->draw(temporaryLayer_);
     clear();
-  }
-}
+    }
+  // }
 
 void AutoFill::clear(){temporaryLayer_->getSprites().clear();}

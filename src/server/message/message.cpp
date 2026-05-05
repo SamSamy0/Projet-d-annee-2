@@ -759,15 +759,17 @@ AutoFillMessage::AutoFillMessage(sf::Packet &dataPacket, std::shared_ptr<Client>
   }
 
 }
+
 void AutoFillMessage::process(Worker& worker){
 
   auto liveProj = worker.mapProjet_.find(projectId_);
   if (liveProj == worker.mapProjet_.end()) {
     return;
   }
-  // if (liveProj->second.resizeSprite(userId_,
+  // if (liveProj->second.autoFill(userId_,
   // calqueId_,sprite_id_,angle_,x_,y_)){
-  std::vector<uint> usersId = this->getUserLists(worker);
+  std::vector<uint> usersId = liveProj->second.getConnected();
+  // std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 
   rps = std::make_unique<ReponseAutoFill>(usersId, *this);

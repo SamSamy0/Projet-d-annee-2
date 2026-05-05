@@ -25,7 +25,7 @@ ToolBar::ToolBar(std::shared_ptr<Map> map, ClientNetworkManager &manager): selec
 void ToolBar::selectTool(ToolType outil) {
   LayerType type = getSelectedTool()->getMap()->getCurrentLayer()->getType();
 
-  if ((outil > 0 && outil <= 2 && type == PIXELLAYER) || (outil > 2 && type == SPRITELAYER)){
+  if ((outil > 0 && outil <= 2 && type == PIXELLAYER) || (outil > 2 && type == SPRITELAYER) || outil == AUTOFILL){
     selected_ = outil;
   }
 }

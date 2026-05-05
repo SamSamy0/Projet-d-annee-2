@@ -50,6 +50,7 @@ public:
   const sf::RenderTexture &getRenderTexture() const { return render_texture_; }
   void createPixelLayer();
   void createSpriteLayer();
+  void createSpriteLayer(uint layer_id);
   void renameLayer(uint layer_id, std::string name);
   void layerUp(uint layerId);
   void layerDown(uint layerId);
