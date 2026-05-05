@@ -8,4 +8,5 @@ struct Sprite {
     float taille;
     uint x;
     uint y;
+    float angle;
 };

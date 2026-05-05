@@ -11,6 +11,7 @@
 #include <iostream>
 #include <qstringview.h>
 #include <unordered_map>
+#include "../common/sfml_overload.hpp"
 
 ClientHandler::ClientHandler(ClientNetworkManager &client_manager,
                              ReceiverInWindow &w)
@@ -551,9 +552,31 @@ void ClientHandler::process(ServerEvent &event) {
     int day;
     int month;
     int year;
-    *(event.data_packet_) >> pseudo >> message >> min >> hour >> day >> month >>
-        year;
+    *(event.data_packet_) >> pseudo >> message >> min >> hour >> day >> month >> year;
     handleWindow_.addChatMess(pseudo, message, min, hour, day, month, year);
+
+    break;
+  }
+
+  case MsgProtocole::CHAT_SYSTEME_REP: {
+    std::string pseudo;
+    uint8_t type;
+    int min;
+    int hour;
+    int day;
+    int month;
+    int year;
+    *(event.data_packet_) >> pseudo >> type >> min >> hour >> day >> month >> year;
+    handleWindow_.addChatSyst(pseudo, type, min, hour, day, month, year);
+
+    break;
+  }
+  
+  case MsgProtocole::MAP_ADD_SPRITE_REP: {
+    sf::Texture sprite;
+    uint spriteId;
+    *(event.data_packet_) >> spriteId >> sprite;
+    handleWindow_.addSprite(spriteId,sprite);
 
     break;
   }

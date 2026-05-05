@@ -36,8 +36,13 @@ bool LiveProject::removeConnection(uint userId) {
         
         *it = connectedID_.back(); 
         connectedID_.pop_back();
+        return true;
     }
 
+    return false;
+}
+
+bool LiveProject::isEmpty() {
     return connectedID_.empty();
 }
 
@@ -198,6 +203,31 @@ bool LiveProject::removeSprite(uint userId, uint calqueId, uint spriteId) {
     return layers_.removeSprite(calqueId, spriteId);
 }
 
+bool LiveProject::moveSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, int deltaX, int deltaY) {
+    if (!canModify(userId)) {
+        qDebug() << "User not allowed to modify the project";
+        return false;
+    }
+
+    return layers_.moveSprite(calqueId, spriteIds, deltaX, deltaY);
+}
+
+bool LiveProject::resizeSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, float scale, std::vector<float> x, std::vector<float> y) {
+    if (!canModify(userId)) {
+        return false;
+    }
+
+    return layers_.resizeSprite(calqueId, spriteIds, scale, x, y);
+}
+
+bool LiveProject::rotateSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, float angle, std::vector<float> x, std::vector<float> y) {
+    if (!canModify(userId)) {
+        return false;
+    }
+
+    return layers_.rotateSprite(calqueId, spriteIds, angle, x, y);
+}
+
 const std::vector<uint> LiveProject::getLayerOrder() {
     return layers_.getLayerOrder();
 }
@@ -217,6 +247,7 @@ const QJsonArray LiveProject::getChatJson() {
 bool LiveProject::addMessageChat(uint userId, const std::shared_ptr<MessageChat> message) {
     auto cleVal = usersRoles_.find(userId);
     if (cleVal == usersRoles_.end()) {
+        qDebug() << "User not found in project";
         return false;
     }
     

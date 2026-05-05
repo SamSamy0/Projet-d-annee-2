@@ -27,6 +27,7 @@ class GameView : public View {
   tgui::Panel::Ptr eraserOptionsPanel_ = nullptr;
   tgui::Panel::Ptr eraserSpriteOptionsPanel_ = nullptr;
   tgui::Panel::Ptr spriteBrushOptionsPanel_ = nullptr;
+  tgui::Panel::Ptr importPanel_ = nullptr;
 
   void initToolbar();
   void initLayerPanel();
@@ -67,4 +68,5 @@ public:
   void clearMemberList();
   void popupWarning(std::string motif);
   void refreshChat();
+  void refreshImportPanel();
 };

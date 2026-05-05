@@ -39,6 +39,10 @@ void SpriteLayer::drawLayer(sf::RenderTarget &target) {
   }
 }
 
+void SpriteLayer::addSprite(const sf::Sprite &s, uint id) {
+  sprites_.emplace(id, SpriteObject(s, id));
+}
+
 void SpriteLayer::setNextId(uint nextId) { nextId_ = nextId; }
 
 void SpriteLayer::resizeSprite(uint spriteId, sf::Vector2f pos,

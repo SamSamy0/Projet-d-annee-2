@@ -3,6 +3,7 @@
 #include "../project/Layer/layer.hpp"
 #include "serverevent.hpp"
 #include <SFML/Network.hpp>
+#include <SFML/Graphics.hpp>
 #include <deque>
 #include <memory>
 
@@ -67,6 +68,8 @@ public:
                      const std::vector<sf::Vector2f> &positions);
 
   void shiftLayer(uint proj_id, uint layer_id, int delta_x, int delta_y);
+  void goHome();
 
   void sendMessageChat(std::string message);
+  void addSprite(sf::Texture sprite);
 };

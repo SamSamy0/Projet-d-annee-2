@@ -16,7 +16,7 @@ using recursive_directory_iterator =
 // Constructors
 Project::Project(unsigned int scale, sf::Vector2u size, std::string name,
                  uint id, sf::RenderWindow &window, tgui::Gui &gui,
-                 ClientNetworkManager &manager, int8_t role)
+                 ClientNetworkManager &manager, int8_t role)  
     : map_{std::make_shared<Map>(id_, size, scale)}, name_{name}, id_{id},
       window_{window}, toolbar_{map_, manager}, gui_{gui}, role_{role} {}
 
@@ -79,7 +79,6 @@ bool Project::exportToPng(const std::string &extension) {
     return false;
   }
 }
-
 
 void Project::display() {
   window_.clear(sf::Color(36, 40, 47));

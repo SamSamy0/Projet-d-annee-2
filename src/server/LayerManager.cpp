@@ -283,6 +283,31 @@ bool LayerManager::removeSprite(uint calqueId, uint spriteId) {
     }
     return false;
 }
+
+bool LayerManager::moveSprite(uint calqueId, std::vector<uint> spriteIds, int deltaX, int deltaY) {
+    if (layersSprite_.find(calqueId) != layersSprite_.end()) {
+        layersSprite_[calqueId].moveSprite(spriteIds, deltaX, deltaY);
+        qDebug() << "MoveSprite: calqueId=" << calqueId << " deltaX=" << deltaX << " deltaY=" << deltaY;
+        return true;        
+    }
+    return false;
+}
+
+bool LayerManager::resizeSprite(uint calqueId, std::vector<uint> spriteIds, float scale, std::vector<float> x, std::vector<float> y) {
+    if (layersSprite_.find(calqueId) != layersSprite_.end()) {
+        layersSprite_[calqueId].resizeSprite(spriteIds, scale, x, y);
+        return true;        
+    }
+    return false;
+}
+
+bool LayerManager::rotateSprite(uint calqueId, std::vector<uint> spriteIds, float angle, std::vector<float> x, std::vector<float> y) {
+    if (layersSprite_.find(calqueId) != layersSprite_.end()) {
+        layersSprite_[calqueId].rotateSprite(spriteIds, angle, x, y);
+        return true;        
+    }
+    return false;
+}
     
 bool LayerManager::moveCalqueUp(uint calqueId) {
     auto it = mapId_.find(calqueId);

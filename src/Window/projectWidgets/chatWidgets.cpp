@@ -94,7 +94,8 @@ void GameView::refreshChat() {
       std::string pseudo = msg->getAuthor().getUser();
       std::string authorDate = pseudo + " - " + std::to_string(date.day_) +
                                "/" + std::to_string(date.month_) + "/" +
-                               std::to_string(date.year_);
+                               std::to_string(date.year_) + 
+                               " " + std::to_string(date.hour_) + ":" + std::to_string(date.min_);
 
       auto author = tgui::Label::create();
       author->setText(authorDate);
@@ -102,7 +103,7 @@ void GameView::refreshChat() {
       author->getRenderer()->setTextColor(tgui::Color(150, 160, 180));
       author->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
       chatMessages_->add(author);
-      author->setTextSize(15);
+      author->setTextSize(13);
       positionY += authorDataHeight;
 
       auto message = tgui::Label::create(msg->getTexte());
@@ -112,6 +113,17 @@ void GameView::refreshChat() {
       message->setMaximumTextWidth(width * 0.16);
       chatMessages_->add(message);
       positionY += message->getSize().y + messageSpace;
+    }
+
+    else if (msg->getType() == MessageType::SYSTEM) {
+auto message = tgui::Label::create(msg->getTexte());
+      message->setPosition("3%", positionY);
+      message->getRenderer()->setTextColor(tgui::Color::White);
+      message->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+      message->setMaximumTextWidth(width * 0.16);
+      chatMessages_->add(message);
+      message->setTextSize(13); 
+      positionY += message->getSize().y + 4.0;
     }
   }
   chatMessages_->setVerticalScrollbarValue(

@@ -1,9 +1,11 @@
 #pragma once
 #include "../client.hpp"
+#include "../../project/Chat/systemNotification.hpp"
 #include <SFML/Network.hpp>
 #include <QByteArray>
 #include <iostream>
 #include <memory>
+#include <SFML/Graphics/Texture.hpp>
 
 class Worker;
 
@@ -111,13 +113,13 @@ struct LeaveProjectMessage : IMessage {
 struct GetProjectDataMessage : IMessage {
   uint userId_;
   uint projectId_;
+  std::string pseudo_;
 
     GetProjectDataMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
 };
 
-
-
+void createSystemNotification(Worker &worker, uint projectId, std::string &pseudo, uint userId, typeNotification type);
 
 struct ModifProjetMessage : IMessage {
   uint userId_;
@@ -280,6 +282,7 @@ struct MoveLayerMessage : ModifProjetMessage {
 struct DisconnectMessage : IMessage {
     uint userId_;
     uint projectId_;
+    std::string pseudo_;
 
   DisconnectMessage(std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
@@ -312,6 +315,26 @@ struct ChatMessage : IMessage {
   int year_ = 0;
   uint projectId_;
   ChatMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
+  void process(Worker &worker) override;
+};
+
+struct HomeMessage : IMessage {
+  uint userId_;
+  uint projectId_;
+  std::string pseudo_;
+
+  HomeMessage(std::shared_ptr<Client>& client);
+  void process(Worker &worker) override;
+  
+};
+
+struct AddSpriteMessage : IMessage {
+  uint userId_;
+  uint projectId_;
+  std::string pseudo_;
+  sf::Texture sprite_;
+  uint spriteId_ = 1;
+  AddSpriteMessage(sf::Packet &dataPacket,std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
 };
 

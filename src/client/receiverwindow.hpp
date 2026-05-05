@@ -50,4 +50,8 @@ public:
                       const std::vector<LayerLoadData> &layers, Chat chat);
   void addChatMess(std::string pseudo, std::string message, int min, int hour,
                    int day, int month, int year);
+
+  void addChatSyst(std::string pseudo, uint8_t type,int min, int hour, int day, int month,
+                                   int year);
+  void addSprite(uint spriteId, sf::Texture sprite);
 };

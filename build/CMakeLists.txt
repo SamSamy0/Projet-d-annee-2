@@ -166,6 +166,7 @@ add_executable(server ${SERVER_SOURCES})
 target_link_libraries(server PRIVATE
     SFML::System
     SFML::Network
+    SFML::Graphics
     Qt6::Core   # ← ajouté
     Qt6::Sql
     Qt6::Gui
