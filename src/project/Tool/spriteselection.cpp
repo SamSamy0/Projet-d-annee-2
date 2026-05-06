@@ -136,9 +136,7 @@ void SpriteSelection::onRelease() {
                       .id); // WARNING: ATTENTION AU COMPORTEMENT SI ON PRESSE
                             // CTRL ON CLICK PUIS ON LE RELACHE AVANT ON RELEASE
             else {
-              selected_.erase(
-                  std::remove(selected_.begin(), selected_.end(), spriteObj.id),
-                  selected_.end());
+              selected_.erase(std::remove(selected_.begin(), selected_.end(), spriteObj.id), selected_.end());
             }
           } else
             selected_.push_back(spriteObj.id);
