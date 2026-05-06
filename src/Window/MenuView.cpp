@@ -1,5 +1,6 @@
 #include "MenuView.hpp"
 #include "Application.hpp"
+#include "View.hpp"
 #include "projectWidgets/GameView.hpp"
 #include <QFile>
 
@@ -319,6 +320,7 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   menu->addItem("Partager");
   menu->addItem("Quitter");
   menu->addItem("Membres");
+  menu->addItem("Exporter");
 
   if (project.role >= 1) {
     menu->addItem("Renommer");
@@ -359,15 +361,17 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
     } else if (item == "Partager") {
       initInputWidget(focusPopup::TOKEN, project);
     }
-                     
+
     else if (item == "Quitter") {
-    Transferring = true;
-    initInputWidget(focusPopup::QUIT, project);
-    } else if (item == "Membres"){
+      Transferring = true;
+      initInputWidget(focusPopup::QUIT, project);
+    } else if (item == "Membres") {
       initInputWidget(focusPopup::MEMBER, project);
-                     
-      }
-    activeMoreButton->getRenderer()->setBackgroundColor(
+
+    } else if (item == "Exporter") {
+    initInputWidget(focusPopup::EXPORT, project);
+    
+    }activeMoreButton->getRenderer()->setBackgroundColor(
         tgui::Color::Transparent);
 
     gui.remove(menu);
@@ -515,31 +519,117 @@ void MenuView::initInputWidget(focusPopup focus, ProjectData project) {
     popupCreateToken(background, project);
     break;
   }
-    case(focusPopup::MEMBER):{
-      activeProjectData_ = project;
-      activeBackground_ = background;
-      Transferring = false;
-      app_.getGui().add(background, "memberBackground");
-      app_.getNetwork().getUsersProjects(project.projectId); 
-      break;
-    }
-    case (focusPopup::QUIT):{
-      activeProjectData_ = project;
-      activeBackground_ = background;
-      app_.getGui().add(background, "memberBackground");
-      app_.getNetwork().getUsersProjects(project.projectId); 
-      
+  case (focusPopup::MEMBER): {
+    activeProjectData_ = project;
+    activeBackground_ = background;
+    Transferring = false;
+    app_.getGui().add(background, "memberBackground");
+    app_.getNetwork().getUsersProjects(project.projectId);
+    break;
+  }
+  case (focusPopup::QUIT): {
+    activeProjectData_ = project;
+    activeBackground_ = background;
+    app_.getGui().add(background, "memberBackground");
+    app_.getNetwork().getUsersProjects(project.projectId);
+
+    break;
+  }
+    case (focusPopup::EXPORT):{
+     popupExport(background, project); 
       break;
     }
   }
 }
+void MenuView::popupExport(tgui::Panel::Ptr background, ProjectData project) {
+  auto &gui = app_.getGui();
+  auto &manager = app_.getNetwork();
+  gui.add(background);
 
-void MenuView::popupQuit(tgui::Panel::Ptr back, ProjectData project, focusPopup view){
-  
+  auto data = tgui::Panel::create();
+  data->setSize("30%", "35%");
+  data->setPosition("50%-15%", "50%-17.5%");
+  data->getRenderer()->setBackgroundColor(tgui::Color(28, 28, 36));
+  data->getRenderer()->setRoundedBorderRadius(12);
+  data->getRenderer()->setBorders(1);
+  data->getRenderer()->setBorderColor(tgui::Color(55, 55, 70));
+  background->add(data, "ExportPanel");
+
+  auto exitB = tgui::Button::create("✕");
+  exitB->setSize("10%", "10%");
+  exitB->setPosition("88%", "3%");
+  exitB->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+  exitB->getRenderer()->setBackgroundColorHover(tgui::Color(60, 60, 75));
+  exitB->getRenderer()->setTextColor(tgui::Color(160, 160, 180));
+  exitB->getRenderer()->setTextColorHover(tgui::Color::White);
+  exitB->getRenderer()->setBorders(0);
+  exitB->getRenderer()->setRoundedBorderRadius(6);
+  data->add(exitB);
+  exitB->onPress([this, background]() { exitAction(background); });
+
+  auto title = tgui::Label::create("Exporter le projet");
+  title->setPosition("0%", "12%");
+  title->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  title->setSize("100%", "10%");
+  title->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+  title->getRenderer()->setTextColor(sf::Color(255, 255, 255));
+  title->setTextSize(22);
+  data->add(title);
+
+  auto separator = tgui::Panel::create();
+  separator->setSize("80%", "1");
+  separator->setPosition("10%", "25%");
+  separator->getRenderer()->setBackgroundColor(tgui::Color(55, 55, 70));
+  data->add(separator);
+
+  auto formatLabel = tgui::Label::create("Format d'exportation :");
+  formatLabel->setPosition("10%", "32%");
+  formatLabel->getRenderer()->setTextColor(tgui::Color(160, 160, 180));
+  formatLabel->setTextSize(14);
+  data->add(formatLabel);
+
+  auto comboBox = tgui::ComboBox::create();
+  comboBox->setSize("80%", "13%");
+  comboBox->setPosition("10%", "44%");
+  comboBox->addItem("PNG");
+  comboBox->addItem("JPG");
+  comboBox->addItem("BMP");
+  comboBox->setSelectedItem("PNG");
+  comboBox->getRenderer()->setBackgroundColor(tgui::Color(40, 40, 52));
+  comboBox->getRenderer()->setTextColor(tgui::Color::White);
+  comboBox->getRenderer()->setBorderColor(tgui::Color(55, 55, 70));
+  comboBox->getRenderer()->setArrowBackgroundColor(tgui::Color(99, 102, 241));
+  comboBox->getRenderer()->setArrowColor(tgui::Color::White);
+  comboBox->getRenderer()->setBorders(1);
+  comboBox->getRenderer()->setRoundedBorderRadius(8);
+  data->add(comboBox);
+
+  auto valid = tgui::Button::create("Générer l'image");
+  valid->setSize("80%", "13%");
+  valid->setPosition("10%", "78%");
+  valid->getRenderer()->setBackgroundColor(tgui::Color(99, 102, 241));
+  valid->getRenderer()->setBackgroundColorHover(tgui::Color(118, 120, 255));
+  valid->getRenderer()->setTextColor(tgui::Color::White);
+  valid->getRenderer()->setBorders(0);
+  valid->getRenderer()->setRoundedBorderRadius(8);
+  data->add(valid);
+
+  valid->onPress([this, comboBox, project, background, &manager]() {
+    std::string extension = comboBox->getSelectedItem().toStdString();
+    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+    
+    app_.setIsExporting(true, extension);
+    manager.getProjectData(project.projectId); 
+    
+    exitAction(background);
+  });
+}
+void MenuView::popupQuit(tgui::Panel::Ptr back, ProjectData project,
+                         focusPopup view) {
+
 };
 
-void  MenuView::setAllUsers(std::vector<MemberEntry>users){
-  
+void MenuView::setAllUsers(std::vector<MemberEntry> users) {
   allUsers_ = users;
   displayMemberList();
   Transferring = false;
@@ -548,21 +638,21 @@ void  MenuView::setAllUsers(std::vector<MemberEntry>users){
 void MenuView::displayMemberList() {
   auto &gui = app_.getGui();
   auto &manager = app_.getNetwork();
-  User& currentUser = app_.getUser();
+  User &currentUser = app_.getUser();
 
   // if (gui.get("memberListPopup")) {
   //   gui.remove(gui.get("memberListPopup"));
   // }
   // If owner is alone, he can leave project instantly
   if (Transferring && allUsers_.size() == 1 &&
-        allUsers_[0].userId == currentUser.getId()) {
+      allUsers_[0].userId == currentUser.getId()) {
     app_.getNetwork().leaveProject(activeProjectData_.projectId);
     app_.getNetwork().getProjectList();
     app_.changeView(std::make_unique<MenuView>(app_));
     return;
   }
 
-  std::cout <<"creating popup" <<std::endl;
+  std::cout << "creating popup" << std::endl;
   auto parent = tgui::Panel::create();
   parent->setSize("40%", "60%");
   parent->setPosition("30%", "20%");
@@ -588,8 +678,9 @@ void MenuView::displayMemberList() {
   exitB->getRenderer()->setBackgroundColorHover(sf::Color(255, 100, 100));
   parent->add(exitB);
 
-  exitB->onPress(
-      [this]() { exitAction(app_.getGui().get<tgui::Panel>("memberBackground")); });
+  exitB->onPress([this]() {
+    exitAction(app_.getGui().get<tgui::Panel>("memberBackground"));
+  });
 
   auto panel = tgui::ScrollablePanel::create();
   panel->setPosition("5%", "18%");
@@ -668,7 +759,6 @@ void MenuView::displayMemberList() {
     }
   }
 }
-
 
 void MenuView::popupCreate(tgui::Panel::Ptr background) {
   auto &gui = app_.getGui();

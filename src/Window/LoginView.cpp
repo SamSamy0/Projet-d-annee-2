@@ -110,6 +110,7 @@ void LoginView::showError(const std::string &message) {
   if (!errorLabel)
     return;
   errorLabel->setText(message);
+  errorLabel->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
   auto usrname = back->get<tgui::EditBox>("Username");
   auto pswd = back->get<tgui::EditBox>("Password");
   if (usrname)

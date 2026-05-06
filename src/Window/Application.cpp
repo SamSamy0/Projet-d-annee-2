@@ -135,8 +135,14 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                   std::string name, uint id) {
   project = std::make_unique<Project>(scale, size, name, id, mainWindow, gui,
                                       manager, currentProjRole);
-  std::cout << "opening with authorisation " << currentProjRole << std::endl;
-  changeView(std::make_unique<GameView>(*this));
+  if (isExporting_){
+    bool res = project->exportToPng(exportFormat_);
+    
+  }else{
+    std::cout << "opening with authorisation " << currentProjRole << std::endl;
+    changeView(std::make_unique<GameView>(*this));
+    
+  }
 };
 
 void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
@@ -207,5 +213,10 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
   }
 
   map->setNextLayerId(nextLayerId);
-  changeView(std::make_unique<GameView>(*this));
+  if (isExporting_){
+    isExporting_ = false;
+    bool res = project->exportToPng(exportFormat_);
+  }else{
+    changeView(std::make_unique<GameView>(*this));
+  }
 };
