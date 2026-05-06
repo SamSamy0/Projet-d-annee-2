@@ -126,7 +126,7 @@ void GameView::initLayerPanel() {
 
   auto goUpLayer = tgui::Button::create("▼");
   goUpLayer->setSize("44%", "7%");
-  goUpLayer->setPosition("5%", "68%");
+  goUpLayer->setPosition("5%", "67%");
   goUpLayer->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
   goUpLayer->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
   goUpLayer->getRenderer()->setTextColor(tgui::Color::White);
@@ -142,7 +142,7 @@ void GameView::initLayerPanel() {
 
   auto goDownLayer = tgui::Button::create("▲");
   goDownLayer->setSize("44%", "7%");
-  goDownLayer->setPosition("51%", "68%");
+  goDownLayer->setPosition("51%", "67%");
   goDownLayer->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
   goDownLayer->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
   goDownLayer->getRenderer()->setTextColor(tgui::Color::White);
@@ -158,7 +158,7 @@ void GameView::initLayerPanel() {
 
   auto maskButton = tgui::Button::create("M/U");
   maskButton->setSize("90%", "7%");
-  maskButton->setPosition("5%", "76%");
+  maskButton->setPosition("5%", "75%");
   maskButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
   maskButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
   maskButton->getRenderer()->setTextColor(tgui::Color::White);
@@ -175,7 +175,7 @@ void GameView::initLayerPanel() {
 
   auto addLayerButton = tgui::Button::create("Ajouter couche");
   addLayerButton->setSize("90%", "7%");
-  addLayerButton->setPosition("5%", "84%");
+  addLayerButton->setPosition("5%", "83%");
   addLayerButton->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
   addLayerButton->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
   addLayerButton->getRenderer()->setTextColor(tgui::Color::White);

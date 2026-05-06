@@ -54,6 +54,18 @@ else()
     message(STATUS "TGUI trouvé localement.")
 endif()
 
+# ── File Explorer ─────────────────────────────────────────────────
+FetchContent_Declare(
+    portable_file_dialogs
+    GIT_REPOSITORY https://github.com/samhocevar/portable-file-dialogs.git
+    GIT_TAG        main
+    GIT_SHALLOW    TRUE
+)
+FetchContent_GetProperties(portable_file_dialogs)
+if(NOT portable_file_dialogs_POPULATED)
+    FetchContent_Populate(portable_file_dialogs)
+endif()
+
 # ── Qt6 ──────────────────────────────────────────────────────────
 find_package(Qt6 REQUIRED COMPONENTS Core Sql Gui)  # ← Core ajouté obligatoire
 set(CMAKE_AUTOMOC ON)  # ← nécessaire pour Qt
@@ -116,6 +128,7 @@ target_link_libraries(client PRIVATE
     Qt6::Core   # ← ajouté
     Qt6::Sql
 )
+target_include_directories(client PRIVATE ${portable_file_dialogs_SOURCE_DIR})
 
 # Fix RPATH sur macOS pour trouver les .dylib
 if(APPLE)
@@ -153,6 +166,7 @@ add_executable(server ${SERVER_SOURCES})
 target_link_libraries(server PRIVATE
     SFML::System
     SFML::Network
+    SFML::Graphics
     Qt6::Core   # ← ajouté
     Qt6::Sql
     Qt6::Gui

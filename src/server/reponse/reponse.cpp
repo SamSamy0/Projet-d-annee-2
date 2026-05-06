@@ -4,6 +4,8 @@
 #include <QBuffer>
 #include <QImage>
 #include <QJsonDocument>
+#include <SFML/Graphics/Texture.hpp>
+#include "../../common/sfml_overload.hpp"
 
 ReponseSolo::ReponseSolo(uint id) : userId_(id) {}
 
@@ -383,4 +385,11 @@ ReponseExport::ReponseExport(uint userId, std::string projectName,
   dataPacket_.append(dataCompress.constData(), dataCompress.size());
   std::cout << "Taille du projet compressé dans la réponse : "
             << dataCompress.size() << " octets" << std::endl;
+}
+
+ReponseAddSprite::ReponseAddSprite(std::vector<uint> usersId, AddSpriteMessage &mess) : ReponseGroupe(usersId){
+  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ADD_SPRITE_REP);
+  dataPacket_ << mess.spriteId_;
+  dataPacket_ << mess.sprite_;
+
 }

@@ -5,6 +5,7 @@
 #include <QByteArray>
 #include <iostream>
 #include <memory>
+#include <SFML/Graphics/Texture.hpp>
 
 class Worker;
 
@@ -325,6 +326,16 @@ struct HomeMessage : IMessage {
   HomeMessage(std::shared_ptr<Client>& client);
   void process(Worker &worker) override;
   
+};
+
+struct AddSpriteMessage : IMessage {
+  uint userId_;
+  uint projectId_;
+  std::string pseudo_;
+  sf::Texture sprite_;
+  uint spriteId_ = 1;
+  AddSpriteMessage(sf::Packet &dataPacket,std::shared_ptr<Client>& client);
+  void process(Worker &worker) override;
 };
 
 

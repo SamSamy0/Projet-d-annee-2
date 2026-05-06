@@ -40,6 +40,7 @@ public:
   // Method for ReceiverInWindow
   void addProjectList(ProjectData project);
   void clearProjList();
+  void refreshImportPanel();
   void updateProjectNameInList(long long id, const std::string &newName);
   void updateCreatedProjectId(uint32_t projId);
   void updateShareToken(std::string newToken);

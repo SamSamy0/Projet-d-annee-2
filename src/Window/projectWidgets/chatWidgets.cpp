@@ -77,9 +77,19 @@ void GameView::refreshChat() {
   const auto &messages = project->getChat().getMessages();
   float positionY = 4.0;
   float authorDataHeight = height * 0.022;
+  float messageSpace = height * 0.012;
 
   for (const auto &msg : messages) {
-    if (msg->getType() == MessageType::USER) {
+    if (msg->getType() == MessageType::SYSTEM) {
+      auto notif = tgui::Label::create(msg->getTexte());
+      notif->setPosition("3%", positionY);
+      notif->getRenderer()->setTextColor(tgui::Color(120, 180, 120));
+      notif->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+      notif->setMaximumTextWidth(width * 0.16);
+      notif->setTextSize(15);
+      chatMessages_->add(notif);
+      positionY += notif->getSize().y + messageSpace;
+    } else if (msg->getType() == MessageType::USER) {
       Date date = msg->getDate();
       std::string pseudo = msg->getAuthor().getUser();
       std::string authorDate = pseudo + " - " + std::to_string(date.day_) +
@@ -102,7 +112,7 @@ void GameView::refreshChat() {
       message->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
       message->setMaximumTextWidth(width * 0.16);
       chatMessages_->add(message);
-      positionY += message->getSize().y + 4.0;
+      positionY += message->getSize().y + messageSpace;
     }
 
     else if (msg->getType() == MessageType::SYSTEM) {

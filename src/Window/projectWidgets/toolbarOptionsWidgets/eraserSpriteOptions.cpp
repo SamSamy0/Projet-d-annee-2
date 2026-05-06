@@ -8,7 +8,7 @@ void GameView::initEraserSpriteOptions() {
   // Création de la barre avec toutes les infos pour la gomme sprite
   eraserSpriteOptionsPanel_ = tgui::Panel::create();
   eraserSpriteOptionsPanel_->setSize("35%", "6.2%");
-  eraserSpriteOptionsPanel_->setPosition("34%", "5%");
+  eraserSpriteOptionsPanel_->setPosition("33%", "5%");
   eraserSpriteOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
   eraserSpriteOptionsPanel_->getRenderer()->setBorders({1});
   eraserSpriteOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));

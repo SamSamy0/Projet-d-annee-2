@@ -11,7 +11,7 @@ string SystemNotification::getTexte() const {
         case typeNotification::UNLOCK:
             return author_.getUser() + " a déverrouillé une couche le " + getDateTexte() + ".";
     }
-    return 0;
+    return "";
 }
 
 string SystemNotification::getDateTexte() const {

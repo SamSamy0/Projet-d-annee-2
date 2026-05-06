@@ -317,6 +317,9 @@ void GameView::handleEvents(const sf::Event &event) {
         project->getMap()->zooming(wheelEvent); // ZOOM
     }
   }
+  if (event.is<sf::Event::Resized>())
+    refreshChat();
+
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Delete)) {
     std::shared_ptr<Tool> tool = project->getToolBar().getSelectedTool();
     if (tool->getType() == SPRITESELECTION)

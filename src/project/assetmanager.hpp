@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
 
-
 struct Asset{
   std::string id;
   std::string filename;
@@ -15,14 +14,13 @@ struct Asset{
 };
 
 class AssetManager{
-  std::unordered_map<std::string, Asset > assets_;
+  std::unordered_map<std::string, Asset> assets_;
 
 public:
   AssetManager();
   void loadFromJson();
   Asset* getAsset(const std::string& id);
-  void addAsset(const std::string& id, const std::string& filename, const std::string& name,
-                const std::string& category = "perso", float sizeH = 1.0f);
+  void addAsset(uint id, sf::Texture texture);
   const std::unordered_map<std::string, Asset>& getAllAssets() { return assets_; }
 
 };

@@ -7,6 +7,8 @@
 #include "../worker.hpp"
 #include <filesystem>
 #include <memory>
+#include <SFML/Graphics/Texture.hpp>
+#include "../../common/sfml_overload.hpp"
 
 namespace fs = std::filesystem;
 ConnectUserMessage::ConnectUserMessage(sf::Packet &dataPacket,
@@ -877,6 +879,27 @@ void HomeMessage::process(Worker& worker){
     }
 }
 
+AddSpriteMessage::AddSpriteMessage(sf::Packet &dataPacket,std::shared_ptr<Client>& client){
+  userId_ = client->id;
+  projectId_ = client->projectId;
+  pseudo_ = client->pseudo;
+  dataPacket >> sprite_;
+}
+
+void AddSpriteMessage::process(Worker &worker){
+  auto itProject = worker.mapProjet_.find(projectId_);
+
+  if (itProject == worker.mapProjet_.end()) {
+    return;
+    std::cout << "impossible de créer une notification de système" << std::endl;
+  }
+  std::vector<uint> usersId = itProject->second.getConnected();
+
+  std::unique_ptr<Reponse> rps;
+  rps = std::make_unique<ReponseAddSprite>(usersId, *this);
+  worker.pushNetwork(std::move(rps));
+}
+
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
                                          std::shared_ptr<Client> &c) {
@@ -988,7 +1011,8 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
     
   case MsgProtocole::PROJ_KICK_USER_REQ:
     return std::make_unique<KickUserMessage>(data_packet, c->id);
-
+  case MsgProtocole::MAP_ADD_SPRITE_REQ:
+    return std::make_unique<AddSpriteMessage>(data_packet, c);
   default:
     std::cout << "pas de message" << std::endl;
     return nullptr;

@@ -48,6 +48,11 @@ void Application::clearProjList() {
   }
 }
 
+void Application::refreshImportPanel() {
+  auto gameView = dynamic_cast<GameView *>(currentView.get());
+  gameView->refreshImportPanel();
+}
+
 void Application::changeView(std::unique_ptr<View> newView) {
   gui.removeAllWidgets();
   currentView = std::move(newView);

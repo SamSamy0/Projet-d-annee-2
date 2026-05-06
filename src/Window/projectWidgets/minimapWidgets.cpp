@@ -66,7 +66,8 @@ void GameView::drawMinimap() {
     userVision.setOutlineThickness(1);
 
     // J'affiche tout
-    mainWindow.setView(mainWindow.getDefaultView());
+    sf::View minimapView(sf::FloatRect({0.f, 0.f}, sf::Vector2f(mainWindow.getSize())));
+    mainWindow.setView(minimapView);
     mainWindow.draw(minimapBackground);
     mainWindow.draw(minimapImage);
     mainWindow.draw(userVision);

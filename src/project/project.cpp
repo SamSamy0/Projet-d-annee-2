@@ -60,7 +60,8 @@ void Project::displayScale() {
       window_.getSize().x - scaleText.getLocalBounds().size.x - 10.f,
       window_.getSize().y * 0.01f));
 
-  window_.setView(window_.getDefaultView());
+  sf::View scaleView(sf::FloatRect({0.f, 0.f}, sf::Vector2f(window_.getSize())));
+  window_.setView(scaleView);
   window_.draw(scaleText);
 }
 
@@ -85,8 +86,6 @@ void Project::display() {
   viewMap_.setViewport(sf::FloatRect{{0.21f, 0.05f}, {0.79f, 0.95f}});
   window_.setView(viewMap_);
   map_->displayMap(window_, viewMap_);
-  window_.setView(window_.getDefaultView());
-
   displayScale();
 }
 
