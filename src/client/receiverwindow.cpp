@@ -64,8 +64,8 @@ void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
                                       std::string name, uint id,
                                       uint nextLayerId,
                                       const std::vector<LayerLoadData> &layers,
-                                      Chat chat) {
-  app_->loadProjectData(scale, size, name, id, nextLayerId, layers, chat);
+                                      Chat chat, const std::map<uint, sf::Texture> &textureMap) {
+  app_->loadProjectData(scale, size, name, id, nextLayerId, layers, chat, textureMap);
 }
 
 void ReceiverInWindow::createLayer(LayerType type) {

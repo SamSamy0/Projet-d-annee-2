@@ -4,6 +4,7 @@
 
 SaveTask::SaveTask(LiveProject& livePrj, uint projId) 
     : json_(livePrj.getJson()), projetId_(projId), chat_(livePrj.getChatJson())
+    , sprites_(livePrj.getSpriteManagerMap())
 {
     const std::unordered_map<uint, QImage>& layersImagePrj = livePrj.getImageMap();
     for (auto it = layersImagePrj.begin(); it != layersImagePrj.end(); ++it) {
@@ -25,8 +26,10 @@ void SaveTask::execute(SaveWorker& worker) {
     }
 
     for(auto layer : layersSprite_) {
-        prjManager.saveSprite(projetId_, layer.first, layer.second);
+        prjManager.saveSpriteLayer(projetId_, layer.first, layer.second);
     }
+
+    prjManager.saveSprite(projetId_, sprites_);
 }
 
 ExportDemand::ExportDemand(LiveProject& livePrj, uint projId, uint userId) : 

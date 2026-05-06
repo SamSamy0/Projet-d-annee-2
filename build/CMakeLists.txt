@@ -159,6 +159,7 @@ set(SERVER_SOURCES
     ../src/project/Chat/systemNotification.cpp
     ../src/project/Chat/date.cpp
     ../src/server/datamanager/miniz.c
+    ../src/server/spriteManager.cpp
 )
 
 add_executable(server ${SERVER_SOURCES})

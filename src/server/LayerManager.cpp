@@ -28,7 +28,7 @@ LayerManager::LayerManager(const QJsonArray& origin, uint projectId, uint lastUs
             }
             else {
                 layersSprite_[id];
-                setupLayerSprite(id, prjManager.loadSprite(projectId, id));
+                setupLayerSprite(id, prjManager.loadSpriteLayer(projectId, id));
                 layer.type = 1;
             }
             layers_.push_back(std::move(layer));

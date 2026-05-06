@@ -111,7 +111,7 @@ ReponseProjectData::ReponseProjectData(
     const std::vector<uint> &layerOrder,
     const std::unordered_map<uint, QImage> &imageMap,
     const std::unordered_map<uint, SpriteLayer> &spriteMap,
-    const QJsonArray &chat)
+    const QJsonArray &chat, const std::map<uint, sf::Texture> &textureMap)
     : ReponseSolo(userId) {
   dataPacket_ << static_cast<std::uint8_t>(
       MsgProtocole::LOB_GET_PROJECT_DATA_REP);
@@ -128,6 +128,19 @@ ReponseProjectData::ReponseProjectData(
   dataPacket_ << static_cast<std::uint32_t>(chatCompress.size());
   dataPacket_.append(chatCompress.constData(), chatCompress.size());
 
+  dataPacket_ << static_cast<std::uint32_t>(textureMap.size());
+  for (const auto &pair : textureMap) {
+    dataPacket_ << static_cast<std::uint32_t>(pair.first);
+    sf::Image image = pair.second.copyToImage();
+    uint32_t width = image.getSize().x;
+    uint32_t height = image.getSize().y;
+
+    dataPacket_ << width << height;
+
+    const uint8_t* pixels = image.getPixelsPtr();
+    dataPacket_.append(pixels, width * height * 4);
+  }
+  
   for (uint id : layerOrder) {
     dataPacket_ << id;
     if (spriteMap.find(id) != spriteMap.end()) {

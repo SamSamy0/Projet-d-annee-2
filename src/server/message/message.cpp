@@ -308,7 +308,7 @@ void GetProjectDataMessage::process(Worker &worker) {
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseProjectData>(
         userId_, liveProj.getJson(), std::move(liveProj.getLayerOrder()),
-        liveProj.getImageMap(), liveProj.getSpritesMap(), liveProj.getChatJson());
+        liveProj.getImageMap(), liveProj.getSpritesMap(), liveProj.getChatJson(), liveProj.getSpriteManagerMap());
     worker.pushNetwork(std::move(rps));
 
     createSystemNotification(worker, projectId_, pseudo_, userId_, typeNotification::CONNEXION);
@@ -891,13 +891,17 @@ void AddSpriteMessage::process(Worker &worker){
 
   if (itProject == worker.mapProjet_.end()) {
     return;
-    std::cout << "impossible de créer une notification de système" << std::endl;
   }
-  std::vector<uint> usersId = itProject->second.getConnected();
 
-  std::unique_ptr<Reponse> rps;
-  rps = std::make_unique<ReponseAddSprite>(usersId, *this);
-  worker.pushNetwork(std::move(rps));
+  spriteId_ = itProject->second.importSprite(userId_, sprite_);
+
+  if (spriteId_ != -1) {
+    std::vector<uint> usersId = itProject->second.getConnected();
+
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseAddSprite>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
 }
 
 

@@ -194,6 +194,36 @@ void ClientHandler::process(ServerEvent &event) {
       }
     }
 
+    std::map<uint, sf::Texture> textureMap;
+    if (pos + 4 <= totalSize) {
+      uint32_t textureCount = readU32BE(rawBuf, pos);
+      pos += 4;
+      for (uint32_t i = 0; i < textureCount; ++i) {
+        // CORRECTION ICI : on vérifie 12 octets (id + width + height)
+        if (pos + 12 <= totalSize) { 
+          uint32_t textureId = readU32BE(rawBuf, pos);
+          pos += 4;
+          uint32_t width = readU32BE(rawBuf, pos);
+          pos += 4;
+          uint32_t height = readU32BE(rawBuf, pos);
+          pos += 4;
+
+          // Calcul de la taille du bloc de pixels (RGBA)
+          uint32_t pixelSize = width * height * 4;
+
+          if (pos + pixelSize <= totalSize) {
+            sf::Image image({width, height}, reinterpret_cast<const uint8_t*>(rawBuf + pos));
+            
+            sf::Texture texture;
+            if (texture.loadFromImage(image)) { 
+                textureMap[textureId] = std::move(texture);
+            }
+            pos += pixelSize;
+          }
+        }
+      }
+    }
+
     // 3. Lecture big-endian des données binaires de chaque layer
     std::vector<LayerLoadData> layers;
     while (pos + 9 <= totalSize) { // min 4 (id) + 1 (type) + 4 (taille)
@@ -226,7 +256,7 @@ void ClientHandler::process(ServerEvent &event) {
     handleWindow_.addProjectData(
         entete["scale"].toInt(), vec, entete["name"].toString().toStdString(),
         entete["id"].toInt(), static_cast<uint>(entete["nextLayerId"].toInt()),
-        layers, chat);
+        layers, chat, textureMap);
     break;
   }
 

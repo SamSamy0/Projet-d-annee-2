@@ -8,6 +8,7 @@
 #include "datamanager/projectsmanager.hpp"
 #include "SpriteLayer.hpp"
 #include "LayerManager.hpp"
+#include "spriteManager.hpp"
 #include "../project/Chat/chat.hpp"
 
 struct LiveProject {
@@ -39,6 +40,8 @@ struct LiveProject {
     bool resizeSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, float scale, std::vector<float> x, std::vector<float> y);
     bool rotateSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, float angle, std::vector<float> x, std::vector<float> y);
 
+    uint importSprite(uint userId, sf::Texture &sprite);
+
     bool moveCalqueUp(uint userId, uint calqueId);
     bool moveCalqueDown(uint userId, uint calqueId);
 
@@ -49,6 +52,7 @@ struct LiveProject {
     const std::vector<uint> getLayerOrder();
 
     const QJsonArray getChatJson();
+    const std::map<uint, sf::Texture>& getSpriteManagerMap();
     bool addMessageChat(uint userId, const std::shared_ptr<MessageChat> message);
 
     private :
@@ -61,8 +65,7 @@ struct LiveProject {
     uint width_;
     LayerManager layers_;
     Chat chat_;
-
-    
+    SpriteManager spriteManager_;
     bool canModify(uint userId);
 
 };
