@@ -16,7 +16,7 @@ void GameView::initAutoFillOptions() {
     gui.add(autoFillOptionsPanel_);
 
     // Title
-    auto title = tgui::Label::create("AutoFill Options");
+    auto title = tgui::Label::create("Remplissage Automatique");
     title->getRenderer()->setTextColor(tgui::Color::White);
     title->setTextSize(11);
     title->setPosition("5%", "5%");
@@ -50,7 +50,7 @@ void GameView::initAutoFillOptions() {
     spacingEdit->setSize("90%", "10%");
     spacingEdit->setPosition("5%", "30%");
     spacingEdit->setInputValidator("[0-9]+\\.?[0-9]*");
-    spacingEdit->setDefaultText("Spacing");
+    spacingEdit->setDefaultText("Espacement");
     spacingEdit->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     spacingEdit->getRenderer()->setTextColor(tgui::Color::White);
     spacingEdit->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -73,7 +73,7 @@ void GameView::initAutoFillOptions() {
     rotationEdit->setSize("90%", "10%");
     rotationEdit->setPosition("5%", "45%");
     rotationEdit->setInputValidator("[0-9]+\\.?[0-9]*");
-    rotationEdit->setDefaultText("Rotation");
+    rotationEdit->setDefaultText("Angle");
     rotationEdit->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     rotationEdit->getRenderer()->setTextColor(tgui::Color::White);
     rotationEdit->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));

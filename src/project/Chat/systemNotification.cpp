@@ -3,13 +3,13 @@
 string SystemNotification::getTexte() const {
     switch (typeNotif_) {
         case typeNotification::CONNEXION:
-            return author_.getUser() + " s'est connecté à la carte à " + getDateTexte() + ".";
+            return author_.getUser() + " s'est connecté à la carte le " + getDateTexte() + ".";
         case typeNotification::DECONNEXION:
-            return author_.getUser() + " s'est déconnecté de la carte à " + getDateTexte() + ".";
+            return author_.getUser() + " s'est déconnecté de la carte le " + getDateTexte() + ".";
         case typeNotification::LOCK:
-            return author_.getUser() + " a verrouillé une couche.";
+            return author_.getUser() + " a verrouillé une couche le " + getDateTexte() + ".";
         case typeNotification::UNLOCK:
-            return author_.getUser() + " a déverrouillé une couche.";
+            return author_.getUser() + " a déverrouillé une couche le " + getDateTexte() + ".";
     }
     return 0;
 }
@@ -17,7 +17,7 @@ string SystemNotification::getTexte() const {
 string SystemNotification::getDateTexte() const {
     Date date = getDate();
     return std::to_string(date.day_) + "/" + std::to_string(date.month_) + "/" +
-           std::to_string(date.year_) + " " + std::to_string(date.hour_) + ":" + std::to_string(date.min_);
+           std::to_string(date.year_) + " à " + std::to_string(date.hour_) + ":" + std::to_string(date.min_);
 }
 
 SystemNotification::SystemNotification(const User& user, const Date& date, const typeNotification &notif) 

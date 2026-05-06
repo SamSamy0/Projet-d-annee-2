@@ -35,7 +35,10 @@ struct LiveProject {
 
     bool addSprite(uint userId, uint calqueId, std::string asset_id, uint x, uint y, float taille);
     bool removeSprite(uint userId, uint calqueId, uint spriteId);
-    
+    bool moveSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, int deltaX, int deltaY);
+    bool resizeSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, float scale, std::vector<float> x, std::vector<float> y);
+    bool rotateSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, float angle, std::vector<float> x, std::vector<float> y);
+
     bool moveCalqueUp(uint userId, uint calqueId);
     bool moveCalqueDown(uint userId, uint calqueId);
 
