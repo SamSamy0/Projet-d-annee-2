@@ -25,7 +25,6 @@ void AutoFill::onDrag(sf::Vector2i pos){
 
 void AutoFill::onRelease(){
   generateSprites();
-  apply();
 }
 
 void AutoFill::generateSprites() { 
@@ -112,6 +111,8 @@ void AutoFill::clearAsset(){assets_.clear();}
 
 
 void AutoFill::apply(){
+    if(temporaryLayer_->getSprites().empty())
+        return;
     std::vector<sf::Vector2f> positions;
     std::vector<std::string> asset_ids;
 

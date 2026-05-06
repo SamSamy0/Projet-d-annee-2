@@ -91,6 +91,8 @@ void GameView::initToolbar() {
           eraserSpriteOptionsPanel_->setVisible(false);
         if (spriteBrushOptionsPanel_)
           spriteBrushOptionsPanel_->setVisible(false);
+        if (autoFillOptionsPanel_)
+          autoFillOptionsPanel_->setVisible(false);
       } else {
         if (penOptionsPanel_)
           penOptionsPanel_->setVisible(!penOptionsPanel_->isVisible());
@@ -102,6 +104,8 @@ void GameView::initToolbar() {
           eraserSpriteOptionsPanel_->setVisible(false);
         if (spriteBrushOptionsPanel_)
           spriteBrushOptionsPanel_->setVisible(false);
+        if (autoFillOptionsPanel_)
+          autoFillOptionsPanel_->setVisible(false);
       }
     });
     toolbar->add(penButton);
@@ -134,6 +138,8 @@ void GameView::initToolbar() {
         penSpriteOptionsPanel_->setVisible(false);
       if (spriteBrushOptionsPanel_)
         spriteBrushOptionsPanel_->setVisible(false);
+      if (autoFillOptionsPanel_)
+        autoFillOptionsPanel_->setVisible(false);
       if (layerType == SPRITELAYER) {
         if (eraserOptionsPanel_)
           eraserOptionsPanel_->setVisible(false);
@@ -185,6 +191,8 @@ void GameView::initToolbar() {
         eraserSpriteOptionsPanel_->setVisible(false);
       if (spriteBrushOptionsPanel_)
         spriteBrushOptionsPanel_->setVisible(false);
+      if (autoFillOptionsPanel_)
+        autoFillOptionsPanel_->setVisible(false);
     });
     toolbar->add(shiftButton);
 
@@ -215,6 +223,8 @@ void GameView::initToolbar() {
       if (spriteBrushOptionsPanel_)
         spriteBrushOptionsPanel_->setVisible(
             !spriteBrushOptionsPanel_->isVisible());
+      if (autoFillOptionsPanel_)
+        autoFillOptionsPanel_->setVisible(false);
     });
     toolbar->add(spriteBrushButton);
 
@@ -244,6 +254,8 @@ void GameView::initToolbar() {
         eraserSpriteOptionsPanel_->setVisible(false);
       if (spriteBrushOptionsPanel_)
         spriteBrushOptionsPanel_->setVisible(false);
+      if (autoFillOptionsPanel_)
+        autoFillOptionsPanel_->setVisible(false);
     });
     toolbar->add(selectionButton);
 
@@ -271,8 +283,10 @@ void GameView::initToolbar() {
         eraserSpriteOptionsPanel_->setVisible(false);
       if (spriteBrushOptionsPanel_)
         spriteBrushOptionsPanel_->setVisible(false);
+      if (autoFillOptionsPanel_)
+        autoFillOptionsPanel_->setVisible(true);
 
-    }); // TODO : completer le bouton
+    });
     toolbar->add(fillerButton);
   }
 

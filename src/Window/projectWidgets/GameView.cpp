@@ -19,8 +19,8 @@ void GameView::init() {
   initEraserOptions();
   initEraserSpriteOptions();
   initSpriteBrushOptions();
-  initLayerPanel();
-  initChatWidget();
+  initAutoFillOptions();
+  initLayerPanel();  initChatWidget();
   initMinimap();
   refreshChat();
 }

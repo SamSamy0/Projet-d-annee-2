@@ -75,6 +75,7 @@ set(SOURCES
     ../src/Window/projectWidgets/toolbarOptionsWidgets/penSpriteOptions.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/eraserSpriteOptions.cpp
     ../src/Window/projectWidgets/toolbarOptionsWidgets/spriteBrushOptions.cpp
+    ../src/Window/projectWidgets/toolbarOptionsWidgets/autoFillOptions.cpp
     ../src/Window/projectWidgets/minimapWidgets.cpp
     ../src/client/clientnetwork.cpp
     ../src/client/handler.cpp

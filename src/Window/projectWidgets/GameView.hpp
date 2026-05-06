@@ -27,6 +27,7 @@ class GameView : public View {
   tgui::Panel::Ptr eraserOptionsPanel_ = nullptr;
   tgui::Panel::Ptr eraserSpriteOptionsPanel_ = nullptr;
   tgui::Panel::Ptr spriteBrushOptionsPanel_ = nullptr;
+  tgui::Panel::Ptr autoFillOptionsPanel_ = nullptr;
 
   void initToolbar();
   void initLayerPanel();
@@ -36,6 +37,7 @@ class GameView : public View {
   void initEraserOptions();
   void initEraserSpriteOptions();
   void initSpriteBrushOptions();
+  void initAutoFillOptions();
   void initMinimap();
   void drawMinimap();
   void refreshLayerList();

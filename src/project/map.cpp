@@ -231,11 +231,12 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap) {
 
     render_texture_.clear(sf::Color::White);
 
-    for (auto& layer: layers_) {
+    for(int i = layers_.size()-1 ; i>=0;i--){
         // We are drawing all the layers on the texture of the map
-        layer->drawLayer(render_texture_);
-        if(layer->getId() == layers_[selected_]->getId())
+        layers_[i]->drawLayer(render_texture_);
+        if(layers_[i]->getId() == layers_[selected_]->getId())
             tempLayer->drawLayer(render_texture_);
+
     }
     // And then we display the texture of the map
     render_texture_.display();
