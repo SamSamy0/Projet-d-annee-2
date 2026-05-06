@@ -2,6 +2,7 @@
 #include "../client/clientnetwork.hpp"
 #include "../project/Tool/tool.hpp"
 #include "../project/project.hpp"
+#include "../server/datamanager/memberentry.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
@@ -17,7 +18,7 @@
 #include <memory>
 #include <vector>
 enum class projectState { LOGIN, MENU, GAME };
-enum class focusPopup { CREATE, RENAME, DUPLICATE, TOKEN };
+enum class focusPopup { CREATE, RENAME, DUPLICATE, TOKEN, QUIT, MEMBER };
 class Application;
 class View {
 protected:
@@ -29,4 +30,5 @@ public:
   virtual void init() = 0;
   virtual void handleEvents(const sf::Event &event) = 0;
   virtual void render() {};
+  virtual void setAllUsers(std::vector<MemberEntry> users){};
 };

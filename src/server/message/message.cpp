@@ -190,6 +190,7 @@ void ImportProjectMessage::process(Worker &worker) {
     std::vector<ProjectEntry> projects = worker.getUserProjects(userId_);
     std::unique_ptr<Reponse> rps =
         std::make_unique<ReponseUsersProjects>(userId_, projects);
+    std::cout <<"construction reponse" <<std::endl;
     worker.pushNetwork(std::move(rps));
   } else {
     std::cerr << "L'extraction du projet importé a échoué." << std::endl;

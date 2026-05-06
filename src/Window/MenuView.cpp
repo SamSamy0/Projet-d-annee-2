@@ -116,7 +116,8 @@ void MenuView::importProj(tgui::Panel::Ptr panel) {
     separator->getRenderer()->setBackgroundColor(tgui::Color(55, 55, 70));
     importPanel->add(separator);
 
-    auto fileLabel = tgui::Label::create("Entrez le nom du fichier (sans .natif) :");
+    auto fileLabel =
+        tgui::Label::create("Entrez le nom du fichier (sans .natif) :");
     fileLabel->setPosition("5%", "22%");
     fileLabel->getRenderer()->setTextColor(sf::Color(180, 180, 200));
     fileLabel->getRenderer()->setTextSize(30);
@@ -156,8 +157,9 @@ void MenuView::importProj(tgui::Panel::Ptr panel) {
 
     valid->onPress([this, panel, importPanel, fileName, projName, &manager]() {
       if (!fileName->getText().empty() && !projName->getText().empty()) {
-        std::string path =
-            "../import/" + static_cast<std::string>(fileName->getText()) + ".natif";
+        std::string path = "../import/" +
+                           static_cast<std::string>(fileName->getText()) +
+                           ".natif";
         std::cout << "Importation de " << fileName->getText() << " vers "
                   << projName->getText() << std::endl;
 
@@ -315,8 +317,10 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   menu->addItem("Ouvrir");
   menu->addItem("Dupliquer");
   menu->addItem("Partager");
+  menu->addItem("Quitter");
+  menu->addItem("Membres");
+
   if (project.role >= 1) {
-    // On désactive les deux derniers items (index 3 et 4)
     menu->addItem("Renommer");
   }
   if (project.role == 2) {
@@ -347,7 +351,6 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
 
       // Rename Action
     } else if (item == "Renommer") {
-      std::cout << "appuyé" << std::endl;
       // NOTE: Sending project reference to server with "project"
       initInputWidget(focusPopup::RENAME, project);
     } else if (item == "Dupliquer") {
@@ -356,12 +359,17 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
     } else if (item == "Partager") {
       initInputWidget(focusPopup::TOKEN, project);
     }
-    //                else if (item == "Quitter") {
-    // // If owner
-    // if (projectRole == 2) {
-    //   // display choseSuccesorWindow
-    // }
-    // }
+                     
+    else if (item == "Quitter") {
+    // If owner
+    if (projectRole == 2) {
+      initInputWidget(focusPopup::QUIT, project);
+      // display choseSuccesorWindow
+    }
+    } else if (item == "Membres"){
+      initInputWidget(focusPopup::MEMBER, project);
+                     
+      }
     activeMoreButton->getRenderer()->setBackgroundColor(
         tgui::Color::Transparent);
 
@@ -510,8 +518,155 @@ void MenuView::initInputWidget(focusPopup focus, ProjectData project) {
     popupCreateToken(background, project);
     break;
   }
+    case(focusPopup::MEMBER):{
+      activeProjectData_ = project;
+      activeBackground_ = background;
+      Transferring = false;
+      app_.getGui().add(background, "memberBackground");
+      app_.getNetwork().getUsersProjects(project.projectId); 
+      break;
+    }
+    case (focusPopup::QUIT):{
+      break;
+    }
   }
 }
+
+void MenuView::popupQuit(tgui::Panel::Ptr back, ProjectData project, focusPopup view){
+  
+};
+
+void  MenuView::setAllUsers(std::vector<MemberEntry>users){
+  
+  allUsers_ = users;
+  displayMemberList();
+  // Transferring = false;
+}
+
+void MenuView::displayMemberList() {
+  auto &gui = app_.getGui();
+  auto &manager = app_.getNetwork();
+  User& currentUser = app_.getUser();
+
+  // if (gui.get("memberListPopup")) {
+  //   gui.remove(gui.get("memberListPopup"));
+  // }
+  // If owner is alone, he can leave project instantly
+  if (Transferring && allUsers_.size() == 1 &&
+        allUsers_[0].userId == currentUser.getId()) {
+    app_.getNetwork().leaveProject(activeProjectData_.projectId);
+    app_.getNetwork().getProjectList();
+    app_.changeView(std::make_unique<MenuView>(app_));
+    return;
+  }
+
+  std::cout <<"creating popup" <<std::endl;
+  auto parent = tgui::Panel::create();
+  parent->setSize("40%", "60%");
+  parent->setPosition("30%", "20%");
+  parent->getRenderer()->setBackgroundColor({40, 40, 40, 240});
+  parent->getRenderer()->setRoundedBorderRadius(10);
+  gui.get<tgui::Panel>("memberBackground")->add(parent, "Panel");
+
+  // Title
+
+  auto title =
+      tgui::Label::create(Transferring ? "Choisissez un nouveau propriétaire"
+                                       : "Membres du projet");
+  title->setPosition("center", "5%");
+  title->setTextSize(24);
+  title->getRenderer()->setTextColor(sf::Color::White);
+  parent->add(title);
+
+  auto exitB = tgui::Button::create("✕");
+  exitB->setSize(30, 30);
+  exitB->setPosition("100% - 35", "5");
+  exitB->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+  exitB->getRenderer()->setTextColor(sf::Color::White);
+  exitB->getRenderer()->setBackgroundColorHover(sf::Color(255, 100, 100));
+  parent->add(exitB);
+
+  exitB->onPress(
+      [this]() { exitAction(app_.getGui().get<tgui::Panel>("memberBackground")); });
+
+  auto panel = tgui::ScrollablePanel::create();
+  panel->setPosition("5%", "18%");
+  panel->setSize("90%", "75%");
+  panel->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+  panel->getRenderer()->setBorders(0);
+  panel->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Automatic);
+  parent->add(panel);
+
+  for (int i = 0; i < (int)allUsers_.size(); i++) {
+    if (allUsers_[i].pseudo == currentUser.getUser()) {
+      continue;
+    }
+    auto row = tgui::Panel::create();
+    row->setSize("96%", 56);
+    row->setPosition("2%", i * 64);
+    row->getRenderer()->setBackgroundColor(sf::Color(32, 32, 40));
+    row->getRenderer()->setRoundedBorderRadius(8);
+    panel->add(row);
+
+    // Pseudo
+    std::string pseudo = allUsers_[i].pseudo;
+    int8_t userId = allUsers_[i].userId;
+    auto label = tgui::Label::create(pseudo);
+    label->setPosition(20, "center");
+    label->setTextSize(18);
+    label->getRenderer()->setTextColor(sf::Color(220, 220, 235));
+    row->add(label);
+
+    // Clickable
+    auto clickable = tgui::Button::create();
+    clickable->setSize("100%", "100%");
+    clickable->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+    clickable->getRenderer()->setBackgroundColorHover(
+        tgui::Color(255, 255, 255, 20));
+    clickable->getRenderer()->setRoundedBorderRadius(8);
+    clickable->onPress([this, pseudo, userId, &manager] {
+      manager.changeRole(userId, activeProjectData_.projectId, 2);
+      app_.getNetwork().leaveProject(activeProjectData_.projectId);
+      app_.getNetwork().getProjectList();
+      app_.changeView(std::make_unique<MenuView>(app_));
+    });
+
+    std::string nomRole = (allUsers_[i].role == 1) ? "Editeur" : "Spectateur";
+    if (allUsers_[i].role == 2)
+      nomRole = "Propriétaire";
+
+    auto labelRole = tgui::Label::create(nomRole);
+    if (Transferring) {
+      labelRole->setPosition("70%", "center");
+      labelRole->setTextSize(14);
+      labelRole->getRenderer()->setTextColor(sf::Color(140, 140, 160));
+      row->add(labelRole);
+      row->add(clickable);
+
+    } else {
+      // Adding more button
+      if (activeProjectData_.role == 2) {
+        labelRole->setPosition("62.5%", "center");
+        auto btn = tgui::Button::create("•••");
+        btn->setSize(80, 35);
+        btn->setPosition("100% -90", "center + 10");
+        btn->getRenderer()->setBackgroundColor(sf::Color::Transparent);
+        btn->getRenderer()->setBackgroundColorHover(sf::Color(55, 55, 70));
+        btn->getRenderer()->setTextColor(sf::Color(140, 140, 160));
+        btn->getRenderer()->setBorders(0);
+        btn->getRenderer()->setRoundedBorderRadius(6);
+        row->add(labelRole);
+        row->add(btn, "BtnMore");
+        // btn->onPress(&GameView::showUserManagment, this, btn, i);
+        btn->setTextSize(20);
+      } else {
+        labelRole->setPosition("70%", "center");
+        row->add(labelRole);
+      }
+    }
+  }
+}
+
 
 void MenuView::popupCreate(tgui::Panel::Ptr background) {
   auto &gui = app_.getGui();

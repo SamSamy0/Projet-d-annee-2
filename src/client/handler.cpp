@@ -278,6 +278,7 @@ void ClientHandler::process(ServerEvent &event) {
 
     std::vector<MemberEntry> memberList;
     for (uint i = 0; i < static_cast<uint>(size); ++i) {
+        
       MemberEntry member;
       std::string pseudo;
       uint32_t role;

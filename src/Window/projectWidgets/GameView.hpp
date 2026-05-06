@@ -55,7 +55,7 @@ public:
   GameView(Application &app);
   ~GameView() override = default;
   void init() override;
-  void render();
+  void render() override;
   void handleEvents(const sf::Event &events) override;
 
   void createLayer(LayerType);
@@ -63,7 +63,7 @@ public:
   void layerUp(uint layer_id);
   void layerDown(uint layer_id);
   void renameLayer(uint layer_id, std::string name);
-  void setAllUsers(std::vector<MemberEntry> users);
+  void setAllUsers(std::vector<MemberEntry> users) override;
   void updateMemberRole(uint targetId, int8_t role);
   void clearMemberList();
   void popupWarning(std::string motif);

@@ -5,6 +5,11 @@
 
 class MenuView : public View {
   std::vector<ProjectData> projectList = {};
+  // Saving context for memberList
+  std::vector<MemberEntry> allUsers_;
+  bool Transferring = false;
+  ProjectData activeProjectData_;
+  tgui::Panel::Ptr activeBackground_;
   tgui::Button::Ptr activeMoreButton = nullptr;
   std::string shareToken = "FFFFF";
 
@@ -14,6 +19,8 @@ class MenuView : public View {
   void displayProjList(tgui::Panel::Ptr parent);
   void showProjectMenu(ProjectData p, tgui::Button::Ptr toHover);
   void initInputWidget(focusPopup focus, ProjectData project = ProjectData{});
+  void popupQuit(tgui::Panel::Ptr back, ProjectData project, focusPopup view);
+  void displayMemberList();
   void popupRename(tgui::Panel::Ptr back, ProjectData project, focusPopup view);
   void popupCreate(tgui::Panel::Ptr background);
   void popupDuplicate(tgui::Panel::Ptr background, ProjectData project,
@@ -48,4 +55,5 @@ public:
   void setShareToken(std::string token);
   void resetShareToken();
   void deleteProject(long long id);
+  void setAllUsers(std::vector<MemberEntry> users) override;
 };
