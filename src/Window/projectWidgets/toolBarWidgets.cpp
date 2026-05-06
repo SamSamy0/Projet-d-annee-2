@@ -284,7 +284,8 @@ void GameView::initToolbar() {
       if (spriteBrushOptionsPanel_)
         spriteBrushOptionsPanel_->setVisible(false);
       if (autoFillOptionsPanel_)
-        autoFillOptionsPanel_->setVisible(true);
+        autoFillOptionsPanel_->setVisible(
+            !autoFillOptionsPanel_->isVisible());
 
     });
     toolbar->add(fillerButton);

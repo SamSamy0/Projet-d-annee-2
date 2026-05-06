@@ -188,15 +188,8 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                 static_cast<float>(map->getScale()) /
                                 bounds.size.x;
             sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
-// <<<<<<< HEAD
             sprite.setPosition(sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
             layer->draw(sprite, nameId);
-// =======
-//             sprite.setPosition(
-//                 sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
-//             sprite.setRotation(sf::radians(angle));
-//             layer->addSprite(sprite, static_cast<uint>(s["interId"].toInt()));
-// >>>>>>> main
           }
         }
       }

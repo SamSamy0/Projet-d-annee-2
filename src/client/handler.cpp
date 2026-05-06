@@ -556,7 +556,8 @@ void ClientHandler::process(ServerEvent &event) {
       }
 
       handleWindow_.autoFill(layer_id,asset_ids,positions,rotation,size);
-    };
+      break;
+    }
 
   case MsgProtocole::MAP_MOV_LAYER_REP: {
     uint project_id;
