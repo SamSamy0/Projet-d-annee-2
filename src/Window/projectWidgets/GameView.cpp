@@ -300,7 +300,7 @@ void GameView::handleEvents(const sf::Event &event) {
         float sizex = size.x;
         float sizey = size.y;
         sf::Vector2u mapSize = project->getMap()->getSize();
-        float step = std::min(mapSize.x, mapSize.y) / 200.0f;
+        float step = std::min(mapSize.x, mapSize.y) / 2000.0f;
 
         if (wheelEvent->delta > 0) {
           sizex += step;

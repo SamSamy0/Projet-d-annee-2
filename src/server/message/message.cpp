@@ -503,8 +503,8 @@ void PutPixelsCircleMessage::process(Worker &worker) {
 PutPixelsDiamondMessage::PutPixelsDiamondMessage(
     sf::Packet &data_packet, std::shared_ptr<Client> &client) {
   userId_ = client->id;
-  data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> hauteur_ >>
-      largeur_ >> red_ >> green_ >> blue_ >> opa_;
+  data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> largeur_ >>
+      hauteur_ >> red_ >> green_ >> blue_ >> opa_;
 }
 
 void PutPixelsDiamondMessage::process(Worker &worker) {
@@ -571,8 +571,8 @@ void ErasePixelsCircleMessage::process(Worker &worker) {
 ErasePixelsDiamondMessage::ErasePixelsDiamondMessage(
     sf::Packet &data_packet, std::shared_ptr<Client> &client) {
   userId_ = client->id;
-  data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> hauteur_ >>
-      largeur_;
+  data_packet >> projectId_ >> calqueId_ >> pos_.x >> pos_.y >> largeur_ >>
+      hauteur_;
 }
 
 void ErasePixelsDiamondMessage::process(Worker &worker) {

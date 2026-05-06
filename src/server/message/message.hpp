@@ -195,8 +195,8 @@ struct PutPixelsSquareMessage : PutPixelsMessage {
 };
 
 struct PutPixelsDiamondMessage : PutPixelsMessage {
-  float hauteur_;
   float largeur_;
+  float hauteur_;
 
     PutPixelsDiamondMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
@@ -222,8 +222,8 @@ struct ErasePixelsSquareMessage : ErasePixelsMessage {
 };
 
 struct ErasePixelsDiamondMessage : ErasePixelsMessage {
-  float hauteur_;
   float largeur_;
+  float hauteur_;
 
   ErasePixelsDiamondMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);;
   void process(Worker &worker) override;
