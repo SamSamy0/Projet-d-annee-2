@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <list>
 #include <QJsonArray>
+#include <QImage>
 #include "SpriteLayer.hpp"
 
 struct Layer {
