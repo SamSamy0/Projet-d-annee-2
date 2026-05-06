@@ -18,7 +18,7 @@ enum ToolType {
   AUTOFILL
 };
 
-enum Shape { // WARNING: PEUT ETRE PAS AU BON ENDROIT DANS LE CODE
+enum Shape { 
   SQUARE,
   DIAMOND,
   CIRCLE

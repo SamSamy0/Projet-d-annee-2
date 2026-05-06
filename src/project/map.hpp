@@ -9,7 +9,7 @@
 #include <vector>
 
 // TODO: DEFINIR DES VALEURS MAX ET MIN POUR LA SIZE, LA SCALE
-//
+
 class SpriteLayer;
 
 using namespace std;

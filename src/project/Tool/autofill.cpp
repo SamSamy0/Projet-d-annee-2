@@ -120,13 +120,8 @@ void AutoFill::apply(){
       positions.push_back(spriteObj.sprite.getPosition());
       asset_ids.push_back(spriteObj.assetId);
     }
-    // map_->createSpriteLayer(map_->getCurrentLayer()->getId());
-    // std::shared_ptr<Layer> layer = (map_->getLayers()[map_->getLayerSelected() +1]);
-    // if(layer->getType() == SPRITELAYER){
-    // static_pointer_cast<SpriteLayer>(layer)->draw(temporaryLayer_);
     manager_.autofill(map_->getId(),map_->getCurrentLayer()->getId(),asset_ids,positions,rotation_,size_);
     clear();
     }
-  // }
 
 void AutoFill::clear(){temporaryLayer_->getSprites().clear();}
