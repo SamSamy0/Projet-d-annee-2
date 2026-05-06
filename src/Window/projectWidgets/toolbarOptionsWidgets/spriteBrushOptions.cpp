@@ -1,6 +1,7 @@
 #include "../../Application.hpp"
 #include "../GameView.hpp"
 #include "../../../project/Tool/spritebrush.hpp"
+#include "../../../project/Tool/autofill.hpp"
 #include <portable-file-dialogs.h>
 
 void GameView::initSpriteBrushOptions() {
@@ -81,12 +82,12 @@ void GameView::initSpriteBrushOptions() {
       image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
       auto assetId = id;
       image->onClick([this, image, assetId, imagesSelected]() {
-        auto tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
-        if (!tool) {
-          project->getToolBar().selectTool(SPRITEBRUSH);
-          tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
-        }
-        if (!tool) return;
+        auto selectedTool = project->getToolBar().getSelectedTool();
+        auto spriteBrush = std::dynamic_pointer_cast<SpriteBrush>(selectedTool);
+        auto autoFill = std::dynamic_pointer_cast<AutoFill>(selectedTool);
+
+        if (!spriteBrush && !autoFill) return;
+
         bool found = false;
         for (auto& img : *imagesSelected) {
           if (img == assetId) { found = true; break; }
@@ -94,11 +95,13 @@ void GameView::initSpriteBrushOptions() {
         if (found) {
           imagesSelected->erase(std::remove(imagesSelected->begin(), imagesSelected->end(), assetId), imagesSelected->end());
           image->getRenderer()->setBorderColor(tgui::Color::Transparent);
-          tool->removeAsset(assetId);
+          if (spriteBrush) spriteBrush->removeAsset(assetId);
+          if (autoFill) autoFill->removeAsset(assetId);
         } else {
           imagesSelected->push_back(assetId);
           image->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
-          tool->addAsset(assetId);
+          if (spriteBrush) spriteBrush->addAsset(assetId);
+          if (autoFill) autoFill->addAsset(assetId);
         }
       });
       panelNature->add(image);
@@ -129,12 +132,12 @@ void GameView::initSpriteBrushOptions() {
       image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
       auto assetId = id;
       image->onClick([this, image, assetId, imagesSelected]() {
-        auto tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
-        if (!tool) {
-          project->getToolBar().selectTool(SPRITEBRUSH);
-          tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
-        }
-        if (!tool) return;
+        auto selectedTool = project->getToolBar().getSelectedTool();
+        auto spriteBrush = std::dynamic_pointer_cast<SpriteBrush>(selectedTool);
+        auto autoFill = std::dynamic_pointer_cast<AutoFill>(selectedTool);
+
+        if (!spriteBrush && !autoFill) return;
+
         bool found = false;
         for (auto& img : *imagesSelected) {
           if (img == assetId) { found = true; break; }
@@ -142,11 +145,13 @@ void GameView::initSpriteBrushOptions() {
         if (found) {
           imagesSelected->erase(std::remove(imagesSelected->begin(), imagesSelected->end(), assetId), imagesSelected->end());
           image->getRenderer()->setBorderColor(tgui::Color::Transparent);
-          tool->removeAsset(assetId);
+          if (spriteBrush) spriteBrush->removeAsset(assetId);
+          if (autoFill) autoFill->removeAsset(assetId);
         } else {
           imagesSelected->push_back(assetId);
           image->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
-          tool->addAsset(assetId);
+          if (spriteBrush) spriteBrush->addAsset(assetId);
+          if (autoFill) autoFill->addAsset(assetId);
         }
       });
       panelConstruct->add(image);
@@ -176,12 +181,12 @@ void GameView::initSpriteBrushOptions() {
       image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
       auto assetId = id;
       image->onClick([this, image, assetId, imagesSelected]() {
-        auto tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
-        if (!tool) {
-          project->getToolBar().selectTool(SPRITEBRUSH);
-          tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
-        }
-        if (!tool) return;
+        auto selectedTool = project->getToolBar().getSelectedTool();
+        auto spriteBrush = std::dynamic_pointer_cast<SpriteBrush>(selectedTool);
+        auto autoFill = std::dynamic_pointer_cast<AutoFill>(selectedTool);
+
+        if (!spriteBrush && !autoFill) return;
+
         bool found = false;
         for (auto& img : *imagesSelected) {
           if (img == assetId) { found = true; break; }
@@ -189,11 +194,13 @@ void GameView::initSpriteBrushOptions() {
         if (found) {
           imagesSelected->erase(std::remove(imagesSelected->begin(), imagesSelected->end(), assetId), imagesSelected->end());
           image->getRenderer()->setBorderColor(tgui::Color::Transparent);
-          tool->removeAsset(assetId);
+          if (spriteBrush) spriteBrush->removeAsset(assetId);
+          if (autoFill) autoFill->removeAsset(assetId);
         } else {
           imagesSelected->push_back(assetId);
           image->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
-          tool->addAsset(assetId);
+          if (spriteBrush) spriteBrush->addAsset(assetId);
+          if (autoFill) autoFill->addAsset(assetId);
         }
       });
       panelObjects->add(image);

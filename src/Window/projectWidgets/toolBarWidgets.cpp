@@ -91,6 +91,8 @@ void GameView::initToolbar() {
           eraserSpriteOptionsPanel_->setVisible(false);
         if (spriteBrushOptionsPanel_)
           spriteBrushOptionsPanel_->setVisible(false);
+        if (autoFillOptionsPanel_)
+          autoFillOptionsPanel_->setVisible(false);
       } else {
         if (penOptionsPanel_)
           penOptionsPanel_->setVisible(!penOptionsPanel_->isVisible());
@@ -102,6 +104,8 @@ void GameView::initToolbar() {
           eraserSpriteOptionsPanel_->setVisible(false);
         if (spriteBrushOptionsPanel_)
           spriteBrushOptionsPanel_->setVisible(false);
+        if (autoFillOptionsPanel_)
+          autoFillOptionsPanel_->setVisible(false);
       }
     });
     toolbar->add(penButton);
@@ -134,6 +138,8 @@ void GameView::initToolbar() {
         penSpriteOptionsPanel_->setVisible(false);
       if (spriteBrushOptionsPanel_)
         spriteBrushOptionsPanel_->setVisible(false);
+      if (autoFillOptionsPanel_)
+        autoFillOptionsPanel_->setVisible(false);
       if (layerType == SPRITELAYER) {
         if (eraserOptionsPanel_)
           eraserOptionsPanel_->setVisible(false);
@@ -185,6 +191,8 @@ void GameView::initToolbar() {
         eraserSpriteOptionsPanel_->setVisible(false);
       if (spriteBrushOptionsPanel_)
         spriteBrushOptionsPanel_->setVisible(false);
+      if (autoFillOptionsPanel_)
+        autoFillOptionsPanel_->setVisible(false);
     });
     toolbar->add(shiftButton);
 
@@ -198,7 +206,7 @@ void GameView::initToolbar() {
     spriteBrushButton->getRenderer()->setOpacity(0.4);
     spriteBrushButton->onPress([this, penButton, brushButton, shiftButton,
                                 spriteBrushButton, selectionButton]() {
-      project->getToolBar().selectTool(SPRITEBRUSH);
+      // project->getToolBar().selectTool(SPRITEBRUSH);
       penButton->getRenderer()->setOpacity(0.4);
       brushButton->getRenderer()->setOpacity(0.4);
       shiftButton->getRenderer()->setOpacity(0.4);
@@ -215,6 +223,8 @@ void GameView::initToolbar() {
       if (spriteBrushOptionsPanel_)
         spriteBrushOptionsPanel_->setVisible(
             !spriteBrushOptionsPanel_->isVisible());
+      if (autoFillOptionsPanel_)
+        autoFillOptionsPanel_->setVisible(false);
     });
     toolbar->add(spriteBrushButton);
 
@@ -226,12 +236,13 @@ void GameView::initToolbar() {
         tgui::Color::Transparent);
     selectionButton->getRenderer()->setOpacity(0.4);
     selectionButton->onPress([this, penButton, brushButton, shiftButton,
-                              spriteBrushButton, selectionButton]() {
+                              spriteBrushButton, selectionButton,fillerButton]() {
       project->getToolBar().selectTool(SPRITESELECTION);
       penButton->getRenderer()->setOpacity(0.4);
       brushButton->getRenderer()->setOpacity(0.4);
       shiftButton->getRenderer()->setOpacity(0.4);
       spriteBrushButton->getRenderer()->setOpacity(0.4);
+      fillerButton->getRenderer()->setOpacity(0.4);
       selectionButton->getRenderer()->setOpacity(1.0);
       if (penOptionsPanel_)
         penOptionsPanel_->setVisible(false);
@@ -243,6 +254,8 @@ void GameView::initToolbar() {
         eraserSpriteOptionsPanel_->setVisible(false);
       if (spriteBrushOptionsPanel_)
         spriteBrushOptionsPanel_->setVisible(false);
+      if (autoFillOptionsPanel_)
+        autoFillOptionsPanel_->setVisible(false);
     });
     toolbar->add(selectionButton);
 
@@ -252,7 +265,29 @@ void GameView::initToolbar() {
     fillerButton->getRenderer()->setBorders({0});
     fillerButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
     fillerButton->getRenderer()->setOpacity(0.4);
-    fillerButton->onPress([this]() {}); // TODO : completer le bouton
+    fillerButton->onPress([this,fillerButton,penButton,brushButton,shiftButton,spriteBrushButton,selectionButton]() {
+      project->getToolBar().selectTool(AUTOFILL);
+      penButton->getRenderer()->setOpacity(0.4);
+      brushButton->getRenderer()->setOpacity(0.4);
+      shiftButton->getRenderer()->setOpacity(0.4);
+      spriteBrushButton->getRenderer()->setOpacity(0.4);
+      selectionButton->getRenderer()->setOpacity(0.4);
+      fillerButton->getRenderer()->setOpacity(1.0);
+      if (penOptionsPanel_)
+        penOptionsPanel_->setVisible(false);
+      if (penSpriteOptionsPanel_)
+        penSpriteOptionsPanel_->setVisible(false);
+      if (eraserOptionsPanel_)
+        eraserOptionsPanel_->setVisible(false);
+      if (eraserSpriteOptionsPanel_)
+        eraserSpriteOptionsPanel_->setVisible(false);
+      if (spriteBrushOptionsPanel_)
+        spriteBrushOptionsPanel_->setVisible(false);
+      if (autoFillOptionsPanel_)
+        autoFillOptionsPanel_->setVisible(
+            !autoFillOptionsPanel_->isVisible());
+
+    });
     toolbar->add(fillerButton);
   }
 

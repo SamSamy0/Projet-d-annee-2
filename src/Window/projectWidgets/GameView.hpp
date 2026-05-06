@@ -28,6 +28,7 @@ class GameView : public View {
   tgui::Panel::Ptr eraserSpriteOptionsPanel_ = nullptr;
   tgui::Panel::Ptr spriteBrushOptionsPanel_ = nullptr;
   tgui::Panel::Ptr importPanel_ = nullptr;
+  tgui::Panel::Ptr autoFillOptionsPanel_ = nullptr;
 
   void initToolbar();
   void initLayerPanel();
@@ -37,6 +38,7 @@ class GameView : public View {
   void initEraserOptions();
   void initEraserSpriteOptions();
   void initSpriteBrushOptions();
+  void initAutoFillOptions();
   void initMinimap();
   void drawMinimap();
   void refreshLayerList();
@@ -60,6 +62,7 @@ public:
 
   void createLayer(LayerType);
   void deleteLayer(uint layer_id);
+  void autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size);
   void layerUp(uint layer_id);
   void layerDown(uint layer_id);
   void renameLayer(uint layer_id, std::string name);

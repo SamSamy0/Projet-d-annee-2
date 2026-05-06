@@ -58,15 +58,15 @@ LayerManager::LayerManager(uint height, uint width, uint scale) {
     width_ = width;
     scale_ = scale;
 
-    Layer layer{0,0,0,0, "Couche Pixel (1)"};
+    Layer layer{0,1,0,0, "Couche Pixel (1)"};
     layers_.push_back(std::move(layer));
     auto it = std::prev(layers_.end());
     mapId_[it->id] = it;
-    lastLayerId_ = 1;
+    lastLayerId_ = 2;
 
     QImage image(width_, height_, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
-    layersImage_[0] = image;
+    layersImage_[1] = image;
 }
 
 bool LayerManager::drawPixelRect(uint calqueId, uint x, uint y, float taille, uint8_t r, uint8_t g, uint8_t b, uint8_t op) {

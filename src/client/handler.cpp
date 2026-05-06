@@ -553,8 +553,8 @@ void ClientHandler::process(ServerEvent &event) {
     uint layer_id;
     uint count;
     float angle;
-
     *(event.data_packet_) >> project_id >> layer_id >> count >> angle;
+
     for (uint i = 0; i < count; ++i) {
       uint sprite_id;
       sf::Vector2f pos;
@@ -563,6 +563,32 @@ void ClientHandler::process(ServerEvent &event) {
     }
     break;
   }
+
+  case MsgProtocole::MAP_AUTOFILL_REP:{
+      uint project_id;
+      uint layer_id;
+      uint count;
+      float rotation;
+      float size;
+      std::vector<std::string> asset_ids;
+      std::vector<sf::Vector2f> positions;
+      *(event.data_packet_) >> project_id >> layer_id >> count >> rotation >> size;
+
+      for(int i = 0; i < count; i++){
+        std::string id;
+        *(event.data_packet_) >> id;
+        asset_ids.push_back(id);
+      }
+
+      for(int i = 0; i < count; i++){
+        sf::Vector2f pos;
+        *(event.data_packet_) >> pos.x >> pos.y;
+        positions.push_back(pos);
+      }
+
+      handleWindow_.autoFill(layer_id,asset_ids,positions,rotation,size);
+      break;
+    }
 
   case MsgProtocole::MAP_MOV_LAYER_REP: {
     uint project_id;

@@ -196,8 +196,8 @@ struct PutPixelsSquareMessage : PutPixelsMessage {
 };
 
 struct PutPixelsDiamondMessage : PutPixelsMessage {
-  float hauteur_;
   float largeur_;
+  float hauteur_;
 
     PutPixelsDiamondMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);
     void process(Worker& worker) override;
@@ -223,8 +223,8 @@ struct ErasePixelsSquareMessage : ErasePixelsMessage {
 };
 
 struct ErasePixelsDiamondMessage : ErasePixelsMessage {
-  float hauteur_;
   float largeur_;
+  float hauteur_;
 
   ErasePixelsDiamondMessage(sf::Packet& dataPacket, std::shared_ptr<Client>& client);;
   void process(Worker &worker) override;
@@ -276,7 +276,18 @@ struct MoveLayerMessage : ModifProjetMessage {
   int deltaY_;
 
   MoveLayerMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
-    void process(Worker& worker) override;
+  void process(Worker& worker) override;
+};
+
+struct AutoFillMessage : ModifProjetMessage{
+  uint count_;
+  float rotation_;
+  float size_;
+  std::vector<std::string> asset_ids_;
+  std::vector<sf::Vector2f> positions_;
+
+  AutoFillMessage(sf::Packet &dataPacket, std::shared_ptr<Client>& client);
+  void process(Worker& worker) override;
 };
 
 struct DisconnectMessage : IMessage {

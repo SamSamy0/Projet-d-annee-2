@@ -195,6 +195,13 @@ void ReceiverInWindow::rotateSprite(uint layer_id, uint sprite_id, float angle,
       ->rotateSprite(sprite_id, angle, pos);
 }
 
+
+
+void ReceiverInWindow::autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size){
+  dynamic_cast<GameView *>(app_->getCurrentView().get())->autoFill(layer_id,asset_id,pos,rotatation,size);
+}
+
+
 void ReceiverInWindow::setMemberList(std::vector<MemberEntry> memberList) {
   if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
     gameView->setAllUsers(memberList);
@@ -222,7 +229,6 @@ void ReceiverInWindow::kickUser(uint targetId) {
   } else {
     app_->getNetwork().getUsersProjects(app_->getProject()->getId());
   }
-  // TODO: Afficher une fenetre d'info qu'on a été kick
 }
 
 void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,

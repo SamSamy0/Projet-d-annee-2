@@ -136,9 +136,7 @@ void SpriteSelection::onRelease() {
                       .id); // WARNING: ATTENTION AU COMPORTEMENT SI ON PRESSE
                             // CTRL ON CLICK PUIS ON LE RELACHE AVANT ON RELEASE
             else {
-              selected_.erase(
-                  std::remove(selected_.begin(), selected_.end(), spriteObj.id),
-                  selected_.end());
+              selected_.erase(std::remove(selected_.begin(), selected_.end(), spriteObj.id), selected_.end());
             }
           } else
             selected_.push_back(spriteObj.id);
@@ -197,25 +195,28 @@ if (scaled_dist != 0.0f) {
     // Rotation Matrix
     float newX = dist.x * cosA - dist.y * sinA;
     float newY = dist.x * sinA + dist.y * cosA;
-    sf::Vector2f newPos =
-        sf::Vector2f(newX + pivotPos_.x, newY + pivotPos_.y);
+    sf::Vector2f newPos = sf::Vector2f(newX + pivotPos_.x, newY + pivotPos_.y);
     spritelayer->rotateSprite(id, scaled_dist, newPos);
     
+ // ------------delete the layer if he's out of the map-----------------------
     sf::FloatRect bounds = spritelayer->getSprite(id).sprite.getGlobalBounds();
     if (bounds.position.x < 0 || bounds.position.y < 0 ||
         bounds.position.x + bounds.size.x > map_->getSize().x ||
         bounds.position.y + bounds.size.y > map_->getSize().y) {
       toErase.push_back(id);
+//----------------------------------------------------------------------------
     } else {
       newPositions.push_back(newPos);
     }
   }
 
+ // ------------delete the layer if he's out of the map-----------------------
   for (uint id : toErase) {
     spritelayer->erase(id);
     manager_.eraseSprite(map_->getId(), map_->getCurrentLayer()->getId(), id);
     selected_.erase(std::remove(selected_.begin(), selected_.end(), id), selected_.end());
   }
+//----------------------------------------------------------------------------
 
   if (!selected_.empty() && !newPositions.empty()) {
     manager_.rotateSprites(map_->getId(), map_->getCurrentLayer()->getId(),
@@ -248,20 +249,25 @@ void SpriteSelection::resize(sf::Vector2i pos) {
         sf::Vector2f newPos = pivotPos_ + dist * scaleFactor;
         spritelayer->resizeSprite(id, newPos, scaleFactor);
         
+ // ------------delete the layer if he's out of the map-----------------------
         sf::FloatRect bounds = spritelayer->getSprite(id).sprite.getGlobalBounds();
         if (bounds.position.x < 0 || bounds.position.y < 0 ||
             bounds.position.x + bounds.size.x > map_->getSize().x ||
             bounds.position.y + bounds.size.y > map_->getSize().y) {
           toErase.push_back(id);
+//----------------------------------------------------------------------------
+        
         } else {
           newPositions.push_back(newPos);
         }
       }
 
+ // ------------delete the layer if he's out of the map-----------------------
       for (uint id : toErase) {
         spritelayer->erase(id);
         manager_.eraseSprite(map_->getId(), map_->getCurrentLayer()->getId(), id);
         selected_.erase(std::remove(selected_.begin(), selected_.end(), id), selected_.end());
+//----------------------------------------------------------------------------
       }
 
       if (!selected_.empty() && !newPositions.empty()) {
