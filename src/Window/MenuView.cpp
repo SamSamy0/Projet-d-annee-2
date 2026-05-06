@@ -361,11 +361,8 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
     }
                      
     else if (item == "Quitter") {
-    // If owner
-    if (projectRole == 2) {
-      initInputWidget(focusPopup::QUIT, project);
-      // display choseSuccesorWindow
-    }
+    Transferring = true;
+    initInputWidget(focusPopup::QUIT, project);
     } else if (item == "Membres"){
       initInputWidget(focusPopup::MEMBER, project);
                      
@@ -527,6 +524,11 @@ void MenuView::initInputWidget(focusPopup focus, ProjectData project) {
       break;
     }
     case (focusPopup::QUIT):{
+      activeProjectData_ = project;
+      activeBackground_ = background;
+      app_.getGui().add(background, "memberBackground");
+      app_.getNetwork().getUsersProjects(project.projectId); 
+      
       break;
     }
   }
@@ -540,7 +542,7 @@ void  MenuView::setAllUsers(std::vector<MemberEntry>users){
   
   allUsers_ = users;
   displayMemberList();
-  // Transferring = false;
+  Transferring = false;
 }
 
 void MenuView::displayMemberList() {
