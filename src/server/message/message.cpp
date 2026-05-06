@@ -653,7 +653,7 @@ void MoveSpriteMessage::process(Worker &worker) {
     std::cout << "Projet non trouvé pour MoveSpriteMessage" << std::endl;
     return;
   }
-  if (liveProj->second.moveSprite(userId_, calqueId_, std::move(sprite_ids_),x_,y_)){
+  if (liveProj->second.moveSprite(userId_, calqueId_, sprite_ids_,x_,y_)){
   std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 

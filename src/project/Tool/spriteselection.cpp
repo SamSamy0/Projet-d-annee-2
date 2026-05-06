@@ -136,9 +136,7 @@ void SpriteSelection::onRelease() {
                       .id); 
                             
             else {
-              selected_.erase(
-                  std::remove(selected_.begin(), selected_.end(), spriteObj.id),
-                  selected_.end());
+              selected_.erase(std::remove(selected_.begin(), selected_.end(), spriteObj.id), selected_.end());
             }
           } else
             selected_.push_back(spriteObj.id);
