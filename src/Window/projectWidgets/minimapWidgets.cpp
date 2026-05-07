@@ -28,18 +28,13 @@ void GameView::drawMinimap() {
     float minimapHeight = mapSize.y * scale;
     float visionWidth = view.getSize().x * scale;
     float visionHeight = view.getSize().y * scale;
-    visionWidth -= view.getSize().x * 0.18 * scale; // j'enlève la partie de la map caché par la liste des couches et chat
 
     // Je vérifie que la taille de la vision utilisateur soit pas plus grande que la minimap
     if (visionWidth > minimapWidth) visionWidth = minimapWidth;
     if (visionHeight > minimapHeight) visionHeight = minimapHeight;
 
-    // Je calcul la position de la vue utilisateur sur la minimap
-    float positionX = minimapOrigin.x + view.getCenter().x * scale;
-    float positionY = minimapOrigin.y + view.getCenter().y * scale;
-    positionX -= visionWidth / 2;
-    positionY -= visionHeight / 2;
-    positionX += view.getSize().x * 0.18 * scale;
+    float positionX = minimapOrigin.x + (view.getCenter().x - view.getSize().x / 2.f) * scale;
+    float positionY = minimapOrigin.y + (view.getCenter().y - view.getSize().y / 2.f) * scale;
     
     // Je regarde si la position est bien dans la minimap
     float minX = minimapOrigin.x;
