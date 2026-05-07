@@ -44,6 +44,7 @@ int main(int argc, char *argv[]) {
         clockThread.join();
     }
     
+    std::cout << "[Main] Tous les threads ont été arrêtés. Fermeture du serveur." << std::endl;
     return 0;
 
 }

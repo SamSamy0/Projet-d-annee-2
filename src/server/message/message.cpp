@@ -956,6 +956,15 @@ void SaveAllMessage::process(Worker &worker) {
   }
 }
 
+ShutDownMessage::ShutDownMessage(std::shared_ptr<Client>& client) {
+  userId_ = client->id;
+}
+
+void ShutDownMessage::process(Worker &worker) {
+  //if (worker.isAdmin(userId_)) {
+  worker.stop();
+//}
+}
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
                                          std::shared_ptr<Client> &c) {
