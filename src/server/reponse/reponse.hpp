@@ -60,7 +60,8 @@ struct ReponseProjectData : ReponseSolo {
     ReponseProjectData(uint userId, const QJsonObject& jsonDoc, 
                    const std::vector<uint>& layerOrder, 
                    const std::unordered_map<uint, QImage>& imageMap, 
-                   const std::unordered_map<uint, SpriteLayer>& spriteMap, const QJsonArray& chat);
+                   const std::unordered_map<uint, SpriteLayer>& spriteMap, 
+                   const QJsonArray& chat, const std::map<uint, sf::Texture>& textureMap);
     static QByteArray imageToBytes(const QImage& image);
 };
 
@@ -170,6 +171,10 @@ struct ReponseRotateSprite : ReponseGroupe{
 
 struct ReponseMoveLayer : ReponseGroupe {
   ReponseMoveLayer(std::vector<uint> usersId, MoveLayerMessage &mess);
+};
+
+struct ReponseAutoFill : ReponseGroupe{
+  ReponseAutoFill(std::vector<uint> usersId, AutoFillMessage& mess);
 };
 
 struct ReponseChat : ReponseGroupe {

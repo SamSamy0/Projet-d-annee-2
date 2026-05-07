@@ -14,7 +14,7 @@ Application::Application(ClientNetworkManager &manager)
                              sf::VideoMode::getDesktopMode().size.x * 0.90),
                          static_cast<unsigned int>(
                              sf::VideoMode::getDesktopMode().size.y * 0.90)}),
-          "Game name", sf::Style::Default),
+          "OpenRPG", sf::Style::Default),
       gui{mainWindow}, manager{manager} {
   // Centering the Window
   sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
@@ -83,11 +83,12 @@ void Application::run() {
   processEvents();
 
   mainWindow.clear(sf::Color(35, 35, 40));
-  if (project)
+  bool inGame = dynamic_cast<GameView*>(currentView.get()) != nullptr;
+  if (project && inGame)
     project->display();
   currentView->render();
   gui.draw();
-  if (project)
+  if (project && inGame)
     project->displayScale();
   mainWindow.display();
 }
@@ -148,13 +149,16 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
 void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                   std::string name, uint id, uint nextLayerId,
                                   const std::vector<LayerLoadData> &layers,
-                                  Chat chat) {
+                                  Chat chat, const std::map<uint, sf::Texture> &textureMap) {
   // Constructeur avec vecteur vide → aucun layer par défaut créé
   project = std::make_unique<Project>(
       scale, size, name, id, mainWindow, gui, manager,
       std::vector<std::shared_ptr<Layer>>{}, currentProjRole);
   auto map = project->getMap();
   project->setChat(chat);
+  for (const auto &[id, texture] : textureMap) {
+    map->getAssetManager().addAsset(id, texture);
+  }
 
   for (const auto &ld : layers) {
     ;
@@ -199,10 +203,8 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                 static_cast<float>(map->getScale()) /
                                 bounds.size.x;
             sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
-            sprite.setPosition(
-                sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
-            sprite.setRotation(sf::radians(angle));
-            layer->addSprite(sprite, static_cast<uint>(s["interId"].toInt()));
+            sprite.setPosition(sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
+            layer->draw(sprite, nameId);
           }
         }
       }

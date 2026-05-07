@@ -14,20 +14,22 @@ class GameView : public View {
   bool Transferring = false;
   tgui::Button::Ptr activeMoreButton = nullptr;
 
-  // Chat widget
   tgui::Panel::Ptr chatPanel_ = nullptr;
   tgui::ScrollablePanel::Ptr chatMessages_ = nullptr;
   tgui::EditBox::Ptr chatInput_ = nullptr;
   tgui::Button::Ptr chatSendButton_ = nullptr;
-
-  // Pen options panel
   tgui::Panel::Ptr penOptionsPanel_ = nullptr;
   tgui::Panel::Ptr penSpriteOptionsPanel_ = nullptr;
-  // Eraser options panel
   tgui::Panel::Ptr eraserOptionsPanel_ = nullptr;
   tgui::Panel::Ptr eraserSpriteOptionsPanel_ = nullptr;
   tgui::Panel::Ptr spriteBrushOptionsPanel_ = nullptr;
-  tgui::Panel::Ptr importPanel_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelImport_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelNature_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelConstruction_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelObjects_ = nullptr;
+  
+  std::shared_ptr<std::vector<std::string>> spritesSelected_;
+  tgui::Panel::Ptr autoFillOptionsPanel_ = nullptr;
 
   void initToolbar();
   void initLayerPanel();
@@ -37,6 +39,7 @@ class GameView : public View {
   void initEraserOptions();
   void initEraserSpriteOptions();
   void initSpriteBrushOptions();
+  void initAutoFillOptions();
   void initMinimap();
   void drawMinimap();
   void refreshLayerList();
@@ -60,6 +63,7 @@ public:
 
   void createLayer(LayerType);
   void deleteLayer(uint layer_id);
+  void autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size);
   void layerUp(uint layer_id);
   void layerDown(uint layer_id);
   void renameLayer(uint layer_id, std::string name);
@@ -69,4 +73,8 @@ public:
   void popupWarning(std::string motif);
   void refreshChat();
   void refreshImportPanel();
+  void refreshNatureSpritePanel();
+  void refreshConstructSpritePanel();
+  void refreshObjectsSpritePanel();
+  void refreshSpriteBrushOptions();
 };

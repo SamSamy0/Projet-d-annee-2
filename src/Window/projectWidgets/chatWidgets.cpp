@@ -50,8 +50,7 @@ void GameView::initChatWidget() {
   chatSendButton_->setPosition("5%", "86%");
   chatSendButton_->setTextSize(12);
   chatSendButton_->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
-  chatSendButton_->getRenderer()->setBackgroundColorHover(
-      tgui::Color(75, 130, 210));
+  chatSendButton_->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
   chatSendButton_->getRenderer()->setTextColor(tgui::Color::White);
   chatSendButton_->getRenderer()->setBorders({0});
   chatSendButton_->getRenderer()->setRoundedBorderRadius(8);
@@ -59,8 +58,7 @@ void GameView::initChatWidget() {
     tgui::String text = chatInput_->getText();
     if (text.empty())
       return;
-    auto msg = std::make_shared<UserMessage>(
-        currentUser.getUser(), currentUser.getId(), text.toStdString());
+    auto msg = std::make_shared<UserMessage>(currentUser.getUser(), currentUser.getId(), text.toStdString());
     app_.getNetwork().sendMessageChat(text.toStdString());
     chatInput_->setText("");
     refreshChat();
@@ -113,10 +111,8 @@ void GameView::refreshChat() {
       message->setMaximumTextWidth(width * 0.16);
       chatMessages_->add(message);
       positionY += message->getSize().y + messageSpace;
-    }
-
-    else if (msg->getType() == MessageType::SYSTEM) {
-auto message = tgui::Label::create(msg->getTexte());
+    } else if (msg->getType() == MessageType::SYSTEM) {
+      auto message = tgui::Label::create(msg->getTexte());
       message->setPosition("3%", positionY);
       message->getRenderer()->setTextColor(tgui::Color::White);
       message->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -126,6 +122,5 @@ auto message = tgui::Label::create(msg->getTexte());
       positionY += message->getSize().y + 4.0;
     }
   }
-  chatMessages_->setVerticalScrollbarValue(
-      chatMessages_->getVerticalScrollbarMaxValue());
+  chatMessages_->setVerticalScrollbarValue(chatMessages_->getVerticalScrollbarMaxValue());
 }

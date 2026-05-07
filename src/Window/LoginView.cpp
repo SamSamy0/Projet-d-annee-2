@@ -25,7 +25,7 @@ void LoginView::init() {
   auto editBoxUsername = tgui::EditBox::create();
   editBoxUsername->setPosition({"10%", "32%"});
   editBoxUsername->setSize({"80%", "13%"});
-  editBoxUsername->setDefaultText("Pseudo...");
+  editBoxUsername->setDefaultText("Pseudo");
   editBoxUsername->getRenderer()->setBackgroundColor(sf::Color(20, 20, 28));
   editBoxUsername->getRenderer()->setBackgroundColorHover(
       sf::Color(24, 24, 34));
@@ -41,17 +41,17 @@ void LoginView::init() {
   editBoxPassword->getRenderer()->setTextColor(tgui::Color(255, 255, 255));
   editBoxPassword->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   editBoxPassword->setPosition({"10%", "50%"});
-  editBoxPassword->setDefaultText("Mot de Passe...");
+  editBoxPassword->setDefaultText("Mot de Passe");
   editBoxPassword->setPasswordCharacter('*');
   back->add(editBoxPassword, "Password");
 
   // Error label (hidden by default)
   auto errorLabel = tgui::Label::create("");
-  errorLabel->setPosition({"10%", "65%"});
-  errorLabel->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
-  errorLabel->setSize({"80%", "8%"});
+  errorLabel->setPosition({"10%", "20%"});
+  errorLabel->setSize({"95%", "8%"});
   errorLabel->getRenderer()->setTextColor(sf::Color(220, 80, 80));
-  errorLabel->setTextSize(13);
+  errorLabel->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  errorLabel->setTextSize(9);
   back->add(errorLabel, "ErrorLabel");
 
   // Login Button

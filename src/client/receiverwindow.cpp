@@ -24,7 +24,7 @@ void ReceiverInWindow::switchConnectState(uint8_t connect) {
     app_->changeView(std::make_unique<MenuView>(*app_));
     app_->getNetwork().getProjectList();
   } else {
-    app_->showLoginError("Identifiant ou mot de passe incorrect.");
+    app_->showLoginError("Identifiants incorrect.");
   }
 }
 
@@ -66,8 +66,8 @@ void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
                                       std::string name, uint id,
                                       uint nextLayerId,
                                       const std::vector<LayerLoadData> &layers,
-                                      Chat chat) {
-  app_->loadProjectData(scale, size, name, id, nextLayerId, layers, chat);
+                                      Chat chat, const std::map<uint, sf::Texture> &textureMap) {
+  app_->loadProjectData(scale, size, name, id, nextLayerId, layers, chat, textureMap);
 }
 
 void ReceiverInWindow::createLayer(LayerType type) {
@@ -197,6 +197,13 @@ void ReceiverInWindow::rotateSprite(uint layer_id, uint sprite_id, float angle,
       ->rotateSprite(sprite_id, angle, pos);
 }
 
+
+
+void ReceiverInWindow::autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size){
+  dynamic_cast<GameView *>(app_->getCurrentView().get())->autoFill(layer_id,asset_id,pos,rotatation,size);
+}
+
+
 void ReceiverInWindow::setMemberList(std::vector<MemberEntry> memberList) {
   // if (auto View = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
   //   View->setAllUsers(memberList);
@@ -225,7 +232,6 @@ void ReceiverInWindow::kickUser(uint targetId) {
   } else {
     app_->getNetwork().getUsersProjects(app_->getProject()->getId());
   }
-  // TODO: Afficher une fenetre d'info qu'on a été kick
 }
 
 void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,

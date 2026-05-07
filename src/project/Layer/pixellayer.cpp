@@ -3,8 +3,6 @@
 
 PixelLayer::PixelLayer(uint id, std::string name, sf::Vector2u size)
     : Layer(id,name, size), offset_(texture_.getTexture()) {
-  // TODO: FAIRE DES RENDERTEXTURES PLUS GRANDE ET BLOQUER LE SHIFT QUAND ON A
-  // TROP SHIFT
   if (!texture_.resize(size)) {
     std::cerr << "Erreur : Impossible de redimensionner la texture."
               << std::endl;

@@ -19,7 +19,7 @@ void GameView::initPenSpriteOptions() {
   widthInput->setSize("26.7%", "64%");
   widthInput->setPosition("5.3%", "18%");
   widthInput->setDefaultText("L");
-  widthInput->setInputValidator("[0-9]+\\.?[0-9]*");
+  widthInput->setInputValidator("[0-9]*\\.?[0-9]*");
   widthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   widthInput->getRenderer()->setTextColor(tgui::Color::White);
   widthInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -40,7 +40,7 @@ void GameView::initPenSpriteOptions() {
   penSpriteOptionsPanel_->add(spaceInput);
 
   spaceInput->onTextChange([this, spaceInput]() {
-    // regarde s'il y a aucune valeur
+
     if (spaceInput->getText().empty()) return;
     if (spaceInput->getText().empty() || spaceInput->getText() == "-" || spaceInput->getText() == "." || spaceInput->getText() == "-.")
         return;
@@ -50,12 +50,11 @@ void GameView::initPenSpriteOptions() {
   });
 
   widthInput->onTextChange([this, widthInput]() {
-    // regarde s'il y a aucune valeur
+
     if (widthInput->getText().empty()) return;
 
-    // Ici il regarde que la taille de la longueur (x) et largeur (y) du pinceau soit au moins égale à 1, et si y pas de valeur on prend la valeur de x
-    unsigned int sizeX = static_cast<unsigned int>(std::stoi(widthInput->getText().toStdString()));
-    if (sizeX < 1) sizeX = 1;
+    float sizeX = std::stof(widthInput->getText().toStdString());
+    // if (sizeX < 1) sizeX = 1;
 
     // On applique la nouvelle taille
     auto brush = dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());

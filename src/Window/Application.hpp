@@ -60,7 +60,7 @@ public:
                        uint id);
   void loadProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                        uint id, uint nextLayerId,
-                       const std::vector<LayerLoadData> &layers, Chat chat);
+                       const std::vector<LayerLoadData> &layers, Chat chat, const std::map<uint, sf::Texture> &textureMap);
   // Getters
   sf::RenderWindow &getWindow();
   bool getIsExporting(){return isExporting_;};

@@ -28,7 +28,7 @@ LayerManager::LayerManager(const QJsonArray& origin, uint projectId, uint lastUs
             }
             else {
                 layersSprite_[id];
-                setupLayerSprite(id, prjManager.loadSprite(projectId, id));
+                setupLayerSprite(id, prjManager.loadSpriteLayer(projectId, id));
                 layer.type = 1;
             }
             layers_.push_back(std::move(layer));
@@ -58,15 +58,15 @@ LayerManager::LayerManager(uint height, uint width, uint scale) {
     width_ = width;
     scale_ = scale;
 
-    Layer layer{0,0,0,0, "Couche Pixel (1)"};
+    Layer layer{0,1,0,0, "Couche Pixel (1)"};
     layers_.push_back(std::move(layer));
     auto it = std::prev(layers_.end());
     mapId_[it->id] = it;
-    lastLayerId_ = 1;
+    lastLayerId_ = 2;
 
     QImage image(width_, height_, QImage::Format_ARGB32);
     image.fill(Qt::transparent);
-    layersImage_[0] = image;
+    layersImage_[1] = image;
 }
 
 bool LayerManager::drawPixelRect(uint calqueId, uint x, uint y, float taille, uint8_t r, uint8_t g, uint8_t b, uint8_t op) {
@@ -214,7 +214,7 @@ const std::unordered_map<uint, QImage>& LayerManager::getImageMap() {
 }
 
 bool LayerManager::addCalquePixel() {
-    Layer newLayer{0, lastLayerId_, 0, 0, "Couche Pixel (" + std::to_string(lastLayerId_ + 1) + ")"};
+    Layer newLayer{0, lastLayerId_, 0, 0, "Couche Pixel (" + std::to_string(lastLayerId_) + ")"};
 
     layers_.push_back(newLayer);
     auto it = std::prev(layers_.end());
@@ -231,7 +231,7 @@ bool LayerManager::addCalquePixel() {
 }
 
 bool LayerManager::addCalqueSprite() {
-    Layer newLayer{1, lastLayerId_, 0, 0, "Couche Sprite (" + std::to_string(lastLayerId_ + 1) + ")"};
+    Layer newLayer{1, lastLayerId_, 0, 0, "Couche Sprite (" + std::to_string(lastLayerId_) + ")"};
 
     layers_.push_back(newLayer);
     auto it = std::prev(layers_.end());
@@ -380,6 +380,31 @@ bool LayerManager::renameCalque(uint calqueId, std::string newName) {
     
     if (it != mapId_.end()) {
         it->second->name = newName;
+        return true;
+    }
+    return false;
+}
+
+bool LayerManager::addCalqueSpriteAfter(uint calqueId) {
+auto targetIt = mapId_.find(calqueId);
+    if (targetIt == mapId_.end()) {
+        return false; 
+    }
+
+    Layer newLayer{1, lastLayerId_, 0, 0, "Couche Sprite (" + std::to_string(lastLayerId_) + ")"};
+    auto newLayerIt = layers_.insert(std::next(targetIt->second), newLayer);
+
+    mapId_[lastLayerId_] = newLayerIt; 
+    layersSprite_[lastLayerId_];
+    lastLayerId_ += 1;
+    
+    return true;
+}
+
+bool LayerManager::autoFill(uint calqueId, const std::vector<std::string>& asset_ids, float angle, float size, const std::vector<sf::Vector2f>& positions) {
+    if (addCalqueSpriteAfter(calqueId)) {
+        uint newLayerId = lastLayerId_ - 1; // ID du calque ajouté
+        layersSprite_[newLayerId].autoFill(asset_ids, angle, size, positions);
         return true;
     }
     return false;

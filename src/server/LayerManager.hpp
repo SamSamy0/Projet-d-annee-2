@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <list>
 #include <QJsonArray>
+#include <QImage>
 #include "SpriteLayer.hpp"
 
 struct Layer {
@@ -39,6 +40,7 @@ class LayerManager {
     
     bool addCalquePixel();
     bool addCalqueSprite();
+    bool addCalqueSpriteAfter(uint calqueId);
     bool addCalque( uint8_t type);
     bool removeCalque(uint calqueId);
     
@@ -47,6 +49,7 @@ class LayerManager {
     bool moveSprite(uint calqueId, std::vector<uint> spriteIds, int deltaX, int deltaY);
     bool resizeSprite(uint calqueId, std::vector<uint> spriteIds, float scale, std::vector<float> x, std::vector<float> y);
     bool rotateSprite(uint calqueId, std::vector<uint> spriteIds, float angle, std::vector<float> x, std::vector<float> y);
+    bool autoFill(uint calqueId, const std::vector<std::string>& asset_ids, float angle, float size, const std::vector<sf::Vector2f>& positions);
 
     bool moveCalqueUp(uint calqueId);
     bool moveCalqueDown(uint calqueId);

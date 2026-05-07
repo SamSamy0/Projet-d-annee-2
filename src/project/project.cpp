@@ -52,14 +52,10 @@ void Project::displayScale() {
   sf::Font police(FONT_PATH);
   police.setSmooth(true);
   sf::Text scaleText(police);
-
   scaleText.setString("1 m = " + to_string(getScale()) + " px");
   scaleText.setCharacterSize(static_cast<unsigned int>(window_.getSize().y * 0.02f));
   scaleText.setFillColor(sf::Color::White);
-  scaleText.setPosition(sf::Vector2f(
-      window_.getSize().x - scaleText.getLocalBounds().size.x - 10.f,
-      window_.getSize().y * 0.01f));
-
+  scaleText.setPosition(sf::Vector2f(window_.getSize().x - scaleText.getLocalBounds().size.x - 10.f, window_.getSize().y * 0.01f));
   sf::View scaleView(sf::FloatRect({0.f, 0.f}, sf::Vector2f(window_.getSize())));
   window_.setView(scaleView);
   window_.draw(scaleText);

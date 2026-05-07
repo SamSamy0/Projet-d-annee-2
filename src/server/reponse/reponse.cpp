@@ -111,7 +111,7 @@ ReponseProjectData::ReponseProjectData(
     const std::vector<uint> &layerOrder,
     const std::unordered_map<uint, QImage> &imageMap,
     const std::unordered_map<uint, SpriteLayer> &spriteMap,
-    const QJsonArray &chat)
+    const QJsonArray &chat, const std::map<uint, sf::Texture> &textureMap)
     : ReponseSolo(userId) {
   dataPacket_ << static_cast<std::uint8_t>(
       MsgProtocole::LOB_GET_PROJECT_DATA_REP);
@@ -128,6 +128,19 @@ ReponseProjectData::ReponseProjectData(
   dataPacket_ << static_cast<std::uint32_t>(chatCompress.size());
   dataPacket_.append(chatCompress.constData(), chatCompress.size());
 
+  dataPacket_ << static_cast<std::uint32_t>(textureMap.size());
+  for (const auto &pair : textureMap) {
+    dataPacket_ << static_cast<std::uint32_t>(pair.first);
+    sf::Image image = pair.second.copyToImage();
+    uint32_t width = image.getSize().x;
+    uint32_t height = image.getSize().y;
+
+    dataPacket_ << width << height;
+
+    const uint8_t* pixels = image.getPixelsPtr();
+    dataPacket_.append(pixels, width * height * 4);
+  }
+  
   for (uint id : layerOrder) {
     dataPacket_ << id;
     if (spriteMap.find(id) != spriteMap.end()) {
@@ -356,6 +369,20 @@ ReponseMoveLayer::ReponseMoveLayer(std::vector<uint> usersId,
 
   dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.deltaX_
               << mess.deltaY_;
+}
+
+
+
+ReponseAutoFill::ReponseAutoFill(std::vector<uint> usersId, AutoFillMessage& mess) : ReponseGroupe(usersId){
+    dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_AUTOFILL_REP);
+
+    dataPacket_ << mess.projectId_ << mess.calqueId_ << mess.count_ << mess.rotation_ << mess.size_;
+    for(std::string id : mess.asset_ids_){
+        dataPacket_ << id;
+    }
+    for(sf::Vector2f pos : mess.positions_){
+        dataPacket_ << pos.x << pos.y;
+    }
 }
 
 ReponseChat::ReponseChat(std::vector<uint> usersId, ChatMessage &mess)
