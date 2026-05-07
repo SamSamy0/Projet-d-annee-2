@@ -1,7 +1,6 @@
 #include "spritebrush.hpp"
 #include "../Layer/spritelayer.hpp"
 #include "../map.hpp"
-#include <algorithm>
 #include <memory>
 #include <algorithm>
 
@@ -51,31 +50,6 @@ Asset *SpriteBrush::getAsset() {
   return assets_[rand() % assets_.size()];
 }
 
-void SpriteBrush::paint(sf::Vector2i pos) {
-  /*draw a random sprite which was selected on the current layer*/
-  // std::shared_ptr<Layer> layer = map_->getCurrentLayer();
-  // if (layer->getType() == SPRITELAYER) {
-  //   std::shared_ptr<SpriteLayer> spritelayer =
-  //       static_pointer_cast<SpriteLayer>(layer);
-  //   if (assets_.empty() == true)
-  //     return;
-  //
-  //   Asset *asset = getAsset();
-  //   sf::Sprite sprite = sf::Sprite(*(asset->texture));
-  //   sf::FloatRect bounds = sprite.getLocalBounds();
-  //   sprite.setOrigin(sf::Vector2f(bounds.size.x / 2, bounds.size.y / 2));
-  //
-  //   float scale = size_m_.x * getScale() / bounds.size.x;
-  //   sprite.setScale(sf::Vector2f(scale, scale));
-  //
-  //   sf::Vector2f offset =
-  //       sf::Vector2f(spritelayer->getOffset().x, spritelayer->getOffset().y);
-  //   sprite.setPosition(sf::Vector2f(static_cast<float>(pos.x) - offset.x,
-  //                                   static_cast<float>(pos.y) - offset.y));
-  //
-  //   spritelayer->draw(sprite);
-  // }
-}
 
 void SpriteBrush::paint(sf::Vector2i pos,Asset* asset){
   std::shared_ptr<Layer> layer = map_->getCurrentLayer();
@@ -94,7 +68,7 @@ void SpriteBrush::paint(sf::Vector2i pos,Asset* asset){
     sprite.setPosition(sf::Vector2f(static_cast<float>(pos.x) - offset.x,
                                     static_cast<float>(pos.y) - offset.y));
 
-    spritelayer->draw(sprite);
+    spritelayer->draw(sprite, asset->id);
   }
 }
 

@@ -1,6 +1,7 @@
 #include "../../Application.hpp"
 #include "../GameView.hpp"
 #include "../../../project/Tool/spritebrush.hpp"
+#include "../../../project/Tool/autofill.hpp"
 #include <portable-file-dialogs.h>
 
 void GameView::initSpriteBrushOptions() {
@@ -19,7 +20,7 @@ void GameView::initSpriteBrushOptions() {
 
   // Maintenant, je crée les différents tabs (pages) pour catégoriser les images
   auto tabNature = tgui::Button::create("Nature");
-  auto tabConstruct = tgui::Button::create("Construction");
+  auto tabConstruction = tgui::Button::create("Construction");
   auto tabObjects = tgui::Button::create("Objects");
   auto tabImport = tgui::Button::create("Perso");
 
@@ -30,35 +31,35 @@ void GameView::initSpriteBrushOptions() {
   tabNature->getRenderer()->setTextColor(tgui::Color::White);
   tabNature->getRenderer()->setBorders({0});
   tabNature->setTextSize(0);
-  tabNature->onPress([this, tabNature, tabConstruct, tabObjects, tabImport]() {
-    natureSpritePanel_->setVisible(true);
-    constructSpritePanel_->setVisible(false);
-    objectsSpritePanel_->setVisible(false);
-    importPanel_->setVisible(false);
+  tabNature->onPress([this, tabNature, tabConstruction, tabObjects, tabImport]() {
+    panelNature_->setVisible(true);
+    panelConstruction_->setVisible(false);
+    panelObjects_->setVisible(false);
+    panelImport_->setVisible(false);
     tabNature->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
-    tabConstruct->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+    tabConstruction->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     tabObjects->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     tabImport->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   });
   spriteBrushOptionsPanel_->add(tabNature);
 
-  tabConstruct->setSize("25%", "10%");
-  tabConstruct->setPosition("25%", "0%");
-  tabConstruct->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
-  tabConstruct->getRenderer()->setTextColor(tgui::Color::White);
-  tabConstruct->getRenderer()->setBorders({0});
-  tabConstruct->setTextSize(0);
-  tabConstruct->onPress([this, tabNature, tabConstruct, tabObjects, tabImport]() {
-    natureSpritePanel_->setVisible(false);
-    constructSpritePanel_->setVisible(true);
-    objectsSpritePanel_->setVisible(false);
-    importPanel_->setVisible(false);
+  tabConstruction->setSize("25%", "10%");
+  tabConstruction->setPosition("25%", "0%");
+  tabConstruction->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+  tabConstruction->getRenderer()->setTextColor(tgui::Color::White);
+  tabConstruction->getRenderer()->setBorders({0});
+  tabConstruction->setTextSize(0);
+  tabConstruction->onPress([this, tabNature, tabConstruction, tabObjects, tabImport]() {
+    panelNature_->setVisible(false);
+    panelConstruction_->setVisible(true);
+    panelObjects_->setVisible(false);
+    panelImport_->setVisible(false);
     tabNature->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
-    tabConstruct->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
+    tabConstruction->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
     tabObjects->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     tabImport->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   });
-  spriteBrushOptionsPanel_->add(tabConstruct);
+  spriteBrushOptionsPanel_->add(tabConstruction);
 
   tabObjects->setSize("25%", "10%");
   tabObjects->setPosition("50%", "0%");
@@ -66,13 +67,13 @@ void GameView::initSpriteBrushOptions() {
   tabObjects->getRenderer()->setTextColor(tgui::Color::White);
   tabObjects->getRenderer()->setBorders({0});
   tabObjects->setTextSize(0);
-  tabObjects->onPress([this, tabNature, tabConstruct, tabObjects, tabImport]() {
-    natureSpritePanel_->setVisible(false);
-    constructSpritePanel_->setVisible(false);
-    objectsSpritePanel_->setVisible(true);
-    importPanel_->setVisible(false);
+  tabObjects->onPress([this, tabNature, tabConstruction, tabObjects, tabImport]() {
+    panelNature_->setVisible(false);
+    panelConstruction_->setVisible(false);
+    panelObjects_->setVisible(true);
+    panelImport_->setVisible(false);
     tabNature->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
-    tabConstruct->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+    tabConstruction->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     tabObjects->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
     tabImport->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   });
@@ -84,13 +85,13 @@ void GameView::initSpriteBrushOptions() {
   tabImport->getRenderer()->setTextColor(tgui::Color::White);
   tabImport->getRenderer()->setBorders({0});
   tabImport->setTextSize(0);
-  tabImport->onPress([this, tabNature, tabConstruct, tabObjects, tabImport]() {
-    natureSpritePanel_->setVisible(false);
-    constructSpritePanel_->setVisible(false);
-    objectsSpritePanel_->setVisible(false);
-    importPanel_->setVisible(true);
+  tabImport->onPress([this, tabNature, tabConstruction, tabObjects, tabImport]() {
+    panelNature_->setVisible(false);
+    panelConstruction_->setVisible(false);
+    panelObjects_->setVisible(false);
+    panelImport_->setVisible(true);
     tabNature->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
-    tabConstruct->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
+    tabConstruction->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     tabObjects->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     tabImport->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
     refreshImportPanel();
@@ -101,34 +102,34 @@ void GameView::initSpriteBrushOptions() {
   spritesSelected_ = std::make_shared<std::vector<std::string>>();
 
   // Maintenant, je crée les pannels qui vont affciher les srites
-  natureSpritePanel_ = tgui::ScrollablePanel::create();
-  natureSpritePanel_->setSize("100%", "90%");
-  natureSpritePanel_->setPosition("0%", "10%");
-  natureSpritePanel_->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-  natureSpritePanel_->getRenderer()->setBorders({0});
-  natureSpritePanel_->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Automatic);
-  natureSpritePanel_->getHorizontalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
-  spriteBrushOptionsPanel_->add(natureSpritePanel_);
+  panelNature_ = tgui::ScrollablePanel::create();
+  panelNature_->setSize("100%", "90%");
+  panelNature_->setPosition("0%", "10%");
+  panelNature_->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+  panelNature_->getRenderer()->setBorders({0});
+  panelNature_->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Automatic);
+  panelNature_->getHorizontalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  spriteBrushOptionsPanel_->add(panelNature_);
 
-  constructSpritePanel_ = tgui::ScrollablePanel::create();
-  constructSpritePanel_->setSize("100%", "90%");
-  constructSpritePanel_->setPosition("0%", "10%");
-  constructSpritePanel_->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-  constructSpritePanel_->getRenderer()->setBorders({0});
-  constructSpritePanel_->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Automatic);
-  constructSpritePanel_->getHorizontalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
-  constructSpritePanel_->setVisible(false);
-  spriteBrushOptionsPanel_->add(constructSpritePanel_);
+  panelConstruction_ = tgui::ScrollablePanel::create();
+  panelConstruction_->setSize("100%", "90%");
+  panelConstruction_->setPosition("0%", "10%");
+  panelConstruction_->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+  panelConstruction_->getRenderer()->setBorders({0});
+  panelConstruction_->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Automatic);
+  panelConstruction_->getHorizontalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  panelConstruction_->setVisible(false);
+  spriteBrushOptionsPanel_->add(panelConstruction_);
 
-  objectsSpritePanel_ = tgui::ScrollablePanel::create();
-  objectsSpritePanel_->setSize("100%", "90%");
-  objectsSpritePanel_->setPosition("0%", "10%");
-  objectsSpritePanel_->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-  objectsSpritePanel_->getRenderer()->setBorders({0});
-  objectsSpritePanel_->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Automatic);
-  objectsSpritePanel_->getHorizontalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
-  objectsSpritePanel_->setVisible(false);
-  spriteBrushOptionsPanel_->add(objectsSpritePanel_);
+  panelObjects_ = tgui::ScrollablePanel::create();
+  panelObjects_->setSize("100%", "90%");
+  panelObjects_->setPosition("0%", "10%");
+  panelObjects_->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+  panelObjects_->getRenderer()->setBorders({0});
+  panelObjects_->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Automatic);
+  panelObjects_->getHorizontalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  panelObjects_->setVisible(false);
+  spriteBrushOptionsPanel_->add(panelObjects_);
 
   auto panelImport = tgui::ScrollablePanel::create();
   panelImport->setSize("100%", "90%");
@@ -155,7 +156,7 @@ void GameView::initSpriteBrushOptions() {
     }
   });
   panelImport->add(importButton, "importBtn");
-  importPanel_ = panelImport;
+  panelImport_ = panelImport;
   panelImport->setVisible(false);
   spriteBrushOptionsPanel_->add(panelImport);
 
@@ -167,9 +168,9 @@ void GameView::initSpriteBrushOptions() {
 
 void GameView::refreshNatureSpritePanel() {
   // Si on est pas dans la page nature, pas besoin de la recréer
-  if (!natureSpritePanel_) return;
+  if (!panelNature_) return;
 
-  natureSpritePanel_->removeAllWidgets();
+  panelNature_->removeAllWidgets();
   float imageSize = spriteBrushOptionsPanel_->getSize().x / 6.f;
   int column = 0, row = 0;
   
@@ -215,7 +216,7 @@ void GameView::refreshNatureSpritePanel() {
           tool->addAsset(id);
         }
       });
-      natureSpritePanel_->add(image);
+      panelNature_->add(image);
 
       column++;
       if (column >= 6) { column = 0; row++; }
@@ -225,9 +226,9 @@ void GameView::refreshNatureSpritePanel() {
 
 void GameView::refreshConstructSpritePanel() {
   // Si on est pas dans la page construction, pas besoin de la recréer
-  if (!constructSpritePanel_) return;
+  if (!panelConstruction_) return;
 
-  constructSpritePanel_->removeAllWidgets();
+  panelConstruction_->removeAllWidgets();
   float imageSize = spriteBrushOptionsPanel_->getSize().x / 6.f;
   int column = 0, row = 0;
 
@@ -273,7 +274,7 @@ void GameView::refreshConstructSpritePanel() {
           tool->addAsset(id);
         }
       });
-      constructSpritePanel_->add(image);
+      panelConstruction_->add(image);
 
       column++;
       if (column >= 6) { column = 0; row++; }
@@ -283,9 +284,9 @@ void GameView::refreshConstructSpritePanel() {
 
 void GameView::refreshObjectsSpritePanel() {
   // Si on est pas dans la page objects, pas besoin de la recréer
-  if (!objectsSpritePanel_) return;
+  if (!panelObjects_) return;
 
-  objectsSpritePanel_->removeAllWidgets();
+  panelObjects_->removeAllWidgets();
   float imageSize = spriteBrushOptionsPanel_->getSize().x / 6.f;
   int column = 0, row = 0;
 
@@ -331,7 +332,7 @@ void GameView::refreshObjectsSpritePanel() {
           tool->addAsset(id);
         }
       });
-      objectsSpritePanel_->add(image);
+      panelObjects_->add(image);
 
       column++;
       if (column >= 6) { column = 0; row++; }
@@ -340,22 +341,22 @@ void GameView::refreshObjectsSpritePanel() {
 }
 
 void GameView::refreshSpriteBrushOptions() {
-  if (!natureSpritePanel_) return;
+  if (!panelNature_) return;
   refreshNatureSpritePanel();
   refreshConstructSpritePanel();
   refreshObjectsSpritePanel();
-  if (importPanel_ && importPanel_->isVisible())
+  if (panelImport_ && panelImport_->isVisible())
     refreshImportPanel();
 }
 
 void GameView::refreshImportPanel() {
   // Si on est pas dans la page import, pas besoin de la recréer
-  if (!importPanel_) return;
+  if (!panelImport_) return;
 
   // On sauvegarde le bouton d'import avant de tout effacer
-  auto importBtn = importPanel_->get<tgui::Button>("importBtn");
-  importPanel_->removeAllWidgets();
-  importPanel_->add(importBtn, "importBtn");
+  auto importBtn = panelImport_->get<tgui::Button>("importBtn");
+  panelImport_->removeAllWidgets();
+  panelImport_->add(importBtn, "importBtn");
 
   float imageSize = spriteBrushOptionsPanel_->getSize().x / 6.f;
   // On décale les images vers le bas pour laisser la place au bouton d'import
@@ -409,7 +410,7 @@ void GameView::refreshImportPanel() {
           tool->addAsset(id);
         }
       });
-      importPanel_->add(image);
+      panelImport_->add(image);
 
       column++;
       if (column >= 6) { column = 0; row++; }

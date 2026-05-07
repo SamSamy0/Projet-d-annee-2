@@ -71,6 +71,8 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::MAP_ERASE_PIXELS_DIAM_REP: return "MAP_ERASE_PIXELS_DIAM_REP";
         case MsgProtocole::MAP_ADD_SPRITE_REQ: return "MAP_ADD_SPRITE_REQ";
         case MsgProtocole::MAP_ADD_SPRITE_REP: return "MAP_ADD_SPRITE_REP";
+        case MsgProtocole::MAP_AUTOFILL_REQ: return "MAP_AUTOFILL_REQ";
+        case MsgProtocole::MAP_AUTOFILL_REP: return "MAP_AUTOFILL_REP";
         case MsgProtocole::CHAT_MESSAGE_REQ: return "CHAT_MESSAGE_REQ";
         case MsgProtocole::CHAT_MESSAGE_REP: return "CHAT_MESSAGE_REP";
         case MsgProtocole::CHAT_SYSTEME_REP: return "CHAT_SYSTEME_REP";

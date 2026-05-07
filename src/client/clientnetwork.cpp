@@ -448,9 +448,31 @@ void ClientNetworkManager::rotateSprites(uint proj_id, uint layer_id,
   }
 
   if (socket_.send(packet) != sf::Socket::Status::Done)
-    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg)
-              << std::endl;
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg) << std::endl;
 }
+
+
+
+void ClientNetworkManager::autofill(uint proj_id,uint layer_id, std::vector<std::string> asset_ids, std::vector <sf::Vector2f> positions, float rotation,float size){
+
+  sf::Packet packet;
+  MsgProtocole msg = MsgProtocole::MAP_AUTOFILL_REQ;
+  packet << static_cast<uint8_t>(msg);
+  packet << proj_id << layer_id << static_cast<uint>(asset_ids.size()) << rotation << size;
+  for(std::string id : asset_ids)
+    packet << id;
+  for(sf::Vector2f pos : positions){
+    packet<<pos.x;
+    packet<<pos.y;
+  }
+
+  if (socket_.send(packet) != sf::Socket::Status::Done)
+    std::cerr << "ERROR : ClientNetWorkManager => " << to_string(msg) << std::endl;
+
+}
+
+
+
 void ClientNetworkManager::sendMessageChat(std::string message){
   sf::Packet packet;
   MsgProtocole msg = MsgProtocole::CHAT_MESSAGE_REQ;

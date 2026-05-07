@@ -6,6 +6,8 @@
 #include <QString>
 #include "../sprite.hpp"
 #include <QFile>
+#include <SFML/Graphics/Texture.hpp>
+#include <map>
 
 class ProjectsManager {
 public:
@@ -19,10 +21,13 @@ public:
   bool updateJsonDup(uint newId, const QString& newName);
   bool deleteProject(uint id);
   bool writeProjetJson(QJsonObject& jsonObject, uint id);
-  bool saveSprite(uint id, uint imageId, QJsonObject& sprite);
-  QJsonObject loadSprite(uint id, uint layerId);
+  bool saveSpriteLayer(uint id, uint imageId, QJsonObject& SpriteLayer);
+  QJsonObject loadSpriteLayer(uint id, uint layerId);
   bool saveChat(uint projectId, QJsonArray& chat);
   QJsonArray loadChat(uint projectId);
+
+  bool saveSprite(uint projectId, std::map<uint, sf::Texture> &sprites);
+  std::map<uint, sf::Texture> loadSprites(uint projectId);
 
   QByteArray Zip(uint projectId);
 

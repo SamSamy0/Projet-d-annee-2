@@ -15,19 +15,24 @@ using namespace std;
 Map::Map(uint id, sf::Vector2u size , unsigned int scale,vector<shared_ptr<Layer>> layers) :
      id_{id},size_{size},scale_{scale},layers_{std::move(layers)}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
     if (!render_texture_.resize(size)){
-        std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;
-    } //TODO: gérer l'erreur
+        std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;} 
+
     sprite_.setTexture(render_texture_.getTexture(),true);
-    hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
+
+    tempLayer = make_shared<SpriteLayer>(0,"temporary layer",size_);   
+    selected_ = 0;
 }
 
 Map::Map(uint id, sf::Vector2u size , unsigned int scale) :
-     id_{id},size_{size},
+    id_{id},size_{size},
     scale_{scale}, move_{static_cast<float>(size_.x), static_cast<float>(size_.y)},sprite_(render_texture_.getTexture()){
-    if (!render_texture_.resize(size)){} //TODO: gérer l'erreur
+    if (!render_texture_.resize(size)){
+        std::cerr<<"Error : size of the layer : ("<<size.x<<","<<size.y<< ")"<<std::endl;
+    } 
     sprite_.setTexture(render_texture_.getTexture(),true);
-    hasLayer() ? selected_ = layers_.size()-1 : selected_ = 0;
+    tempLayer = make_shared<SpriteLayer>(0,"temporary layer",size_);   
     createPixelLayer();
+    selected_ = 0 ;
 }
 
 Zoom& Map::getZoom() { return zoom_; }
@@ -63,21 +68,47 @@ shared_ptr<Layer> Map::getLayer(uint id){
     return nullptr;
 }
 
+
+
+std::shared_ptr<SpriteLayer> Map::getTempLayer(){return tempLayer;}
+
 void Map::createPixelLayer(){
-    std::string name = "Couche Pixel (" + std::to_string(nextLayerId_ + 1) + ")";
+    /*create a pixel layer on the top of the map*/
+    std::string name = "Couche Pixel (" + std::to_string(nextLayerId_) + ")";
     shared_ptr<PixelLayer> pixellayer = make_shared<PixelLayer>(nextLayerId_,name, size_);
+    layers_.emplace_back(pixellayer);
     nextLayerId_ +=1;
-    layers_.push_back(pixellayer);
-    layers_.size() == 1 ? selected_ = 0 : selected_ += 1; // évite d'avoir des numéros de couche négative
 }
 
 
 void Map::createSpriteLayer(){
-    std::string name = "Couche Sprite (" + std::to_string(nextLayerId_ + 1) + ")";
+    /*create a sprite layer on the top of the map*/
+    std::string name = "Couche Sprite (" + std::to_string(nextLayerId_) + ")";
     shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(nextLayerId_,name,size_); 
+    layers_.emplace_back(spritelayer);
     nextLayerId_ +=1;
-    layers_.push_back(spritelayer);
-    layers_.size() == 1 ? selected_ = 0 : selected_ += 1;
+}
+
+
+
+void Map::createSpriteLayer(uint layer_id){
+    /*create a sprite layer on top of layer that have as id layer_id*/
+    std::string name = "Couche Sprite (" + std::to_string(nextLayerId_) + ")";
+    shared_ptr<SpriteLayer> spritelayer = make_shared<SpriteLayer>(nextLayerId_,name,size_); 
+    unsigned int idx = 0 ;
+    bool found = false;
+    for(const auto& layer : layers_){
+        if(layer->getId() == layer_id){
+            found = true;
+            break;
+        }
+            
+        idx++;
+    }
+    if(found){
+        layers_.emplace(layers_.begin() + idx + 1,spritelayer);
+        nextLayerId_++;
+    }
 }
 
 void Map::renameLayer(uint layer_id, std::string name){
@@ -131,9 +162,10 @@ void Map::layerUp(uint layerId){
 }
 
 void Map::deleteLayer(uint layer_id){
+    if(layer_id == 0)
+        return;
     if (layers_.size() <= 1) return;
     int j = NULL;
-
     for(int i = 0; i<layers_.size(); i++){
         if(layers_[i]->getId() == layer_id){
             j = i;
@@ -142,6 +174,7 @@ void Map::deleteLayer(uint layer_id){
     }
     if(j != NULL){
         layers_.erase(layers_.begin() + j);
+
         if (selected_ == j && selected_ > 0) selected_ -= 1;
         else if (selected_ > j) selected_ -= 1;
 
@@ -153,7 +186,7 @@ void Map::deleteLayer(uint layer_id){
 }
 
 void Map::deleteLayer(){
-    if (layers_.size() <= 1) return;
+    if (layers_.size() <= 1 ) return;
     layers_.erase(layers_.begin() + selected_);
     selected_ = (selected_ > 0) ? selected_ - 1 : 0;
 }
@@ -193,9 +226,12 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap) {
     viewMap.setCenter(sf::Vector2f(move_.positionX_ + (float)(size_.x) / 2, move_.positionY_ + (float)(size_.y) / 2));
     render_texture_.clear(sf::Color::White);
 
-    // On déssine chaque couche une par une sur une texture
-    for (auto& layer: layers_) {
-        layer->drawLayer(render_texture_);
+    for(int i = layers_.size()-1 ; i>=0;i--){
+        // We are drawing all the layers on the texture of the map
+        layers_[i]->drawLayer(render_texture_);
+        if(layers_[i]->getId() == layers_[selected_]->getId())
+            tempLayer->drawLayer(render_texture_);
+
     }
     
     // On ajoute la texture sur la map et on l'affiche

@@ -68,6 +68,7 @@ public:
                      const std::vector<sf::Vector2f> &positions);
 
   void shiftLayer(uint proj_id, uint layer_id, int delta_x, int delta_y);
+  void autofill(uint proj_id,uint layer_id, std::vector<std::string> asset_id, std::vector <sf::Vector2f> pos, float rotation,float size);
   void goHome();
 
   void sendMessageChat(std::string message);

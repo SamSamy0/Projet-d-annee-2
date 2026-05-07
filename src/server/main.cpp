@@ -3,6 +3,7 @@
 #include <thread>
 #include <QCoreApplication>
 #include "saveworker.hpp"
+#include "clockSave.hpp"
 
 int main(int argc, char *argv[]) {
     QCoreApplication app(argc, argv);
@@ -12,6 +13,7 @@ int main(int argc, char *argv[]) {
     ServerNetworkManager servManager(mesQ, repQ);
     Worker worker(mesQ, repQ, saveQ);
     SaveWorker saveWorker(saveQ, repQ);
+    ClockSave clockSave(mesQ);
 
     if (!servManager.start()) {
         return 0;
@@ -23,6 +25,9 @@ int main(int argc, char *argv[]) {
     std::thread saveThread(&SaveWorker::run, &saveWorker);
     std::cout << "[Main] Saveur lancé dans un thread." << std::endl;
 
+    std::thread clockThread(&ClockSave::run, &clockSave);
+    std::cout << "[Main] ClockSave lancé dans un thread." << std::endl;
+
     worker.run(); 
 
     if (networkThread.joinable()) {
@@ -32,5 +37,13 @@ int main(int argc, char *argv[]) {
     if (saveThread.joinable()) {
         saveThread.join();
     }
+
+    clockSave.stop();
+
+    if (clockThread.joinable()) {
+        clockThread.join();
+    }
+    
+    return 0;
 
 }

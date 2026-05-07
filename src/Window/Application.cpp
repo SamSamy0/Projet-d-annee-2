@@ -143,13 +143,16 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
 void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                   std::string name, uint id, uint nextLayerId,
                                   const std::vector<LayerLoadData> &layers,
-                                  Chat chat) {
+                                  Chat chat, const std::map<uint, sf::Texture> &textureMap) {
   // Constructeur avec vecteur vide → aucun layer par défaut créé
   project = std::make_unique<Project>(
       scale, size, name, id, mainWindow, gui, manager,
       std::vector<std::shared_ptr<Layer>>{}, currentProjRole);
   auto map = project->getMap();
   project->setChat(chat);
+  for (const auto &[id, texture] : textureMap) {
+    map->getAssetManager().addAsset(id, texture);
+  }
 
   for (const auto &ld : layers) {
     ;
@@ -194,10 +197,8 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                 static_cast<float>(map->getScale()) /
                                 bounds.size.x;
             sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
-            sprite.setPosition(
-                sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
-            sprite.setRotation(sf::radians(angle));
-            layer->addSprite(sprite, static_cast<uint>(s["interId"].toInt()));
+            sprite.setPosition(sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
+            layer->draw(sprite, nameId);
           }
         }
       }

@@ -13,6 +13,7 @@ class SaveTask {
     std::vector<std::pair<uint, QJsonObject>> layersSprite_;
     uint projetId_;
     QJsonArray chat_;
+    std::map<uint, sf::Texture> sprites_;
 
     public:
     virtual void execute(SaveWorker& worker);

@@ -22,8 +22,10 @@ public:
   Layer(uint id, std::string name, sf::Vector2u size);
   std::string getName() const;
   void setName(const std::string& name);
+  void setTemp();
   uint getId()const;
   LayerType getType();
+  bool isTemp();
   bool isMasked() const;
   void setMasked(bool masked);
   virtual sf::Vector2i getOffset() const = 0;

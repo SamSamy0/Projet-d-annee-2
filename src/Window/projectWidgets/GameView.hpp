@@ -23,12 +23,13 @@ class GameView : public View {
   tgui::Panel::Ptr eraserOptionsPanel_ = nullptr;
   tgui::Panel::Ptr eraserSpriteOptionsPanel_ = nullptr;
   tgui::Panel::Ptr spriteBrushOptionsPanel_ = nullptr;
-  tgui::ScrollablePanel::Ptr importPanel_ = nullptr;
-  tgui::ScrollablePanel::Ptr natureSpritePanel_ = nullptr;
-  tgui::ScrollablePanel::Ptr constructSpritePanel_ = nullptr;
-  tgui::ScrollablePanel::Ptr objectsSpritePanel_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelImport_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelNature_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelConstruction_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelObjects_ = nullptr;
   
   std::shared_ptr<std::vector<std::string>> spritesSelected_;
+  tgui::Panel::Ptr autoFillOptionsPanel_ = nullptr;
 
   void initToolbar();
   void initLayerPanel();
@@ -38,6 +39,7 @@ class GameView : public View {
   void initEraserOptions();
   void initEraserSpriteOptions();
   void initSpriteBrushOptions();
+  void initAutoFillOptions();
   void initMinimap();
   void drawMinimap();
   void refreshLayerList();
@@ -61,6 +63,7 @@ public:
 
   void createLayer(LayerType);
   void deleteLayer(uint layer_id);
+  void autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size);
   void layerUp(uint layer_id);
   void layerDown(uint layer_id);
   void renameLayer(uint layer_id, std::string name);

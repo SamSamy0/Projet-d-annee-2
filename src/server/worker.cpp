@@ -23,6 +23,7 @@ void Worker::stop() {
   mRunning_ = false;
   repQueue_.stop();
   demQueue_.stop();
+  saveQueue_.stop();
 }
 
 void Worker::pushNetwork(std::unique_ptr<Reponse> rps) {

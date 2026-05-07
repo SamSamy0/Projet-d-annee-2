@@ -194,6 +194,36 @@ void ClientHandler::process(ServerEvent &event) {
       }
     }
 
+    std::map<uint, sf::Texture> textureMap;
+    if (pos + 4 <= totalSize) {
+      uint32_t textureCount = readU32BE(rawBuf, pos);
+      pos += 4;
+      for (uint32_t i = 0; i < textureCount; ++i) {
+        // CORRECTION ICI : on vérifie 12 octets (id + width + height)
+        if (pos + 12 <= totalSize) { 
+          uint32_t textureId = readU32BE(rawBuf, pos);
+          pos += 4;
+          uint32_t width = readU32BE(rawBuf, pos);
+          pos += 4;
+          uint32_t height = readU32BE(rawBuf, pos);
+          pos += 4;
+
+          // Calcul de la taille du bloc de pixels (RGBA)
+          uint32_t pixelSize = width * height * 4;
+
+          if (pos + pixelSize <= totalSize) {
+            sf::Image image({width, height}, reinterpret_cast<const uint8_t*>(rawBuf + pos));
+            
+            sf::Texture texture;
+            if (texture.loadFromImage(image)) { 
+                textureMap[textureId] = std::move(texture);
+            }
+            pos += pixelSize;
+          }
+        }
+      }
+    }
+
     // 3. Lecture big-endian des données binaires de chaque layer
     std::vector<LayerLoadData> layers;
     while (pos + 9 <= totalSize) { // min 4 (id) + 1 (type) + 4 (taille)
@@ -226,7 +256,7 @@ void ClientHandler::process(ServerEvent &event) {
     handleWindow_.addProjectData(
         entete["scale"].toInt(), vec, entete["name"].toString().toStdString(),
         entete["id"].toInt(), static_cast<uint>(entete["nextLayerId"].toInt()),
-        layers, chat);
+        layers, chat, textureMap);
     break;
   }
 
@@ -523,8 +553,8 @@ void ClientHandler::process(ServerEvent &event) {
     uint layer_id;
     uint count;
     float angle;
-
     *(event.data_packet_) >> project_id >> layer_id >> count >> angle;
+
     for (uint i = 0; i < count; ++i) {
       uint sprite_id;
       sf::Vector2f pos;
@@ -533,6 +563,32 @@ void ClientHandler::process(ServerEvent &event) {
     }
     break;
   }
+
+  case MsgProtocole::MAP_AUTOFILL_REP:{
+      uint project_id;
+      uint layer_id;
+      uint count;
+      float rotation;
+      float size;
+      std::vector<std::string> asset_ids;
+      std::vector<sf::Vector2f> positions;
+      *(event.data_packet_) >> project_id >> layer_id >> count >> rotation >> size;
+
+      for(int i = 0; i < count; i++){
+        std::string id;
+        *(event.data_packet_) >> id;
+        asset_ids.push_back(id);
+      }
+
+      for(int i = 0; i < count; i++){
+        sf::Vector2f pos;
+        *(event.data_packet_) >> pos.x >> pos.y;
+        positions.push_back(pos);
+      }
+
+      handleWindow_.autoFill(layer_id,asset_ids,positions,rotation,size);
+      break;
+    }
 
   case MsgProtocole::MAP_MOV_LAYER_REP: {
     uint project_id;
