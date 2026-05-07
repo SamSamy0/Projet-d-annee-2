@@ -22,7 +22,7 @@ void GameView::initPenOptions() {
   lengthInput->setSize("5.3%", "64%");
   lengthInput->setPosition("1%", "18%");
   lengthInput->setDefaultText("L");
-  lengthInput->setInputValidator("[0-9]+\\.?[0-9]*");
+  lengthInput->setInputValidator("[0-9]*\\.?[0-9]*");
   lengthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   lengthInput->getRenderer()->setTextColor(tgui::Color::White);
   lengthInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -35,7 +35,7 @@ void GameView::initPenOptions() {
   widthInput->setSize("5.3%", "64%");
   widthInput->setPosition("6.8%", "18%");
   widthInput->setDefaultText("W");
-  widthInput->setInputValidator("[0-9]+\\.?[0-9]*");
+  widthInput->setInputValidator("[0-9]*\\.?[0-9]*");
   widthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   widthInput->getRenderer()->setTextColor(tgui::Color::White);
   widthInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -46,11 +46,8 @@ void GameView::initPenOptions() {
 
   lengthInput->onTextChange([this, lengthInput, widthInput]() {
     if (lengthInput->getText().empty()) return;
-
     float sizeX = lengthInput->getText().empty() ? 1 :std::stof(lengthInput->getText().toStdString());
-
     float sizeY = widthInput->getText().empty() ? 1 : std::stof(widthInput->getText().toStdString());
-
     auto brush = dynamic_pointer_cast<PixelBrush>(project->getToolBar().getSelectedTool());
     if (brush) {
       brush->setSize(sizeX, sizeY);

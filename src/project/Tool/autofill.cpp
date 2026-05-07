@@ -83,8 +83,9 @@ void AutoFill::setRotation(float rotation){
   generateSprites();
 }
 void AutoFill::setSize(float size){
-  size_ = size;
-  generateSprites();
+    if(size == 0) return;
+    size_ = size;
+    generateSprites();
 }
 void AutoFill::setSeed(uint seed){
   seed_ = seed;

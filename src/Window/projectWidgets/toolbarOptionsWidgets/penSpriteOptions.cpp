@@ -19,7 +19,7 @@ void GameView::initPenSpriteOptions() {
   widthInput->setSize("26.7%", "64%");
   widthInput->setPosition("5.3%", "18%");
   widthInput->setDefaultText("L");
-  widthInput->setInputValidator("[0-9]+\\.?[0-9]*");
+  widthInput->setInputValidator("[0-9]*\\.?[0-9]*");
   widthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   widthInput->getRenderer()->setTextColor(tgui::Color::White);
   widthInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
