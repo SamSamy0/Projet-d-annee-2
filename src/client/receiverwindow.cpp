@@ -24,7 +24,7 @@ void ReceiverInWindow::switchConnectState(uint8_t connect) {
     app_->changeView(std::make_unique<MenuView>(*app_));
     app_->getNetwork().getProjectList();
   } else {
-    app_->showLoginError("Identifiant ou mot de passe incorrect.");
+    app_->showLoginError("Identifiants incorrect.");
   }
 }
 
@@ -252,3 +252,4 @@ void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,int m
     gameView->refreshChat();
   }
 }
+
