@@ -587,7 +587,7 @@ void MenuView::popupExport(tgui::Panel::Ptr background, ProjectData project) {
   auto nativeBtn = tgui::Button::create("Export Natif\n(.natif)");
   nativeBtn->setSize("40%", "40%");
   nativeBtn->setPosition("52.5%", "40%");
-  nativeBtn->getRenderer()->setBackgroundColor(tgui::Color(99, 102, 241));
+  nativeBtn->getRenderer()->setBackgroundColor(tgui::Color(45, 45, 55));
   nativeBtn->getRenderer()->setTextColor(tgui::Color::White);
   nativeBtn->getRenderer()->setRoundedBorderRadius(8);
   data->add(nativeBtn);
