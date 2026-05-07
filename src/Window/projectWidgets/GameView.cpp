@@ -236,6 +236,7 @@ void GameView::handleEvents(const sf::Event &event) {
     // On menu
     auto popup = gui.get("popup");
     auto exportPopup = gui.get("exportPopup");
+    auto shortcutPopup = gui.get("shortcutPopup");
     // If popup exists
     if (popup) {
       // Gets position of where menu pops
@@ -256,6 +257,12 @@ void GameView::handleEvents(const sf::Event &event) {
       // If click outside the menu, then remove it
       if (!exportPopup->isMouseOnWidget(clickPos)) {
         gui.remove(exportPopup);
+      }
+    }
+    if (shortcutPopup) {
+      sf::Vector2f clickPos(mousePressed->position.x, mousePressed->position.y);
+      if (!shortcutPopup->isMouseOnWidget(clickPos)) {
+        gui.remove(shortcutPopup);
       }
     }
 

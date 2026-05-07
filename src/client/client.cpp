@@ -11,14 +11,10 @@ int main() {
   ReceiverInWindow receiver_window(window);
   ClientHandler handler(manager, receiver_window);
 
-  if (manager.connect()) {
-    while (window.isOpen()) {
-      manager.getEvent();
-      handler.processEventQueu();
-      window.run();
-    }
-  } else {
-    std::cout << "conexion au serveur impossible" << std::endl;
+  while (window.isOpen()) {
+    manager.getEvent();
+    handler.processEventQueu();
+    window.run();
   }
   return 0;
 }

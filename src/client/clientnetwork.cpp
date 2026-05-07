@@ -8,14 +8,17 @@ std::deque<ServerEvent> &ClientNetworkManager::getQueuEvent() {
   return reponse_;
 }
 
-bool ClientNetworkManager::connect() {
+bool ClientNetworkManager::connect(const std::string &ip, int port) {
   socket_.setBlocking(true);
 
-  if (socket_.connect({127, 0, 0, 1}, 5001) == sf::Socket::Status::Done) {
+  auto address = sf::IpAddress::resolve(ip);
+  if (!address)
+    return false;
+  if (socket_.connect(*address, port) == sf::Socket::Status::Done) {
     socket_.setBlocking(false);
     return true;
-  } else
-    return false;
+  }
+  return false;
 }
 
 void ClientNetworkManager::getEvent() {

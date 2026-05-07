@@ -1,6 +1,7 @@
 #include "Application.hpp"
 #include "../project/Layer/pixellayer.hpp"
 #include "../project/Layer/spritelayer.hpp"
+#include "IpView.hpp"
 #include "LoginView.hpp"
 #include "MenuView.hpp"
 #include "projectWidgets/GameView.hpp"
@@ -28,7 +29,7 @@ Application::Application(ClientNetworkManager &manager)
 
   updateTextSize();
   gui.onViewChange([this] { updateTextSize(); });
-  changeView(std::make_unique<LoginView>(*this));
+  changeView(std::make_unique<IpView>(*this));
 }
 
 void Application::updateTextSize() {
