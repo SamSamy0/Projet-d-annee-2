@@ -946,6 +946,16 @@ void AddSpriteMessage::process(Worker &worker){
   }
 }
 
+SaveAllMessage::SaveAllMessage() {}
+
+void SaveAllMessage::process(Worker &worker) {
+  for (auto &[projectId, liveProj] : worker.mapProjet_) {
+    std::unique_ptr<SaveTask> savetsk;
+    savetsk = std::make_unique<SaveTask>(liveProj, projectId);
+    worker.pushSave(std::move(savetsk));
+  }
+}
+
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
                                          std::shared_ptr<Client> &c) {
@@ -1060,8 +1070,10 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
     
   case MsgProtocole::PROJ_KICK_USER_REQ:
     return std::make_unique<KickUserMessage>(data_packet, c->id);
+
   case MsgProtocole::MAP_ADD_SPRITE_REQ:
     return std::make_unique<AddSpriteMessage>(data_packet, c);
+    
   default:
     std::cout << "pas de message" << std::endl;
     return nullptr;

@@ -349,5 +349,9 @@ struct AddSpriteMessage : IMessage {
   void process(Worker &worker) override;
 };
 
+struct SaveAllMessage : IMessage {
+  SaveAllMessage();
+  void process(Worker &worker) override;
+};
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet& data_packet, std::shared_ptr<Client>& client);

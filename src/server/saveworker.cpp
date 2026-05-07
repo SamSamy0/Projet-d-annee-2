@@ -3,7 +3,7 @@
 #include <fstream>
 
 SaveWorker::SaveWorker(MutexQueue<SaveTask>& saveQueue, MutexQueue<Reponse>& repQueue) 
-    : saveQueue_(saveQueue), repQueue_(repQueue), mRunning_(true) {}
+    : mRunning_(true), saveQueue_(saveQueue), repQueue_(repQueue), projManagerLocal_() {}
 
 void SaveWorker::run() {
     std::cout << "[SaveWorker] Démarré et en attente de sauvegardes..." << std::endl;
@@ -12,7 +12,11 @@ void SaveWorker::run() {
     while (mRunning_) {
         task = saveQueue_.pop();
         std::cout << "tentative de sauvgarde" << std::endl;
-        task->execute(*this);
+        if (task) {
+            task->execute(*this);
+        } else {
+            std::cout << "[SaveWorker] Arrêt demandé, fin de la boucle." << std::endl;
+        }
     }
 }
 

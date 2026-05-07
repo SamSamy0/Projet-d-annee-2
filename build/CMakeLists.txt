@@ -162,6 +162,7 @@ set(SERVER_SOURCES
     ../src/project/Chat/date.cpp
     ../src/server/datamanager/miniz.c
     ../src/server/spriteManager.cpp
+    ../src/server/clockSave.cpp
 )
 
 add_executable(server ${SERVER_SOURCES})
