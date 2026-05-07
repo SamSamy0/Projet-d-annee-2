@@ -205,8 +205,9 @@ void ReceiverInWindow::autoFill(uint layer_id,std::vector<std::string> asset_id,
 
 
 void ReceiverInWindow::setMemberList(std::vector<MemberEntry> memberList) {
-  // if (auto View = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
-  //   View->setAllUsers(memberList);
+  if (auto View = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
+    View->setAllUsers(memberList);
+  }
    if (auto View = dynamic_cast<MenuView *>(app_->getCurrentView().get()))
     View->setAllUsers(memberList);
 }
@@ -219,6 +220,9 @@ void ReceiverInWindow::updateMemberList(uint projectId, uint target,
     if (app_->getProject() and app_->getProject()->getId() == projectId) {
       gameView->updateMemberRole(target, role);
     }
+  }
+  if (auto menuView = dynamic_cast<MenuView *>(app_->getCurrentView().get())) {
+    menuView->updateMemberRole(projectId, target, role);
   }
 }
 void ReceiverInWindow::kickUser(uint targetId) {

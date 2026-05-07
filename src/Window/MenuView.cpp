@@ -346,10 +346,6 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
       deleteProject(id);
       // Open Action
     } else if (item == "Ouvrir") {
-      std::cout << "Ouverture du projet " << std::endl;
-      std::cout << "futur role : " << static_cast<int>(project.role)
-                << std::endl;
-
       manager.getProjectData(id);
 
       // Rename Action
@@ -388,7 +384,6 @@ void MenuView::deleteProject(long long id) {
 
   if (it != projectList.end()) {
     projectList.erase(it);
-    std::cout << "Suppression du projet " << id << std::endl;
     init();
   }
   manager.delProject(id);
@@ -466,27 +461,24 @@ void MenuView::popupRename(tgui::Panel::Ptr renameBackground,
   renamePanel->add(exitB);
   exitB->onPress([this, renameBackground]() { exitAction(renameBackground); });
 
-  rvalid->onPress([this, rname, project, renameBackground, view, &gui,
-                   &manager]() {
-    if (view == focusPopup::RENAME) {
-      std::cout << "Renaming project id: " << project.projectId << std::endl;
-      std::string newName = static_cast<std::string>(rname->getText());
-      if (!newName.empty()) {
-        manager.renameProject(project.projectId, newName);
-        exitAction(renameBackground);
-      } else
-        (boxError(rname));
-    } else if (view == focusPopup::DUPLICATE) {
-      std::string newName = static_cast<std::string>(rname->getText());
-      if (!newName.empty()) {
-        std::cout << "duplicating projects id: " << project.projectId
-                  << std::endl;
-        manager.dupProj(project.projectId, newName);
-        exitAction(renameBackground);
-      } else
-        (boxError(rname));
-    }
-  });
+  rvalid->onPress(
+      [this, rname, project, renameBackground, view, &gui, &manager]() {
+        if (view == focusPopup::RENAME) {
+          std::string newName = static_cast<std::string>(rname->getText());
+          if (!newName.empty()) {
+            manager.renameProject(project.projectId, newName);
+            exitAction(renameBackground);
+          } else
+            (boxError(rname));
+        } else if (view == focusPopup::DUPLICATE) {
+          std::string newName = static_cast<std::string>(rname->getText());
+          if (!newName.empty()) {
+            manager.dupProj(project.projectId, newName);
+            exitAction(renameBackground);
+          } else
+            (boxError(rname));
+        }
+      });
 }
 void MenuView::updateList() { init(); }
 
@@ -694,9 +686,6 @@ void MenuView::displayMemberList() {
   auto &manager = app_.getNetwork();
   User &currentUser = app_.getUser();
 
-  // if (gui.get("memberListPopup")) {
-  //   gui.remove(gui.get("memberListPopup"));
-  // }
   // If owner is alone, he can leave project instantly
   if (Transferring && allUsers_.size() == 1 &&
       allUsers_[0].userId == currentUser.getId()) {
@@ -706,7 +695,6 @@ void MenuView::displayMemberList() {
     return;
   }
 
-  std::cout << "creating popup" << std::endl;
   auto parent = tgui::Panel::create();
   parent->setSize("40%", "60%");
   parent->setPosition("30%", "20%");
@@ -804,12 +792,109 @@ void MenuView::displayMemberList() {
         btn->getRenderer()->setRoundedBorderRadius(6);
         row->add(labelRole);
         row->add(btn, "BtnMore");
-        // btn->onPress(&GameView::showUserManagment, this, btn, i);
+        btn->onPress(&MenuView::showUserManagment, this, btn, i,
+                     activeProjectData_);
         btn->setTextSize(20);
       } else {
         labelRole->setPosition("70%", "center");
         row->add(labelRole);
       }
+    }
+  }
+}
+
+void MenuView::showUserManagment(tgui::Button::Ptr toHover, int place,
+                                 ProjectData project) {
+  auto &gui = app_.getGui();
+  auto &manager = app_.getNetwork();
+  activeMoreButton = toHover;
+  sf::Vector2f btnPos = toHover->getAbsolutePosition();
+  activeMoreButton->getRenderer()->setBackgroundColor(sf::Color(55, 55, 70));
+  auto menu = tgui::ListBox::create();
+  menu->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  menu->getRenderer()->setBorders(2);
+  menu->getRenderer()->setBorderColor(sf::Color::White);
+  menu->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
+  menu->getRenderer()->setTextColor(tgui::Color::White);
+  menu->addItem("Promouvoir");
+  menu->addItem("Retrograder");
+  menu->addItem("Ejecter");
+  menu->addItem("Propriétaire");
+  float menuHeight = menu->getItemCount() * 45;
+  menu->setSize(150, menuHeight);
+  menu->setItemHeight(45);
+
+  menu->setPosition(btnPos.x - 150, btnPos.y);
+
+  gui.add(menu, "popup");
+  menu->setTextSize(20);
+  menu->onItemSelect(
+      [this, menu, place, project, &manager, &gui](const tgui::String &item) {
+        int8_t role = project.role;
+        if (item == "Promouvoir") {
+          // Spector -> Editor
+          if (allUsers_[place].role == 0) {
+            manager.changeRole(allUsers_[place].userId, project.projectId, 1);
+          } else if (role == 1) {
+            // WARNING YOU ARE LOSING YOUR OWNER STATUS
+          }
+
+        } else if (item == "Retrograder") {
+          if (allUsers_[place].role == 1) {
+            manager.changeRole(allUsers_[place].userId, project.projectId, 0);
+          } else if (role == 1) {
+            // WARNING YOU CAN'T DOWNGRADE A SPECTATOR
+          }
+        } else if (item == "Ejecter") {
+          manager.kickUser(allUsers_[place].userId, project.projectId);
+          displayMemberList();
+
+        } else if (item == "Propriétaire") {
+          // We find the owner position
+          for (int i = 0; i < (int)allUsers_.size(); i++) {
+            if (allUsers_[i].pseudo == app_.getUser().getUser()) {
+              // We downgrade owner to editor
+              manager.changeRole(allUsers_[i].userId, project.projectId, 1);
+            }
+          }
+          // Change target role to owner
+          manager.changeRole(allUsers_[place].userId, project.projectId, 2);
+        }
+
+        activeMoreButton->getRenderer()->setBackgroundColor(
+            tgui::Color::Transparent);
+        gui.remove(menu);
+      });
+}
+
+void MenuView::updateMemberRole(uint projectId, uint targetId, int8_t newRole) {
+  // If we are the target
+  if (app_.getUser().getId() == targetId) {
+    for (auto &p : projectList) {
+      if (p.projectId == projectId) {
+        p.role = newRole;
+        break;
+      }
+    }
+    // Updating "My Project List" we loaded in the background to update the
+    // roles
+    init();
+    return;
+  }
+
+  if (activeProjectData_.projectId == projectId) {
+    // If member panel opened -> refresh (our role didn't changed)
+    for (auto &i : allUsers_) {
+      if (i.userId == targetId) {
+        i.role = newRole;
+      }
+    }
+
+    auto &gui = app_.getGui();
+    auto bg = gui.get<tgui::Panel>("memberBackground");
+    if (bg && bg->get("Panel")) {
+      bg->remove(bg->get("Panel"));
+      displayMemberList();
     }
   }
 }
@@ -979,9 +1064,7 @@ void MenuView::updateProjectNameInList(long long id, const std::string &name) {
   init();
 }
 void MenuView::setShareToken(std::string newToken) {
-  std::cout << "token in app" << newToken << std::endl;
   shareToken = newToken;
-  std::cout << "token changed " << shareToken << std::endl;
   init();
 }
 
@@ -1130,14 +1213,11 @@ void MenuView::popupCreateToken(tgui::Panel::Ptr background,
 
   valid->onPress([this, comboBox, project, background, &gui]() {
     tgui::String selected = comboBox->getSelectedItem();
-    std::cout << "Element selectionné : " << selected << std::endl;
 
     if (selected == "Editeur") {
-      std::cout << "Editeur" << std::endl;
       generateToken(1, project.projectId);
 
     } else if (selected == "Spectateur") {
-      std::cout << "Spectateur" << std::endl;
       generateToken(0, project.projectId);
     }
     exitAction(background);

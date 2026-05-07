@@ -341,14 +341,13 @@ ChangeRoleMessage::ChangeRoleMessage(sf::Packet &data_packet, uint userId) {
 
 void ChangeRoleMessage::process(Worker &worker) {
   bool success = worker.changeRole(target_, projectId_, role_);
-
-  // Getting all connected users
   std::vector<uint> usersId;
-  auto it = worker.mapProjet_.find(projectId_);
-  if (it != worker.mapProjet_.end()) {
-    usersId = it->second.getConnected();
-  }
+  // Everyone in the projet, not only those connected
+  std::vector<MemberEntry> projectMembers = worker.getProjectMembers(projectId_);
 
+  for (const auto& member : projectMembers) {
+      usersId.push_back(member.userId);
+  } 
   // Building the group response
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseChangeRole>(usersId, target_, projectId_, role_,

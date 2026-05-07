@@ -22,7 +22,10 @@ class MenuView : public View {
   void popupQuit(tgui::Panel::Ptr back, ProjectData project, focusPopup view);
   void displayMemberList();
   void popupExport(tgui::Panel::Ptr background, ProjectData project);
-  void imageExport(tgui::Panel::Ptr background, tgui::Panel::Ptr panel, ProjectData project );
+  void showUserManagment(tgui::Button::Ptr toHover, int place,
+                         ProjectData project);
+  void imageExport(tgui::Panel::Ptr background, tgui::Panel::Ptr panel,
+                   ProjectData project);
   void popupRename(tgui::Panel::Ptr back, ProjectData project, focusPopup view);
   void popupCreate(tgui::Panel::Ptr background);
   void popupDuplicate(tgui::Panel::Ptr background, ProjectData project,
@@ -58,4 +61,5 @@ public:
   void resetShareToken();
   void deleteProject(long long id);
   void setAllUsers(std::vector<MemberEntry> users) override;
+  void updateMemberRole(uint projectId, uint targetId, int8_t newRole);
 };

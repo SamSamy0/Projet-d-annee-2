@@ -307,7 +307,6 @@ bool DatabaseManager::saveToken(std::string token, uint8_t role, int projectId,
     qDebug() << "Erreur creation token:" << query.lastError().text();
     return false;
   }
-  std::cout << "token : " << token << std::endl;
   return true;
 };
 
@@ -321,9 +320,6 @@ bool DatabaseManager::checkToken(uint userId, std::string token) {
 
   // If token ok -> adding project to projectList
   if (query.exec() && query.next()) {
-    // std::string original = query.value(0).toString().toStdString();
-    // std::cout <<"passed and comparing 1 " <<original <<" with " << token
-    // <<std::endl; Token is valid if (original == token) {
     bool isUsed = query.value(0).toBool();
     uint projId = query.value(1).toUInt();
     int role = query.value(2).toInt();
