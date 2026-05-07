@@ -24,14 +24,14 @@ void GameView::drawMinimap() {
     // A partir d'ici, je m'occupe de la vue de l'utilisateur sur la minimap
     sf::View view = project->getView();
     sf::Vector2f minimapOrigin = minimapBackground.getPosition();
-    float minimapWidth  = mapSize.x * scale;
+    float minimapWidth = mapSize.x * scale;
     float minimapHeight = mapSize.y * scale;
-    float visionWidth  = view.getSize().x * scale;
+    float visionWidth = view.getSize().x * scale;
     float visionHeight = view.getSize().y * scale;
     visionWidth -= view.getSize().x * 0.18 * scale; // j'enlève la partie de la map caché par la liste des couches et chat
 
     // Je vérifie que la taille de la vision utilisateur soit pas plus grande que la minimap
-    if (visionWidth > minimapWidth)  visionWidth  = minimapWidth;
+    if (visionWidth > minimapWidth) visionWidth = minimapWidth;
     if (visionHeight > minimapHeight) visionHeight = minimapHeight;
 
     // Je calcul la position de la vue utilisateur sur la minimap

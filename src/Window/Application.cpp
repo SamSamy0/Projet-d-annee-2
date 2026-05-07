@@ -14,7 +14,7 @@ Application::Application(ClientNetworkManager &manager)
                              sf::VideoMode::getDesktopMode().size.x * 0.90),
                          static_cast<unsigned int>(
                              sf::VideoMode::getDesktopMode().size.y * 0.90)}),
-          "Game name", sf::Style::Default),
+          "OpenRPG", sf::Style::Default),
       gui{mainWindow}, manager{manager} {
   // Centering the Window
   sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
@@ -83,11 +83,12 @@ void Application::run() {
   processEvents();
 
   mainWindow.clear(sf::Color(35, 35, 40));
-  if (project)
+  bool inGame = dynamic_cast<GameView*>(currentView.get()) != nullptr;
+  if (project && inGame)
     project->display();
   currentView->render();
   gui.draw();
-  if (project)
+  if (project && inGame)
     project->displayScale();
   mainWindow.display();
 }
