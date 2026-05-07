@@ -74,6 +74,7 @@ set(CMAKE_AUTOMOC ON)  # ← nécessaire pour Qt
 set(SOURCES
     ../src/client/client.cpp
     ../src/Window/Application.cpp
+    ../src/Window/IpView.cpp
     ../src/Window/LoginView.cpp
     ../src/Window/MenuView.cpp
     ../src/Window/projectWidgets/GameView.cpp

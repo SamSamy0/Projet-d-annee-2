@@ -14,7 +14,7 @@ class ClientNetworkManager {
   std::deque<ServerEvent> reponse_;
 
 public:
-  bool connect();
+  bool connect(const std::string &ip = "127.0.0.1", int port = 5001);
   void getEvent();
   bool hasEvent();
   ServerEvent popEvent();
