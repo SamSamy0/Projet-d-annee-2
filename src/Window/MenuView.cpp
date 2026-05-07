@@ -549,6 +549,7 @@ void MenuView::popupExport(tgui::Panel::Ptr background, ProjectData project) {
 
   auto data = tgui::Panel::create();
   data->setSize("30%", "35%");
+  // Trying to center with half the size of data (above)
   data->setPosition("50%-15%", "50%-17.5%");
   data->getRenderer()->setBackgroundColor(tgui::Color(28, 28, 36));
   data->getRenderer()->setRoundedBorderRadius(12);
@@ -683,6 +684,7 @@ void MenuView::popupQuit(tgui::Panel::Ptr back, ProjectData project,
 
 void MenuView::setAllUsers(std::vector<MemberEntry> users) {
   allUsers_ = users;
+  // TODO: Manage member from the menu
   displayMemberList();
   Transferring = false;
 }
