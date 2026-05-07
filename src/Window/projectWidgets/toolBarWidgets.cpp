@@ -271,11 +271,11 @@ void GameView::initToolbar() {
         eraserOptionsPanel_->setVisible(false);
       if (eraserSpriteOptionsPanel_)
         eraserSpriteOptionsPanel_->setVisible(false);
-      if (spriteBrushOptionsPanel_)
-        spriteBrushOptionsPanel_->setVisible(false);
+      bool show = autoFillOptionsPanel_ && !autoFillOptionsPanel_->isVisible();
       if (autoFillOptionsPanel_)
-        autoFillOptionsPanel_->setVisible(
-            !autoFillOptionsPanel_->isVisible());
+        autoFillOptionsPanel_->setVisible(show);
+      if (spriteBrushOptionsPanel_)
+        spriteBrushOptionsPanel_->setVisible(show);
 
     });
     toolbar->add(fillerButton);
