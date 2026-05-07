@@ -1,18 +1,20 @@
+#include "../../../project/Tool/spritebrush.hpp"
 #include "../../Application.hpp"
 #include "../GameView.hpp"
-#include "../../../project/Tool/spritebrush.hpp"
 #include <portable-file-dialogs.h>
 
 void GameView::initSpriteBrushOptions() {
-  auto& mainWindow = app_.getWindow();
-  auto& gui = app_.getGui();
+  auto &mainWindow = app_.getWindow();
+  auto &gui = app_.getGui();
 
   spriteBrushOptionsPanel_ = tgui::Panel::create();
   spriteBrushOptionsPanel_->setSize("50%", "40%");
   spriteBrushOptionsPanel_->setPosition("48%", "5%");
-  spriteBrushOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
+  spriteBrushOptionsPanel_->getRenderer()->setBackgroundColor(
+      tgui::Color(50, 56, 66));
   spriteBrushOptionsPanel_->getRenderer()->setBorders({1});
-  spriteBrushOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+  spriteBrushOptionsPanel_->getRenderer()->setBorderColor(
+      tgui::Color(90, 95, 105));
   spriteBrushOptionsPanel_->getRenderer()->setRoundedBorderRadius(8);
   spriteBrushOptionsPanel_->setVisible(false);
   gui.add(spriteBrushOptionsPanel_);
@@ -54,7 +56,7 @@ void GameView::initSpriteBrushOptions() {
   tabImport->setTextSize(0);
   spriteBrushOptionsPanel_->add(tabImport);
 
-  const auto& allSprites = project->getMap()->getAssetManager().getAllAssets();
+  const auto &allSprites = project->getMap()->getAssetManager().getAllAssets();
   float imageSize = mainWindow.getSize().x * 0.50f / 6;
   auto imagesSelected = std::make_shared<std::vector<std::string>>();
   int column = 0, row = 0;
@@ -65,45 +67,57 @@ void GameView::initSpriteBrushOptions() {
   panelNature->setPosition("0%", "10%");
   panelNature->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   panelNature->getRenderer()->setBorders({0});
-  column = 0; row = 0;
-  for (auto& entry : allSprites) {
-      std::string id = entry.first;
-      auto& asset = entry.second;
-      if (asset.category != "nature") continue;
-      column %= 6;
-      auto image = tgui::Button::create();
-      image->setSize(imageSize, imageSize);
-      image->setPosition(column * imageSize, row * imageSize);
-      image->getRenderer()->setTexture(tgui::Texture("../res/sprites/" + asset.filename));
-      image->getRenderer()->setBorders({3});
-      image->getRenderer()->setBorderColor(tgui::Color::Transparent);
-      image->getRenderer()->setBorderColorHover(tgui::Color(0, 120, 255));
-      image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
-      auto assetId = id;
-      image->onClick([this, image, assetId, imagesSelected]() {
-        auto tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
-        if (!tool) {
-          project->getToolBar().selectTool(SPRITEBRUSH);
-          tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+  column = 0;
+  row = 0;
+  for (auto &entry : allSprites) {
+    std::string id = entry.first;
+    auto &asset = entry.second;
+    if (asset.category != "nature")
+      continue;
+    column %= 6;
+    auto image = tgui::Button::create();
+    image->setSize(imageSize, imageSize);
+    image->setPosition(column * imageSize, row * imageSize);
+    image->getRenderer()->setTexture(
+        tgui::Texture("../res/sprites/" + asset.filename));
+    image->getRenderer()->setBorders({3});
+    image->getRenderer()->setBorderColor(tgui::Color::Transparent);
+    image->getRenderer()->setBorderColorHover(tgui::Color(0, 120, 255));
+    image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
+    auto assetId = id;
+    image->onClick([this, image, assetId, imagesSelected]() {
+      auto tool = std::dynamic_pointer_cast<SpriteBrush>(
+          project->getToolBar().getSelectedTool());
+      if (!tool) {
+        project->getToolBar().selectTool(SPRITEBRUSH);
+        tool = std::dynamic_pointer_cast<SpriteBrush>(
+            project->getToolBar().getSelectedTool());
+      }
+      if (!tool)
+        return;
+      bool found = false;
+      for (auto &img : *imagesSelected) {
+        if (img == assetId) {
+          found = true;
+          break;
         }
-        if (!tool) return;
-        bool found = false;
-        for (auto& img : *imagesSelected) {
-          if (img == assetId) { found = true; break; }
-        }
-        if (found) {
-          imagesSelected->erase(std::remove(imagesSelected->begin(), imagesSelected->end(), assetId), imagesSelected->end());
-          image->getRenderer()->setBorderColor(tgui::Color::Transparent);
-          tool->removeAsset(assetId);
-        } else {
-          imagesSelected->push_back(assetId);
-          image->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
-          tool->addAsset(assetId);
-        }
-      });
-      panelNature->add(image);
-      column++;
-      if (column % 6 == 0) row++;
+      }
+      if (found) {
+        imagesSelected->erase(std::remove(imagesSelected->begin(),
+                                          imagesSelected->end(), assetId),
+                              imagesSelected->end());
+        image->getRenderer()->setBorderColor(tgui::Color::Transparent);
+        tool->removeAsset(assetId);
+      } else {
+        imagesSelected->push_back(assetId);
+        image->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
+        tool->addAsset(assetId);
+      }
+    });
+    panelNature->add(image);
+    column++;
+    if (column % 6 == 0)
+      row++;
   }
   spriteBrushOptionsPanel_->add(panelNature);
 
@@ -113,45 +127,57 @@ void GameView::initSpriteBrushOptions() {
   panelConstruct->setPosition("0%", "10%");
   panelConstruct->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   panelConstruct->getRenderer()->setBorders({0});
-  column = 0; row = 0;
-  for (auto& entry : allSprites) {
-      std::string id = entry.first;
-      auto& asset = entry.second;
-      if (asset.category != "building") continue;
-      column %= 6;
-      auto image = tgui::Button::create();
-      image->setSize(imageSize, imageSize);
-      image->setPosition(column * imageSize, row * imageSize);
-      image->getRenderer()->setTexture(tgui::Texture("../res/sprites/" + asset.filename));
-      image->getRenderer()->setBorders({3});
-      image->getRenderer()->setBorderColor(tgui::Color::Transparent);
-      image->getRenderer()->setBorderColorHover(tgui::Color(0, 120, 255));
-      image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
-      auto assetId = id;
-      image->onClick([this, image, assetId, imagesSelected]() {
-        auto tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
-        if (!tool) {
-          project->getToolBar().selectTool(SPRITEBRUSH);
-          tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+  column = 0;
+  row = 0;
+  for (auto &entry : allSprites) {
+    std::string id = entry.first;
+    auto &asset = entry.second;
+    if (asset.category != "building")
+      continue;
+    column %= 6;
+    auto image = tgui::Button::create();
+    image->setSize(imageSize, imageSize);
+    image->setPosition(column * imageSize, row * imageSize);
+    image->getRenderer()->setTexture(
+        tgui::Texture("../res/sprites/" + asset.filename));
+    image->getRenderer()->setBorders({3});
+    image->getRenderer()->setBorderColor(tgui::Color::Transparent);
+    image->getRenderer()->setBorderColorHover(tgui::Color(0, 120, 255));
+    image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
+    auto assetId = id;
+    image->onClick([this, image, assetId, imagesSelected]() {
+      auto tool = std::dynamic_pointer_cast<SpriteBrush>(
+          project->getToolBar().getSelectedTool());
+      if (!tool) {
+        project->getToolBar().selectTool(SPRITEBRUSH);
+        tool = std::dynamic_pointer_cast<SpriteBrush>(
+            project->getToolBar().getSelectedTool());
+      }
+      if (!tool)
+        return;
+      bool found = false;
+      for (auto &img : *imagesSelected) {
+        if (img == assetId) {
+          found = true;
+          break;
         }
-        if (!tool) return;
-        bool found = false;
-        for (auto& img : *imagesSelected) {
-          if (img == assetId) { found = true; break; }
-        }
-        if (found) {
-          imagesSelected->erase(std::remove(imagesSelected->begin(), imagesSelected->end(), assetId), imagesSelected->end());
-          image->getRenderer()->setBorderColor(tgui::Color::Transparent);
-          tool->removeAsset(assetId);
-        } else {
-          imagesSelected->push_back(assetId);
-          image->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
-          tool->addAsset(assetId);
-        }
-      });
-      panelConstruct->add(image);
-      column++;
-      if (column % 6 == 0) row++;
+      }
+      if (found) {
+        imagesSelected->erase(std::remove(imagesSelected->begin(),
+                                          imagesSelected->end(), assetId),
+                              imagesSelected->end());
+        image->getRenderer()->setBorderColor(tgui::Color::Transparent);
+        tool->removeAsset(assetId);
+      } else {
+        imagesSelected->push_back(assetId);
+        image->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
+        tool->addAsset(assetId);
+      }
+    });
+    panelConstruct->add(image);
+    column++;
+    if (column % 6 == 0)
+      row++;
   }
   panelConstruct->setVisible(false);
   spriteBrushOptionsPanel_->add(panelConstruct);
@@ -162,43 +188,55 @@ void GameView::initSpriteBrushOptions() {
   panelObjects->setPosition("0%", "10%");
   panelObjects->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
   panelObjects->getRenderer()->setBorders({0});
-  column = 0; row = 0;
-  for (const auto& [id, asset] : allSprites) {
-      if (asset.category != "object") continue;
-      column %= 6;
-      auto image = tgui::Button::create();
-      image->setSize(imageSize, imageSize);
-      image->setPosition(column * imageSize, row * imageSize);
-      image->getRenderer()->setTexture(tgui::Texture("../res/sprites/" + asset.filename));
-      image->getRenderer()->setBorders({3});
-      image->getRenderer()->setBorderColor(tgui::Color::Transparent);
-      image->getRenderer()->setBorderColorHover(tgui::Color(0, 120, 255));
-      image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
-      auto assetId = id;
-      image->onClick([this, image, assetId, imagesSelected]() {
-        auto tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
-        if (!tool) {
-          project->getToolBar().selectTool(SPRITEBRUSH);
-          tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+  column = 0;
+  row = 0;
+  for (const auto &[id, asset] : allSprites) {
+    if (asset.category != "object")
+      continue;
+    column %= 6;
+    auto image = tgui::Button::create();
+    image->setSize(imageSize, imageSize);
+    image->setPosition(column * imageSize, row * imageSize);
+    image->getRenderer()->setTexture(
+        tgui::Texture("../res/sprites/" + asset.filename));
+    image->getRenderer()->setBorders({3});
+    image->getRenderer()->setBorderColor(tgui::Color::Transparent);
+    image->getRenderer()->setBorderColorHover(tgui::Color(0, 120, 255));
+    image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
+    auto assetId = id;
+    image->onClick([this, image, assetId, imagesSelected]() {
+      auto tool = std::dynamic_pointer_cast<SpriteBrush>(
+          project->getToolBar().getSelectedTool());
+      if (!tool) {
+        project->getToolBar().selectTool(SPRITEBRUSH);
+        tool = std::dynamic_pointer_cast<SpriteBrush>(
+            project->getToolBar().getSelectedTool());
+      }
+      if (!tool)
+        return;
+      bool found = false;
+      for (auto &img : *imagesSelected) {
+        if (img == assetId) {
+          found = true;
+          break;
         }
-        if (!tool) return;
-        bool found = false;
-        for (auto& img : *imagesSelected) {
-          if (img == assetId) { found = true; break; }
-        }
-        if (found) {
-          imagesSelected->erase(std::remove(imagesSelected->begin(), imagesSelected->end(), assetId), imagesSelected->end());
-          image->getRenderer()->setBorderColor(tgui::Color::Transparent);
-          tool->removeAsset(assetId);
-        } else {
-          imagesSelected->push_back(assetId);
-          image->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
-          tool->addAsset(assetId);
-        }
-      });
-      panelObjects->add(image);
-      column++;
-      if (column % 6 == 0) row++;
+      }
+      if (found) {
+        imagesSelected->erase(std::remove(imagesSelected->begin(),
+                                          imagesSelected->end(), assetId),
+                              imagesSelected->end());
+        image->getRenderer()->setBorderColor(tgui::Color::Transparent);
+        tool->removeAsset(assetId);
+      } else {
+        imagesSelected->push_back(assetId);
+        image->getRenderer()->setBorderColor(tgui::Color(0, 120, 255));
+        tool->addAsset(assetId);
+      }
+    });
+    panelObjects->add(image);
+    column++;
+    if (column % 6 == 0)
+      row++;
   }
   panelObjects->setVisible(false);
   spriteBrushOptionsPanel_->add(panelObjects);
@@ -218,16 +256,14 @@ void GameView::initSpriteBrushOptions() {
   importButton->getRenderer()->setBorders({0});
   importButton->setTextSize(14);
   importButton->onPress([this]() {
-    auto result = pfd::open_file(
-        "Ouvrir un fichier",
-        ".",
-        { "Images PNG", "*.png" }
-    ).result();
+    auto result =
+        pfd::open_file("Ouvrir un fichier", ".", {"Images PNG", "*.png"})
+            .result();
 
     if (!result.empty()) {
-        sf::Texture texture;
-        if (texture.loadFromFile(result[0]))
-            app_.getNetwork().addSprite(texture);
+      sf::Texture texture;
+      if (texture.loadFromFile(result[0]))
+        app_.getNetwork().addSprite(texture);
     }
   });
   panelImport->add(importButton, "importBtn");
@@ -235,7 +271,8 @@ void GameView::initSpriteBrushOptions() {
   panelImport->setVisible(false);
   spriteBrushOptionsPanel_->add(panelImport);
 
-  tabNature->onPress([panelNature, panelConstruct, panelObjects, panelImport, tabNature, tabConstruct, tabObjects, tabImport]() {
+  tabNature->onPress([panelNature, panelConstruct, panelObjects, panelImport,
+                      tabNature, tabConstruct, tabObjects, tabImport]() {
     panelNature->setVisible(true);
     panelConstruct->setVisible(false);
     panelObjects->setVisible(false);
@@ -245,7 +282,8 @@ void GameView::initSpriteBrushOptions() {
     tabObjects->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     tabImport->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   });
-  tabConstruct->onPress([panelNature, panelConstruct, panelObjects, panelImport, tabNature, tabConstruct, tabObjects, tabImport]() {
+  tabConstruct->onPress([panelNature, panelConstruct, panelObjects, panelImport,
+                         tabNature, tabConstruct, tabObjects, tabImport]() {
     panelNature->setVisible(false);
     panelConstruct->setVisible(true);
     panelObjects->setVisible(false);
@@ -255,7 +293,8 @@ void GameView::initSpriteBrushOptions() {
     tabObjects->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
     tabImport->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   });
-  tabObjects->onPress([panelNature, panelConstruct, panelObjects, panelImport, tabNature, tabConstruct, tabObjects, tabImport]() {
+  tabObjects->onPress([panelNature, panelConstruct, panelObjects, panelImport,
+                       tabNature, tabConstruct, tabObjects, tabImport]() {
     panelNature->setVisible(false);
     panelConstruct->setVisible(false);
     panelObjects->setVisible(true);
@@ -265,7 +304,9 @@ void GameView::initSpriteBrushOptions() {
     tabObjects->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
     tabImport->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   });
-  tabImport->onPress([this, panelNature, panelConstruct, panelObjects, panelImport, tabNature, tabConstruct, tabObjects, tabImport]() {
+  tabImport->onPress([this, panelNature, panelConstruct, panelObjects,
+                      panelImport, tabNature, tabConstruct, tabObjects,
+                      tabImport]() {
     panelNature->setVisible(false);
     panelConstruct->setVisible(false);
     panelObjects->setVisible(false);
@@ -279,7 +320,8 @@ void GameView::initSpriteBrushOptions() {
 }
 
 void GameView::refreshImportPanel() {
-  if (!importPanel_) return;
+  if (!importPanel_)
+    return;
 
   auto importBtn = importPanel_->get<tgui::Button>("importBtn");
   importPanel_->removeAllWidgets();
@@ -290,9 +332,10 @@ void GameView::refreshImportPanel() {
   auto imagesSelected = std::make_shared<std::vector<std::string>>();
   int col = 0, row = 0;
 
-  for (auto& entry : project->getMap()->getAssetManager().getAllAssets()) {
-    const auto& asset = entry.second;
-    if (asset.category != "import") continue;
+  for (auto &entry : project->getMap()->getAssetManager().getAllAssets()) {
+    const auto &asset = entry.second;
+    if (asset.category != "import")
+      continue;
     col %= 6;
     auto image = tgui::Button::create();
     image->setSize(imageSize, imageSize);
@@ -307,18 +350,26 @@ void GameView::refreshImportPanel() {
     image->getRenderer()->setBorderColorDown(tgui::Color(0, 80, 200));
     auto assetId = entry.first;
     image->onClick([this, image, assetId, imagesSelected]() {
-      auto tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+      auto tool = std::dynamic_pointer_cast<SpriteBrush>(
+          project->getToolBar().getSelectedTool());
       if (!tool) {
         project->getToolBar().selectTool(SPRITEBRUSH);
-        tool = std::dynamic_pointer_cast<SpriteBrush>(project->getToolBar().getSelectedTool());
+        tool = std::dynamic_pointer_cast<SpriteBrush>(
+            project->getToolBar().getSelectedTool());
       }
-      if (!tool) return;
+      if (!tool)
+        return;
       bool found = false;
-      for (auto& img : *imagesSelected) {
-        if (img == assetId) { found = true; break; }
+      for (auto &img : *imagesSelected) {
+        if (img == assetId) {
+          found = true;
+          break;
+        }
       }
       if (found) {
-        imagesSelected->erase(std::remove(imagesSelected->begin(), imagesSelected->end(), assetId), imagesSelected->end());
+        imagesSelected->erase(std::remove(imagesSelected->begin(),
+                                          imagesSelected->end(), assetId),
+                              imagesSelected->end());
         image->getRenderer()->setBorderColor(tgui::Color::Transparent);
         tool->removeAsset(assetId);
       } else {
@@ -329,6 +380,7 @@ void GameView::refreshImportPanel() {
     });
     importPanel_->add(image);
     col++;
-    if (col % 6 == 0) row++;
+    if (col % 6 == 0)
+      row++;
   }
 }

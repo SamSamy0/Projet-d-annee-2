@@ -49,6 +49,7 @@ struct CreateProjectMessage : IMessage{
 struct ExportNativeMessage: IMessage{
   uint userId_;
   uint projectId_;
+  std::string destPath_;
   
   ExportNativeMessage(sf::Packet& dataPacket, std::shared_ptr<Client> client );
   void process(Worker& worker) override;

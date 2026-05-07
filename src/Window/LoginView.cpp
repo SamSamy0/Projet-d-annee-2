@@ -48,6 +48,7 @@ void LoginView::init() {
   // Error label (hidden by default)
   auto errorLabel = tgui::Label::create("");
   errorLabel->setPosition({"10%", "65%"});
+  errorLabel->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
   errorLabel->setSize({"80%", "8%"});
   errorLabel->getRenderer()->setTextColor(sf::Color(220, 80, 80));
   errorLabel->setTextSize(13);
@@ -92,8 +93,6 @@ void LoginView::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   auto &manager = app_.getNetwork();
   auto &currentUser_ = app_.getUser();
 
-  // NOTE: I have to put the condition username 3-15 car
-
   if (usrname->getText() != "") {
     currentUser_ = User(static_cast<std::string>(usrname->getText()), 0);
     manager.askRegister(static_cast<std::string>(usrname->getText()),
@@ -109,8 +108,9 @@ void LoginView::showError(const std::string &message) {
   auto errorLabel = back->get<tgui::Label>("ErrorLabel");
   if (!errorLabel)
     return;
-  errorLabel->setText(message);
   errorLabel->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  errorLabel->getRenderer()->setTextSize(18);
+  errorLabel->setText(message);
   auto usrname = back->get<tgui::EditBox>("Username");
   auto pswd = back->get<tgui::EditBox>("Password");
   if (usrname)
@@ -119,6 +119,4 @@ void LoginView::showError(const std::string &message) {
     pswd->setText("");
 }
 
-void LoginView::handleEvents(const sf::Event &event) {
-
-};
+void LoginView::handleEvents(const sf::Event &event) {};

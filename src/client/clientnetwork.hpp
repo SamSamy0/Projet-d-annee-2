@@ -38,7 +38,7 @@ public:
   void layerDown(uint proj_id, uint current_layer_id);
   void leaveProject(uint project_id);
   void changeRole(uint userId, uint projectId, int8_t role);
-  void exportToNative(uint projectId);
+  void exportToNative(uint projectId, std::string destPath);
   void importProj(std::string path, std::string name);
 
   void drawSquare(uint proj_id, uint layer_id, int pos_x, int pos_y, float size,

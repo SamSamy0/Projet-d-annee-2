@@ -3,6 +3,7 @@
 #include "View.hpp"
 #include "projectWidgets/GameView.hpp"
 #include <QFile>
+#include <portable-file-dialogs.h>
 
 MenuView::MenuView(Application &app) : View(app) {};
 
@@ -369,9 +370,9 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
       initInputWidget(focusPopup::MEMBER, project);
 
     } else if (item == "Exporter") {
-    initInputWidget(focusPopup::EXPORT, project);
-    
-    }activeMoreButton->getRenderer()->setBackgroundColor(
+      initInputWidget(focusPopup::EXPORT, project);
+    }
+    activeMoreButton->getRenderer()->setBackgroundColor(
         tgui::Color::Transparent);
 
     gui.remove(menu);
@@ -535,10 +536,10 @@ void MenuView::initInputWidget(focusPopup focus, ProjectData project) {
 
     break;
   }
-    case (focusPopup::EXPORT):{
-     popupExport(background, project); 
-      break;
-    }
+  case (focusPopup::EXPORT): {
+    popupExport(background, project);
+    break;
+  }
   }
 }
 void MenuView::popupExport(tgui::Panel::Ptr background, ProjectData project) {
@@ -567,6 +568,56 @@ void MenuView::popupExport(tgui::Panel::Ptr background, ProjectData project) {
   data->add(exitB);
   exitB->onPress([this, background]() { exitAction(background); });
 
+  auto title = tgui::Label::create("Choisir le type d'export");
+  title->setPosition("0%", "10%");
+  title->setSize("100%", "15%");
+  title->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+  title->getRenderer()->setTextColor(sf::Color::White);
+  title->setTextSize(22);
+  data->add(title);
+
+  auto imgBtn = tgui::Button::create("Format Image\n(PNG, JPG...)");
+  imgBtn->setSize("40%", "40%");
+  imgBtn->setPosition("7.5%", "40%");
+  imgBtn->getRenderer()->setBackgroundColor(tgui::Color(45, 45, 55));
+  imgBtn->getRenderer()->setTextColor(tgui::Color::White);
+  imgBtn->getRenderer()->setRoundedBorderRadius(8);
+  data->add(imgBtn);
+
+  auto nativeBtn = tgui::Button::create("Export Natif\n(.natif)");
+  nativeBtn->setSize("40%", "40%");
+  nativeBtn->setPosition("52.5%", "40%");
+  nativeBtn->getRenderer()->setBackgroundColor(tgui::Color(99, 102, 241));
+  nativeBtn->getRenderer()->setTextColor(tgui::Color::White);
+  nativeBtn->getRenderer()->setRoundedBorderRadius(8);
+  data->add(nativeBtn);
+
+  imgBtn->onPress([this, data, project, background, &manager]() {
+    imageExport(background, data, project);
+  });
+
+  nativeBtn->onPress([this, project, background, &manager]() {
+    auto destination =
+        pfd::select_folder("Choisissez un dossier de destination").result();
+    if (!destination.empty()) {
+      std::string path = destination + "/" + project.projectName + ".natif";
+      manager.exportToNative(project.projectId, path);
+      exitAction(background);
+    }
+  });
+}
+
+void MenuView::imageExport(tgui::Panel::Ptr background, tgui::Panel::Ptr panel,
+                           ProjectData project) {
+  auto &manager = app_.getNetwork();
+  panel->removeAllWidgets();
+  auto exitB = tgui::Button::create("✕");
+  exitB->setSize("10%", "10%");
+  exitB->setPosition("88%", "3%");
+  exitB->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+  exitB->getRenderer()->setTextColor(tgui::Color::White);
+  panel->add(exitB);
+  exitB->onPress([this, background]() { exitAction(background); });
   auto title = tgui::Label::create("Exporter le projet");
   title->setPosition("0%", "12%");
   title->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
@@ -574,19 +625,19 @@ void MenuView::popupExport(tgui::Panel::Ptr background, ProjectData project) {
   title->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
   title->getRenderer()->setTextColor(sf::Color(255, 255, 255));
   title->setTextSize(22);
-  data->add(title);
+  panel->add(title);
 
   auto separator = tgui::Panel::create();
   separator->setSize("80%", "1");
   separator->setPosition("10%", "25%");
   separator->getRenderer()->setBackgroundColor(tgui::Color(55, 55, 70));
-  data->add(separator);
+  panel->add(separator);
 
   auto formatLabel = tgui::Label::create("Format d'exportation :");
   formatLabel->setPosition("10%", "32%");
   formatLabel->getRenderer()->setTextColor(tgui::Color(160, 160, 180));
   formatLabel->setTextSize(14);
-  data->add(formatLabel);
+  panel->add(formatLabel);
 
   auto comboBox = tgui::ComboBox::create();
   comboBox->setSize("80%", "13%");
@@ -602,7 +653,7 @@ void MenuView::popupExport(tgui::Panel::Ptr background, ProjectData project) {
   comboBox->getRenderer()->setArrowColor(tgui::Color::White);
   comboBox->getRenderer()->setBorders(1);
   comboBox->getRenderer()->setRoundedBorderRadius(8);
-  data->add(comboBox);
+  panel->add(comboBox);
 
   auto valid = tgui::Button::create("Générer l'image");
   valid->setSize("80%", "13%");
@@ -612,15 +663,16 @@ void MenuView::popupExport(tgui::Panel::Ptr background, ProjectData project) {
   valid->getRenderer()->setTextColor(tgui::Color::White);
   valid->getRenderer()->setBorders(0);
   valid->getRenderer()->setRoundedBorderRadius(8);
-  data->add(valid);
+  panel->add(valid);
 
   valid->onPress([this, comboBox, project, background, &manager]() {
     std::string extension = comboBox->getSelectedItem().toStdString();
-    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-    
+    std::transform(extension.begin(), extension.end(), extension.begin(),
+                   ::tolower);
+
     app_.setIsExporting(true, extension);
-    manager.getProjectData(project.projectId); 
-    
+    manager.getProjectData(project.projectId);
+
     exitAction(background);
   });
 }

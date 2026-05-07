@@ -369,7 +369,7 @@ void GameView::initToolbar() {
         menu->deselectItem();
  
       } else if (item == "Format natif") {
-        manager.exportToNative(project->getId());
+        manager.exportToNative(project->getId(), "bonjour" );
         exportButton->getRenderer()->setBackgroundColor(
             tgui::Color::Transparent);
         if (gui.get("exportSubPopup"))

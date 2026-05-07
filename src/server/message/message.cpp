@@ -70,7 +70,7 @@ void CreateProjectMessage::process(Worker &worker) {
 }
 ExportNativeMessage::ExportNativeMessage(sf::Packet &data_packet,
                                          std::shared_ptr<Client> client) {
-  data_packet >> projectId_;
+  data_packet >> projectId_ >> destPath_;
   userId_ = client->id;
 }
 
@@ -78,14 +78,16 @@ void ExportNativeMessage::process(Worker &worker) {
   auto itProject = worker.mapProjet_.find(projectId_);
 
   if (itProject == worker.mapProjet_.end()) {
-    return;
+    // We don't open the projet but we silently load it in the background
+      LiveProject liveProj = LiveProject(projectId_);
+      worker.mapProjet_.emplace(projectId_, std::move(liveProj));
+      itProject = worker.mapProjet_.find(projectId_);
   }
-
   if (userId_ > 0) {
     // Server saves project
     std::unique_ptr<ExportDemand> savetsk;
     savetsk = std::make_unique<ExportDemand>(worker.mapProjet_.at(projectId_),
-                                             projectId_, userId_);
+                                             projectId_, destPath_, userId_);
     worker.pushSave(std::move(savetsk));
   }
 }
