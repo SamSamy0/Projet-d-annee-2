@@ -40,6 +40,7 @@ public:
   // Method for ReceiverInWindow
   void addProjectList(ProjectData project);
   void clearProjList();
+  void refreshImportPanel();
   void updateProjectNameInList(long long id, const std::string &newName);
   void updateCreatedProjectId(uint32_t projId);
   void updateShareToken(std::string newToken);
@@ -57,7 +58,7 @@ public:
                        uint id);
   void loadProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                        uint id, uint nextLayerId,
-                       const std::vector<LayerLoadData> &layers, Chat chat);
+                       const std::vector<LayerLoadData> &layers, Chat chat, const std::map<uint, sf::Texture> &textureMap);
   // Getters
   sf::RenderWindow &getWindow();
   tgui::Gui &getGui();

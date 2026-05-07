@@ -3,6 +3,7 @@
 #include "../project/Layer/layer.hpp"
 #include "serverevent.hpp"
 #include <SFML/Network.hpp>
+#include <SFML/Graphics.hpp>
 #include <deque>
 #include <memory>
 
@@ -71,4 +72,5 @@ public:
   void goHome();
 
   void sendMessageChat(std::string message);
+  void addSprite(sf::Texture sprite);
 };

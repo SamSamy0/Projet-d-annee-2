@@ -7,6 +7,8 @@
 #include "../worker.hpp"
 #include <filesystem>
 #include <memory>
+#include <SFML/Graphics/Texture.hpp>
+#include "../../common/sfml_overload.hpp"
 
 namespace fs = std::filesystem;
 ConnectUserMessage::ConnectUserMessage(sf::Packet &dataPacket,
@@ -306,7 +308,7 @@ void GetProjectDataMessage::process(Worker &worker) {
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseProjectData>(
         userId_, liveProj.getJson(), std::move(liveProj.getLayerOrder()),
-        liveProj.getImageMap(), liveProj.getSpritesMap(), liveProj.getChatJson());
+        liveProj.getImageMap(), liveProj.getSpritesMap(), liveProj.getChatJson(), liveProj.getSpriteManagerMap());
     worker.pushNetwork(std::move(rps));
 
     createSystemNotification(worker, projectId_, pseudo_, userId_, typeNotification::CONNEXION);
@@ -765,15 +767,14 @@ void AutoFillMessage::process(Worker& worker){
   if (liveProj == worker.mapProjet_.end()) {
     return;
   }
-  // if (liveProj->second.autoFill(userId_,
-  // calqueId_,sprite_id_,angle_,x_,y_)){
+  if (liveProj->second.autoFill(userId_, calqueId_, asset_ids_, rotation_, size_, positions_)){
   std::vector<uint> usersId = liveProj->second.getConnected();
   // std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 
   rps = std::make_unique<ReponseAutoFill>(usersId, *this);
   worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 
@@ -920,6 +921,41 @@ void HomeMessage::process(Worker& worker){
     }
 }
 
+AddSpriteMessage::AddSpriteMessage(sf::Packet &dataPacket,std::shared_ptr<Client>& client){
+  userId_ = client->id;
+  projectId_ = client->projectId;
+  pseudo_ = client->pseudo;
+  dataPacket >> sprite_;
+}
+
+void AddSpriteMessage::process(Worker &worker){
+  auto itProject = worker.mapProjet_.find(projectId_);
+
+  if (itProject == worker.mapProjet_.end()) {
+    return;
+  }
+
+  spriteId_ = itProject->second.importSprite(userId_, sprite_);
+
+  if (spriteId_ != -1) {
+    std::vector<uint> usersId = itProject->second.getConnected();
+
+    std::unique_ptr<Reponse> rps;
+    rps = std::make_unique<ReponseAddSprite>(usersId, *this);
+    worker.pushNetwork(std::move(rps));
+  }
+}
+
+SaveAllMessage::SaveAllMessage() {}
+
+void SaveAllMessage::process(Worker &worker) {
+  for (auto &[projectId, liveProj] : worker.mapProjet_) {
+    std::unique_ptr<SaveTask> savetsk;
+    savetsk = std::make_unique<SaveTask>(liveProj, projectId);
+    worker.pushSave(std::move(savetsk));
+  }
+}
+
 
 std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
                                          std::shared_ptr<Client> &c) {
@@ -1035,6 +1071,9 @@ std::unique_ptr<IMessage> MessageFactory(sf::Packet &data_packet,
   case MsgProtocole::PROJ_KICK_USER_REQ:
     return std::make_unique<KickUserMessage>(data_packet, c->id);
 
+  case MsgProtocole::MAP_ADD_SPRITE_REQ:
+    return std::make_unique<AddSpriteMessage>(data_packet, c);
+    
   default:
     std::cout << "pas de message" << std::endl;
     return nullptr;

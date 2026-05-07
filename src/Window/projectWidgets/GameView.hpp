@@ -14,19 +14,21 @@ class GameView : public View {
   bool Transferring = false;
   tgui::Button::Ptr activeMoreButton = nullptr;
 
-  // Chat widget
   tgui::Panel::Ptr chatPanel_ = nullptr;
   tgui::ScrollablePanel::Ptr chatMessages_ = nullptr;
   tgui::EditBox::Ptr chatInput_ = nullptr;
   tgui::Button::Ptr chatSendButton_ = nullptr;
-
-  // Pen options panel
   tgui::Panel::Ptr penOptionsPanel_ = nullptr;
   tgui::Panel::Ptr penSpriteOptionsPanel_ = nullptr;
-  // Eraser options panel
   tgui::Panel::Ptr eraserOptionsPanel_ = nullptr;
   tgui::Panel::Ptr eraserSpriteOptionsPanel_ = nullptr;
   tgui::Panel::Ptr spriteBrushOptionsPanel_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelImport_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelNature_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelConstruction_ = nullptr;
+  tgui::ScrollablePanel::Ptr panelObjects_ = nullptr;
+  
+  std::shared_ptr<std::vector<std::string>> spritesSelected_;
   tgui::Panel::Ptr autoFillOptionsPanel_ = nullptr;
 
   void initToolbar();
@@ -70,4 +72,9 @@ public:
   void clearMemberList();
   void popupWarning(std::string motif);
   void refreshChat();
+  void refreshImportPanel();
+  void refreshNatureSpritePanel();
+  void refreshConstructSpritePanel();
+  void refreshObjectsSpritePanel();
+  void refreshSpriteBrushOptions();
 };

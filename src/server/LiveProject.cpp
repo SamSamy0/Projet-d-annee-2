@@ -17,6 +17,7 @@ LiveProject::LiveProject(uint projId) {
 
     layers_ = LayerManager(layers, projId,  json_["nextLayerId"].toInt(), height_, width_, scale_);
     chat_ = Chat(prjManager.loadChat(projId));
+    spriteManager_ = SpriteManager(prjManager.loadSprites(projId));
 }
 
 LiveProject::LiveProject(uint id, const std::string &projectName, uint width, uint height, uint scale) 
@@ -134,6 +135,10 @@ const std::unordered_map<uint, QImage>& LiveProject::getImageMap() {
 
 bool LiveProject::addSprite(uint userId, uint calqueId, std::string asset_id, uint x, uint y, float taille) {
     if (!canModify(userId)) {
+        return false;
+    }
+
+    if (!spriteManager_.verifyAssetId(asset_id)) {
         return false;
     }
 
@@ -255,3 +260,24 @@ bool LiveProject::addMessageChat(uint userId, const std::shared_ptr<MessageChat>
     return true;
 }
 
+uint LiveProject::importSprite(uint userId, sf::Texture &sprite) {
+    if (!canModify(userId)) {
+        qDebug() << "User not allowed to modify the project";
+        return -1;
+    }
+
+    return spriteManager_.addSprite(sprite);
+}
+
+const std::map<uint, sf::Texture>& LiveProject::getSpriteManagerMap() {
+    return spriteManager_.getImportedSprites();
+}
+
+bool LiveProject::autoFill(uint userId, uint calqueId, const std::vector<std::string>& asset_ids, float angle, float size_, const std::vector<sf::Vector2f>& positions_) {
+    if (!canModify(userId)) {
+        qDebug() << "User not allowed to modify the project";
+        return false;
+    }
+
+    return layers_.autoFill(calqueId, asset_ids, angle, size_, positions_);
+}

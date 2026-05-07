@@ -112,22 +112,21 @@ void Map::createSpriteLayer(uint layer_id){
 }
 
 void Map::renameLayer(uint layer_id, std::string name){
-    int j = -1;
-
+    int j = NULL;
     for(int i = 0; i<layers_.size(); i++){
         if(layers_[i]->getId() == layer_id){
             j = i;
             break;
         }
     }
-    if(j>=0)
+    if(j != NULL)
         layers_[j]->setName(name);
 
 }
 
 void Map::layerDown(uint layerId){
     if (layers_.size() <= 1) return;
-    int j = -1;
+    int j = NULL;
 
     for(int i = 0; i<layers_.size(); i++){
         if(layers_[i]->getId() == layerId){
@@ -135,16 +134,19 @@ void Map::layerDown(uint layerId){
             break;
         }
     }
-    if(j >= 0 && j < layers_.size()-1){
+    if(j != NULL && j < layers_.size()-1){
         std::swap(layers_[j],layers_[j+1]);
-        if(selected_ == j) selected_ +=1;
-        else if(selected_ == j+1) selected_ -= 1;
+        if(selected_ == j) {
+            selected_ +=1;
+        } else if(selected_ == j+1) {
+            selected_ -= 1;
+        }
     }
 }
 
 void Map::layerUp(uint layerId){
     if (layers_.size() <= 1) return;
-    int j = -1;
+    int j = NULL;
 
     for(int i = 0; i<layers_.size(); i++){
         if(layers_[i]->getId() == layerId){
@@ -152,38 +154,34 @@ void Map::layerUp(uint layerId){
             break;
         }
     }
-    if(j > 0 && j <= layers_.size()-1){
+    if(j != NULL && j > 0){
         std::swap(layers_[j],layers_[j-1]);
         if(selected_ == j) selected_ -=1;
         else if(selected_ == j-1) selected_ += 1;
     }
 }
 
-
-
 void Map::deleteLayer(uint layer_id){
     if(layer_id == 0)
         return;
     if (layers_.size() <= 1) return;
-
-    int j = -1;
+    int j = NULL;
     for(int i = 0; i<layers_.size(); i++){
         if(layers_[i]->getId() == layer_id){
             j = i;
             break;
         }
     }
-    if(j != -1){
+    if(j != NULL){
         layers_.erase(layers_.begin() + j);
 
         if (selected_ == j && selected_ > 0) selected_ -= 1;
         else if (selected_ > j) selected_ -= 1;
 
-        if (layers_.empty()) 
+        if (layers_.empty())
             selected_ = 0;
-        else if (selected_ >= layers_.size()) 
+        else if (selected_ >= layers_.size())
             selected_ = layers_.size() - 1;
-                
     }
 }
 
@@ -216,7 +214,6 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap) {
     float windowRatio = (window.getSize().x * 0.79f) / (window.getSize().y * 0.95f);
     float mapRatio = (float)(size_.x) / (float)(size_.y);
     float zoomFactor = zoom_.getZoom();
-
     if (windowRatio > mapRatio) {
         float newWidth = size_.y * windowRatio;
         viewMap.setSize(sf::Vector2f(newWidth * zoomFactor, size_.y * zoomFactor));
@@ -227,8 +224,6 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap) {
     // Fin de l'idée de ChatGPT
 
     viewMap.setCenter(sf::Vector2f(move_.positionX_ + (float)(size_.x) / 2, move_.positionY_ + (float)(size_.y) / 2));
-
-
     render_texture_.clear(sf::Color::White);
 
     for(int i = layers_.size()-1 ; i>=0;i--){
@@ -238,7 +233,8 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap) {
             tempLayer->drawLayer(render_texture_);
 
     }
-    // And then we display the texture of the map
+    
+    // On ajoute la texture sur la map et on l'affiche
     render_texture_.display();
     window.draw(map);
     window.draw(sprite_);
@@ -268,8 +264,7 @@ void Map::zooming(sf::Event::MouseWheelScrolled const* event) {
     }
 }
 
-void Map::detectMovement()
-{
+void Map::detectMovement() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))) { // regarde si l'utilisateur veut aller à gauche
         move_.goLeft(zoom_.getZoom());
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) || (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))) { // regarde si l'utilisateur veut aller à droite

@@ -4,6 +4,8 @@
 #include <QBuffer>
 #include <QImage>
 #include <QJsonDocument>
+#include <SFML/Graphics/Texture.hpp>
+#include "../../common/sfml_overload.hpp"
 
 ReponseSolo::ReponseSolo(uint id) : userId_(id) {}
 
@@ -109,7 +111,7 @@ ReponseProjectData::ReponseProjectData(
     const std::vector<uint> &layerOrder,
     const std::unordered_map<uint, QImage> &imageMap,
     const std::unordered_map<uint, SpriteLayer> &spriteMap,
-    const QJsonArray &chat)
+    const QJsonArray &chat, const std::map<uint, sf::Texture> &textureMap)
     : ReponseSolo(userId) {
   dataPacket_ << static_cast<std::uint8_t>(
       MsgProtocole::LOB_GET_PROJECT_DATA_REP);
@@ -126,6 +128,19 @@ ReponseProjectData::ReponseProjectData(
   dataPacket_ << static_cast<std::uint32_t>(chatCompress.size());
   dataPacket_.append(chatCompress.constData(), chatCompress.size());
 
+  dataPacket_ << static_cast<std::uint32_t>(textureMap.size());
+  for (const auto &pair : textureMap) {
+    dataPacket_ << static_cast<std::uint32_t>(pair.first);
+    sf::Image image = pair.second.copyToImage();
+    uint32_t width = image.getSize().x;
+    uint32_t height = image.getSize().y;
+
+    dataPacket_ << width << height;
+
+    const uint8_t* pixels = image.getPixelsPtr();
+    dataPacket_.append(pixels, width * height * 4);
+  }
+  
   for (uint id : layerOrder) {
     dataPacket_ << id;
     if (spriteMap.find(id) != spriteMap.end()) {
@@ -397,4 +412,11 @@ ReponseExport::ReponseExport(uint userId, std::string projectName,
   dataPacket_.append(dataCompress.constData(), dataCompress.size());
   std::cout << "Taille du projet compressé dans la réponse : "
             << dataCompress.size() << " octets" << std::endl;
+}
+
+ReponseAddSprite::ReponseAddSprite(std::vector<uint> usersId, AddSpriteMessage &mess) : ReponseGroupe(usersId){
+  dataPacket_ << static_cast<std::uint8_t>(MsgProtocole::MAP_ADD_SPRITE_REP);
+  dataPacket_ << mess.spriteId_;
+  dataPacket_ << mess.sprite_;
+
 }

@@ -80,7 +80,12 @@ void ServerNetworkManager::respond(){
     std::unique_ptr<Reponse> rps;
     while(mRunning_) {
         rps = repQueu_.pop();
-        rps->envoyer(*this);
+        if (rps) {
+            rps->envoyer(*this);
+        } else {
+            std::cout << "[ServerNetworkManager] Arrêt demandé, fin de la boucle de réponse." << std::endl;
+            stop();
+        }
     }
 };
 

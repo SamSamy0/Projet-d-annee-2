@@ -64,8 +64,8 @@ void ReceiverInWindow::addProjectData(unsigned int scale, sf::Vector2u size,
                                       std::string name, uint id,
                                       uint nextLayerId,
                                       const std::vector<LayerLoadData> &layers,
-                                      Chat chat) {
-  app_->loadProjectData(scale, size, name, id, nextLayerId, layers, chat);
+                                      Chat chat, const std::map<uint, sf::Texture> &textureMap) {
+  app_->loadProjectData(scale, size, name, id, nextLayerId, layers, chat, textureMap);
 }
 
 void ReceiverInWindow::createLayer(LayerType type) {
@@ -231,25 +231,32 @@ void ReceiverInWindow::kickUser(uint targetId) {
   }
 }
 
-void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,int min, int hour, int day, int month,
+void ReceiverInWindow::addChatMess(std::string pseudo, std::string message,
+                                   int min, int hour, int day, int month,
                                    int year) {
   Date date(min, hour, day, month, year);
   if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
     if (app_->getProject()) {
-      app_->getProject()->getChat().addMessage(make_shared<UserMessage>(User(pseudo, 0), date, message));
+      app_->getProject()->getChat().addMessage(
+          make_shared<UserMessage>(User(pseudo, 0), date, message));
     }
     gameView->refreshChat();
   }
 }
 
- void ReceiverInWindow::addChatSyst(std::string pseudo, uint8_t type,int min, int hour, int day, int month,
-                                   int year) {
+void ReceiverInWindow::addChatSyst(std::string pseudo, uint8_t type, int min,
+                                   int hour, int day, int month, int year) {
   Date date(min, hour, day, month, year);
   if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
     if (app_->getProject()) {
-      app_->getProject()->getChat().addMessage(make_shared<SystemNotification>(User(pseudo, 0), date, static_cast<typeNotification>(type)));
+      app_->getProject()->getChat().addMessage(make_shared<SystemNotification>(
+          User(pseudo, 0), date, static_cast<typeNotification>(type)));
     }
     gameView->refreshChat();
   }
 }
 
+void ReceiverInWindow::addSprite(uint spriteId, sf::Texture sprite){
+  app_->getProject()->getMap()->getAssetManager().addAsset(spriteId, sprite);
+  app_->refreshImportPanel();
+}

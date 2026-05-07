@@ -217,17 +217,21 @@ void GameView::showUserManagment(tgui::Button::Ptr toHover, int place) {
 void GameView::clearMemberList() { allUsers_.clear(); }
 
 void GameView::render() {
-  if (project)
-    drawMinimap();
+  if (project) drawMinimap();
 }
 
 void GameView::handleEvents(const sf::Event &event) {
   auto &mainWindow = app_.getWindow();
   auto &gui = app_.getGui();
 
-  if (!chatInput_->isFocused())
+  // On évite de se déplacer en écrivant
+  auto focusedWidget = gui.getFocusedLeaf();
+  bool textInputFocused = chatInput_->isFocused() ||
+      (focusedWidget && std::dynamic_pointer_cast<tgui::EditBox>(focusedWidget) != nullptr);
+  if (!textInputFocused)
     project->getMap()->detectMovement();
-  // ON PRESS
+  
+    // ON PRESS
   if (const auto *mousePressed = event.getIf<sf::Event::MouseButtonPressed>()) {
     // On menu
     auto popup = gui.get("popup");
@@ -317,6 +321,8 @@ void GameView::handleEvents(const sf::Event &event) {
         project->getMap()->zooming(wheelEvent); // ZOOM
     }
   }
+  if (event.is<sf::Event::Resized>()) refreshChat();
+
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Delete)) {
     std::shared_ptr<Tool> tool = project->getToolBar().getSelectedTool();
     if (tool->getType() == SPRITESELECTION)

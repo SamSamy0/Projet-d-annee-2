@@ -8,7 +8,7 @@ void GameView::initEraserSpriteOptions() {
   // Création de la barre avec toutes les infos pour la gomme sprite
   eraserSpriteOptionsPanel_ = tgui::Panel::create();
   eraserSpriteOptionsPanel_->setSize("35%", "6.2%");
-  eraserSpriteOptionsPanel_->setPosition("34%", "5%");
+  eraserSpriteOptionsPanel_->setPosition("33%", "5%");
   eraserSpriteOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
   eraserSpriteOptionsPanel_->getRenderer()->setBorders({1});
   eraserSpriteOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
@@ -20,7 +20,7 @@ void GameView::initEraserSpriteOptions() {
   widthInput->setSize("11.4%", "64%");
   widthInput->setPosition("2.3%", "18%");
   widthInput->setDefaultText("L");
-  widthInput->setInputValidator("[0-9]+\\.?[0-9]*");
+  widthInput->setInputValidator("[0-9]*\\.?[0-9]*");
   widthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   widthInput->getRenderer()->setTextColor(tgui::Color::White);
   widthInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -32,7 +32,7 @@ void GameView::initEraserSpriteOptions() {
   heightInput->setSize("11.4%", "64%");
   heightInput->setPosition("15%", "18%");
   heightInput->setDefaultText("l");
-  heightInput->setInputValidator("[0-9]+\\.?[0-9]*");
+  heightInput->setInputValidator("[0-9]*\\.?[0-9]*");
   heightInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   heightInput->getRenderer()->setTextColor(tgui::Color::White);
   heightInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));

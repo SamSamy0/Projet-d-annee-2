@@ -6,10 +6,9 @@
 void GameView::initEraserOptions() {
   auto& gui = app_.getGui();
 
-  // Création de la barre avec toutes les infos pour la gomme
   eraserOptionsPanel_ = tgui::Panel::create();
   eraserOptionsPanel_->setSize("35%", "6.2%");
-  eraserOptionsPanel_->setPosition("34%", "5%");
+  eraserOptionsPanel_->setPosition("33%", "5%");
   eraserOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
   eraserOptionsPanel_->getRenderer()->setBorders({1});
   eraserOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
@@ -21,7 +20,7 @@ void GameView::initEraserOptions() {
   widthInput->setSize("11.4%", "64%");
   widthInput->setPosition("2.3%", "18%");
   widthInput->setDefaultText("L");
-  widthInput->setInputValidator("[0-9]+\\.?[0-9]*");
+  widthInput->setInputValidator("[0-9]*\\.?[0-9]*");
   widthInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   widthInput->getRenderer()->setTextColor(tgui::Color::White);
   widthInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -33,7 +32,7 @@ void GameView::initEraserOptions() {
   heightInput->setSize("11.4%", "64%");
   heightInput->setPosition("15%", "18%");
   heightInput->setDefaultText("l");
-  heightInput->setInputValidator("[0-9]+\\.?[0-9]*");
+  heightInput->setInputValidator("[0-9]*\\.?[0-9]*");
   heightInput->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));
   heightInput->getRenderer()->setTextColor(tgui::Color::White);
   heightInput->getRenderer()->setDefaultTextColor(tgui::Color(150, 155, 165));
@@ -94,7 +93,7 @@ void GameView::initEraserOptions() {
   eraserOptionsPanel_->add(squareButton);
   squareButton->setTextSize(0);
 
-  // Diamant (losange)
+  // Diamant
   diamondButton->setSize("18.6%", "64%");
   diamondButton->setPosition("49%", "18%");
   diamondButton->getRenderer()->setBackgroundColor(tgui::Color(36, 40, 47));

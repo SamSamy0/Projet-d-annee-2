@@ -50,8 +50,7 @@ void GameView::initChatWidget() {
   chatSendButton_->setPosition("5%", "86%");
   chatSendButton_->setTextSize(12);
   chatSendButton_->getRenderer()->setBackgroundColor(tgui::Color(60, 110, 190));
-  chatSendButton_->getRenderer()->setBackgroundColorHover(
-      tgui::Color(75, 130, 210));
+  chatSendButton_->getRenderer()->setBackgroundColorHover(tgui::Color(75, 130, 210));
   chatSendButton_->getRenderer()->setTextColor(tgui::Color::White);
   chatSendButton_->getRenderer()->setBorders({0});
   chatSendButton_->getRenderer()->setRoundedBorderRadius(8);
@@ -59,8 +58,7 @@ void GameView::initChatWidget() {
     tgui::String text = chatInput_->getText();
     if (text.empty())
       return;
-    auto msg = std::make_shared<UserMessage>(
-        currentUser.getUser(), currentUser.getId(), text.toStdString());
+    auto msg = std::make_shared<UserMessage>(currentUser.getUser(), currentUser.getId(), text.toStdString());
     app_.getNetwork().sendMessageChat(text.toStdString());
     chatInput_->setText("");
     refreshChat();
@@ -77,9 +75,19 @@ void GameView::refreshChat() {
   const auto &messages = project->getChat().getMessages();
   float positionY = 4.0;
   float authorDataHeight = height * 0.022;
+  float messageSpace = height * 0.012;
 
   for (const auto &msg : messages) {
-    if (msg->getType() == MessageType::USER) {
+    if (msg->getType() == MessageType::SYSTEM) {
+      auto notif = tgui::Label::create(msg->getTexte());
+      notif->setPosition("3%", positionY);
+      notif->getRenderer()->setTextColor(tgui::Color(120, 180, 120));
+      notif->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+      notif->setMaximumTextWidth(width * 0.16);
+      notif->setTextSize(15);
+      chatMessages_->add(notif);
+      positionY += notif->getSize().y + messageSpace;
+    } else if (msg->getType() == MessageType::USER) {
       Date date = msg->getDate();
       std::string pseudo = msg->getAuthor().getUser();
       std::string authorDate = pseudo + " - " + std::to_string(date.day_) +
@@ -102,11 +110,9 @@ void GameView::refreshChat() {
       message->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
       message->setMaximumTextWidth(width * 0.16);
       chatMessages_->add(message);
-      positionY += message->getSize().y + 4.0;
-    }
-
-    else if (msg->getType() == MessageType::SYSTEM) {
-auto message = tgui::Label::create(msg->getTexte());
+      positionY += message->getSize().y + messageSpace;
+    } else if (msg->getType() == MessageType::SYSTEM) {
+      auto message = tgui::Label::create(msg->getTexte());
       message->setPosition("3%", positionY);
       message->getRenderer()->setTextColor(tgui::Color::White);
       message->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
@@ -116,6 +122,5 @@ auto message = tgui::Label::create(msg->getTexte());
       positionY += message->getSize().y + 4.0;
     }
   }
-  chatMessages_->setVerticalScrollbarValue(
-      chatMessages_->getVerticalScrollbarMaxValue());
+  chatMessages_->setVerticalScrollbarValue(chatMessages_->getVerticalScrollbarMaxValue());
 }

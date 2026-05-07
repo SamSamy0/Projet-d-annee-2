@@ -11,6 +11,7 @@
 #include <QSaveFile>
 #include <iostream>
 #include <string>
+#include <SFML/Graphics/Image.hpp>
 
 ProjectsManager::ProjectsManager(const std::string &rootPath)
     : rootPath_(QString::fromStdString(rootPath)) {
@@ -24,6 +25,7 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
   if (!dir.exists(rootPath_ + "/projectZipped")) {
     dir.mkpath(rootPath_ + "/projectZipped");
   }
+  /*
   if (!dir.exists("../export")) {
     dir.mkpath("../export");
   }
@@ -32,7 +34,7 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
   }
   if (!dir.exists("../export_image")) {
     dir.mkpath("../export_image");
-  }
+  }*/
 }
 
 /*bool ProjectsManager::createProjectJson(uint id, const QString &projectName,
@@ -91,7 +93,7 @@ bool ProjectsManager::writeProjetJson(QJsonObject &jsonObject, uint id) {
   return false;
 }
 
-bool ProjectsManager::saveSprite(uint id, uint layerId,
+bool ProjectsManager::saveSpriteLayer(uint id, uint layerId,
                                  QJsonObject &jsonObject) {
   ensureDirectoryExists(id);
 
@@ -110,7 +112,7 @@ bool ProjectsManager::saveSprite(uint id, uint layerId,
   return false;
 }
 
-QJsonObject ProjectsManager::loadSprite(uint id, uint layerId) {
+QJsonObject ProjectsManager::loadSpriteLayer(uint id, uint layerId) {
   QString filePath =
       getProjectPath(id) + "/images/" + QString::number(layerId) + ".json";
   QFile file(filePath);
@@ -326,6 +328,11 @@ bool ProjectsManager::ensureDirectoryExists(uint id) const {
     qCritical() << "Erreur de création du dossier projet pour l'ID :" << id;
     return false;
   }
+
+  if (!dir.mkpath(path + "/sprites")) {
+    qCritical() << "Erreur de création du dossier sprites pour l'ID :" << id;
+    return false;
+  }
   return true;
 }
 
@@ -461,4 +468,47 @@ QByteArray ProjectsManager::Zip(uint projectId) {
 
   // Sending Bytes to client
   return rawData;
+}
+
+bool ProjectsManager::saveSprite(uint projectId, std::map<uint, sf::Texture> &sprites) {
+  std::string projectPath = getProjectPath(projectId).toStdString();
+  std::string spritesDir = projectPath + "/sprites/";
+
+  if (!std::filesystem::exists(spritesDir)) {
+      std::filesystem::create_directories(spritesDir);
+  }
+
+  bool allSaved = true;
+  for (const auto& [spriteId, texture] : sprites) {
+      std::string spritePath = spritesDir + std::to_string(spriteId) + ".png";
+      sf::Image image = texture.copyToImage();
+      if (!image.saveToFile(spritePath)) {
+          allSaved = false;
+      }
+  }
+  return allSaved;
+}
+
+std::map<uint, sf::Texture> ProjectsManager::loadSprites(uint projectId) {
+    std::map<uint, sf::Texture> textures;
+    std::string spritesDir = getProjectPath(projectId).toStdString() + "/sprites/";
+
+    if (!std::filesystem::exists(spritesDir)) return textures;
+
+    for (const auto &entry : std::filesystem::directory_iterator(spritesDir)) {
+        if (!entry.is_regular_file() || entry.path().extension() != ".png") continue; //bérifie que c'est un png
+
+        try {
+            uint spriteId = std::stoul(entry.path().stem().string()); //transfome le nom du fichier en uint
+            sf::Texture texture;
+            if (texture.loadFromFile(entry.path().string())) {
+                textures[spriteId] = std::move(texture); 
+            } else {
+                qWarning() << "Impossible de charger le sprite :" << QString::fromStdString(entry.path().string());
+            }
+        } catch (...) {
+            qWarning() << "Fichier ignoré (ID invalide) :" << QString::fromStdString(entry.path().string());
+        }
+    }
+    return textures;
 }
