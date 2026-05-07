@@ -39,6 +39,7 @@ struct LiveProject {
     bool moveSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, int deltaX, int deltaY);
     bool resizeSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, float scale, std::vector<float> x, std::vector<float> y);
     bool rotateSprite(uint userId, uint calqueId, std::vector<uint> spriteIds, float angle, std::vector<float> x, std::vector<float> y);
+    bool autoFill(uint userId, uint calqueId, const std::vector<std::string>& asset_ids, float angle, float size, const std::vector<sf::Vector2f>& positions);
 
     uint importSprite(uint userId, sf::Texture &sprite);
 

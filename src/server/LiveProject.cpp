@@ -272,3 +272,12 @@ uint LiveProject::importSprite(uint userId, sf::Texture &sprite) {
 const std::map<uint, sf::Texture>& LiveProject::getSpriteManagerMap() {
     return spriteManager_.getImportedSprites();
 }
+
+bool LiveProject::autoFill(uint userId, uint calqueId, const std::vector<std::string>& asset_ids, float angle, float size_, const std::vector<sf::Vector2f>& positions_) {
+    if (!canModify(userId)) {
+        qDebug() << "User not allowed to modify the project";
+        return false;
+    }
+
+    return layers_.autoFill(calqueId, asset_ids, angle, size_, positions_);
+}

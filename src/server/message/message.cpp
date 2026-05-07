@@ -767,15 +767,14 @@ void AutoFillMessage::process(Worker& worker){
   if (liveProj == worker.mapProjet_.end()) {
     return;
   }
-  // if (liveProj->second.autoFill(userId_,
-  // calqueId_,sprite_id_,angle_,x_,y_)){
+  if (liveProj->second.autoFill(userId_, calqueId_, asset_ids_, rotation_, size_, positions_)){
   std::vector<uint> usersId = liveProj->second.getConnected();
   // std::vector<uint> usersId = this->getUserLists(worker);
   std::unique_ptr<Reponse> rps;
 
   rps = std::make_unique<ReponseAutoFill>(usersId, *this);
   worker.pushNetwork(std::move(rps));
-  // }
+  }
 }
 
 

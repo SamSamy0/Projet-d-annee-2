@@ -25,7 +25,7 @@ SpriteLayer::SpriteLayer() {
     lastId_ = 0;
 }
 
-void SpriteLayer::addSprite(std::string nameId, float taille, uint x, uint y) {
+void SpriteLayer::addSprite(std::string nameId, float taille, uint x, uint y, float angle) {
     Sprite spriteOpt;
 
     spriteOpt.id = lastId_;
@@ -35,7 +35,7 @@ void SpriteLayer::addSprite(std::string nameId, float taille, uint x, uint y) {
     spriteOpt.x = x;
     spriteOpt.y = y;
     spriteOpt.taille = taille;
-    spriteOpt.angle = 0.0;
+    spriteOpt.angle = angle;
     sprites_.push_back(std::move(spriteOpt));
     
     auto it = std::prev(sprites_.end());
@@ -103,5 +103,11 @@ void SpriteLayer::rotateSprite(std::vector<uint> spriteIds, float angle, std::ve
             it->second->x = x[i];
             it->second->y = y[i];
         }
+    }
+}
+
+void SpriteLayer::autoFill(const std::vector<std::string>& asset_ids, float angle, float size, const std::vector<sf::Vector2f>& positions) {
+    for (size_t i = 0; i < asset_ids.size(); ++i) {
+        addSprite(asset_ids[i], size, static_cast<uint>(positions[i].x), static_cast<uint>(positions[i].y), angle);
     }
 }
