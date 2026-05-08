@@ -11,7 +11,6 @@ void SaveWorker::run() {
     
     while (mRunning_) {
         task = saveQueue_.pop();
-        std::cout << "tentative de sauvgarde" << std::endl;
         if (task) {
             task->execute(*this);
         } else {

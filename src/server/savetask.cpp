@@ -31,6 +31,7 @@ void SaveTask::execute(SaveWorker &worker) {
     }
 
     prjManager.saveSprite(projetId_, sprites_);
+    std::cout << "Projet " << projetId_ << " sauvegardé." << std::endl;
 }
 
 ExportDemand::ExportDemand(LiveProject &livePrj, uint projId,

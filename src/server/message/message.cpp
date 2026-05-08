@@ -969,6 +969,7 @@ ShutDownMessage::ShutDownMessage() {
 
 void ShutDownMessage::process(Worker &worker) {
   //if (worker.isAdmin(userId_)) {
+  SaveAllMessage().process(worker);
   worker.stop();
 //}
 }
