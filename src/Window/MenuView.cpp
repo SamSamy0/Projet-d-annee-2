@@ -110,16 +110,15 @@ void MenuView::importProj(tgui::Panel::Ptr panel) {
     infoLabel->setPosition("5%", "5%");
     infoLabel->getRenderer()->setTextColor(sf::Color(180, 180, 200));
     infoLabel->getRenderer()->setTextSize(24);
-    importPanel->add(infoLabel);
+    // importPanel->add(infoLabel);
 
     auto separator = tgui::Panel::create();
     separator->setSize("80%", "1");
     separator->setPosition("10%", "15%");
     separator->getRenderer()->setBackgroundColor(tgui::Color(55, 55, 70));
-    importPanel->add(separator);
+    // importPanel->add(separator);
 
-    auto fileLabel =
-        tgui::Label::create("Entrez le nom du fichier (sans .natif) :");
+    auto fileLabel = tgui::Label::create("Fichier séléctionné: ");
     fileLabel->setPosition("5%", "22%");
     fileLabel->getRenderer()->setTextColor(sf::Color(180, 180, 200));
     fileLabel->getRenderer()->setTextSize(30);
@@ -131,7 +130,23 @@ void MenuView::importProj(tgui::Panel::Ptr panel) {
     fileName->getRenderer()->setRoundedBorderRadius(8);
     fileName->setSize("90%", "12%");
     fileName->setPosition("5%", "32%");
+    fileName->setReadOnly(true);
     importPanel->add(fileName);
+
+    auto importButton = tgui::Button::create("Parcourir...");
+    importButton->setSize("40%", "12%");
+    importButton->setPosition("30%", "2%");
+    importButton->getRenderer()->setBackgroundColor(tgui::Color(60, 130, 200));
+    importButton->getRenderer()->setTextColor(tgui::Color::White);
+    importButton->getRenderer()->setBorders({0});
+    importButton->setTextSize(14);
+    importButton->onPress([this, fileName]() {
+      auto destination = FileExplorer("file");
+      if (!destination.empty()) {
+        fileName->setText(destination[0]);
+      }
+    });
+    importPanel->add(importButton, "importButton");
 
     auto projLabel = tgui::Label::create("Entrez le nom du futur Projet :");
     projLabel->setPosition("5%", "52%");
@@ -159,13 +174,11 @@ void MenuView::importProj(tgui::Panel::Ptr panel) {
 
     valid->onPress([this, panel, importPanel, fileName, projName, &manager]() {
       if (!fileName->getText().empty() && !projName->getText().empty()) {
-        std::string path = "../import/" +
-                           static_cast<std::string>(fileName->getText()) +
-                           ".natif";
         std::cout << "Importation de " << fileName->getText() << " vers "
                   << projName->getText() << std::endl;
 
-        manager.importProj(path, static_cast<std::string>(projName->getText()));
+        manager.importProj(fileName->getText().toStdString(),
+                           static_cast<std::string>(projName->getText()));
 
         panel->remove(importPanel);
 
@@ -179,6 +192,71 @@ void MenuView::importProj(tgui::Panel::Ptr panel) {
   }
 }
 
+void MenuView::popupWarning(std::string motif) {
+  auto &gui = app_.getGui();
+  auto back = tgui::Panel::create();
+  back->setSize("100%", "100%");
+  back->getRenderer()->setBackgroundColor({0, 0, 0, 160});
+  gui.add(back, "back");
+
+  auto popup = tgui::Panel::create();
+  popup->setSize("30%", "20%");
+  popup->setPosition("35%", "40%");
+  popup->getRenderer()->setBackgroundColor(tgui::Color(28, 28, 36));
+  popup->getRenderer()->setBorders(1);
+  popup->getRenderer()->setBorderColor(tgui::Color(200, 60, 60));
+  popup->getRenderer()->setRoundedBorderRadius(12);
+  back->add(popup);
+
+  tgui::Label::Ptr icon;
+  tgui::Label::Ptr msg;
+  if (motif == "kick") {
+    icon = tgui::Label::create("⚠");
+    msg = tgui::Label::create("Vous avez été expulsé d'un projet");
+  } else if (motif == "exportNatif") {
+    icon = tgui::Label::create("⚠");
+    msg = tgui::Label::create("Vous devez d'abord \nsauvegarder le projet");
+  } else if (motif == "exportPngOK") {
+    icon = tgui::Label::create("✔");
+    msg = tgui::Label::create(
+        "Votre image à été sauvegardé\n dans le dossier export_image");
+    popup->getRenderer()->setBorderColor(tgui::Color::Green);
+  } else if (motif == "exportPngKO") {
+    icon = tgui::Label::create("⚠");
+    msg = tgui::Label::create("L'export au format image\n n'a pas pu aboutir");
+  }
+  msg->setPosition("5%", "45%");
+  msg->getRenderer()->setTextSize(20);
+  msg->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
+  msg->getRenderer()->setTextColor(tgui::Color(220, 220, 235));
+  popup->add(msg);
+
+  icon->setPosition("50%", "10%");
+  icon->getRenderer()->setTextSize(40);
+  if (motif == "exportPngKO")
+    icon->getRenderer()->setTextColor(tgui::Color(200, 60, 60));
+  else if (motif == "exportPngOK")
+    icon->getRenderer()->setTextColor(tgui::Color::Green);
+  popup->add(icon);
+
+  auto okBtn = tgui::Button::create("OK");
+  okBtn->setSize("40%", "20%");
+  okBtn->setPosition("30%", "72%");
+  okBtn->getRenderer()->setBackgroundColor(tgui::Color(99, 102, 241));
+  okBtn->getRenderer()->setBackgroundColorHover(tgui::Color(118, 120, 255));
+  okBtn->getRenderer()->setTextColor(tgui::Color::White);
+  okBtn->getRenderer()->setBorders(0);
+  okBtn->getRenderer()->setRoundedBorderRadius(8);
+  popup->add(okBtn);
+
+  okBtn->onPress([this, motif, &gui]() {
+    gui.remove(gui.get("back"));
+    if (motif == "kick") {
+      app_.getNetwork().getProjectList();
+      app_.changeView(std::make_unique<MenuView>(app_));
+    }
+  });
+}
 void MenuView::clearProjList() {
   projectList.clear();
   init();
@@ -216,7 +294,7 @@ void MenuView::joinProj(tgui::Panel::Ptr panel) {
     auto &manager = app_.getNetwork();
     auto joinPanel = tgui::Panel::create();
     joinPanel->setSize("80%", "30%");
-    joinPanel->setPosition("10%", "40%");
+    joinPanel->setPosition("10%", "45%");
     joinPanel->getRenderer()->setBackgroundColor(sf::Color(35, 35, 40));
     joinPanel->getRenderer()->setRoundedBorderRadius(8);
     panel->add(joinPanel, "joinPanel");
@@ -310,70 +388,89 @@ void MenuView::showProjectMenu(ProjectData project, tgui::Button::Ptr toHover) {
   activeMoreButton = toHover;
   sf::Vector2f btnPos = toHover->getAbsolutePosition();
   activeMoreButton->getRenderer()->setBackgroundColor(sf::Color(55, 55, 70));
-  auto menu = tgui::ListBox::create();
-  menu->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+
+  int8_t projectRole = project.role;
+  app_.setCurrentProjRole(projectRole);
+
+  // List Box is replaced by panel to have different colors in the menu ...
+  auto menu = tgui::Panel::create();
   menu->getRenderer()->setBorders(2);
   menu->getRenderer()->setBorderColor(sf::Color::White);
   menu->getRenderer()->setBackgroundColor(sf::Color(40, 40, 52));
-  menu->getRenderer()->setTextColor(tgui::Color::White);
-  menu->addItem("Ouvrir");
-  menu->addItem("Dupliquer");
-  menu->addItem("Partager");
-  menu->addItem("Quitter");
-  menu->addItem("Membres");
-  menu->addItem("Exporter");
 
-  if (project.role >= 1) {
-    menu->addItem("Renommer");
-  }
-  if (project.role == 2) {
-    menu->addItem("Supprimer");
-  }
-  float menuHeight = menu->getItemCount() * 45;
+  // Options to display in Menu
+  std::vector<std::string> options = {"Ouvrir",    "Dupliquer",   "Partager",
+                                      "Quitter",   "Permissions", "Renommer",
+                                      "Supprimer", "Exporter"};
+
+  float menuHeight = options.size() * 45;
   menu->setSize(150, menuHeight);
-  menu->setItemHeight(45);
-
   menu->setPosition(btnPos.x - 150, btnPos.y);
-
   gui.add(menu, "popup");
-  menu->setTextSize(20);
-  int8_t projectRole = project.role;
-  app_.setCurrentProjRole(projectRole);
-  menu->onItemSelect([this, menu, id, toHover, project, projectRole, &manager,
-                      &gui](const tgui::String &item) {
-    // Delete Action
-    if (item == "Supprimer") {
-      deleteProject(id);
-      // Open Action
-    } else if (item == "Ouvrir") {
-      manager.getProjectData(id);
 
-      // Rename Action
-    } else if (item == "Renommer") {
-      // NOTE: Sending project reference to server with "project"
-      initInputWidget(focusPopup::RENAME, project);
-    } else if (item == "Dupliquer") {
-      initInputWidget(focusPopup::DUPLICATE, project);
+  for (int i = 0; i < (int)options.size(); ++i) {
+    std::string item = options[i];
+    auto btn = tgui::Button::create(item);
 
-    } else if (item == "Partager") {
-      initInputWidget(focusPopup::TOKEN, project);
+    btn->setSize("100%", 45);
+    btn->setPosition(0, i * 45);
+    btn->getRenderer()->setTextSize(20);
+    btn->getRenderer()->setBorders(0);
+    btn->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+
+    // Permissions
+    bool disabled = false;
+
+    // Spectator
+    if (projectRole == 0 &&
+        (item == "Supprimer" || item == "Renommer" || item == "Permissions")) {
+      disabled = true;
+    }
+    // Editor
+    else if (projectRole == 1 &&
+             (item == "Supprimer" || item == "Permissions")) {
+      disabled = true;
     }
 
-    else if (item == "Quitter") {
-      Transferring = true;
-      initInputWidget(focusPopup::QUIT, project);
-    } else if (item == "Membres") {
-      initInputWidget(focusPopup::MEMBER, project);
+    if (disabled) {
+      // Grey button
+      btn->getRenderer()->setTextColor(sf::Color(120, 120, 130));
+      btn->getRenderer()->setBackgroundColorHover(tgui::Color::Transparent);
+    } else {
+      btn->getRenderer()->setTextColor(tgui::Color::White);
+      btn->getRenderer()->setBackgroundColorHover(sf::Color(55, 55, 70));
 
-    } else if (item == "Exporter") {
-      initInputWidget(focusPopup::EXPORT, project);
+      btn->onPress([this, item, id, project, menu, &manager, &gui]() {
+        if (item == "Supprimer") {
+          deleteProject(id);
+        } else if (item == "Ouvrir") {
+          manager.getProjectData(id);
+        } else if (item == "Renommer") {
+          initInputWidget(focusPopup::RENAME, project);
+        } else if (item == "Dupliquer") {
+          initInputWidget(focusPopup::DUPLICATE, project);
+        } else if (item == "Partager") {
+          initInputWidget(focusPopup::TOKEN, project);
+        } else if (item == "Quitter") {
+          Transferring = true;
+          initInputWidget(focusPopup::QUIT, project);
+        } else if (item == "Permissions") {
+          initInputWidget(focusPopup::MEMBER, project);
+        } else if (item == "Exporter") {
+          initInputWidget(focusPopup::EXPORT, project);
+        }
+
+        if (activeMoreButton) {
+          activeMoreButton->getRenderer()->setBackgroundColor(
+              tgui::Color::Transparent);
+        }
+        gui.remove(menu);
+      });
     }
-    activeMoreButton->getRenderer()->setBackgroundColor(
-        tgui::Color::Transparent);
 
-    gui.remove(menu);
-    // toHover->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
-  });
+    // On ajoute le bouton dans notre Panel
+    menu->add(btn);
+  }
 }
 
 void MenuView::deleteProject(long long id) {
@@ -590,14 +687,26 @@ void MenuView::popupExport(tgui::Panel::Ptr background, ProjectData project) {
   });
 
   nativeBtn->onPress([this, project, background, &manager]() {
-    auto destination =
-        pfd::select_folder("Choisissez un dossier de destination").result();
+    auto destination = FileExplorer("directory");
+
     if (!destination.empty()) {
       std::string path = destination + "/" + project.projectName + ".natif";
       manager.exportToNative(project.projectId, path);
       exitAction(background);
     }
   });
+}
+
+std::string MenuView::FileExplorer(std::string target) {
+  std::string res;
+  if (target == "directory") {
+    res = pfd::select_folder("Choisissez un dossier de destination").result();
+  }
+  if (target == "file") {
+    pfd::open_file("Choisissez un fichier", ".", {"Fichier Natif", "*.natif"})
+        .result();
+  }
+  return res;
 }
 
 void MenuView::imageExport(tgui::Panel::Ptr background, tgui::Panel::Ptr panel,
@@ -1079,7 +1188,7 @@ void MenuView::generateToken(uint8_t role, uint id) {
 tgui::Panel::Ptr MenuView::displayToken() {
   auto tokenPanel = tgui::Panel::create();
   tokenPanel->setSize("80%", "15%");
-  tokenPanel->setPosition("10%", "32%");
+  tokenPanel->setPosition("10%", "40%");
   tokenPanel->getRenderer()->setBackgroundColor(tgui::Color(35, 35, 48));
   tokenPanel->getRenderer()->setBorders(1);
   tokenPanel->getRenderer()->setBorderColor(tgui::Color(99, 102, 241));

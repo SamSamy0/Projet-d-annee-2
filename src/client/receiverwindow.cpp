@@ -225,16 +225,19 @@ void ReceiverInWindow::updateMemberList(uint projectId, uint target,
     menuView->updateMemberRole(projectId, target, role);
   }
 }
-void ReceiverInWindow::kickUser(uint targetId) {
+void ReceiverInWindow::kickUser(uint targetId, uint projectId) {
   if (app_->getUser().getId() == targetId) {
     if (auto gameView =
             dynamic_cast<GameView *>(app_->getCurrentView().get())) {
       gameView->popupWarning("kick");
     } else {
-      app_->getNetwork().getProjectList();
+      auto menuView =
+            dynamic_cast<MenuView *>(app_->getCurrentView().get());
+      menuView->init();
+      menuView->popupWarning("kick");
     }
   } else {
-    app_->getNetwork().getUsersProjects(app_->getProject()->getId());
+    app_->getNetwork().getUsersProjects(projectId);
   }
 }
 

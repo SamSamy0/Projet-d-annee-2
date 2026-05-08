@@ -36,7 +36,8 @@ public:
   void rotateSprite(uint layer_id, uint sprite_id, float angle,
                     sf::Vector2f pos);
   void shiftLayer(uint layer_id, int delta_x, int delta_y);
-  void autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size);
+  void autoFill(uint layer_id, std::vector<std::string> asset_id,
+                std::vector<sf::Vector2f> pos, float rotatation, float size);
   void updateShareToken(std::string newTok);
   void clearProjList();
   void clearMemberList();
@@ -45,14 +46,15 @@ public:
   void setState();
   void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                       uint id);
-  void kickUser(uint targetId);
+  void kickUser(uint targetId, uint projectId);
   void addProjectData(unsigned int scale, sf::Vector2u size, std::string name,
                       uint id, uint nextLayerId,
-                      const std::vector<LayerLoadData> &layers, Chat chat, const std::map<uint, sf::Texture> &textureMap);
+                      const std::vector<LayerLoadData> &layers, Chat chat,
+                      const std::map<uint, sf::Texture> &textureMap);
   void addChatMess(std::string pseudo, std::string message, int min, int hour,
                    int day, int month, int year);
 
-  void addChatSyst(std::string pseudo, uint8_t type,int min, int hour, int day, int month,
-                                   int year);
+  void addChatSyst(std::string pseudo, uint8_t type, int min, int hour, int day,
+                   int month, int year);
   void addSprite(uint spriteId, sf::Texture sprite);
 };
