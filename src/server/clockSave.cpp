@@ -7,7 +7,7 @@ void ClockSave::run() {
             bool arret_demande = condition_.wait_for(lock, std::chrono::seconds(30), [this]() {
                 return !running_;
             });
-            
+
             if (arret_demande) {
                 break; 
             }
@@ -24,5 +24,5 @@ void ClockSave::stop() {
         running_ = false;
     }
     condition_.notify_all(); 
-    std::cout << "[ClockSave] Arrêt demandé et thread réveillé." << std::endl;
+    std::cout << "[ClockSave] Arrêt demandé." << std::endl;
 }
