@@ -27,7 +27,7 @@ class GameView : public View {
   tgui::ScrollablePanel::Ptr panelNature_ = nullptr;
   tgui::ScrollablePanel::Ptr panelConstruction_ = nullptr;
   tgui::ScrollablePanel::Ptr panelObjects_ = nullptr;
-  
+
   std::shared_ptr<std::vector<std::string>> spritesSelected_;
   tgui::Panel::Ptr autoFillOptionsPanel_ = nullptr;
 
@@ -63,14 +63,15 @@ public:
 
   void createLayer(LayerType);
   void deleteLayer(uint layer_id);
-  void autoFill(uint layer_id,std::vector<std::string> asset_id, std::vector<sf::Vector2f> pos, float rotatation, float size);
+  void autoFill(uint layer_id, std::vector<std::string> asset_id,
+                std::vector<sf::Vector2f> pos, float rotatation, float size);
   void layerUp(uint layer_id);
   void layerDown(uint layer_id);
   void renameLayer(uint layer_id, std::string name);
   void setAllUsers(std::vector<MemberEntry> users) override;
   void updateMemberRole(uint targetId, int8_t role);
   void clearMemberList();
-  void popupWarning(std::string motif);
+  void popupWarning(std::string motif) override;
   void refreshChat();
   void refreshImportPanel();
   void refreshNatureSpritePanel();
