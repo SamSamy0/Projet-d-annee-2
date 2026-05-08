@@ -785,7 +785,6 @@ void MenuView::popupQuit(tgui::Panel::Ptr back, ProjectData project,
 
 void MenuView::setAllUsers(std::vector<MemberEntry> users) {
   allUsers_ = users;
-  // TODO: Manage member from the menu
   displayMemberList();
   Transferring = false;
 }

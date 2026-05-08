@@ -311,8 +311,7 @@ void GetProjectDataMessage::process(Worker &worker) {
       worker.mapProjet_.emplace(projectId_, std::move(liveProj));
     }
     LiveProject &liveProj = worker.mapProjet_.at(projectId_);
-    liveProj.addConnection(userId_, role); // WARNING: LE 1 EST FORCE CODER
-
+    liveProj.addConnection(userId_, role);
     std::unique_ptr<Reponse> rps;
     rps = std::make_unique<ReponseProjectData>(
         userId_, liveProj.getJson(), std::move(liveProj.getLayerOrder()),
