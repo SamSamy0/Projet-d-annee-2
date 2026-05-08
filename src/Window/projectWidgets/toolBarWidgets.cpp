@@ -2,6 +2,7 @@
 #include "../../project/Layer/layer.hpp"
 #include "../../project/Tool/pixelbrush.hpp"
 #include "../../project/Tool/pixelshift.hpp"
+#include "../../project/Tool/autofill.hpp"
 #include "../Application.hpp"
 #include "../MenuView.hpp"
 #include "GameView.hpp"
@@ -261,6 +262,12 @@ void GameView::initToolbar() {
     fillerButton->getRenderer()->setOpacity(0.4);
     fillerButton->onPress([this,fillerButton,penButton,brushButton,shiftButton,spriteBrushButton,selectionButton]() {
       project->getToolBar().selectTool(AUTOFILL);
+      auto autoFill = std::dynamic_pointer_cast<AutoFill>(project->getToolBar().getSelectedTool());
+      if (autoFill && spritesSelected_) {
+        autoFill->clearAsset();
+        for (const auto& id : *spritesSelected_)
+          autoFill->addAsset(id);
+      }
       penButton->getRenderer()->setOpacity(0.4);
       brushButton->getRenderer()->setOpacity(0.4);
       shiftButton->getRenderer()->setOpacity(0.4);
