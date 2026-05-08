@@ -16,7 +16,7 @@ class SpriteSelection : public Tool {
   sf::Vector2i startSelectionPos_;
   sf::Vector2f pivotPos_;
 
-  bool isSelected(uint) const;
+  bool isSelected(uint id) const;
   sf::Vector2f findPivot();
 
 public:

@@ -12,14 +12,9 @@ class AutoFill : public Tool{
   float rotation_ = 0.0f; // Angle in degree
   float size_ = 1.0f;
   uint seed_ = 0;
-
-
-
   std::shared_ptr<SpriteLayer> temporaryLayer_;
 
-
   void generateSprites();
-
 
 public:
   AutoFill(std::shared_ptr<Map> map, ClientNetworkManager &manager);
