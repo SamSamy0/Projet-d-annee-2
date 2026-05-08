@@ -4,8 +4,18 @@
 #include <QCoreApplication>
 #include "saveworker.hpp"
 #include "clockSave.hpp"
+#include <csignal>
+
+void handle_sigint(int sig) {
+    std::cout << "\n[System] Ctrl+C intercepté ! Arrêt des services en cours..." << std::endl;
+    ctrl_c_pressed = true;
+    
+}
+
+std::atomic<bool> ctrl_c_pressed{false};
 
 int main(int argc, char *argv[]) {
+    std::signal(SIGINT, handle_sigint);
     QCoreApplication app(argc, argv);
     MutexQueue<IMessage> mesQ;
     MutexQueue<Reponse> repQ;
