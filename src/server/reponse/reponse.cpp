@@ -401,7 +401,7 @@ ReponseChatSystem::ReponseChatSystem(std::vector<uint> usersId, SystemNotificati
               << mess.getDate().month_ << mess.getDate().year_;
 }
 
-ReponseExport::ReponseExport(uint userId, std::string projectName,
+ReponseExport::ReponseExport(uint userId, std::string projectName,std::string destPath,
                              QByteArray data)
     : ReponseSolo(userId) {
   dataPacket_ << static_cast<std::uint8_t>(
@@ -409,9 +409,8 @@ ReponseExport::ReponseExport(uint userId, std::string projectName,
   QByteArray dataCompress = qCompress(data, 9);
   dataPacket_ << static_cast<std::uint32_t>(dataCompress.size());
   dataPacket_ << (projectName);
+  dataPacket_ << (destPath);
   dataPacket_.append(dataCompress.constData(), dataCompress.size());
-  std::cout << "Taille du projet compressé dans la réponse : "
-            << dataCompress.size() << " octets" << std::endl;
 }
 
 ReponseAddSprite::ReponseAddSprite(std::vector<uint> usersId, AddSpriteMessage &mess) : ReponseGroupe(usersId){

@@ -3,8 +3,8 @@
 #include "../Window/projectWidgets/GameView.hpp"
 #include "../project/Chat/chat.hpp"
 #include "../project/Chat/date.hpp"
-#include "../project/Chat/userMessage.hpp"
 #include "../project/Chat/systemNotification.hpp"
+#include "../project/Chat/userMessage.hpp"
 #include "../project/Layer/spritelayer.hpp"
 #include "../project/Tool/pixelbrush.hpp"
 #include "../project/Tool/pixelshift.hpp"
@@ -39,7 +39,9 @@ void ReceiverInWindow::updateProjectNameInList(uint id,
 
 void ReceiverInWindow::clearProjList() { app_->clearProjList(); }
 void ReceiverInWindow::clearMemberList() {
-  dynamic_cast<GameView *>(app_->getCurrentView().get())->clearMemberList();
+  if (auto view = dynamic_cast<GameView *>(app_->getCurrentView().get())){
+    view->clearMemberList();
+  } 
 }
 
 void ReceiverInWindow::setUserId(uint newId) { app_->setUserId(newId); }
@@ -203,9 +205,11 @@ void ReceiverInWindow::autoFill(uint layer_id,std::vector<std::string> asset_id,
 
 
 void ReceiverInWindow::setMemberList(std::vector<MemberEntry> memberList) {
-  if (auto gameView = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
-    gameView->setAllUsers(memberList);
+  if (auto View = dynamic_cast<GameView *>(app_->getCurrentView().get())) {
+    View->setAllUsers(memberList);
   }
+   if (auto View = dynamic_cast<MenuView *>(app_->getCurrentView().get()))
+    View->setAllUsers(memberList);
 }
 
 void ReceiverInWindow::updateMemberList(uint projectId, uint target,
@@ -216,6 +220,9 @@ void ReceiverInWindow::updateMemberList(uint projectId, uint target,
     if (app_->getProject() and app_->getProject()->getId() == projectId) {
       gameView->updateMemberRole(target, role);
     }
+  }
+  if (auto menuView = dynamic_cast<MenuView *>(app_->getCurrentView().get())) {
+    menuView->updateMemberRole(projectId, target, role);
   }
 }
 void ReceiverInWindow::kickUser(uint targetId) {
@@ -256,7 +263,7 @@ void ReceiverInWindow::addChatSyst(std::string pseudo, uint8_t type, int min,
   }
 }
 
-void ReceiverInWindow::addSprite(uint spriteId, sf::Texture sprite){
+void ReceiverInWindow::addSprite(uint spriteId, sf::Texture sprite) {
   app_->getProject()->getMap()->getAssetManager().addAsset(spriteId, sprite);
   app_->refreshImportPanel();
 }

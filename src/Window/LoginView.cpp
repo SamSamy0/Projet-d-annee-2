@@ -93,13 +93,10 @@ void LoginView::signIn(tgui::EditBox::Ptr usrname, tgui::EditBox::Ptr pswd) {
   auto &manager = app_.getNetwork();
   auto &currentUser_ = app_.getUser();
 
-  // NOTE: I have to put the condition username 3-15 car
-
   if (usrname->getText() != "") {
     currentUser_ = User(static_cast<std::string>(usrname->getText()), 0);
     manager.askRegister(static_cast<std::string>(usrname->getText()),
                         static_cast<std::string>(pswd->getText()));
-    std::cout << usrname->getText() << "   " << pswd->getText() << std::endl;
   }
 }
 void LoginView::showError(const std::string &message) {
@@ -110,6 +107,8 @@ void LoginView::showError(const std::string &message) {
   auto errorLabel = back->get<tgui::Label>("ErrorLabel");
   if (!errorLabel)
     return;
+  errorLabel->getScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+  errorLabel->getRenderer()->setTextSize(18);
   errorLabel->setText(message);
   auto usrname = back->get<tgui::EditBox>("Username");
   auto pswd = back->get<tgui::EditBox>("Password");
@@ -119,6 +118,4 @@ void LoginView::showError(const std::string &message) {
     pswd->setText("");
 }
 
-void LoginView::handleEvents(const sf::Event &event) {
-
-};
+void LoginView::handleEvents(const sf::Event &event) {};

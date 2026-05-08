@@ -70,7 +70,7 @@ void CreateProjectMessage::process(Worker &worker) {
 }
 ExportNativeMessage::ExportNativeMessage(sf::Packet &data_packet,
                                          std::shared_ptr<Client> client) {
-  data_packet >> projectId_;
+  data_packet >> projectId_ >> destPath_;
   userId_ = client->id;
 }
 
@@ -78,14 +78,16 @@ void ExportNativeMessage::process(Worker &worker) {
   auto itProject = worker.mapProjet_.find(projectId_);
 
   if (itProject == worker.mapProjet_.end()) {
-    return;
+    // We don't open the projet but we silently load it in the background
+      LiveProject liveProj = LiveProject(projectId_);
+      worker.mapProjet_.emplace(projectId_, std::move(liveProj));
+      itProject = worker.mapProjet_.find(projectId_);
   }
-
   if (userId_ > 0) {
     // Server saves project
     std::unique_ptr<ExportDemand> savetsk;
     savetsk = std::make_unique<ExportDemand>(worker.mapProjet_.at(projectId_),
-                                             projectId_, userId_);
+                                             projectId_, destPath_, userId_);
     worker.pushSave(std::move(savetsk));
   }
 }
@@ -190,6 +192,7 @@ void ImportProjectMessage::process(Worker &worker) {
     std::vector<ProjectEntry> projects = worker.getUserProjects(userId_);
     std::unique_ptr<Reponse> rps =
         std::make_unique<ReponseUsersProjects>(userId_, projects);
+    std::cout <<"construction reponse" <<std::endl;
     worker.pushNetwork(std::move(rps));
   } else {
     std::cerr << "L'extraction du projet importé a échoué." << std::endl;
@@ -338,14 +341,13 @@ ChangeRoleMessage::ChangeRoleMessage(sf::Packet &data_packet, uint userId) {
 
 void ChangeRoleMessage::process(Worker &worker) {
   bool success = worker.changeRole(target_, projectId_, role_);
-
-  // Getting all connected users
   std::vector<uint> usersId;
-  auto it = worker.mapProjet_.find(projectId_);
-  if (it != worker.mapProjet_.end()) {
-    usersId = it->second.getConnected();
-  }
+  // Everyone in the projet, not only those connected
+  std::vector<MemberEntry> projectMembers = worker.getProjectMembers(projectId_);
 
+  for (const auto& member : projectMembers) {
+      usersId.push_back(member.userId);
+  } 
   // Building the group response
   std::unique_ptr<Reponse> rps;
   rps = std::make_unique<ReponseChangeRole>(usersId, target_, projectId_, role_,

@@ -1,3 +1,4 @@
+#include "../../../project/Tool/spritebrush.hpp"
 #include "../../Application.hpp"
 #include "../GameView.hpp"
 #include "../../../project/Tool/spritebrush.hpp"
@@ -13,7 +14,8 @@ void GameView::initSpriteBrushOptions() {
   spriteBrushOptionsPanel_->setPosition("34%", "5%");
   spriteBrushOptionsPanel_->getRenderer()->setBackgroundColor(tgui::Color(50, 56, 66));
   spriteBrushOptionsPanel_->getRenderer()->setBorders({1});
-  spriteBrushOptionsPanel_->getRenderer()->setBorderColor(tgui::Color(90, 95, 105));
+  spriteBrushOptionsPanel_->getRenderer()->setBorderColor(
+      tgui::Color(90, 95, 105));
   spriteBrushOptionsPanel_->getRenderer()->setRoundedBorderRadius(8);
   spriteBrushOptionsPanel_->setVisible(false);
   gui.add(spriteBrushOptionsPanel_);
@@ -150,9 +152,9 @@ void GameView::initSpriteBrushOptions() {
   importButton->onPress([this]() {
     auto result = pfd::open_file("Choisissez votre image", ".", { "Images PNG", "*.png"}).result();
     if (!result.empty()) {
-        sf::Texture texture;
-        if (texture.loadFromFile(result[0]))
-            app_.getNetwork().addSprite(texture);
+      sf::Texture texture;
+      if (texture.loadFromFile(result[0]))
+        app_.getNetwork().addSprite(texture);
     }
   });
   panelImport->add(importButton, "importBtn");

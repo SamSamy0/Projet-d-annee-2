@@ -186,7 +186,7 @@ struct ReponseChatSystem : ReponseGroupe {
 };
 
 struct ReponseExport : ReponseSolo {
-  ReponseExport(uint userId,std::string projectName,  QByteArray data);
+  ReponseExport(uint userId,std::string projectName,  std::string destPath, QByteArray data);
 };
 
 struct ReponseAddSprite : ReponseGroupe{

@@ -1,6 +1,7 @@
 #include "Application.hpp"
 #include "../project/Layer/pixellayer.hpp"
 #include "../project/Layer/spritelayer.hpp"
+#include "IpView.hpp"
 #include "LoginView.hpp"
 #include "MenuView.hpp"
 #include "projectWidgets/GameView.hpp"
@@ -28,7 +29,7 @@ Application::Application(ClientNetworkManager &manager)
 
   updateTextSize();
   gui.onViewChange([this] { updateTextSize(); });
-  changeView(std::make_unique<LoginView>(*this));
+  changeView(std::make_unique<IpView>(*this));
 }
 
 void Application::updateTextSize() {
@@ -136,8 +137,14 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                   std::string name, uint id) {
   project = std::make_unique<Project>(scale, size, name, id, mainWindow, gui,
                                       manager, currentProjRole);
-  std::cout << "opening with authorisation " << currentProjRole << std::endl;
-  changeView(std::make_unique<GameView>(*this));
+  if (isExporting_){
+    bool res = project->exportToPng(exportFormat_);
+    
+  }else{
+    std::cout << "opening with authorisation " << currentProjRole << std::endl;
+    changeView(std::make_unique<GameView>(*this));
+    
+  }
 };
 
 void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
@@ -209,5 +216,10 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
   }
 
   map->setNextLayerId(nextLayerId);
-  changeView(std::make_unique<GameView>(*this));
+  if (isExporting_){
+    isExporting_ = false;
+    bool res = project->exportToPng(exportFormat_);
+  }else{
+    changeView(std::make_unique<GameView>(*this));
+  }
 };

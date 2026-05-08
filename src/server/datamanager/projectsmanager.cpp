@@ -452,7 +452,6 @@ QByteArray ProjectsManager::Zip(uint projectId) {
   // Cleaning and closing zip
   mz_zip_writer_finalize_archive(&zip_archive);
   mz_zip_writer_end(&zip_archive);
-  std::cout << "fin de la compression " << std::endl;
 
   QString Qpath = QString::fromStdString(zipPath);
   QFile fileZip(Qpath);

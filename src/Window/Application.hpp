@@ -26,6 +26,8 @@ struct LayerLoadData {
 class Application {
   ClientNetworkManager &manager;
   sf::RenderWindow mainWindow;
+  bool isExporting_ = false;
+  std::string exportFormat_ = "png";
   tgui::Gui gui;
   projectState state = projectState::LOGIN;
   bool isLoggedIn = false;
@@ -61,6 +63,8 @@ public:
                        const std::vector<LayerLoadData> &layers, Chat chat, const std::map<uint, sf::Texture> &textureMap);
   // Getters
   sf::RenderWindow &getWindow();
+  bool getIsExporting(){return isExporting_;};
+  void setIsExporting(bool isExporting, std::string format){isExporting_ = true; exportFormat_ = format;};
   tgui::Gui &getGui();
   ClientNetworkManager &getNetwork();
   User &getUser();

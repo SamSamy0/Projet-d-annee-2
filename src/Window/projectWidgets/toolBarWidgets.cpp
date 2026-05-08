@@ -396,7 +396,7 @@ void GameView::initToolbar() {
         menu->deselectItem();
  
       } else if (item == "Format natif") {
-        manager.exportToNative(project->getId());
+        manager.exportToNative(project->getId(), "bonjour" );
         exportButton->getRenderer()->setBackgroundColor(
             tgui::Color::Transparent);
         if (gui.get("exportSubPopup"))
@@ -406,6 +406,67 @@ void GameView::initToolbar() {
     });
   });
   toolbar->add(exportButton);
+
+  auto shortcutButton = tgui::Button::create();
+  shortcutButton->setSize("2%", "70%");
+  shortcutButton->setPosition("83%", "15%");
+  shortcutButton->getRenderer()->setTexture("../res/images/shortcut.png");
+  shortcutButton->getRenderer()->setBorders({0});
+  shortcutButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+  shortcutButton->getRenderer()->setOpacity(0.4);
+  shortcutButton->onPress([this, shortcutButton]() {
+    auto &gui = app_.getGui();
+    if (gui.get("shortcutPopup")) {
+      shortcutButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+      gui.remove(gui.get("shortcutPopup"));
+      return;
+    }
+
+    shortcutButton->getRenderer()->setBackgroundColor(sf::Color(55, 55, 70));
+
+    auto popup = tgui::Panel::create();
+    popup->setSize(300, 200);
+    sf::Vector2f btnPos = shortcutButton->getAbsolutePosition();
+    popup->setPosition(btnPos.x + shortcutButton->getSize().x - 300,
+                       btnPos.y + shortcutButton->getSize().y + 10);
+    popup->getRenderer()->setBackgroundColor(tgui::Color(40, 40, 52));
+    popup->getRenderer()->setBorders(2);
+    popup->getRenderer()->setBorderColor(tgui::Color::White);
+
+    auto title = tgui::Label::create("Raccourcis");
+    title->setPosition(10, 10);
+    title->getRenderer()->setTextSize(20);
+    title->getRenderer()->setTextColor(tgui::Color::White);
+    popup->add(title);
+
+    auto closeButton = tgui::Button::create("✕");
+    closeButton->setSize(30, 30);
+    closeButton->setPosition("100% - 35", "5");
+    closeButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+    closeButton->getRenderer()->setTextColor(tgui::Color::White);
+    closeButton->getRenderer()->setTextSize(18);
+    closeButton->getRenderer()->setBorders(0);
+    closeButton->getRenderer()->setBackgroundColorHover(sf::Color(255, 100, 100));
+    closeButton->onPress([&gui, shortcutButton]() {
+        gui.remove(gui.get("shortcutPopup"));
+        shortcutButton->getRenderer()->setBackgroundColor(tgui::Color::Transparent);
+    });
+    popup->add(closeButton);
+
+    auto list = tgui::Label::create(
+        "Z,Q,S,D / Flèches : Déplacement\n"
+        "Molette : Zoom\n"
+        "Ctrl + Molette : Taille pinceau\n"
+        "Suppr : Supprimer sélection\n"
+        "Echap / Ctrl+C : Quitter");
+    list->setPosition(10, 50);
+    list->getRenderer()->setTextSize(16);
+    list->getRenderer()->setTextColor(tgui::Color::White);
+    popup->add(list);
+
+    gui.add(popup, "shortcutPopup");
+  });
+  toolbar->add(shortcutButton);
 
   auto leaveProjectButton = tgui::Button::create();
   leaveProjectButton->setSize("2%", "70%");

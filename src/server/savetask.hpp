@@ -23,8 +23,9 @@ class SaveTask {
 
 class ExportDemand : public SaveTask {
     uint userId_;
+    std::string destPath_;
     public:
-    ExportDemand(LiveProject& livePrj, uint projId, uint userId);
+    ExportDemand(LiveProject& livePrj, uint projId,std::string destPath, uint userId);
     void execute(SaveWorker& worker);
 };
 
