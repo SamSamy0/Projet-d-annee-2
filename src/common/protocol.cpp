@@ -43,10 +43,6 @@ std::string to_string(MsgProtocole msg) {
         case MsgProtocole::MAP_ORGANIZE_LAYER_UP_REP: return "MAP_ORGANIZE_LAYER_UP_REP";
         case MsgProtocole::MAP_ORGANIZE_LAYER_DOWN_REQ: return "MAP_ORGANIZE_LAYER_DOWN_REQ";
         case MsgProtocole::MAP_ORGANIZE_LAYER_DOWN_REP: return "MAP_ORGANIZE_LAYER_DOWN_REP";
-        case MsgProtocole::MAP_MASK_LAYER_REQ: return "MAP_MASK_LAYER_REQ";
-        case MsgProtocole::MAP_MASK_LAYER_REP: return "MAP_MASK_LAYER_REP";
-        case MsgProtocole::MAP_IMPORT_SPRITE_REQ: return "MAP_IMPORT_SPRITE_REQ";
-        case MsgProtocole::MAP_IMPORT_SPRITE_REP: return "MAP_IMPORT_SPRITE_REP";
         case MsgProtocole::MAP_PUT_SPRITE_REQ: return "MAP_PUT_SPRITE_REQ";
         case MsgProtocole::MAP_PUT_SPRITE_REP: return "MAP_PUT_SPRITE_REP";
         case MsgProtocole::MAP_ERASE_SPRITE_REQ: return "MAP_ERASE_SPRITE_REQ";

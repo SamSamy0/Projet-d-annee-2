@@ -11,7 +11,6 @@ struct SpriteObject {
 };
 
 class SpriteLayer : public Layer {
-  // std::vector<SpriteObject> sprites_;
   std::unordered_map<uint, SpriteObject> sprites_;
   sf::Vector2i offset_;
   uint nextId_;
@@ -28,9 +27,7 @@ public:
   void shift(sf::Vector2i v) override;
   void shiftSprite(uint id, sf::Vector2i v);
   void drawLayer(sf::RenderTarget &target) override;
-
   void addSprite(const sf::Sprite &s, uint id);
-
   void resizeSprite(uint id, sf::Vector2f pos, float scale);
   void rotateSprite(uint id, float angle, sf::Vector2f pos);
 };

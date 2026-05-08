@@ -15,7 +15,6 @@ class Map;
 class User;
 
 class Project {
-  // std::vector<User> users;
   Chat chat_;
   std::string name_;
   uint id_;
