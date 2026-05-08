@@ -16,6 +16,7 @@ void SaveWorker::run() {
             task->execute(*this);
         } else {
             std::cout << "[SaveWorker] Arrêt demandé, fin de la boucle." << std::endl;
+            break;
         }
     }
 }

@@ -17,7 +17,7 @@ DatabaseManager::DatabaseManager() {
         "id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "pseudo TEXT UNIQUE COLLATE NOCASE CHECK(LENGTH(pseudo) BETWEEN 3 AND "
         "15), "
-        "password TEXT)");
+        "password TEXT CHECK(LENGTH(password) >= 1))");
     query.exec("CREATE TABLE IF NOT EXISTS projects ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                "name TEXT)");

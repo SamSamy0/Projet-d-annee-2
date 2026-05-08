@@ -9,9 +9,9 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QSaveFile>
+#include <SFML/Graphics/Image.hpp>
 #include <iostream>
 #include <string>
-#include <SFML/Graphics/Image.hpp>
 
 ProjectsManager::ProjectsManager(const std::string &rootPath)
     : rootPath_(QString::fromStdString(rootPath)) {
@@ -25,16 +25,6 @@ ProjectsManager::ProjectsManager(const std::string &rootPath)
   if (!dir.exists(rootPath_ + "/projectZipped")) {
     dir.mkpath(rootPath_ + "/projectZipped");
   }
-  /*
-  if (!dir.exists("../export")) {
-    dir.mkpath("../export");
-  }
-  if (!dir.exists("../import")) {
-    dir.mkpath("../import");
-  }
-  if (!dir.exists("../export_image")) {
-    dir.mkpath("../export_image");
-  }*/
 }
 
 /*bool ProjectsManager::createProjectJson(uint id, const QString &projectName,
@@ -94,7 +84,7 @@ bool ProjectsManager::writeProjetJson(QJsonObject &jsonObject, uint id) {
 }
 
 bool ProjectsManager::saveSpriteLayer(uint id, uint layerId,
-                                 QJsonObject &jsonObject) {
+                                      QJsonObject &jsonObject) {
   ensureDirectoryExists(id);
 
   QString filePath =
@@ -469,45 +459,52 @@ QByteArray ProjectsManager::Zip(uint projectId) {
   return rawData;
 }
 
-bool ProjectsManager::saveSprite(uint projectId, std::map<uint, sf::Texture> &sprites) {
+bool ProjectsManager::saveSprite(uint projectId,
+                                 std::map<uint, sf::Texture> &sprites) {
   std::string projectPath = getProjectPath(projectId).toStdString();
   std::string spritesDir = projectPath + "/sprites/";
 
   if (!std::filesystem::exists(spritesDir)) {
-      std::filesystem::create_directories(spritesDir);
+    std::filesystem::create_directories(spritesDir);
   }
 
   bool allSaved = true;
-  for (const auto& [spriteId, texture] : sprites) {
-      std::string spritePath = spritesDir + std::to_string(spriteId) + ".png";
-      sf::Image image = texture.copyToImage();
-      if (!image.saveToFile(spritePath)) {
-          allSaved = false;
-      }
+  for (const auto &[spriteId, texture] : sprites) {
+    std::string spritePath = spritesDir + std::to_string(spriteId) + ".png";
+    sf::Image image = texture.copyToImage();
+    if (!image.saveToFile(spritePath)) {
+      allSaved = false;
+    }
   }
   return allSaved;
 }
 
 std::map<uint, sf::Texture> ProjectsManager::loadSprites(uint projectId) {
-    std::map<uint, sf::Texture> textures;
-    std::string spritesDir = getProjectPath(projectId).toStdString() + "/sprites/";
+  std::map<uint, sf::Texture> textures;
+  std::string spritesDir =
+      getProjectPath(projectId).toStdString() + "/sprites/";
 
-    if (!std::filesystem::exists(spritesDir)) return textures;
-
-    for (const auto &entry : std::filesystem::directory_iterator(spritesDir)) {
-        if (!entry.is_regular_file() || entry.path().extension() != ".png") continue; //bérifie que c'est un png
-
-        try {
-            uint spriteId = std::stoul(entry.path().stem().string()); //transfome le nom du fichier en uint
-            sf::Texture texture;
-            if (texture.loadFromFile(entry.path().string())) {
-                textures[spriteId] = std::move(texture); 
-            } else {
-                qWarning() << "Impossible de charger le sprite :" << QString::fromStdString(entry.path().string());
-            }
-        } catch (...) {
-            qWarning() << "Fichier ignoré (ID invalide) :" << QString::fromStdString(entry.path().string());
-        }
-    }
+  if (!std::filesystem::exists(spritesDir))
     return textures;
+
+  for (const auto &entry : std::filesystem::directory_iterator(spritesDir)) {
+    if (!entry.is_regular_file() || entry.path().extension() != ".png")
+      continue; // bérifie que c'est un png
+
+    try {
+      uint spriteId = std::stoul(
+          entry.path().stem().string()); // transfome le nom du fichier en uint
+      sf::Texture texture;
+      if (texture.loadFromFile(entry.path().string())) {
+        textures[spriteId] = std::move(texture);
+      } else {
+        qWarning() << "Impossible de charger le sprite :"
+                   << QString::fromStdString(entry.path().string());
+      }
+    } catch (...) {
+      qWarning() << "Fichier ignoré (ID invalide) :"
+                 << QString::fromStdString(entry.path().string());
+    }
+  }
+  return textures;
 }

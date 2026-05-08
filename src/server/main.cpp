@@ -25,7 +25,17 @@ int main(int argc, char *argv[]) {
     SaveWorker saveWorker(saveQ, repQ);
     ClockSave clockSave(mesQ);
 
+    std::thread controlThread([&mesQ]() {
+        while (!ctrl_c_pressed) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        }
+        std::unique_ptr<IMessage> shutdownMsg = std::make_unique<ShutDownMessage>();
+        mesQ.push(std::move(shutdownMsg));
+    });
+
     if (!servManager.start()) {
+        ctrl_c_pressed = true;
+        controlThread.join();
         return 0;
     }
 
@@ -40,6 +50,15 @@ int main(int argc, char *argv[]) {
 
     worker.run(); 
 
+    ctrl_c_pressed = true; //si le worker s'interrompt avant le ctrl+c
+    if (controlThread.joinable()) {
+        controlThread.join();
+        mesQ.stop();
+        repQ.stop();
+        saveQ.stop();
+        clockSave.stop();
+    }
+
     if (networkThread.joinable()) {
         networkThread.join();
     }
@@ -48,12 +67,12 @@ int main(int argc, char *argv[]) {
         saveThread.join();
     }
 
-    clockSave.stop();
 
     if (clockThread.joinable()) {
         clockThread.join();
     }
     
+    std::cout << "[Main] Tous les threads ont été arrêtés. Fermeture du serveur." << std::endl;
     return 0;
 
 }
