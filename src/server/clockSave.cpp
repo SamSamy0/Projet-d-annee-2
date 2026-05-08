@@ -1,16 +1,18 @@
 #include "clockSave.hpp"
 
 void ClockSave::run() {
+    sf::Clock timer;
     while (running_) {
-        sf::sleep(sf::seconds(30));
+        sf::sleep(sf::milliseconds(500));
 
-        if (running_) {
-            std::unique_ptr<IMessage> saveMsg = std::make_unique<SaveAllMessage>();
-            messageQueue_.push(std::move(saveMsg));
+        // Si 30 secondes se sont écoulées
+        if (timer.getElapsedTime() >= sf::seconds(30)) {
+            timer.restart();
             
-            /*std::shared_ptr<Client> client = std::make_shared<Client>(); // Client fictif pour le message de shutdown
-            saveMsg = std::make_unique<ShutDownMessage>(client);
-            messageQueue_.push(std::move(saveMsg));*/
+            if (running_) {
+                std::unique_ptr<IMessage> saveMsg = std::make_unique<SaveAllMessage>();
+                messageQueue_.push(std::move(saveMsg));
+            }
         }
     }
 }
