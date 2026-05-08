@@ -46,6 +46,7 @@ class MenuView : public View {
   ProjectData getProjectData(std::unique_ptr<Project> &proj);
   ProjectData askProjectData();
   void generateToken(uint8_t role, uint id);
+  std::string FileExplorer(std::string target);
 
 public:
   MenuView(Application &app);
@@ -62,4 +63,5 @@ public:
   void deleteProject(long long id);
   void setAllUsers(std::vector<MemberEntry> users) override;
   void updateMemberRole(uint projectId, uint targetId, int8_t newRole);
+  void popupWarning(std::string motif) override;
 };

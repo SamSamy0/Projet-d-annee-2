@@ -299,7 +299,7 @@ void ClientHandler::process(ServerEvent &event) {
       uint targetId;
       uint projectId;
       *(event.data_packet_) >> targetId >> projectId;
-      handleWindow_.kickUser(targetId);
+      handleWindow_.kickUser(targetId, projectId);
     }
     break;
   }

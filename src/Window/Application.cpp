@@ -84,7 +84,7 @@ void Application::run() {
   processEvents();
 
   mainWindow.clear(sf::Color(35, 35, 40));
-  bool inGame = dynamic_cast<GameView*>(currentView.get()) != nullptr;
+  bool inGame = dynamic_cast<GameView *>(currentView.get()) != nullptr;
   if (project && inGame)
     project->display();
   currentView->render();
@@ -137,20 +137,19 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                   std::string name, uint id) {
   project = std::make_unique<Project>(scale, size, name, id, mainWindow, gui,
                                       manager, currentProjRole);
-  if (isExporting_){
+  if (isExporting_) {
     bool res = project->exportToPng(exportFormat_);
-    
-  }else{
+
+  } else {
     std::cout << "opening with authorisation " << currentProjRole << std::endl;
     changeView(std::make_unique<GameView>(*this));
-    
   }
 };
 
-void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
-                                  std::string name, uint id, uint nextLayerId,
-                                  const std::vector<LayerLoadData> &layers,
-                                  Chat chat, const std::map<uint, sf::Texture> &textureMap) {
+void Application::loadProjectData(
+    unsigned int scale, sf::Vector2u size, std::string name, uint id,
+    uint nextLayerId, const std::vector<LayerLoadData> &layers, Chat chat,
+    const std::map<uint, sf::Texture> &textureMap) {
   // Constructeur avec vecteur vide → aucun layer par défaut créé
   project = std::make_unique<Project>(
       scale, size, name, id, mainWindow, gui, manager,
@@ -204,7 +203,8 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
                                 static_cast<float>(map->getScale()) /
                                 bounds.size.x;
             sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
-            sprite.setPosition(sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
+            sprite.setPosition(
+                sf::Vector2f(static_cast<float>(sx), static_cast<float>(sy)));
             layer->draw(sprite, nameId);
           }
         }
@@ -216,10 +216,13 @@ void Application::loadProjectData(unsigned int scale, sf::Vector2u size,
   }
 
   map->setNextLayerId(nextLayerId);
-  if (isExporting_){
+  // Exporting to png
+  if (isExporting_) {
     isExporting_ = false;
     bool res = project->exportToPng(exportFormat_);
-  }else{
+    res ? currentView->popupWarning("exportPngOK")
+        : currentView->popupWarning("exportPngKO");
+  } else {
     changeView(std::make_unique<GameView>(*this));
   }
 };
