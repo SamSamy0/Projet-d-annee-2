@@ -6,9 +6,14 @@ LoginView::LoginView(Application &app) : View(app) {};
 void LoginView::init() {
   auto &gui = app_.getGui();
   // SubWindow
+  auto logo = tgui::Picture::create("../res/images/logo.png");
+  logo->setSize("24%", "8%");
+  logo->setPosition("38%", "18%");
+  gui.add(logo);
+
   auto back = tgui::Panel::create();
   back->setSize("32%", "42%");
-  back->setPosition("34%", "29%");
+  back->setPosition("34%", "34%");
   back->getRenderer()->setBackgroundColor(tgui::Color(28, 28, 36));
   back->getRenderer()->setRoundedBorderRadius(12);
   back->getRenderer()->setBorderColor(sf::Color(55, 55, 70));

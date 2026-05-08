@@ -211,8 +211,8 @@ void Map::displayMap(sf::RenderWindow& window, sf::View& viewMap) {
 
     // Pour éviter que SFML n'étire la carte si celle-ci n'a pas la meme taille que la fenêtre, on utilise un système de ratio
     // Note : idée proposée par ChatGPT !!
-    float windowRatio = (window.getSize().x * 0.79f) / (window.getSize().y * 0.95f);
-    float mapRatio = (float)(size_.x) / (float)(size_.y);
+    float windowRatio = (window.getSize().x * 0.79) / (window.getSize().y * 0.95);
+    float mapRatio = static_cast<float>(size_.x) / static_cast<float>(size_.y);
     float zoomFactor = zoom_.getZoom();
     if (windowRatio > mapRatio) {
         float newWidth = size_.y * windowRatio;

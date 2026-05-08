@@ -5,9 +5,14 @@
 void IpView::init() {
   auto &gui = app_.getGui();
 
+  auto logo = tgui::Picture::create("../res/images/logo.png");
+  logo->setSize("24%", "8%");
+  logo->setPosition("38%", "22%");
+  gui.add(logo);
+
   auto background = tgui::Panel::create();
-  background->setSize("32%", "38%");
-  background->setPosition("34%", "31%");
+  background->setSize("32%", "30%");
+  background->setPosition("34%", "38%");
   background->getRenderer()->setBackgroundColor(tgui::Color(28, 28, 36));
   background->getRenderer()->setRoundedBorderRadius(12);
   background->getRenderer()->setBorderColor(sf::Color(55, 55, 70));
@@ -41,34 +46,23 @@ void IpView::init() {
   ip->getRenderer()->setRoundedBorderRadius(6);
   background->add(ip, "IpBox");
 
-  auto port = tgui::EditBox::copy(ip);
-  port->setPosition({"10%", "55%"});
-  port->setDefaultText("5001");
-  port->setInputValidator("[0-9]*");
-  background->add(port, "PortBox");
-
   auto connect = tgui::Button::create("Se connecter");
   connect->getRenderer()->setBackgroundColor(sf::Color(99, 102, 241));
   connect->getRenderer()->setBackgroundColorHover(sf::Color(118, 120, 255));
   connect->getRenderer()->setTextColor(sf::Color::White);
   connect->getRenderer()->setBorders(0);
   connect->getRenderer()->setRoundedBorderRadius(8);
-  connect->setPosition({"25%", "74%"});
-  connect->setSize({"50%", "14%"});
+  connect->setPosition({"25%", "64%"});
+  connect->setSize({"50%", "18%"});
   background->add(connect);
-  connect->onPress(&IpView::tryConnect, this, ip, port);
+  connect->onPress(&IpView::tryConnect, this, ip);
 }
 
-void IpView::tryConnect(tgui::EditBox::Ptr ipBox, tgui::EditBox::Ptr portBox) {
-  
-  // Je récupère l'ip et le port
+void IpView::tryConnect(tgui::EditBox::Ptr ipBox) {
   std::string ip = static_cast<std::string>(ipBox->getText());
-  if (ip.empty()) ip = "127.0.0.1";
-  std::string portStr = static_cast<std::string>(portBox->getText());
-  int port = portStr.empty() ? 5001 : std::stoi(portStr);
+  if (ip.empty()) ip = "127.0.0.1"; // ip par défaut si on lance en local
 
-  // Si connexion réussi, on va au login au sinon erreur
-  if (app_.getNetwork().connect(ip, port)) {
+  if (app_.getNetwork().connect(ip, 5001)) {
     app_.changeView(std::make_unique<LoginView>(app_));
   } else {
     error_->setText("Connexion impossible");

@@ -10,5 +10,5 @@ public:
 
 private:
   tgui::Label::Ptr error_;
-  void tryConnect(tgui::EditBox::Ptr ipBox, tgui::EditBox::Ptr portBox);
+  void tryConnect(tgui::EditBox::Ptr ipBox);
 };

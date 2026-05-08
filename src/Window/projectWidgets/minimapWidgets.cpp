@@ -11,12 +11,14 @@ void GameView::drawMinimap() {
     sf::Vector2u mapSize = map->getSize();
     float scale = ((200.0 / mapSize.x) < (150.0 / mapSize.y)) ? (200.0 / mapSize.x) : (150.0 / mapSize.y);
 
+    // Je crée la bordure grise à la minimap
     sf::RectangleShape minimapBackground({mapSize.x * scale, mapSize.y * scale});
     minimapBackground.setPosition({static_cast<float>(mainWindow.getSize().x) - mapSize.x * scale - 10.f, static_cast<float>(mainWindow.getSize().y) - mapSize.y * scale - 10.f});
     minimapBackground.setFillColor(sf::Color(36, 40, 47));
     minimapBackground.setOutlineColor(sf::Color(90, 95, 105));
     minimapBackground.setOutlineThickness(1);
 
+    // C'est l'image de la minimap
     sf::Sprite minimapImage(texture);
     minimapImage.setScale({scale, scale});
     minimapImage.setPosition(minimapBackground.getPosition());
@@ -54,6 +56,7 @@ void GameView::drawMinimap() {
         positionY = maxY - visionHeight;
     }
 
+    // Ici je construit le rectangle bleu qui affiche ce que l'utilisateur voit dans la minimap
     sf::RectangleShape userVision({visionWidth, visionHeight});
     userVision.setPosition({positionX, positionY});
     userVision.setFillColor(sf::Color(0, 0, 128, 50));
