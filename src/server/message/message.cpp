@@ -956,8 +956,7 @@ void SaveAllMessage::process(Worker &worker) {
   }
 }
 
-ShutDownMessage::ShutDownMessage(std::shared_ptr<Client>& client) {
-  userId_ = client->id;
+ShutDownMessage::ShutDownMessage() {
 }
 
 void ShutDownMessage::process(Worker &worker) {

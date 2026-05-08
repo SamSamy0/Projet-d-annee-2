@@ -355,8 +355,7 @@ struct SaveAllMessage : IMessage {
 };
 
 struct ShutDownMessage : IMessage {
-  uint userId_ = 0;
-  ShutDownMessage(std::shared_ptr<Client>& client);
+  ShutDownMessage();
   void process(Worker &worker) override;
 };
 
