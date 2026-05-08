@@ -1,23 +1,28 @@
 #include "clockSave.hpp"
 
 void ClockSave::run() {
-    sf::Clock timer;
     while (running_) {
-        sf::sleep(sf::milliseconds(500));
-
-        // Si 30 secondes se sont écoulées
-        if (timer.getElapsedTime() >= sf::seconds(30)) {
-            timer.restart();
+        {
+            std::unique_lock<std::mutex> lock(mutex_);
+            bool arret_demande = condition_.wait_for(lock, std::chrono::seconds(30), [this]() {
+                return !running_;
+            });
             
-            if (running_) {
-                std::unique_ptr<IMessage> saveMsg = std::make_unique<SaveAllMessage>();
-                messageQueue_.push(std::move(saveMsg));
+            if (arret_demande) {
+                break; 
             }
         }
+        std::unique_ptr<IMessage> saveMsg = std::make_unique<SaveAllMessage>();
+        messageQueue_.push(std::move(saveMsg));
     }
 }
 
+
 void ClockSave::stop() {
-    running_ = false;
-    std::cout << "[ClockSave] Arrêt demandé." << std::endl;
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        running_ = false;
+    }
+    condition_.notify_all(); 
+    std::cout << "[ClockSave] Arrêt demandé et thread réveillé." << std::endl;
 }

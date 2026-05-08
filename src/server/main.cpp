@@ -56,6 +56,7 @@ int main(int argc, char *argv[]) {
         mesQ.stop();
         repQ.stop();
         saveQ.stop();
+        clockSave.stop();
     }
 
     if (networkThread.joinable()) {
@@ -66,7 +67,6 @@ int main(int argc, char *argv[]) {
         saveThread.join();
     }
 
-    clockSave.stop();
 
     if (clockThread.joinable()) {
         clockThread.join();
